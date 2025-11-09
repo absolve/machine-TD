@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://5gs5yimexruo"]
+
+[ext_resource type="Script" uid="uid://d2uty4uy1sr2" path="res://script/bullet.gd" id="1_qwydi"]
+
+[node name="bullet" type="Area2D"]
+script = ExtResource("1_qwydi")
+
+[node name="shape" type="CollisionShape2D" parent="."]
+
+[node name="ani" type="AnimatedSprite2D" parent="."]

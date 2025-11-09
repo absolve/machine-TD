@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3 uid="uid://b8acvedo8gexp"]
+
+[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_xj8p8"]
+[ext_resource type="Script" uid="uid://bxm1puyb5lju" path="res://scene/cannon_tower.gd" id="2_lnf4k"]
+[ext_resource type="Texture2D" uid="uid://nhtnmvtr4ud" path="res://sprite/towerDefense_vector.svg" id="3_v83o1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lm0w6"]
+atlas = ExtResource("3_v83o1")
+region = Rect2(1280, 448, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sk265"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lm0w6")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v83o1"]
+atlas = ExtResource("3_v83o1")
+region = Rect2(1280, 640, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lm0w6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v83o1")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Tower" instance=ExtResource("1_xj8p8")]
+script = ExtResource("2_lnf4k")
+
+[node name="base" parent="." index="0"]
+sprite_frames = SubResource("SpriteFrames_sk265")
+
+[node name="radar" parent="." index="1"]
+visible = false
+
+[node name="turret" parent="." index="2"]
+sprite_frames = SubResource("SpriteFrames_lm0w6")
+offset = Vector2(0, -10)

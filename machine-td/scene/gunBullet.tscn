@@ -1,0 +1,32 @@
+[gd_scene load_steps=7 format=3 uid="uid://bj4ug85qul1wa"]
+
+[ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet.tscn" id="1_1ru8m"]
+[ext_resource type="Script" uid="uid://b4n0gn6e1wxel" path="res://script/gun_bullet.gd" id="2_edk6p"]
+[ext_resource type="Texture2D" uid="uid://nhtnmvtr4ud" path="res://sprite/towerDefense_vector.svg" id="3_ayjrs"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_g7r77"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dafhc"]
+atlas = ExtResource("3_ayjrs")
+region = Rect2(1216, 704, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cfo3h"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dafhc")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="bullet" instance=ExtResource("1_1ru8m")]
+script = ExtResource("2_edk6p")
+
+[node name="shape" parent="." index="0"]
+visible = false
+shape = SubResource("CircleShape2D_g7r77")
+
+[node name="ani" parent="." index="1"]
+sprite_frames = SubResource("SpriteFrames_cfo3h")
