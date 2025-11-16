@@ -2,17 +2,17 @@
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_64uc6"]
 [ext_resource type="Script" uid="uid://h5w308vyc8yt" path="res://script/gun_tower.gd" id="2_i5mjb"]
-[ext_resource type="Texture2D" uid="uid://nhtnmvtr4ud" path="res://sprite/towerDefense_vector.svg" id="3_5i26j"]
+[ext_resource type="Texture2D" uid="uid://b85d7hnm7nf8j" path="res://sprite/towerDefense_tilesheet.png" id="3_k8n1u"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_k8n1u"]
-atlas = ExtResource("3_5i26j")
-region = Rect2(1216, 448, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_86lx6"]
+atlas = ExtResource("3_k8n1u")
+region = Rect2(1280, 448, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_i5mjb"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_k8n1u")
+"texture": SubResource("AtlasTexture_86lx6")
 }],
 "loop": false,
 "name": &"default",
@@ -20,7 +20,7 @@ animations = [{
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5i26j"]
-atlas = ExtResource("3_5i26j")
+atlas = ExtResource("3_k8n1u")
 region = Rect2(1216, 640, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_k8n1u"]

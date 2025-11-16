@@ -2,11 +2,11 @@
 
 [ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet.tscn" id="1_1ru8m"]
 [ext_resource type="Script" uid="uid://b4n0gn6e1wxel" path="res://script/gun_bullet.gd" id="2_edk6p"]
-[ext_resource type="Texture2D" uid="uid://nhtnmvtr4ud" path="res://sprite/towerDefense_vector.svg" id="3_ayjrs"]
+[ext_resource type="Texture2D" uid="uid://b85d7hnm7nf8j" path="res://sprite/towerDefense_tilesheet.png" id="3_ayjrs"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_g7r77"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_dafhc"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_g7r77"]
 atlas = ExtResource("3_ayjrs")
 region = Rect2(1216, 704, 64, 64)
 
@@ -14,7 +14,7 @@ region = Rect2(1216, 704, 64, 64)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_dafhc")
+"texture": SubResource("AtlasTexture_g7r77")
 }],
 "loop": true,
 "name": &"default",

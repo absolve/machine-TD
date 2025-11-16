@@ -1,12 +1,12 @@
 [gd_scene load_steps=8 format=3 uid="uid://b8acvedo8gexp"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_xj8p8"]
-[ext_resource type="Script" uid="uid://bxm1puyb5lju" path="res://scene/cannon_tower.gd" id="2_lnf4k"]
-[ext_resource type="Texture2D" uid="uid://nhtnmvtr4ud" path="res://sprite/towerDefense_vector.svg" id="3_v83o1"]
+[ext_resource type="Script" uid="uid://bxm1puyb5lju" path="res://script/cannon_tower.gd" id="2_v83o1"]
+[ext_resource type="Texture2D" uid="uid://b85d7hnm7nf8j" path="res://sprite/towerDefense_tilesheet.png" id="3_v83o1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lm0w6"]
 atlas = ExtResource("3_v83o1")
-region = Rect2(1280, 448, 64, 64)
+region = Rect2(1344, 448, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_sk265"]
 animations = [{
@@ -19,7 +19,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_v83o1"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_sk265"]
 atlas = ExtResource("3_v83o1")
 region = Rect2(1280, 640, 64, 64)
 
@@ -27,7 +27,7 @@ region = Rect2(1280, 640, 64, 64)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_v83o1")
+"texture": SubResource("AtlasTexture_sk265")
 }],
 "loop": false,
 "name": &"default",
@@ -35,7 +35,7 @@ animations = [{
 }]
 
 [node name="Tower" instance=ExtResource("1_xj8p8")]
-script = ExtResource("2_lnf4k")
+script = ExtResource("2_v83o1")
 
 [node name="base" parent="." index="0"]
 sprite_frames = SubResource("SpriteFrames_sk265")

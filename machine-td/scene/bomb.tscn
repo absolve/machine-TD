@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://dx0wt0kj2d5c"]
+
+[ext_resource type="Script" uid="uid://d3yok4jd5kvnc" path="res://script/bomb.gd" id="1_owhvf"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4eul8"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_owhvf"]
+
+[node name="bomb" type="Area2D"]
+script = ExtResource("1_owhvf")
+
+[node name="shape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_4eul8")
+
+[node name="ani" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_owhvf")
