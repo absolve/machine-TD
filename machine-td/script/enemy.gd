@@ -4,5 +4,5 @@ var hp=100 #血量
 var speed  #移动速度
 var vec=Vector2.ZERO
 var target=[] #目标
-
-@onready var ani=$ani
+var points=[]
+var pointIndex=0

@@ -15,4 +15,4 @@ script = ExtResource("1_h08p8")
 
 [node name="shape" type="CollisionShape2D" parent="radar"]
 
-[node name="turret" type="Sprite2D" parent="."]
+[node name="turret" type="AnimatedSprite2D" parent="."]

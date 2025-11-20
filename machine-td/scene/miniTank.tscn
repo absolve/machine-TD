@@ -1,5 +1,60 @@
-[gd_scene load_steps=2 format=3 uid="uid://bf8vkrw335d0"]
+[gd_scene load_steps=10 format=3 uid="uid://bf8vkrw335d0"]
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_6peud"]
+[ext_resource type="Script" uid="uid://de1xh8lbgnoye" path="res://script/mini_tank.gd" id="2_pd3il"]
+[ext_resource type="Texture2D" uid="uid://b85d7hnm7nf8j" path="res://sprite/towerDefense_tilesheet.png" id="2_yg2f7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pd3il"]
+atlas = ExtResource("2_yg2f7")
+region = Rect2(960, 704, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bmskb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pd3il")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yg2f7"]
+size = Vector2(40, 20)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yg2f7"]
+radius = 100.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yg2f7"]
+atlas = ExtResource("2_yg2f7")
+region = Rect2(960, 768, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pd3il"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yg2f7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="enemy" instance=ExtResource("1_6peud")]
+script = ExtResource("2_pd3il")
+
+[node name="base" parent="." index="0"]
+sprite_frames = SubResource("SpriteFrames_bmskb")
+
+[node name="shape" parent="body" index="0"]
+shape = SubResource("RectangleShape2D_yg2f7")
+
+[node name="radar" parent="." index="2"]
+visible = false
+
+[node name="shape" parent="radar" index="0"]
+shape = SubResource("CircleShape2D_yg2f7")
+
+[node name="turret" parent="." index="3"]
+sprite_frames = SubResource("SpriteFrames_pd3il")
+offset = Vector2(10, 0)
