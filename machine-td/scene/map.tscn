@@ -313,9 +313,9 @@ sources/1 = SubResource("TileSetAtlasSource_h0nt1")
 
 [sub_resource type="Curve2D" id="Curve2D_wpp1k"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 496, 360, 0, 0, 0, 0, 600, 240, 0, 0, 0, 0, 1408, 248, 0, 0, 0, 0, 1408, 888, 0, 0, 0, 0, 1472, 960, 0, 0, 0, 0, 1920, 968, 0, 0, 0, 0, 488, 1088, 0, 0, 0, 0, 496, 360)
+"points": PackedVector2Array(0, 0, 0, 0, 494, 1063, 0, 0, 0, 0, 513, 277, 0, 0, 0, 0, 1400, 272, 0, 0, 0, 0, 1416, 944, 0, 0, 0, 0, 1912, 952)
 }
-point_count = 8
+point_count = 5
 
 [node name="map" type="Node2D"]
 script = ExtResource("1_rgtto")
@@ -330,3 +330,4 @@ metadata/_edit_lock_ = true
 curve = SubResource("Curve2D_wpp1k")
 
 [node name="enemy" parent="." instance=ExtResource("3_h0nt1")]
+position = Vector2(352, 1008)
