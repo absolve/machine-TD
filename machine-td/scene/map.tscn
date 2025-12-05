@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=4 uid="uid://c0rd5oseij63o"]
+[gd_scene load_steps=8 format=4 uid="uid://c0rd5oseij63o"]
 
 [ext_resource type="Script" uid="uid://cgdxoyy80vpqi" path="res://script/map.gd" id="1_rgtto"]
 [ext_resource type="Texture2D" uid="uid://b85d7hnm7nf8j" path="res://sprite/towerDefense_tilesheet.png" id="2_wpp1k"]
 [ext_resource type="PackedScene" uid="uid://bf8vkrw335d0" path="res://scene/miniTank.tscn" id="3_h0nt1"]
+[ext_resource type="PackedScene" uid="uid://di6u5yfi44083" path="res://scene/gunTower.tscn" id="4_nf54y"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_h0nt1"]
 texture = ExtResource("2_wpp1k")
@@ -331,3 +332,6 @@ curve = SubResource("Curve2D_wpp1k")
 
 [node name="enemy" parent="." instance=ExtResource("3_h0nt1")]
 position = Vector2(352, 1008)
+
+[node name="Tower" parent="." instance=ExtResource("4_nf54y")]
+position = Vector2(584, 840)
