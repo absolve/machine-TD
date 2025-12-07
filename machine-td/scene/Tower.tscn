@@ -13,6 +13,8 @@ script = ExtResource("1_nxw3l")
 
 [node name="turret" type="AnimatedSprite2D" parent="."]
 
+[node name="Marker2D" type="Marker2D" parent="turret"]
+
 [node name="mouseArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="mouseArea"]

@@ -3,28 +3,29 @@ extends "res://script/tower.gd"
 var bullet=preload("res://scene/gunBullet.tscn")
 
 func _ready():
-	delay=1
+	delay=0.3
 	delayTimer.wait_time=delay
 	pass
 
 func _physics_process(_delta):
 	var temp=getTarget()
 	if temp:
-		fire(temp)
-		pass
-	pass
-
+	
+		turret.look_at(temp.global_position)
+		turret.rotate(deg_to_rad(90))
+		fire(temp)	
+	
+		
 func fire(t):
-	print("fire")
+	#print("fire")
 	if canShot:
 		var temp=bullet.instantiate()
-		temp.position=global_position
-		temp.angle=global_position.angle_to(t.global_position)
+		temp.position=marker.global_position
+		temp.angle=position.direction_to(t.global_position).angle()
 		Game.addObj(temp)
 		canShot=false
-	else:
-		if delayTimer.is_stopped():
-			delayTimer.start()
+		delayTimer.start()
+
 
 
 func _on_radar_area_entered(area):

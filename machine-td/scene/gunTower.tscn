@@ -55,6 +55,9 @@ shape = SubResource("CircleShape2D_5i26j")
 sprite_frames = SubResource("SpriteFrames_k8n1u")
 offset = Vector2(0, -10)
 
+[node name="Marker2D" parent="turret" index="0"]
+position = Vector2(0, -40)
+
 [node name="mouseArea" parent="." index="3"]
 visible = false
 
