@@ -1,4 +1,4 @@
-extends Node2D
+extends Area2D
 
 var hp=100 #血量
 var speed  #移动速度
@@ -9,3 +9,7 @@ var pointIndex=0
 
 @onready var base=$base
 @onready var turret=$turret
+
+
+func hurt(_num):
+	pass

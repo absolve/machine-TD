@@ -4,6 +4,10 @@ extends "res://script/enemy.gd"
 func _ready():
 	speed=100
 	
+func hurt(_num):
+	hp-=_num
+	if hp<0:
+		queue_free()
 
 func _physics_process(delta):
 	if points.size()==0:
