@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://c7fck7k88qhrn"]
+[gd_scene load_steps=3 format=3 uid="uid://c7fck7k88qhrn"]
 
 [ext_resource type="Script" uid="uid://dbvhmj1j0f0i4" path="res://script/tower.gd" id="1_nxw3l"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nxw3l"]
+radius = 20.0
 
 [node name="Tower" type="Node2D"]
 script = ExtResource("1_nxw3l")
@@ -8,6 +11,7 @@ script = ExtResource("1_nxw3l")
 [node name="base" type="AnimatedSprite2D" parent="."]
 
 [node name="radar" type="Area2D" parent="."]
+input_pickable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="radar"]
 
@@ -18,8 +22,10 @@ script = ExtResource("1_nxw3l")
 [node name="mouseArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="mouseArea"]
+shape = SubResource("CircleShape2D_nxw3l")
 
 [node name="delay" type="Timer" parent="."]
 one_shot = true
 
+[connection signal="input_event" from="mouseArea" to="." method="_on_mouse_area_input_event"]
 [connection signal="timeout" from="delay" to="." method="_on_delay_timeout"]

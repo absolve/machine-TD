@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=3 uid="uid://c8adh3ikjulbd"]
+
+[ext_resource type="Texture2D" uid="uid://b85d7hnm7nf8j" path="res://sprite/towerDefense_tilesheet.png" id="1_c5443"]
+[ext_resource type="Script" uid="uid://cxxjryhi1jd0i" path="res://script/explosion.gd" id="2_qekrk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hfxkd"]
+atlas = ExtResource("1_c5443")
+region = Rect2(1216, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mgngk"]
+atlas = ExtResource("1_c5443")
+region = Rect2(1280, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uox2b"]
+atlas = ExtResource("1_c5443")
+region = Rect2(1344, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ge384"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hfxkd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mgngk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uox2b")
+}],
+"loop": false,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="explosion" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_ge384")
+script = ExtResource("2_qekrk")

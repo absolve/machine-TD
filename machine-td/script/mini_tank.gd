@@ -7,6 +7,7 @@ func _ready():
 func hurt(_num):
 	hp-=_num
 	if hp<0:
+		ExplosionManage.playExplosion(global_position)
 		queue_free()
 
 func _physics_process(delta):

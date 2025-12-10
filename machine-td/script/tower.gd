@@ -2,10 +2,11 @@ extends Node2D
 
 
 var hp  #防御塔血量
-var radarScope=50 #雷达范围
+var radarScope=500 #雷达范围
 var delay=0.1 #开火延迟
 var target=[] #目标集合
 var canShot=true
+var selected=false #选中
 
 @onready var rader=$radar
 @onready var base=$base
@@ -26,4 +27,16 @@ func getTarget():
 
 func _on_delay_timeout():
 	canShot=true
+	
+
+
+func _on_mouse_area_input_event(_viewport, event, _shape_idx):
+	if event is InputEventMouseButton:
+		if event.is_pressed()&& event.button_index==MouseButton.MOUSE_BUTTON_LEFT:
+			selected=!selected
+			queue_redraw()
+			
+func _draw():
+	if selected:
+		draw_circle(position,radarScope,Color.WHITE)
 	

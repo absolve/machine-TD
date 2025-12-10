@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://di6u5yfi44083"]
+[gd_scene load_steps=9 format=3 uid="uid://di6u5yfi44083"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_64uc6"]
 [ext_resource type="Script" uid="uid://h5w308vyc8yt" path="res://script/gun_tower.gd" id="2_i5mjb"]
@@ -37,8 +37,6 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_k8n1u"]
-
 [node name="Tower" instance=ExtResource("1_64uc6")]
 script = ExtResource("2_i5mjb")
 
@@ -46,6 +44,7 @@ script = ExtResource("2_i5mjb")
 sprite_frames = SubResource("SpriteFrames_i5mjb")
 
 [node name="radar" parent="." index="1"]
+visible = false
 collision_mask = 2
 
 [node name="CollisionShape2D" parent="radar" index="0"]
@@ -57,12 +56,6 @@ offset = Vector2(0, -10)
 
 [node name="Marker2D" parent="turret" index="0"]
 position = Vector2(0, -40)
-
-[node name="mouseArea" parent="." index="3"]
-visible = false
-
-[node name="CollisionShape2D" parent="mouseArea" index="0"]
-shape = SubResource("CircleShape2D_k8n1u")
 
 [connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
 [connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]

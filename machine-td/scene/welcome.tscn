@@ -1,6 +1,34 @@
-[gd_scene load_steps=2 format=3 uid="uid://cdegvxp10onm4"]
+[gd_scene load_steps=3 format=3 uid="uid://cdegvxp10onm4"]
 
 [ext_resource type="Script" uid="uid://dvh3dchh6mk70" path="res://script/welcome.gd" id="1_njjjx"]
 
+[sub_resource type="Theme" id="Theme_njjjx"]
+
 [node name="welcome" type="Node2D"]
 script = ExtResource("1_njjjx")
+
+[node name="ui" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = SubResource("Theme_njjjx")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ui"]
+layout_mode = 0
+offset_left = 792.0
+offset_top = 608.0
+offset_right = 1016.0
+offset_bottom = 639.0
+
+[node name="Button" type="Button" parent="ui/HBoxContainer"]
+layout_mode = 2
+text = "start"
+
+[node name="Button2" type="Button" parent="ui/HBoxContainer"]
+layout_mode = 2
+text = "setting"
+
+[node name="Button3" type="Button" parent="ui/HBoxContainer"]
+layout_mode = 2
+text = "about"

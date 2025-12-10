@@ -1,0 +1,50 @@
+[gd_scene load_steps=2 format=3 uid="uid://8vvx43vtulw5"]
+
+[ext_resource type="Script" uid="uid://svh6y8okcup5" path="res://script/title.gd" id="1_4fdtc"]
+
+[node name="title" type="CanvasLayer"]
+script = ExtResource("1_4fdtc")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control"]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 31.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "wave"
+
+[node name="Label2" type="Label" parent="Control/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "0"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "hp"
+
+[node name="Label2" type="Label" parent="Control/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "10"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Control/HBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Control/HBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "加速"
+
+[node name="Button2" type="Button" parent="Control/HBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "pause"
