@@ -35,8 +35,9 @@ func _on_mouse_area_input_event(_viewport, event, _shape_idx):
 		if event.is_pressed()&& event.button_index==MouseButton.MOUSE_BUTTON_LEFT:
 			selected=!selected
 			queue_redraw()
+		
 			
 func _draw():
 	if selected:
-		draw_circle(position,radarScope,Color.WHITE)
+		draw_circle(Vector2.ZERO,radarScope,Color(0.1,0.1,0.1,0.2))
 	

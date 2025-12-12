@@ -6,8 +6,10 @@ func _ready():
 	
 func hurt(_num):
 	hp-=_num
+	lifeBar.setValue(hp)
 	if hp<0:
 		ExplosionManage.playExplosion(global_position)
+		Game.defeatEnemy.emit(reward)
 		queue_free()
 
 func _physics_process(delta):

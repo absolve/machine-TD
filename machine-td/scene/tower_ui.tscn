@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://clbbod4cwf6n8"]
+
+[ext_resource type="Script" uid="uid://cw5p1ankmsixl" path="res://script/tower_ui.gd" id="1_yx7l2"]
+
+[node name="towerUI" type="CanvasLayer"]
+script = ExtResource("1_yx7l2")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0

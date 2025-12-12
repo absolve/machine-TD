@@ -4,6 +4,7 @@ enum bulletType{
 	player,enemy
 }
 
+signal defeatEnemy  #击败敌人
 
 var map=null
 

@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://c7fck7k88qhrn"]
+[gd_scene load_steps=4 format=3 uid="uid://c7fck7k88qhrn"]
 
 [ext_resource type="Script" uid="uid://dbvhmj1j0f0i4" path="res://script/tower.gd" id="1_nxw3l"]
+[ext_resource type="PackedScene" uid="uid://4vv5x7rd5335" path="res://scene/life_bar.tscn" id="2_5eujo"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_nxw3l"]
-radius = 20.0
+radius = 25.0
 
 [node name="Tower" type="Node2D"]
 script = ExtResource("1_nxw3l")
@@ -26,6 +27,9 @@ shape = SubResource("CircleShape2D_nxw3l")
 
 [node name="delay" type="Timer" parent="."]
 one_shot = true
+
+[node name="lifeBar" parent="." instance=ExtResource("2_5eujo")]
+position = Vector2(0, -30)
 
 [connection signal="input_event" from="mouseArea" to="." method="_on_mouse_area_input_event"]
 [connection signal="timeout" from="delay" to="." method="_on_delay_timeout"]
