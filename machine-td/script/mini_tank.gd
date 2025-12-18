@@ -2,7 +2,7 @@ extends "res://script/enemy.gd"
 
 
 func _ready():
-	speed=100
+	speed=50
 	
 func hurt(_num):
 	hp-=_num

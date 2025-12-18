@@ -7,6 +7,7 @@ var delay=0.1 #开火延迟
 var target=[] #目标集合
 var canShot=true
 var selected=false #选中
+var rotationSpeed=10
 
 @onready var rader=$radar
 @onready var base=$base

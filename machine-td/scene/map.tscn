@@ -337,7 +337,7 @@ metadata/_edit_lock_ = true
 curve = SubResource("Curve2D_wpp1k")
 
 [node name="enemy" parent="." instance=ExtResource("3_h0nt1")]
-position = Vector2(352, 1008)
+position = Vector2(488, 1056)
 
 [node name="Tower" parent="." instance=ExtResource("4_nf54y")]
 position = Vector2(584, 840)
