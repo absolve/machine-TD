@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 Game="*res://autoload/game.gd"
 ExplosionManage="*res://scene/explosion_manage.tscn"
 SoundManage="*res://scene/sound_manage.tscn"
+StageData="*res://autoload/stageData.gd"
 
 [display]
 

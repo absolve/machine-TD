@@ -341,3 +341,6 @@ position = Vector2(488, 1056)
 
 [node name="Tower" parent="." instance=ExtResource("4_nf54y")]
 position = Vector2(584, 840)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0

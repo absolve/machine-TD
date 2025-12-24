@@ -8,6 +8,7 @@ var target=[] #目标
 var points=[]
 var pointIndex=0
 
+
 @onready var base=$base
 @onready var turret=$turret
 @onready var lifeBar=$lifeBar

@@ -1,13 +1,15 @@
 extends Node2D
 
 
-var hp  #防御塔血量
+var hp=0  #防御塔血量
 var radarScope=500 #雷达范围
 var delay=0.1 #开火延迟
 var target=[] #目标集合
 var canShot=true
 var selected=false #选中
 var rotationSpeed=10
+var money=0 #花费
+
 
 @onready var rader=$radar
 @onready var base=$base
