@@ -22,6 +22,7 @@ func _physics_process(_delta):
 func fire(t):
 	#print("fire")
 	if canShot:
+		player.play("fire")
 		var temp=bullet.instantiate()
 		temp.position=marker.global_position
 		temp.angle=position.direction_to(t.global_position).angle()

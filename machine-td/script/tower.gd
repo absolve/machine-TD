@@ -17,6 +17,7 @@ var money=0 #花费
 @onready var mouseArea=$mouseArea
 @onready var delayTimer=$delay
 @onready var marker=$turret/Marker2D
+@onready var player=$player
 
 func getTarget():
 	var temp=null

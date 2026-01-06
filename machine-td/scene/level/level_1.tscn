@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://b61gsmirxvp8x"]
+
+[ext_resource type="PackedScene" uid="uid://3y2m15k6dbu" path="res://scene/level/base_level.tscn" id="1_mm6v6"]
+[ext_resource type="Script" uid="uid://rac20ie4eef7" path="res://script/level_1.gd" id="2_ke3pq"]
+
+[node name="level1" instance=ExtResource("1_mm6v6")]
+script = ExtResource("2_ke3pq")
+levelId = 1

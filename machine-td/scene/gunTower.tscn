@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://di6u5yfi44083"]
+[gd_scene load_steps=13 format=3 uid="uid://di6u5yfi44083"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_64uc6"]
 [ext_resource type="Script" uid="uid://h5w308vyc8yt" path="res://script/gun_tower.gd" id="2_i5mjb"]
@@ -38,6 +38,43 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Animation" id="Animation_k8n1u"]
+resource_name = "fire"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("turret:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(16, 0), Vector2(0, 0), Vector2(16, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_86lx6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("turret:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(16, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_k4bnm"]
+_data = {
+&"RESET": SubResource("Animation_86lx6"),
+&"fire": SubResource("Animation_k8n1u")
+}
+
 [node name="Tower" instance=ExtResource("1_64uc6")]
 script = ExtResource("2_i5mjb")
 
@@ -57,6 +94,11 @@ offset = Vector2(16, 0)
 
 [node name="Marker2D" parent="turret" index="0"]
 position = Vector2(45, 0)
+
+[node name="player" parent="." index="6"]
+libraries = {
+&"": SubResource("AnimationLibrary_k4bnm")
+}
 
 [connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
 [connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]
