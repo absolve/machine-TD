@@ -6,3 +6,12 @@
 [node name="level1" instance=ExtResource("1_mm6v6")]
 script = ExtResource("2_ke3pq")
 levelId = 1
+
+[node name="waveTimer" parent="." index="4"]
+one_shot = true
+
+[node name="spawnerTimer" parent="." index="5"]
+one_shot = true
+
+[connection signal="timeout" from="waveTimer" to="." method="_on_wave_timer_timeout"]
+[connection signal="timeout" from="spawnerTimer" to="." method="_on_spawner_timer_timeout"]

@@ -3,6 +3,10 @@
 [ext_resource type="Script" uid="uid://b2feq1aklupua" path="res://script/base_level.gd" id="1_dxhww"]
 
 [sub_resource type="Curve2D" id="Curve2D_dxhww"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 88, 400, 0, 0, 0, 0, 1656, 384)
+}
+point_count = 2
 
 [sub_resource type="Curve2D" id="Curve2D_ivasy"]
 
@@ -18,3 +22,7 @@ curve = SubResource("Curve2D_dxhww")
 
 [node name="Path2D2" type="Path2D" parent="."]
 curve = SubResource("Curve2D_ivasy")
+
+[node name="waveTimer" type="Timer" parent="."]
+
+[node name="spawnerTimer" type="Timer" parent="."]

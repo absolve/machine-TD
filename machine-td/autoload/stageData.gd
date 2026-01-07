@@ -8,6 +8,8 @@ var allStage=[
 		'wave':5,
 		'health':20,
 		'money':300,
-		"enemySpawner":[{'time':0,'type':Game.enemyType.miniTank,'number':10}]
+		"enemySpawner":[{'time':1,'type':Game.enemyType.miniTank,'number':10}]
 	}
 ]
+
+var minTank=preload("res://scene/miniTank.tscn")
