@@ -27,6 +27,10 @@ func _on_wave_timer_timeout():
 	if currentSpawner.size()>0:
 		waveTimer.start()
 		return
+	if currentSpawner.size()==0&&get_tree().get_nodes_in_group("enemy").size()>0:
+		waveTimer.start()
+		return
+			
 	currWave+=1
 	if currWave>wave:
 		print("end")
@@ -34,8 +38,10 @@ func _on_wave_timer_timeout():
 	for i in enemyList:
 		if int(i.time)==currWave:
 			currentSpawner.push_back(i)
-			pass	
-	spawnerTimer.start()
+	if currentSpawner.size()>0:	
+		spawnerTimer.start()		
+	waveTimer.start()
+	
 
 func _on_spawner_timer_timeout():
 	print("_on_spawner_timer_timeout")
@@ -49,5 +55,6 @@ func _on_spawner_timer_timeout():
 				i.number-=1
 		else:
 			currentSpawner.erase(i)		
-	spawnerTimer.start()
+	if currentSpawner.size()>0:
+		spawnerTimer.start()
 	

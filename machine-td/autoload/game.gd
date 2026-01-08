@@ -8,7 +8,11 @@ enum enemyType{
 	miniTank,
 }
 
+@warning_ignore("unused_signal")
 signal defeatEnemy  #击败敌人
+@warning_ignore("unused_signal")
+signal enemyEscape #敌人逃脱
+
 
 var map=null
 

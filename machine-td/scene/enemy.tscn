@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c6naokb8mjbq5" path="res://script/enemy.gd" id="1_h08p8"]
 [ext_resource type="PackedScene" uid="uid://4vv5x7rd5335" path="res://scene/life_bar.tscn" id="2_f87vc"]
 
-[node name="enemy" type="Area2D"]
+[node name="enemy" type="Area2D" groups=["enemy"]]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_h08p8")

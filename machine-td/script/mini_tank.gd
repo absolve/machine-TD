@@ -20,6 +20,9 @@ func _physics_process(delta):
 		#print("====",pointIndex,points[pointIndex])
 		pointIndex=wrapi(pointIndex+1, 0,points.size())
 		target1 =points[pointIndex]
+		if pointIndex==0:
+			Game.enemyEscape.emit(lossPoints)
+			queue_free()
 	#vec = (target - position).normalized() * speed
 	position+=position.direction_to(target1) * speed * delta
 	base.look_at(target1)
