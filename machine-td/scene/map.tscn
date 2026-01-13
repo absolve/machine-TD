@@ -316,9 +316,11 @@ sources/1 = SubResource("TileSetAtlasSource_h0nt1")
 [node name="map" type="Node2D"]
 script = ExtResource("1_rgtto")
 
-[node name="title" parent="." instance=ExtResource("2_4xw1d")]
+[node name="hud" type="CanvasLayer" parent="."]
 
-[node name="towerUI" parent="." instance=ExtResource("3_bq37x")]
+[node name="title" parent="hud" instance=ExtResource("2_4xw1d")]
+
+[node name="towerUI" parent="hud" instance=ExtResource("3_bq37x")]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 visible = false

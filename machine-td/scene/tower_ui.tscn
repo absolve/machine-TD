@@ -1,26 +1,94 @@
-[gd_scene load_steps=2 format=3 uid="uid://clbbod4cwf6n8"]
+[gd_scene load_steps=3 format=3 uid="uid://clbbod4cwf6n8"]
 
 [ext_resource type="Script" uid="uid://cw5p1ankmsixl" path="res://script/tower_ui.gd" id="1_yx7l2"]
+[ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_tg0id"]
 
-[node name="towerUI" type="CanvasLayer"]
+[node name="towerUI" type="Control"]
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("1_yx7l2")
 
 [node name="Control" type="Control" parent="."]
-layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme = ExtResource("2_tg0id")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control"]
 layout_mode = 0
-offset_right = 280.0
-offset_bottom = 600.0
+offset_left = 1688.0
+offset_right = 1920.0
+offset_bottom = 520.0
+metadata/_edit_group_ = true
 
 [node name="ItemList" type="ItemList" parent="Control/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 1.5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer"]
+[node name="towerInfo" type="VBoxContainer" parent="Control/VBoxContainer"]
+visible = false
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="Control/VBoxContainer/towerInfo"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/towerInfo/PanelContainer"]
+layout_mode = 2
+
+[node name="towerName" type="Label" parent="Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "rocket"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "act:"
+horizontal_alignment = 2
+
+[node name="atkLabel" type="Label" parent="Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "cost:"
+horizontal_alignment = 2
+
+[node name="costLabel" type="Label" parent="Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "reload:"
+horizontal_alignment = 2
+
+[node name="reloadLabel" type="Label" parent="Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="towerDetail" type="Label" parent="Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Launch missiles to strike the enemy"
+autowrap_mode = 1
 
 [connection signal="item_selected" from="Control/VBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
