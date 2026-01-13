@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://llvmr0r2odio"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uvf7x"]
+
+[node name="placeableArea" type="Area2D" groups=["placeableArea"]]
+
+[node name="shape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_uvf7x")

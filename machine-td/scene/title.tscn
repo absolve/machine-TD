@@ -6,91 +6,86 @@
 [node name="title" type="Control"]
 layout_mode = 3
 anchors_preset = 0
+theme = ExtResource("2_hr6ky")
 script = ExtResource("1_4fdtc")
 
-[node name="Control" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-theme = ExtResource("2_hr6ky")
-
-[node name="PanelContainer" type="PanelContainer" parent="Control"]
+[node name="PanelContainer" type="PanelContainer" parent="."]
 layout_mode = 0
-offset_right = 1552.0
+offset_right = 1640.0
 offset_bottom = 72.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/PanelContainer"]
+[node name="hbox" type="HBoxContainer" parent="PanelContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/PanelContainer/HBoxContainer"]
+[node name="hbox1" type="HBoxContainer" parent="PanelContainer/hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Control/PanelContainer/HBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="PanelContainer/hbox/hbox1"]
 layout_mode = 2
 text = "wave:"
 
-[node name="waveLabel" type="Label" parent="Control/PanelContainer/HBoxContainer/HBoxContainer"]
+[node name="waveLabel" type="Label" parent="PanelContainer/hbox/hbox1"]
 layout_mode = 2
 text = "0"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Control/PanelContainer/HBoxContainer"]
+[node name="hbox2" type="HBoxContainer" parent="PanelContainer/hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Control/PanelContainer/HBoxContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="PanelContainer/hbox/hbox2"]
 layout_mode = 2
 text = "hp"
 
-[node name="hpLabel" type="Label" parent="Control/PanelContainer/HBoxContainer/HBoxContainer2"]
+[node name="hpLabel" type="Label" parent="PanelContainer/hbox/hbox2"]
 layout_mode = 2
 text = "10"
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="Control/PanelContainer/HBoxContainer"]
+[node name="hbox3" type="HBoxContainer" parent="PanelContainer/hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Control/PanelContainer/HBoxContainer/HBoxContainer4"]
+[node name="Label" type="Label" parent="PanelContainer/hbox/hbox3"]
 layout_mode = 2
 text = "money:"
 
-[node name="moneyLabel" type="Label" parent="Control/PanelContainer/HBoxContainer/HBoxContainer4"]
+[node name="moneyLabel" type="Label" parent="PanelContainer/hbox/hbox3"]
 layout_mode = 2
 text = "0"
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="Control/PanelContainer/HBoxContainer"]
+[node name="hbox4" type="HBoxContainer" parent="PanelContainer/hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="Control/PanelContainer/HBoxContainer/HBoxContainer5"]
+[node name="Label" type="Label" parent="PanelContainer/hbox/hbox4"]
 layout_mode = 2
 text = "score:"
 
-[node name="scoreLabel" type="Label" parent="Control/PanelContainer/HBoxContainer/HBoxContainer5"]
+[node name="scoreLabel" type="Label" parent="PanelContainer/hbox/hbox4"]
 layout_mode = 2
 text = "0"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Control/PanelContainer/HBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/hbox"]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 2
 
-[node name="Button" type="Button" parent="Control/PanelContainer/HBoxContainer/HBoxContainer3"]
+[node name="Button" type="Button" parent="PanelContainer/hbox/HBoxContainer3"]
 layout_mode = 2
 text = "speed"
 
-[node name="Button2" type="Button" parent="Control/PanelContainer/HBoxContainer/HBoxContainer3"]
+[node name="Button2" type="Button" parent="PanelContainer/hbox/HBoxContainer3"]
 layout_mode = 2
 text = "pause"
 
-[node name="Button3" type="Button" parent="Control/PanelContainer/HBoxContainer/HBoxContainer3"]
+[node name="Button3" type="Button" parent="PanelContainer/hbox/HBoxContainer3"]
 layout_mode = 2
 text = "sound"
 
-[node name="Button4" type="Button" parent="Control/PanelContainer/HBoxContainer/HBoxContainer3"]
+[node name="Button4" type="Button" parent="PanelContainer/hbox/HBoxContainer3"]
 layout_mode = 2
 text = "sfx"
 
-[node name="Button5" type="Button" parent="Control/PanelContainer/HBoxContainer/HBoxContainer3"]
+[node name="Button5" type="Button" parent="PanelContainer/hbox/HBoxContainer3"]
 layout_mode = 2
 text = "menu"

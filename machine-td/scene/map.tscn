@@ -321,6 +321,8 @@ script = ExtResource("1_rgtto")
 [node name="title" parent="hud" instance=ExtResource("2_4xw1d")]
 
 [node name="towerUI" parent="hud" instance=ExtResource("3_bq37x")]
+offset_left = 1640.0
+offset_right = 1640.0
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 visible = false

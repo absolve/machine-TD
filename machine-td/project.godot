@@ -33,6 +33,7 @@ window/stretch/mode="viewport"
 [global_group]
 
 enemy="敌人"
+placeableArea=""
 
 [layer_names]
 

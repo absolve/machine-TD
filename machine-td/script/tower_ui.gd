@@ -1,13 +1,13 @@
-extends CanvasLayer
+extends Control
 
 
-@onready var itemList=$Control/VBoxContainer/ItemList
-@onready var towerName=$Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/towerName
-@onready var towerDetail=$Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/towerDetail
-@onready var towerInfo=$Control/VBoxContainer/towerInfo
-@onready var atkLabel=$Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer/atkLabel
-@onready var costLabel=$Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer2/costLabel
-@onready var reloadLabel=$Control/VBoxContainer/towerInfo/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer3/reloadLabel
+@onready var itemList=$fc/vbox/ItemList
+@onready var towerName=$fc/vbox/towerInfo/panel/vbox/towerName
+@onready var towerDetail=$fc/vbox/towerInfo/panel/vbox/towerDetail
+@onready var towerInfo=$fc/vbox/towerInfo
+@onready var atkLabel=$fc/vbox/towerInfo/panel/vbox/hbox/hbox1/atkLabel
+@onready var costLabel=$fc/vbox/towerInfo/panel/vbox/hbox/hbox2/costLabel
+@onready var reloadLabel=$fc/vbox/towerInfo/panel/vbox/hbox/hbox3/reloadLabel
 
 var tower1 =preload("res://sprite/tower1.png")
 var tower2=preload("res://sprite/tower2.png")
@@ -20,6 +20,9 @@ func _ready() -> void:
 	itemList.set_item_metadata(0,Game.towerType.gunTower)
 	itemList.set_item_metadata(1,Game.towerType.cannonTower)
 	itemList.set_item_metadata(2,Game.towerType.rocketTower)
+	itemList.set_item_text(0,"gunTower")
+	itemList.set_item_text(1,"cannonTower")
+	itemList.set_item_text(2,"rocketTower")
 
 func setTowerDetail(type):
 	var temp= Game.towerInfo.get(type)
