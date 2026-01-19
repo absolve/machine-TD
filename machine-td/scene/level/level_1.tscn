@@ -1,7 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://b61gsmirxvp8x"]
+[gd_scene load_steps=6 format=3 uid="uid://b61gsmirxvp8x"]
 
 [ext_resource type="PackedScene" uid="uid://3y2m15k6dbu" path="res://scene/level/base_level.tscn" id="1_mm6v6"]
 [ext_resource type="Script" uid="uid://rac20ie4eef7" path="res://script/level_1.gd" id="2_ke3pq"]
+[ext_resource type="PackedScene" uid="uid://llvmr0r2odio" path="res://scene/placeable_area.tscn" id="3_dg8y7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dg8y7"]
+size = Vector2(240, 74)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8tvdk"]
+size = Vector2(362, 90)
 
 [node name="level1" instance=ExtResource("1_mm6v6")]
 script = ExtResource("2_ke3pq")
@@ -14,5 +21,22 @@ one_shot = true
 wait_time = 1.5
 one_shot = true
 
+[node name="placeableArea" parent="." index="6" instance=ExtResource("3_dg8y7")]
+position = Vector2(216, 336)
+metadata/_edit_group_ = true
+
+[node name="shape" parent="placeableArea" index="0"]
+shape = SubResource("RectangleShape2D_dg8y7")
+
+[node name="placeableArea2" parent="." index="7" instance=ExtResource("3_dg8y7")]
+position = Vector2(544, 328)
+metadata/_edit_group_ = true
+
+[node name="shape" parent="placeableArea2" index="0"]
+shape = SubResource("RectangleShape2D_8tvdk")
+
 [connection signal="timeout" from="waveTimer" to="." method="_on_wave_timer_timeout"]
 [connection signal="timeout" from="spawnerTimer" to="." method="_on_spawner_timer_timeout"]
+
+[editable path="placeableArea"]
+[editable path="placeableArea2"]

@@ -4,7 +4,11 @@ extends "res://script/base_level.gd"
 
 func _ready():
 	print(StageData.allStage)
-	
+	print(get_node("placeableArea2/shape").shape.get_rect())
+	print( Rect2(get_node("placeableArea2").global_position-
+	get_node("placeableArea2/shape").shape.get_rect().size/2,
+				get_node("placeableArea2/shape").shape.get_rect().size) )
+	#print(get_node("placeableArea2/shape").shape.get_rect())
 	for i in StageData.allStage:
 		if levelId==i.get("id"):
 			wave=i.get("wave")
@@ -12,7 +16,8 @@ func _ready():
 			money=i.get("money")
 			enemyList=i.get("enemySpawner")
 			break
-	waveTimer.start(5)
+	#waveTimer.start(5)
+	
 
 func waveSpawner():
 	if currentSpawner.size()>0:

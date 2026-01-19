@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=4 uid="uid://c0rd5oseij63o"]
+[gd_scene load_steps=9 format=4 uid="uid://c0rd5oseij63o"]
 
 [ext_resource type="Script" uid="uid://cgdxoyy80vpqi" path="res://script/map.gd" id="1_rgtto"]
 [ext_resource type="PackedScene" uid="uid://8vvx43vtulw5" path="res://scene/title.tscn" id="2_4xw1d"]
 [ext_resource type="Texture2D" uid="uid://b85d7hnm7nf8j" path="res://sprite/towerDefense_tilesheet.png" id="2_wpp1k"]
 [ext_resource type="PackedScene" uid="uid://clbbod4cwf6n8" path="res://scene/tower_ui.tscn" id="3_bq37x"]
 [ext_resource type="PackedScene" uid="uid://b61gsmirxvp8x" path="res://scene/level/level_1.tscn" id="5_4xw1d"]
+[ext_resource type="PackedScene" uid="uid://cfwue5nwpbqlj" path="res://scene/tower_shadow.tscn" id="6_bq37x"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_h0nt1"]
 texture = ExtResource("2_wpp1k")
@@ -319,6 +320,7 @@ script = ExtResource("1_rgtto")
 [node name="hud" type="CanvasLayer" parent="."]
 
 [node name="title" parent="hud" instance=ExtResource("2_4xw1d")]
+visible = false
 
 [node name="towerUI" parent="hud" instance=ExtResource("3_bq37x")]
 offset_left = 1640.0
@@ -334,3 +336,5 @@ metadata/_edit_lock_ = true
 anchor_mode = 0
 
 [node name="level1" parent="." instance=ExtResource("5_4xw1d")]
+
+[node name="towerShadow" parent="." instance=ExtResource("6_bq37x")]

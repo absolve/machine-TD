@@ -42,7 +42,8 @@ const towerInfo={
 signal defeatEnemy  #击败敌人
 @warning_ignore("unused_signal")
 signal enemyEscape #敌人逃脱
-
+@warning_ignore("unused_signal")
+signal selectTower #选择塔
 
 var map=null
 

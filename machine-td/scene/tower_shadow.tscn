@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://cfwue5nwpbqlj"]
+
+[ext_resource type="Script" uid="uid://c5eck2x0jj4kg" path="res://script/tower_shadow.gd" id="1_gmqdi"]
+[ext_resource type="Texture2D" uid="uid://4l2fst2rdd3t" path="res://sprite/tower1.png" id="2_cqdud"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gmqdi"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gmqdi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_cqdud")
+}],
+"loop": true,
+"name": &"gun",
+"speed": 5.0
+}]
+
+[node name="towerShadow" type="Area2D"]
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("1_gmqdi")
+
+[node name="shape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_gmqdi")
+
+[node name="ani" type="AnimatedSprite2D" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.5)
+sprite_frames = SubResource("SpriteFrames_gmqdi")
+animation = &"gun"

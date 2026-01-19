@@ -38,3 +38,4 @@ func _on_item_list_item_selected(index: int) -> void:
 	towerInfo.visible=true
 	print(itemList.get_item_metadata(index))
 	setTowerDetail(itemList.get_item_metadata(index))
+	Game.selectTower.emit(itemList.get_item_metadata(index))
