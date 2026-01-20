@@ -44,6 +44,9 @@ signal defeatEnemy  #击败敌人
 signal enemyEscape #敌人逃脱
 @warning_ignore("unused_signal")
 signal selectTower #选择塔
+@warning_ignore("unused_signal")
+signal placeTower #放置塔
+
 
 var map=null
 

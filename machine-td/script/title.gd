@@ -9,3 +9,5 @@ extends Control
 
 var hp=0
 var wave=1
+var money=0
+var score=0

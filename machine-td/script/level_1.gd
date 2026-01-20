@@ -3,11 +3,11 @@ extends "res://script/base_level.gd"
 @onready var path1=$Path2D
 
 func _ready():
-	print(StageData.allStage)
-	print(get_node("placeableArea2/shape").shape.get_rect())
-	print( Rect2(get_node("placeableArea2").global_position-
-	get_node("placeableArea2/shape").shape.get_rect().size/2,
-				get_node("placeableArea2/shape").shape.get_rect().size) )
+	#print(StageData.allStage)
+	#print(get_node("placeableArea2/shape").shape.get_rect())
+	#print( Rect2(get_node("placeableArea2").global_position-
+	#get_node("placeableArea2/shape").shape.get_rect().size/2,
+				#get_node("placeableArea2/shape").shape.get_rect().size) )
 	#print(get_node("placeableArea2/shape").shape.get_rect())
 	for i in StageData.allStage:
 		if levelId==i.get("id"):

@@ -41,3 +41,14 @@ func _physics_process(_delta):
 				placable=true
 	else:
 		placable=false
+
+
+func _unhandled_input(_event):
+	if Input.is_action_just_pressed("click"):
+		print(placable)
+		if placable:
+			print('placa')
+			Game.placeTower.emit(towerType)
+	if Input.is_action_just_pressed("selectCancel"):
+		if active:
+			setInactive()

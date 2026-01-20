@@ -12,7 +12,7 @@ script = ExtResource("1_yx7l2")
 [node name="fc" type="FoldableContainer" parent="."]
 layout_mode = 0
 offset_right = 280.0
-offset_bottom = 464.0
+offset_bottom = 776.0
 folded = true
 title = "tower"
 title_alignment = 1
@@ -28,7 +28,6 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 1.5
 
 [node name="towerInfo" type="VBoxContainer" parent="fc/vbox"]
-visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
