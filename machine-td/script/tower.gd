@@ -1,5 +1,5 @@
 extends Node2D
-
+class_name Tower
 
 var hp=0  #防御塔血量
 var radarScope=500 #雷达范围

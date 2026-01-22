@@ -7,7 +7,22 @@ extends Control
 @onready var scoreLabel=$PanelContainer/hbox/hbox4/scoreLabel
 
 
-var hp=0
-var wave=1
-var money=0
-var score=0
+var hp=0:
+	set(value):
+		hp=value
+		hpLabel.text=str(value)
+		
+var wave=1:
+	set(value):
+		wave=value
+		waveLabel.text=str(value)
+		
+var money=0:
+	set(value):
+		money=value
+		moneyLabel.text=str(value)
+		
+var score=0:
+	set(value):
+		score=value
+		scoreLabel.text=str(value)

@@ -6,8 +6,8 @@ extends Area2D
 
 var placable = false  #可放置
 var active=false #是否活动
-var towerType=Game.towerType.gunTower
-
+var towerType=Game.towerType.gunTower #类型
+var cost=0 #花费
 
 func _ready():
 	print(shape.shape.get_rect()) 
@@ -34,6 +34,8 @@ func _physics_process(_delta):
 		var ownRect=Rect2(global_position-shape.shape.get_rect().size/2,
 		shape.shape.get_rect().size)
 		for i in areas:
+			if i is Tower: #判断塔是不是重叠
+				pass
 			var shape1=i.get_node("shape")
 			var otherRect=Rect2(i.global_position-shape1.shape.get_rect().size/2,
 				shape1.shape.get_rect().size)

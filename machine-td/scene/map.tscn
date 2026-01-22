@@ -12,7 +12,6 @@ script = ExtResource("1_rgtto")
 [node name="hud" type="CanvasLayer" parent="."]
 
 [node name="title" parent="hud" instance=ExtResource("2_4xw1d")]
-visible = false
 
 [node name="towerUI" parent="hud" instance=ExtResource("3_bq37x")]
 offset_left = 1640.0

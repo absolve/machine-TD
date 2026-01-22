@@ -24,18 +24,20 @@ func _ready() -> void:
 	itemList.set_item_text(1,"cannonTower")
 	itemList.set_item_text(2,"rocketTower")
 
-func setTowerDetail(type):
-	var temp= Game.towerInfo.get(type)
-	towerName.text=str(temp.name)
-	towerDetail.text=str(temp.desc)
-	atkLabel.text=str(temp.atk)
-	costLabel.text=str(temp.cost)
-	reloadLabel.text=str(temp.reload)
+func setTowerDetail(obj):
+	towerName.text=str(obj.name)
+	towerDetail.text=str(obj.desc)
+	atkLabel.text=str(obj.atk)
+	costLabel.text=str(obj.cost)
+	reloadLabel.text=str(obj.reload)
 
 
 func _on_item_list_item_selected(index: int) -> void:
-	print(index)
 	towerInfo.visible=true
 	print(itemList.get_item_metadata(index))
-	setTowerDetail(itemList.get_item_metadata(index))
+	var type=itemList.get_item_metadata(index)
+	var temp= Game.towerInfo.get(type)
+	towerInfo.type=type
+	towerInfo.cost=temp.cost
+	setTowerDetail(temp)
 	Game.selectTower.emit(itemList.get_item_metadata(index))
