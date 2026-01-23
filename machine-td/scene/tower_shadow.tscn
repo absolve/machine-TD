@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cfwue5nwpbqlj"]
+[gd_scene load_steps=7 format=3 uid="uid://cfwue5nwpbqlj"]
 
 [ext_resource type="Script" uid="uid://c5eck2x0jj4kg" path="res://script/tower_shadow.gd" id="1_gmqdi"]
 [ext_resource type="Texture2D" uid="uid://4l2fst2rdd3t" path="res://sprite/tower1.png" id="2_cqdud"]
+[ext_resource type="Texture2D" uid="uid://iwd57ggunjdl" path="res://sprite/tower2.png" id="2_i13lh"]
+[ext_resource type="Texture2D" uid="uid://bl0olbrgthb3l" path="res://sprite/tower3.png" id="4_nvd0d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gmqdi"]
 
@@ -9,10 +11,26 @@
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("2_i13lh")
+}],
+"loop": false,
+"name": &"cannon",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("2_cqdud")
 }],
-"loop": true,
+"loop": false,
 "name": &"gun",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_nvd0d")
+}],
+"loop": true,
+"name": &"rocket",
 "speed": 5.0
 }]
 
@@ -28,4 +46,4 @@ shape = SubResource("RectangleShape2D_gmqdi")
 visible = false
 modulate = Color(1, 1, 1, 0.5)
 sprite_frames = SubResource("SpriteFrames_gmqdi")
-animation = &"gun"
+animation = &"rocket"

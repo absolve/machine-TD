@@ -6,12 +6,17 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_nxw3l"]
 radius = 25.0
 
-[node name="Tower" type="Node2D"]
+[node name="Tower" type="Area2D"]
+collision_mask = 0
 script = ExtResource("1_nxw3l")
+
+[node name="shape" type="CollisionShape2D" parent="."]
 
 [node name="base" type="AnimatedSprite2D" parent="."]
 
 [node name="radar" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
 input_pickable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="radar"]
@@ -21,6 +26,8 @@ input_pickable = false
 [node name="Marker2D" type="Marker2D" parent="turret"]
 
 [node name="mouseArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="mouseArea"]
 shape = SubResource("CircleShape2D_nxw3l")

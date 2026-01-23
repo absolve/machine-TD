@@ -17,7 +17,12 @@ func _ready():
 func setActive():
 	active=true
 	ani.visible=true
-
+	if towerType==Game.towerType.gunTower:
+		ani.play("gun")
+	elif towerType==Game.towerType.cannonTower:
+		ani.play("cannon")
+	elif towerType==Game.towerType.rocketTower:
+		ani.play("rocket")
 
 func setInactive():
 	active=false
@@ -33,14 +38,20 @@ func _physics_process(_delta):
 		placable=false
 		var ownRect=Rect2(global_position-shape.shape.get_rect().size/2,
 		shape.shape.get_rect().size)
+		var hasTower=false
 		for i in areas:
-			if i is Tower: #判断塔是不是重叠
-				pass
 			var shape1=i.get_node("shape")
 			var otherRect=Rect2(i.global_position-shape1.shape.get_rect().size/2,
 				shape1.shape.get_rect().size)
-			if 	otherRect.encloses(ownRect):
-				placable=true
+			if i is Tower: #判断塔是不是重叠
+				if otherRect.intersects(ownRect):
+					hasTower=true		
+			else:
+				if otherRect.encloses(ownRect):
+					placable=true	
+		if hasTower:
+			#print('hasTower',hasTower)
+			placable=false	
 	else:
 		placable=false
 

@@ -37,7 +37,5 @@ func _on_item_list_item_selected(index: int) -> void:
 	print(itemList.get_item_metadata(index))
 	var type=itemList.get_item_metadata(index)
 	var temp= Game.towerInfo.get(type)
-	towerInfo.type=type
-	towerInfo.cost=temp.cost
 	setTowerDetail(temp)
 	Game.selectTower.emit(itemList.get_item_metadata(index))

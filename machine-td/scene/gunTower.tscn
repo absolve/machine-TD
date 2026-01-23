@@ -1,9 +1,12 @@
-[gd_scene load_steps=13 format=3 uid="uid://di6u5yfi44083"]
+[gd_scene load_steps=14 format=3 uid="uid://di6u5yfi44083"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_64uc6"]
 [ext_resource type="Script" uid="uid://h5w308vyc8yt" path="res://script/gun_tower.gd" id="2_i5mjb"]
 [ext_resource type="Texture2D" uid="uid://b85d7hnm7nf8j" path="res://sprite/towerDefense_tilesheet.png" id="3_k8n1u"]
 [ext_resource type="Texture2D" uid="uid://bgmucqhp44lo6" path="res://sprite/tower_tilesheet.png" id="4_k8n1u"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k8n1u"]
+size = Vector2(50, 50)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_86lx6"]
 atlas = ExtResource("3_k8n1u")
@@ -78,27 +81,29 @@ _data = {
 [node name="Tower" instance=ExtResource("1_64uc6")]
 script = ExtResource("2_i5mjb")
 
-[node name="base" parent="." index="0"]
+[node name="shape" parent="." index="0"]
+shape = SubResource("RectangleShape2D_k8n1u")
+
+[node name="base" parent="." index="1"]
 sprite_frames = SubResource("SpriteFrames_i5mjb")
 
-[node name="radar" parent="." index="1"]
+[node name="radar" parent="." index="2"]
 visible = false
-collision_mask = 2
 
 [node name="CollisionShape2D" parent="radar" index="0"]
 shape = SubResource("CircleShape2D_5i26j")
 
-[node name="turret" parent="." index="2"]
+[node name="turret" parent="." index="3"]
 sprite_frames = SubResource("SpriteFrames_k8n1u")
 offset = Vector2(16, 0)
 
 [node name="Marker2D" parent="turret" index="0"]
 position = Vector2(45, 0)
 
-[node name="mouseArea" parent="." index="3"]
+[node name="mouseArea" parent="." index="4"]
 visible = false
 
-[node name="player" parent="." index="6"]
+[node name="player" parent="." index="7"]
 libraries = {
 &"": SubResource("AnimationLibrary_k4bnm")
 }

@@ -27,22 +27,31 @@ func _ready():
 #选中塔
 func selectTower(item):
 	print(item)
+	var temp= Game.towerInfo.get(item)
+	towerShadow.cost=temp.cost
+	towerShadow.towerType=item
 	towerShadow.setActive()
 	
 #放着塔
 func placeTower(type):
 	print(type)
-	
+	if titleNode.money<towerShadow.cost:
+		print('Insufficient funds')
+		return
+	var temp=null	
+	titleNode.money-=towerShadow.cost
 	if type==Game.towerType.gunTower:
-		if titleNode.money>towerShadow.cost:
-			titleNode.money-=towerShadow.cost
-			var temp=gunTower.instantiate()
-			temp.position=towerShadow.position
-			level.add_child(temp)
-			towerShadow.setInactive()
-		else:
-			print('Insufficient funds')
-
+		temp=gunTower.instantiate()
+	elif type==Game.towerType.cannonTower:
+		temp=cannonTower.instantiate()	
+	elif type==Game.towerType.rocketTower:
+		temp=rocketTower.instantiate()		
+	temp.position=towerShadow.position
+	level.add_child(temp)
+	#towerShadow.setInactive()
+	
+		
+		
 #更新游戏中数据
 func refreshData(dict):
 	print(dict)

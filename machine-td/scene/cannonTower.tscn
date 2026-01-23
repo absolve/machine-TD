@@ -1,8 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://b8acvedo8gexp"]
+[gd_scene load_steps=10 format=3 uid="uid://b8acvedo8gexp"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_xj8p8"]
 [ext_resource type="Script" uid="uid://bxm1puyb5lju" path="res://script/cannon_tower.gd" id="2_v83o1"]
 [ext_resource type="Texture2D" uid="uid://b85d7hnm7nf8j" path="res://sprite/towerDefense_tilesheet.png" id="3_v83o1"]
+[ext_resource type="Texture2D" uid="uid://bgmucqhp44lo6" path="res://sprite/tower_tilesheet.png" id="4_lm0w6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v83o1"]
+size = Vector2(50, 50)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lm0w6"]
 atlas = ExtResource("3_v83o1")
@@ -20,8 +24,8 @@ animations = [{
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sk265"]
-atlas = ExtResource("3_v83o1")
-region = Rect2(1280, 640, 64, 64)
+atlas = ExtResource("4_lm0w6")
+region = Rect2(0, 64, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lm0w6"]
 animations = [{
@@ -37,12 +41,20 @@ animations = [{
 [node name="Tower" instance=ExtResource("1_xj8p8")]
 script = ExtResource("2_v83o1")
 
-[node name="base" parent="." index="0"]
+[node name="shape" parent="." index="0"]
+shape = SubResource("RectangleShape2D_v83o1")
+
+[node name="base" parent="." index="1"]
 sprite_frames = SubResource("SpriteFrames_sk265")
 
-[node name="radar" parent="." index="1"]
+[node name="radar" parent="." index="2"]
 visible = false
+light_mask = 0
+visibility_layer = 2
 
-[node name="turret" parent="." index="2"]
+[node name="turret" parent="." index="3"]
 sprite_frames = SubResource("SpriteFrames_lm0w6")
-offset = Vector2(0, -10)
+offset = Vector2(10, 0)
+
+[node name="mouseArea" parent="." index="4"]
+visible = false
