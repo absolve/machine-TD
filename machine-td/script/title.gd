@@ -9,7 +9,7 @@ extends Control
 
 var hp=0:
 	set(value):
-		hp=value
+		hp=max(value,0)
 		hpLabel.text=str(value)
 		
 var wave=1:

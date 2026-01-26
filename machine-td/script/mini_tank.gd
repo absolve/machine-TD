@@ -2,11 +2,11 @@ extends "res://script/enemy.gd"
 
 
 func _ready():
-	speed=50
+	pass
 	
 func hurt(_num):
 	hp-=_num
-	lifeBar.setValue(hp)
+	lifeBar.value=hp
 	if hp<0:
 		ExplosionManage.playExplosion(global_position)
 		Game.defeatEnemy.emit(reward)

@@ -34,7 +34,6 @@ func fire(t):
 
 func _on_radar_area_entered(area):
 	target.push_back(area)
-	print(1111)
 
 
 func _on_radar_area_exited(area):

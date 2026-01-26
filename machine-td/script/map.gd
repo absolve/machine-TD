@@ -16,6 +16,8 @@ func _ready():
 	Game.selectTower.connect(selectTower)
 	Game.placeTower.connect(placeTower)
 	Game.refreshData.connect(refreshData)
+	Game.defeatEnemy.connect(defeatEnemy)
+	Game.enemyEscape.connect(enemyEscape)
 	#加载关卡
 	
 	titleNode.hp=level.health
@@ -64,6 +66,15 @@ func refreshData(dict):
 	if 	dict.score:
 		titleNode.score=dict.score
 
-func _unhandled_input(_event):
-	
-	pass
+#获得奖励
+func defeatEnemy(point):
+	titleNode.money+=point
+
+#敌人逃脱
+func enemyEscape(point):
+	if titleNode.hp-point<0:
+		print('game over')
+	titleNode.hp-=point
+
+func _on_button_pressed():
+	level.start()

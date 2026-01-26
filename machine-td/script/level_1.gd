@@ -25,7 +25,11 @@ func waveSpawner():
 		
 		pass
 	pass
-	
+
+#开始产生
+func start():
+	waveTimer.start()
+
 
 
 func _on_wave_timer_timeout():

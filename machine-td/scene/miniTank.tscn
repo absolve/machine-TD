@@ -42,6 +42,8 @@ size = Vector2(45, 25)
 
 [node name="enemy" instance=ExtResource("1_6peud")]
 script = ExtResource("2_pd3il")
+speed = 50
+reward = 10
 
 [node name="base" parent="." index="0"]
 sprite_frames = SubResource("SpriteFrames_bmskb")

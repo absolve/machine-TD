@@ -23,6 +23,7 @@ func _ready() -> void:
 	itemList.set_item_text(0,"gunTower")
 	itemList.set_item_text(1,"cannonTower")
 	itemList.set_item_text(2,"rocketTower")
+	
 
 func setTowerDetail(obj):
 	towerName.text=str(obj.name)
