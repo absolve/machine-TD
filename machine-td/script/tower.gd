@@ -9,6 +9,7 @@ var canShot=true
 var selected=false #选中
 var rotationSpeed=10
 var money=0 #花费
+var sellingPrice=0  #售价
 
 
 @onready var rader=$radar

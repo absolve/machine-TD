@@ -1,7 +1,10 @@
-[gd_scene format=3 uid="uid://llvmr0r2odio"]
+[gd_scene load_steps=2 format=3 uid="uid://llvmr0r2odio"]
+
+[ext_resource type="Script" uid="uid://imi3uq7a740y" path="res://script/placeable_area.gd" id="1_iexqj"]
 
 [node name="placeableArea" type="Area2D" groups=["placeableArea"]]
 collision_layer = 8
 collision_mask = 0
+script = ExtResource("1_iexqj")
 
 [node name="shape" type="CollisionShape2D" parent="."]

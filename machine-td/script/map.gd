@@ -33,6 +33,8 @@ func selectTower(item):
 	towerShadow.cost=temp.cost
 	towerShadow.towerType=item
 	towerShadow.setActive()
+	for i in get_tree().get_nodes_in_group("placeableArea"):
+		i.isShow=true
 	
 #放着塔
 func placeTower(type):
@@ -78,3 +80,9 @@ func enemyEscape(point):
 
 func _on_button_pressed():
 	level.start()
+
+func _unhandled_input(_event):
+	if Input.is_action_just_pressed("selectCancel"):
+		for i in get_tree().get_nodes_in_group("placeableArea"):
+			i.isShow=false
+		towerShadow.setInactive()

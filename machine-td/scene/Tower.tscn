@@ -36,9 +36,9 @@ shape = SubResource("CircleShape2D_nxw3l")
 one_shot = true
 
 [node name="lifeBar" parent="." instance=ExtResource("2_5eujo")]
-position = Vector2(0, -30)
+position = Vector2(0, -40)
 
 [node name="player" type="AnimationPlayer" parent="."]
 
-[connection signal="input_event" from="mouseArea" to="." method="_on_mouse_area_input_event"]
+[connection signal="input_event" from="." to="." method="_on_mouse_area_input_event"]
 [connection signal="timeout" from="delay" to="." method="_on_delay_timeout"]
