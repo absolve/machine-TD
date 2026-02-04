@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://yj02ufxeixcg"]
+
+[ext_resource type="PackedScene" uid="uid://3y2m15k6dbu" path="res://scene/level/base_level.tscn" id="1_1dh62"]
+[ext_resource type="Script" uid="uid://ck6kcwerjstfb" path="res://script/level_tutorial.gd" id="2_q57px"]
+
+[node name="levelTutorial" instance=ExtResource("1_1dh62")]
+script = ExtResource("2_q57px")
+
+[node name="Path2D" parent="." index="2"]
+curve = null

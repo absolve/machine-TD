@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://v3vtbt8yry5c"]
+
+[ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_qs0ou"]
+
+[node name="aboutPanel" type="PopupPanel"]
+oversampling_override = 1.0
+size = Vector2i(1024, 600)
+visible = true
+min_size = Vector2i(1024, 600)
+theme = ExtResource("1_qs0ou")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 1020.0
+offset_bottom = 596.0
+
+[node name="vbox" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ScrollContainer/vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "about"
