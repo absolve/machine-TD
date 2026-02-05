@@ -1,12 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://3y2m15k6dbu"]
+[gd_scene load_steps=3 format=3 uid="uid://3y2m15k6dbu"]
 
 [ext_resource type="Script" uid="uid://b2feq1aklupua" path="res://script/base_level.gd" id="1_dxhww"]
-
-[sub_resource type="Curve2D" id="Curve2D_dxhww"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 88, 400, 0, 0, 0, 0, 1656, 384)
-}
-point_count = 2
 
 [sub_resource type="Curve2D" id="Curve2D_ivasy"]
 
@@ -15,10 +9,9 @@ script = ExtResource("1_dxhww")
 
 [node name="bg" type="TileMapLayer" parent="."]
 
-[node name="TileMapLayer2" type="TileMapLayer" parent="."]
+[node name="fg" type="TileMapLayer" parent="."]
 
 [node name="Path2D" type="Path2D" parent="."]
-curve = SubResource("Curve2D_dxhww")
 
 [node name="Path2D2" type="Path2D" parent="."]
 curve = SubResource("Curve2D_ivasy")
