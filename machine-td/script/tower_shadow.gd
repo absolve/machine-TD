@@ -1,59 +1,59 @@
 extends Area2D
 
 
-@onready var shape=$shape
-@onready var ani=$ani
+@onready var shape = $shape
+@onready var ani = $ani
 
-var placable = false  #可放置
-var active=false #是否活动
-var towerType=Game.towerType.gunTower #类型
-var cost=0 #花费
+var placable = false # 可放置
+var active = false # 是否活动
+var towerType = Game.towerType.gunTower # 类型
+var cost = 0 # 花费
 
 func _ready():
-	print(shape.shape.get_rect()) 
+	print(shape.shape.get_rect())
 	
 	pass
 
 func setActive():
-	active=true
-	ani.visible=true
-	if towerType==Game.towerType.gunTower:
+	active = true
+	ani.visible = true
+	if towerType == Game.towerType.gunTower:
 		ani.play("gun")
-	elif towerType==Game.towerType.cannonTower:
+	elif towerType == Game.towerType.cannonTower:
 		ani.play("cannon")
-	elif towerType==Game.towerType.rocketTower:
+	elif towerType == Game.towerType.rocketTower:
 		ani.play("rocket")
 
 func setInactive():
-	active=false
-	ani.visible=false
-	placable=false
+	active = false
+	ani.visible = false
+	placable = false
 	
 func _physics_process(_delta):
 	if !active:
 		return
-	position=get_global_mouse_position()
-	var areas=get_overlapping_areas()
+	position = get_global_mouse_position()
+	var areas = get_overlapping_areas()
 	if areas:
-		placable=false
-		var ownRect=Rect2(global_position-shape.shape.get_rect().size/2,
+		placable = false
+		var ownRect = Rect2(global_position - shape.shape.get_rect().size / 2,
 		shape.shape.get_rect().size)
-		var hasTower=false
+		var hasTower = false
 		for i in areas:
-			var shape1=i.get_node("shape")
-			var otherRect=Rect2(i.global_position-shape1.shape.get_rect().size/2,
+			var shape1 = i.get_node("shape")
+			var otherRect = Rect2(i.global_position - shape1.shape.get_rect().size / 2,
 				shape1.shape.get_rect().size)
-			if i is Tower: #判断塔是不是重叠
+			if i is Tower: # 判断塔是不是重叠
 				if otherRect.intersects(ownRect):
-					hasTower=true		
+					hasTower = true
 			else:
 				if otherRect.encloses(ownRect):
-					placable=true	
+					placable = true
 		if hasTower:
 			#print('hasTower',hasTower)
-			placable=false	
+			placable = false
 	else:
-		placable=false
+		placable = false
 
 
 func _unhandled_input(_event):

@@ -1,5 +1,7 @@
 extends Area2D
 
+class_name Enemy
+
 @export var hp=100 #血量
 @export var speed:int  #移动速度
 @export var reward=0 #奖励
