@@ -1,0 +1,31 @@
+[gd_scene load_steps=7 format=3 uid="uid://bapkogsulgmm4"]
+
+[ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet.tscn" id="1_4btjf"]
+[ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="2_cn0lh"]
+[ext_resource type="Script" uid="uid://byc0uo8bvhwgo" path="res://script/cannon_bullet.gd" id="2_jhiub"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jhiub"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j7yms"]
+atlas = ExtResource("2_cn0lh")
+region = Rect2(128, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dk0wp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j7yms")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="cannonBullet" instance=ExtResource("1_4btjf")]
+script = ExtResource("2_jhiub")
+
+[node name="shape" parent="." index="0"]
+shape = SubResource("CircleShape2D_jhiub")
+
+[node name="ani" parent="." index="1"]
+sprite_frames = SubResource("SpriteFrames_dk0wp")

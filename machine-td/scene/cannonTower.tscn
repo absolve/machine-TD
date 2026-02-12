@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://b8acvedo8gexp"]
+[gd_scene load_steps=13 format=3 uid="uid://b8acvedo8gexp"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_xj8p8"]
 [ext_resource type="Script" uid="uid://bxm1puyb5lju" path="res://script/cannon_tower.gd" id="2_v83o1"]
@@ -22,6 +22,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_v83o1"]
+radius = 300.0
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_sk265"]
 atlas = ExtResource("3_v83o1")
 region = Rect2(256, 128, 128, 128)
@@ -37,6 +40,43 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Animation" id="Animation_lm0w6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("turret:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(10, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_v83o1"]
+resource_name = "fire"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("turret:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(10, 0), Vector2(0, 0), Vector2(10, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lm0w6"]
+_data = {
+&"RESET": SubResource("Animation_lm0w6"),
+&"fire": SubResource("Animation_v83o1")
+}
+
 [node name="Tower" instance=ExtResource("1_xj8p8")]
 script = ExtResource("2_v83o1")
 
@@ -47,9 +87,11 @@ shape = SubResource("RectangleShape2D_v83o1")
 sprite_frames = SubResource("SpriteFrames_sk265")
 
 [node name="radar" parent="." index="2"]
-visible = false
 light_mask = 0
 visibility_layer = 2
+
+[node name="CollisionShape2D" parent="radar" index="0"]
+shape = SubResource("CircleShape2D_v83o1")
 
 [node name="turret" parent="." index="3"]
 sprite_frames = SubResource("SpriteFrames_lm0w6")
@@ -57,3 +99,11 @@ offset = Vector2(10, 0)
 
 [node name="mouseArea" parent="." index="4"]
 visible = false
+
+[node name="player" parent="." index="7"]
+libraries = {
+&"": SubResource("AnimationLibrary_lm0w6")
+}
+
+[connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
+[connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]

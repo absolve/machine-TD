@@ -3,7 +3,7 @@ extends "res://script/base_level.gd"
 @onready var path1 = $Path2D
 
 func _ready():
-	print("level")
+	#print("level")
 	#print(StageData.allStage)
 	#print(get_node("placeableArea2/shape").shape.get_rect())
 	#print( Rect2(get_node("placeableArea2").global_position-
@@ -20,12 +20,12 @@ func _ready():
 	#waveTimer.start(5)
 	#Game.refreshData.emit({'wave':wave,'health':health,'money':money})
 
-func waveSpawner():
-	if currentSpawner.size() > 0:
-		pass
-	pass
+#func waveSpawner():
+	#if currentSpawner.size() > 0:
+		#pass
+	#pass
 
-#开始产生
+#开始生产
 func start():
 	waveTimer.start()
 

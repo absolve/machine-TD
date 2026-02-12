@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bjxyjaqmeb1cp"]
+[gd_scene load_steps=10 format=3 uid="uid://bjxyjaqmeb1cp"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_ojo5w"]
 [ext_resource type="Script" uid="uid://ba0syy3x76icx" path="res://script/rocket_tower.gd" id="2_kf01a"]
@@ -21,6 +21,9 @@ animations = [{
 "name": &"default",
 "speed": 5.0
 }]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_f662h"]
+radius = 400.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_f662h"]
 atlas = ExtResource("3_f662h")
@@ -50,6 +53,9 @@ sprite_frames = SubResource("SpriteFrames_svgp0")
 visible = false
 light_mask = 0
 visibility_layer = 2
+
+[node name="CollisionShape2D" parent="radar" index="0"]
+shape = SubResource("CircleShape2D_f662h")
 
 [node name="turret" parent="." index="3"]
 sprite_frames = SubResource("SpriteFrames_4ky5n")

@@ -1,8 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://3y2m15k6dbu"]
+[gd_scene load_steps=2 format=3 uid="uid://3y2m15k6dbu"]
 
 [ext_resource type="Script" uid="uid://b2feq1aklupua" path="res://script/base_level.gd" id="1_dxhww"]
-
-[sub_resource type="Curve2D" id="Curve2D_ivasy"]
 
 [node name="baseLevel" type="Node2D"]
 script = ExtResource("1_dxhww")
@@ -10,11 +8,6 @@ script = ExtResource("1_dxhww")
 [node name="bg" type="TileMapLayer" parent="."]
 
 [node name="fg" type="TileMapLayer" parent="."]
-
-[node name="Path2D" type="Path2D" parent="."]
-
-[node name="Path2D2" type="Path2D" parent="."]
-curve = SubResource("Curve2D_ivasy")
 
 [node name="waveTimer" type="Timer" parent="."]
 
