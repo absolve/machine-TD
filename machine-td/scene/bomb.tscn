@@ -1,12 +1,49 @@
-[gd_scene load_steps=4 format=3 uid="uid://dx0wt0kj2d5c"]
+[gd_scene load_steps=9 format=3 uid="uid://dx0wt0kj2d5c"]
 
 [ext_resource type="Script" uid="uid://d3yok4jd5kvnc" path="res://script/bomb.gd" id="1_owhvf"]
+[ext_resource type="Texture2D" uid="uid://dp5scyioamsud" path="res://sprite/towerDefense_tilesheet@2.png" id="2_coick"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4eul8"]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_bjs2y"]
+atlas = ExtResource("2_coick")
+region = Rect2(2816, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r17kw"]
+atlas = ExtResource("2_coick")
+region = Rect2(2432, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ue2tq"]
+atlas = ExtResource("2_coick")
+region = Rect2(2560, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xnax7"]
+atlas = ExtResource("2_coick")
+region = Rect2(2688, 0, 128, 128)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_owhvf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bjs2y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r17kw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ue2tq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xnax7")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
 
 [node name="bomb" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
 script = ExtResource("1_owhvf")
 
 [node name="shape" type="CollisionShape2D" parent="."]
@@ -17,3 +54,5 @@ sprite_frames = SubResource("SpriteFrames_owhvf")
 
 [connection signal="area_shape_entered" from="." to="." method="_on_area_shape_entered"]
 [connection signal="area_shape_exited" from="." to="." method="_on_area_shape_exited"]
+[connection signal="animation_finished" from="ani" to="." method="_on_ani_animation_finished"]
+[connection signal="frame_changed" from="ani" to="." method="_on_ani_frame_changed"]

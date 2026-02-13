@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bjxyjaqmeb1cp"]
+[gd_scene load_steps=12 format=3 uid="uid://bjxyjaqmeb1cp"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_ojo5w"]
 [ext_resource type="Script" uid="uid://ba0syy3x76icx" path="res://script/rocket_tower.gd" id="2_kf01a"]
@@ -40,6 +40,14 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Animation" id="Animation_f662h"]
+resource_name = "fire"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0vk61"]
+_data = {
+&"fire": SubResource("Animation_f662h")
+}
+
 [node name="Tower" instance=ExtResource("1_ojo5w")]
 script = ExtResource("2_kf01a")
 
@@ -60,5 +68,16 @@ shape = SubResource("CircleShape2D_f662h")
 [node name="turret" parent="." index="3"]
 sprite_frames = SubResource("SpriteFrames_4ky5n")
 
+[node name="Marker2D" parent="turret" index="0"]
+position = Vector2(45, 0)
+
 [node name="mouseArea" parent="." index="4"]
 visible = false
+
+[node name="player" parent="." index="7"]
+libraries = {
+&"": SubResource("AnimationLibrary_0vk61")
+}
+
+[connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
+[connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]

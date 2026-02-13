@@ -16,7 +16,7 @@ func _ready():
 
 func setActive():
 	active = true
-	ani.visible = true
+	visible = true
 	if towerType == Game.towerType.gunTower:
 		ani.play("gun")
 	elif towerType == Game.towerType.cannonTower:
@@ -26,7 +26,7 @@ func setActive():
 
 func setInactive():
 	active = false
-	ani.visible = false
+	visible = false
 	placable = false
 	
 func _physics_process(_delta):

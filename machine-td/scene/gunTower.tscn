@@ -99,10 +99,7 @@ offset = Vector2(16, 0)
 [node name="Marker2D" parent="turret" index="0"]
 position = Vector2(45, 0)
 
-[node name="mouseArea" parent="." index="4"]
-visible = false
-
-[node name="player" parent="." index="7"]
+[node name="player" parent="." index="6"]
 libraries = {
 &"": SubResource("AnimationLibrary_k4bnm")
 }

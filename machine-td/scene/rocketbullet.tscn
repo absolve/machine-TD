@@ -23,6 +23,8 @@ animations = [{
 }]
 
 [node name="rocketbullet" instance=ExtResource("1_g7i8c")]
+collision_layer = 0
+collision_mask = 2
 script = ExtResource("2_640v1")
 
 [node name="shape" parent="." index="0"]

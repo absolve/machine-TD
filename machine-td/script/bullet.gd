@@ -8,3 +8,5 @@ var lifetime=0 #存活时间
 var angle=0  #角度
 var damage=0 #伤害
 var speed=0 #速度
+
+@onready var aniNode=$ani
