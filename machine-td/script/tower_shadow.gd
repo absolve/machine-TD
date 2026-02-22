@@ -4,15 +4,14 @@ extends Area2D
 @onready var shape = $shape
 @onready var ani = $ani
 
-var placable = false # 可放置
+var placeable = false # 可放置
 var active = false # 是否活动
 var towerType = Game.towerType.gunTower # 类型
 var cost = 0 # 花费
 
 func _ready():
 	print(shape.shape.get_rect())
-	
-	pass
+	visible=false
 
 func setActive():
 	active = true
@@ -27,7 +26,7 @@ func setActive():
 func setInactive():
 	active = false
 	visible = false
-	placable = false
+	placeable = false
 	
 func _physics_process(_delta):
 	if !active:
@@ -35,7 +34,7 @@ func _physics_process(_delta):
 	position = get_global_mouse_position()
 	var areas = get_overlapping_areas()
 	if areas:
-		placable = false
+		placeable = false
 		var ownRect = Rect2(global_position - shape.shape.get_rect().size / 2,
 		shape.shape.get_rect().size)
 		var hasTower = false
@@ -48,20 +47,29 @@ func _physics_process(_delta):
 					hasTower = true
 			else:
 				if otherRect.encloses(ownRect):
-					placable = true
+					placeable = true
 		if hasTower:
 			#print('hasTower',hasTower)
-			placable = false
+			placeable = false
 	else:
-		placable = false
+		placeable = false
 
-
-func _unhandled_input(_event):
+func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("click"):
-		print(placable)
-		if placable:
-			print('placa')
+		if placeable:
 			Game.placeTower.emit(towerType)
+		
 	if Input.is_action_just_pressed("selectCancel"):
 		if active:
 			setInactive()
+	
+#func _unhandled_input(_event:InputEvent):
+	#if Input.is_action_just_pressed("click"):
+		#print(placable)
+		#if placable:
+			#print('placa')
+			#Game.placeTower.emit(towerType)
+			#get_viewport().set_input_as_handled()
+	#if Input.is_action_just_pressed("selectCancel"):
+		#if active:
+			#setInactive()

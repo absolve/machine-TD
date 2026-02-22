@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_f662h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f662h"]
-size = Vector2(50, 50)
+size = Vector2(100, 100)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0vk61"]
 atlas = ExtResource("3_f662h")
@@ -71,10 +71,7 @@ sprite_frames = SubResource("SpriteFrames_4ky5n")
 [node name="Marker2D" parent="turret" index="0"]
 position = Vector2(45, 0)
 
-[node name="mouseArea" parent="." index="4"]
-visible = false
-
-[node name="player" parent="." index="7"]
+[node name="player" parent="." index="6"]
 libraries = {
 &"": SubResource("AnimationLibrary_0vk61")
 }

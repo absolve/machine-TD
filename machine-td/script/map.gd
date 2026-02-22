@@ -24,7 +24,15 @@ func _ready():
 	titleNode.wave=level.wave
 	titleNode.money=level.money
 	#titleNode.score=level.score
-
+	titleNode.start.connect(startGame)
+	titleNode.pause.connect(pauseGame)
+	titleNode.soundOn.connect(soundOn)
+	titleNode.soundOff.connect(soundOff)
+	titleNode.musicOn.connect(musicOn)
+	titleNode.musicOff.connect(musicOff)
+	titleNode.home.connect(home)
+	titleNode.speedOn.connect(speedOn)
+	titleNode.speedOff.connect(speedOff)
 	
 #选中塔
 func selectTower(item):
@@ -51,6 +59,7 @@ func placeTower(type):
 	elif type==Game.towerType.rocketTower:
 		temp=rocketTower.instantiate()		
 	temp.position=towerShadow.position
+
 	level.add_child(temp)
 	#towerShadow.setInactive()
 	
@@ -78,6 +87,34 @@ func enemyEscape(point):
 		print('game over')
 	titleNode.hp-=point
 
+func startGame():
+	get_tree().paused = false
+	level.start()
+
+func pauseGame():
+	get_tree().paused = true
+
+func soundOn():
+	pass
+	
+func soundOff():
+	pass
+	
+func musicOn():
+	pass
+	
+func musicOff():
+	pass			
+
+func home():
+	pass
+
+func speedOn():
+	pass
+	
+func speedOff():
+	pass	
+	
 func _on_button_pressed():
 	level.start()
 

@@ -17,18 +17,9 @@ script = ExtResource("1_rgtto")
 offset_left = 1640.0
 offset_right = 1640.0
 
-[node name="Button" type="Button" parent="hud"]
-offset_left = 8.0
-offset_top = 112.0
-offset_right = 120.0
-offset_bottom = 160.0
-text = "start"
-
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
 
 [node name="level1" parent="." instance=ExtResource("5_4xw1d")]
 
 [node name="towerShadow" parent="." instance=ExtResource("6_bq37x")]
-
-[connection signal="pressed" from="hud/Button" to="." method="_on_button_pressed"]

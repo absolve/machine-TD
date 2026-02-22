@@ -19,6 +19,9 @@ var sellingPrice=0  #售价
 @onready var marker=$turret/Marker2D
 @onready var player=$player
 
+func _ready() -> void:
+	pass
+	
 func getTarget():
 	var temp=null
 	if target.size()==1:
@@ -39,8 +42,12 @@ func _draw():
 		draw_circle(Vector2.ZERO,radarScope,Color(0.1,0.1,0.1,0.2))
 	
 
-func _on_input_event(_viewport, event, _shape_idx):
-	if event is InputEventMouseButton:
-		if event.is_pressed()&& event.button_index==MouseButton.MOUSE_BUTTON_LEFT:
-			selected=!selected
-			queue_redraw()
+func _on_input_event(_viewport, _event, _shape_idx):
+	#if event is InputEventMouseButton:
+		#if event.is_pressed()&& event.button_index==MouseButton.MOUSE_BUTTON_LEFT:
+			#selected=!selected
+			#queue_redraw()
+	if Input.is_action_pressed("click"):
+		selected=!selected
+		queue_redraw()
+		print(1111)

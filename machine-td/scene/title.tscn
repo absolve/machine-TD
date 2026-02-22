@@ -1,9 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://8vvx43vtulw5"]
+[gd_scene load_steps=11 format=3 uid="uid://8vvx43vtulw5"]
 
 [ext_resource type="Script" uid="uid://svh6y8okcup5" path="res://script/title.gd" id="1_4fdtc"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_hr6ky"]
+[ext_resource type="Texture2D" uid="uid://o5p2mirmr8s6" path="res://sprite/Start_37108 (1).png" id="3_0npwg"]
+[ext_resource type="Texture2D" uid="uid://cuaueh06hc01a" path="res://sprite/PausePressed_26932.png" id="4_qaeh8"]
+[ext_resource type="Texture2D" uid="uid://3pi8175swvst" path="res://sprite/MediumArrow-Right.png" id="5_5tkpx"]
+[ext_resource type="Texture2D" uid="uid://ih1lsl8arw44" path="res://sprite/Sound-Two.png" id="5_th0ar"]
+[ext_resource type="Texture2D" uid="uid://d1c1qb7h3dlk2" path="res://sprite/Sound-None.png" id="6_5xh2k"]
+[ext_resource type="Texture2D" uid="uid://bllvjsuem5oma" path="res://sprite/Music-On.png" id="8_5tkpx"]
+[ext_resource type="Texture2D" uid="uid://b5xkid71b1rf0" path="res://sprite/Music-Off.png" id="9_glyem"]
+[ext_resource type="Texture2D" uid="uid://ogfcb767msec" path="res://sprite/Home.png" id="10_5tkpx"]
 
 [node name="title" type="Control"]
+process_mode = 3
 layout_mode = 3
 anchors_preset = 0
 theme = ExtResource("2_hr6ky")
@@ -71,22 +80,52 @@ layout_mode = 2
 size_flags_horizontal = 3
 alignment = 2
 
-[node name="Button" type="Button" parent="PanelContainer/hbox/HBoxContainer3"]
+[node name="btnStart" type="TextureButton" parent="PanelContainer/hbox/HBoxContainer3"]
 layout_mode = 2
-text = "speed"
+toggle_mode = true
+texture_normal = ExtResource("3_0npwg")
+texture_pressed = ExtResource("4_qaeh8")
+stretch_mode = 3
 
-[node name="Button2" type="Button" parent="PanelContainer/hbox/HBoxContainer3"]
+[node name="hbox" type="MarginContainer" parent="PanelContainer/hbox/HBoxContainer3"]
 layout_mode = 2
-text = "pause"
+theme_override_constants/margin_right = 20
 
-[node name="Button3" type="Button" parent="PanelContainer/hbox/HBoxContainer3"]
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/hbox/HBoxContainer3/hbox"]
 layout_mode = 2
-text = "sound"
 
-[node name="Button4" type="Button" parent="PanelContainer/hbox/HBoxContainer3"]
+[node name="btnSpeed" type="TextureButton" parent="PanelContainer/hbox/HBoxContainer3/hbox/HBoxContainer"]
 layout_mode = 2
-text = "sfx"
+toggle_mode = true
+texture_normal = ExtResource("5_5tkpx")
+texture_pressed = ExtResource("5_5tkpx")
+stretch_mode = 3
 
-[node name="Button5" type="Button" parent="PanelContainer/hbox/HBoxContainer3"]
+[node name="speedLabel" type="Label" parent="PanelContainer/hbox/HBoxContainer3/hbox/HBoxContainer"]
 layout_mode = 2
-text = "menu"
+text = "1X"
+
+[node name="btnSound" type="TextureButton" parent="PanelContainer/hbox/HBoxContainer3"]
+layout_mode = 2
+toggle_mode = true
+texture_normal = ExtResource("5_th0ar")
+texture_pressed = ExtResource("6_5xh2k")
+stretch_mode = 3
+
+[node name="btnMusic" type="TextureButton" parent="PanelContainer/hbox/HBoxContainer3"]
+layout_mode = 2
+toggle_mode = true
+texture_normal = ExtResource("8_5tkpx")
+texture_pressed = ExtResource("9_glyem")
+stretch_mode = 3
+
+[node name="btnHome" type="TextureButton" parent="PanelContainer/hbox/HBoxContainer3"]
+layout_mode = 2
+texture_normal = ExtResource("10_5tkpx")
+stretch_mode = 3
+
+[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnStart" to="." method="_on_texture_button_toggled"]
+[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/hbox/HBoxContainer/btnSpeed" to="." method="_on_btn_speed_toggled"]
+[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnSound" to="." method="_on_btn_sound_toggled"]
+[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnMusic" to="." method="_on_btn_music_toggled"]
+[connection signal="pressed" from="PanelContainer/hbox/HBoxContainer3/btnHome" to="." method="_on_btn_home_pressed"]

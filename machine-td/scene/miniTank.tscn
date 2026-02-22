@@ -2,13 +2,31 @@
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_6peud"]
 [ext_resource type="Script" uid="uid://de1xh8lbgnoye" path="res://script/mini_tank.gd" id="2_pd3il"]
-[ext_resource type="Texture2D" uid="uid://b85d7hnm7nf8j" path="res://sprite/towerDefense_tilesheet.png" id="2_yg2f7"]
+[ext_resource type="Texture2D" uid="uid://dp5scyioamsud" path="res://sprite/towerDefense_tilesheet@2.png" id="3_bmskb"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_pd3il"]
-atlas = ExtResource("2_yg2f7")
-region = Rect2(960, 704, 64, 64)
+[sub_resource type="AtlasTexture" id="AtlasTexture_6xvsg"]
+atlas = ExtResource("3_bmskb")
+region = Rect2(1920, 1408, 128, 128)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_bmskb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6xvsg")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yg2f7"]
+radius = 100.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pd3il"]
+atlas = ExtResource("3_bmskb")
+region = Rect2(1920, 1536, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pd3il"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -19,26 +37,8 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_yg2f7"]
-radius = 100.0
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_yg2f7"]
-atlas = ExtResource("2_yg2f7")
-region = Rect2(960, 768, 64, 64)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_pd3il"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_yg2f7")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_yg2f7"]
-size = Vector2(45, 25)
+size = Vector2(60, 60)
 
 [node name="enemy" instance=ExtResource("1_6peud")]
 script = ExtResource("2_pd3il")

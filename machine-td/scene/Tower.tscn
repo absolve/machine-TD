@@ -5,6 +5,7 @@
 
 [node name="Tower" type="Area2D"]
 collision_mask = 0
+input_pickable = false
 script = ExtResource("1_nxw3l")
 
 [node name="shape" type="CollisionShape2D" parent="."]
