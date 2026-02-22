@@ -5,10 +5,8 @@ var bullet = preload("res://scene/rocketbullet.tscn")
 func _ready():
 	delay = 1
 	delayTimer.wait_time = delay
-	#input_pickable=true
-	var tween= create_tween()
-	tween.tween_property(self,"input_pickable",true,1)
-#	塔需要初始化
+	super._ready()
+
 
 func _physics_process(_delta):
 	var temp = getTarget()

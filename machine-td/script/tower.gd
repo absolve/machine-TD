@@ -18,9 +18,14 @@ var sellingPrice=0  #售价
 @onready var delayTimer=$delay
 @onready var marker=$turret/Marker2D
 @onready var player=$player
+@onready var initBar=$ProgressBar
 
 func _ready() -> void:
-	pass
+	monitorable=false
+	set_physics_process(false)
+	var tween=create_tween()
+	tween.tween_property(initBar,"value",100,1)
+	tween.tween_callback(init)
 	
 func getTarget():
 	var temp=null
@@ -30,6 +35,14 @@ func getTarget():
 		temp=target[0]
 	
 	return temp
+
+func init():
+	initBar.visible=false
+	base.modulate.a=1
+	turret.modulate.a=1
+	monitorable=true
+	set_physics_process(true)
+	
 
 
 func _on_delay_timeout():

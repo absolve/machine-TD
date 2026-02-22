@@ -7,7 +7,7 @@ var bullet = preload("res://scene/cannon_bullet.tscn")
 func _ready():
 	delay = 0.8
 	delayTimer.wait_time = delay
-	
+	super._ready()
 
 func _physics_process(_delta):
 	var temp = getTarget()
