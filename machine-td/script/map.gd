@@ -18,6 +18,7 @@ func _ready():
 	Game.refreshData.connect(refreshData)
 	Game.defeatEnemy.connect(defeatEnemy)
 	Game.enemyEscape.connect(enemyEscape)
+	Game.sellTower.connect(sellTower)
 	#加载关卡
 	
 	titleNode.hp=level.health
@@ -33,6 +34,7 @@ func _ready():
 	titleNode.home.connect(home)
 	titleNode.speedOn.connect(speedOn)
 	titleNode.speedOff.connect(speedOff)
+	
 	
 #选中塔
 func selectTower(item):
@@ -114,6 +116,12 @@ func speedOn():
 	
 func speedOff():
 	pass	
+	
+func sellTower(money):
+	print("sellTower ",money)
+	titleNode.money+=money
+
+	
 	
 func _on_button_pressed():
 	level.start()

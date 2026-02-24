@@ -1,0 +1,77 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6gjxxdlchyde"]
+
+[ext_resource type="Script" uid="uid://belv4jwyveg6s" path="res://script/tower_info.gd" id="1_dm3ur"]
+
+[node name="towerInfo" type="PanelContainer"]
+offset_right = 150.0
+offset_bottom = 157.0
+script = ExtResource("1_dm3ur")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="towerName" type="Label" parent="vbox"]
+layout_mode = 2
+text = "rocket"
+horizontal_alignment = 1
+
+[node name="hbox" type="VBoxContainer" parent="vbox"]
+layout_mode = 2
+
+[node name="hbox1" type="HBoxContainer" parent="vbox/hbox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="vbox/hbox/hbox1"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "act:"
+horizontal_alignment = 2
+
+[node name="atkLabel" type="Label" parent="vbox/hbox/hbox1"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="hbox2" type="HBoxContainer" parent="vbox/hbox"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="vbox/hbox/hbox2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "cost:"
+horizontal_alignment = 2
+
+[node name="costLabel" type="Label" parent="vbox/hbox/hbox2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="hbox3" type="HBoxContainer" parent="vbox/hbox"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="vbox/hbox/hbox3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "reload:"
+horizontal_alignment = 2
+
+[node name="reloadLabel" type="Label" parent="vbox/hbox/hbox3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="hbox4" type="HBoxContainer" parent="vbox/hbox"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="vbox/hbox/hbox4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "scope:"
+horizontal_alignment = 2
+
+[node name="scopeLabel" type="Label" parent="vbox/hbox/hbox4"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="towerDetail" type="Label" parent="vbox"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Launch missiles to strike the enemy"
+autowrap_mode = 1

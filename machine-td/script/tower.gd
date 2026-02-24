@@ -19,6 +19,7 @@ var sellingPrice=0  #售价
 @onready var marker=$turret/Marker2D
 @onready var player=$player
 @onready var initBar=$ProgressBar
+@onready var btnSell=$btnSell
 
 func _ready() -> void:
 	monitorable=false
@@ -41,6 +42,7 @@ func init():
 	base.modulate.a=1
 	turret.modulate.a=1
 	monitorable=true
+	input_pickable=true
 	set_physics_process(true)
 	
 
@@ -63,4 +65,9 @@ func _on_input_event(_viewport, _event, _shape_idx):
 	if Input.is_action_pressed("click"):
 		selected=!selected
 		queue_redraw()
-		print(1111)
+		btnSell.visible=selected
+
+
+func _on_btn_sell_pressed():
+	Game.sellTower.emit(sellingPrice)
+	queue_free()

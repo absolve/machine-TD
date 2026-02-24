@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_v83o1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v83o1"]
-size = Vector2(50, 50)
+size = Vector2(100, 100)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lm0w6"]
 atlas = ExtResource("3_v83o1")
@@ -87,6 +87,7 @@ shape = SubResource("RectangleShape2D_v83o1")
 sprite_frames = SubResource("SpriteFrames_sk265")
 
 [node name="radar" parent="." index="2"]
+visible = false
 light_mask = 0
 visibility_layer = 2
 

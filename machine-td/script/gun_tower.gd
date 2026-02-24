@@ -5,6 +5,7 @@ var bullet = preload("res://scene/gunBullet.tscn")
 func _ready():
 	delay = 0.3
 	delayTimer.wait_time = delay
+	sellingPrice=10
 	super._ready()
 
 
