@@ -21,77 +21,8 @@ title_alignment = 1
 [node name="vbox" type="VBoxContainer" parent="fc"]
 visible = false
 layout_mode = 2
+alignment = 1
 metadata/_edit_group_ = true
-
-[node name="ItemList" type="ItemList" parent="fc/vbox"]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 1.5
-
-[node name="towerInfo" type="VBoxContainer" parent="fc/vbox"]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="panel" type="PanelContainer" parent="fc/vbox/towerInfo"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="vbox" type="VBoxContainer" parent="fc/vbox/towerInfo/panel"]
-layout_mode = 2
-
-[node name="towerName" type="Label" parent="fc/vbox/towerInfo/panel/vbox"]
-layout_mode = 2
-text = "rocket"
-horizontal_alignment = 1
-
-[node name="hbox" type="VBoxContainer" parent="fc/vbox/towerInfo/panel/vbox"]
-layout_mode = 2
-
-[node name="hbox1" type="HBoxContainer" parent="fc/vbox/towerInfo/panel/vbox/hbox"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="fc/vbox/towerInfo/panel/vbox/hbox/hbox1"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "act:"
-horizontal_alignment = 2
-
-[node name="atkLabel" type="Label" parent="fc/vbox/towerInfo/panel/vbox/hbox/hbox1"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="hbox2" type="HBoxContainer" parent="fc/vbox/towerInfo/panel/vbox/hbox"]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="fc/vbox/towerInfo/panel/vbox/hbox/hbox2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "cost:"
-horizontal_alignment = 2
-
-[node name="costLabel" type="Label" parent="fc/vbox/towerInfo/panel/vbox/hbox/hbox2"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="hbox3" type="HBoxContainer" parent="fc/vbox/towerInfo/panel/vbox/hbox"]
-layout_mode = 2
-
-[node name="Label3" type="Label" parent="fc/vbox/towerInfo/panel/vbox/hbox/hbox3"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "reload:"
-horizontal_alignment = 2
-
-[node name="reloadLabel" type="Label" parent="fc/vbox/towerInfo/panel/vbox/hbox/hbox3"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="towerDetail" type="Label" parent="fc/vbox/towerInfo/panel/vbox"]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-text = "Launch missiles to strike the enemy"
-autowrap_mode = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="fc/vbox"]
 layout_mode = 2
@@ -99,11 +30,10 @@ size_flags_vertical = 3
 
 [node name="towerList" type="VBoxContainer" parent="fc/vbox/ScrollContainer"]
 layout_mode = 2
+alignment = 1
 
 [node name="towerInfo" parent="." instance=ExtResource("3_gwmlu")]
 visible = false
 layout_mode = 0
 offset_right = 304.0
 offset_bottom = 482.0
-
-[connection signal="item_selected" from="fc/vbox/ItemList" to="." method="_on_item_list_item_selected"]
