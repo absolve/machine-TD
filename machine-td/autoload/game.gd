@@ -50,6 +50,8 @@ signal placeTower #放置塔
 signal refreshData   #游戏数据刷新
 @warning_ignore("unused_signal")
 signal sellTower  #出售塔
+@warning_ignore("unused_signal")
+signal lastWave #最后一波
 
 var map=null
 

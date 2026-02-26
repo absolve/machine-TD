@@ -5,10 +5,11 @@ var allStage=[
 	{
 		'name':'stage-1',
 		"id":1,
-		'wave':5,
+		'wave':2,
 		'health':20,
 		'money':300,
-		"enemySpawner":[{'time':1,'type':Game.enemyType.miniTank,'number':10}]
+		"enemySpawner":[{'time':1,'type':Game.enemyType.miniTank,'number':1},
+		{'time':2,'type':Game.enemyType.miniTank,'number':2}]
 	}
 ]
 

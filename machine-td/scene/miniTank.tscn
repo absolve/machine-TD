@@ -42,7 +42,7 @@ size = Vector2(60, 60)
 
 [node name="enemy" instance=ExtResource("1_6peud")]
 script = ExtResource("2_pd3il")
-speed = 50
+speed = 100
 reward = 10
 
 [node name="base" parent="." index="0"]

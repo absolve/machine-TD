@@ -4,7 +4,9 @@ extends Node2D
 @onready var towerShadow=$towerShadow
 @onready var titleNode=$hud/title
 @onready var towerUINode=$hud/towerUI
+@onready var resultScreen=$hud/resultScreen
 @onready var level=$level1
+
 
 var gunTower=preload("res://scene/gunTower.tscn")
 var rocketTower=preload("res://scene/rocketTower.tscn")
@@ -19,6 +21,7 @@ func _ready():
 	Game.defeatEnemy.connect(defeatEnemy)
 	Game.enemyEscape.connect(enemyEscape)
 	Game.sellTower.connect(sellTower)
+	Game.lastWave.connect(lastWave)
 	#加载关卡
 	
 	titleNode.hp=level.health
@@ -121,10 +124,14 @@ func sellTower(money):
 	print("sellTower ",money)
 	titleNode.money+=money
 
+func lastWave():
+	print('lastWave')
+	pass
 	
+func finishTimer():
+	#判断敌人是否生产完毕和所有敌人全部消灭，游戏结束
 	
-func _on_button_pressed():
-	level.start()
+	pass
 
 func _unhandled_input(_event):
 	if Input.is_action_just_pressed("selectCancel"):

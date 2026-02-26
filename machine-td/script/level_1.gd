@@ -39,15 +39,17 @@ func _on_wave_timer_timeout():
 		waveTimer.start()
 		return
 			
-	currWave += 1
-	if currWave > wave:
-		print("end")
-		return
+	currWave += 1 #波次默认从0开始
+	
 	for i in enemyList:
-		if int(i.time) == currWave:
+		if int(i.time) == currWave: #当前波次的成产敌人都获取出来
 			currentSpawner.push_back(i)
-	if currentSpawner.size() > 0:
+	if currentSpawner.size() > 0:  #当前波次需要生产的敌人
 		spawnerTimer.start()
+	if currWave >= wave:
+		print("end")
+		Game.lastWave.emit()
+		return
 	waveTimer.start()
 	
 

@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://c0rd5oseij63o"]
+[gd_scene load_steps=7 format=3 uid="uid://c0rd5oseij63o"]
 
 [ext_resource type="Script" uid="uid://cgdxoyy80vpqi" path="res://script/map.gd" id="1_rgtto"]
 [ext_resource type="PackedScene" uid="uid://8vvx43vtulw5" path="res://scene/title.tscn" id="2_4xw1d"]
 [ext_resource type="PackedScene" uid="uid://clbbod4cwf6n8" path="res://scene/tower_ui.tscn" id="3_bq37x"]
+[ext_resource type="PackedScene" uid="uid://b2646ykmxfyif" path="res://scene/result_screen.tscn" id="4_bq37x"]
 [ext_resource type="PackedScene" uid="uid://b61gsmirxvp8x" path="res://scene/level/level_1.tscn" id="5_4xw1d"]
 [ext_resource type="PackedScene" uid="uid://cfwue5nwpbqlj" path="res://scene/tower_shadow.tscn" id="6_bq37x"]
 
@@ -17,9 +18,14 @@ script = ExtResource("1_rgtto")
 offset_left = 1640.0
 offset_right = 1640.0
 
+[node name="resultScreen" parent="hud" instance=ExtResource("4_bq37x")]
+visible = false
+
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
 
 [node name="level1" parent="." instance=ExtResource("5_4xw1d")]
 
 [node name="towerShadow" parent="." instance=ExtResource("6_bq37x")]
+
+[node name="Timer" type="Timer" parent="."]
