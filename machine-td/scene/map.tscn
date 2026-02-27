@@ -18,8 +18,11 @@ script = ExtResource("1_rgtto")
 offset_left = 1640.0
 offset_right = 1640.0
 
-[node name="resultScreen" parent="hud" instance=ExtResource("4_bq37x")]
-visible = false
+[node name="Button" type="Button" parent="hud"]
+offset_top = 500.0
+offset_right = 38.0
+offset_bottom = 531.0
+text = "test"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
@@ -29,3 +32,8 @@ anchor_mode = 0
 [node name="towerShadow" parent="." instance=ExtResource("6_bq37x")]
 
 [node name="Timer" type="Timer" parent="."]
+
+[node name="resultScreen" parent="." instance=ExtResource("4_bq37x")]
+visible = false
+
+[connection signal="pressed" from="hud/Button" to="." method="_on_button_pressed"]

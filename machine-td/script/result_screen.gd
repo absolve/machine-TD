@@ -1,9 +1,11 @@
-extends Control
+extends PopupPanel
 
-
-func showPanel():
-	visible=true
+func _ready():
+	popup_window=false
+	exclusive=true
+	#set_transient(true)
 	pass
-	
-func hidePanel():
-	visible=false
+
+#显示弹窗	
+func showPanel():
+	pass

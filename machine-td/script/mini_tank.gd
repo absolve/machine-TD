@@ -12,10 +12,11 @@ func hurt(_num):
 		Game.defeatEnemy.emit(reward)
 		queue_free()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if points.size() == 0:
 		return
 	var target1 = points[pointIndex]
+	#print(position.distance_to(target1) )
 	if position.distance_to(target1) < 1:
 		#print("====",pointIndex,points[pointIndex])
 		pointIndex = wrapi(pointIndex + 1, 0, points.size())
@@ -24,5 +25,5 @@ func _physics_process(delta):
 			Game.enemyEscape.emit(lossPoints)
 			queue_free()
 	#vec = (target - position).normalized() * speed
-	position += position.direction_to(target1) * speed * delta
+	position += position.direction_to(target1) * speed *_delta
 	base.look_at(target1)

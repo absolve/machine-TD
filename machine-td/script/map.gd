@@ -1,16 +1,18 @@
 extends Node2D
 
-
+@onready var hud=$hud
 @onready var towerShadow=$towerShadow
 @onready var titleNode=$hud/title
 @onready var towerUINode=$hud/towerUI
-@onready var resultScreen=$hud/resultScreen
+@onready var resultScreen=$resultScreen
 @onready var level=$level1
 
 
 var gunTower=preload("res://scene/gunTower.tscn")
 var rocketTower=preload("res://scene/rocketTower.tscn")
 var cannonTower=preload("res://scene/cannonTower.tscn")
+
+var isLastWave=false #最后一波
 
 func _ready():
 	print("map")
@@ -90,6 +92,9 @@ func defeatEnemy(point):
 func enemyEscape(point):
 	if titleNode.hp-point<0:
 		print('game over')
+		pauseGame()
+		resultScreen.popup_centered()
+	
 	titleNode.hp-=point
 
 func startGame():
@@ -126,15 +131,28 @@ func sellTower(money):
 
 func lastWave():
 	print('lastWave')
+	isLastWave=true
 	pass
 	
 func finishTimer():
 	#判断敌人是否生产完毕和所有敌人全部消灭，游戏结束
-	
-	pass
+	if level.currentSpawner.size() > 0:
+		pass
+	if get_tree().get_nodes_in_group("enemy").size() > 0:
+		pass
+		
+	#所有敌人都被消灭
+	resultScreen.popup_centered()		
+
 
 func _unhandled_input(_event):
 	if Input.is_action_just_pressed("selectCancel"):
 		for i in get_tree().get_nodes_in_group("placeableArea"):
 			i.isShow=false
 		towerShadow.setInactive()
+
+
+func _on_button_pressed():
+	resultScreen.popup_centered()
+	
+	pass # Replace with function body.
