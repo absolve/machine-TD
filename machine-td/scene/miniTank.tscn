@@ -45,7 +45,7 @@ loop = false
 
 [node name="enemy" parent="." instance=ExtResource("1_6peud")]
 script = ExtResource("2_pd3il")
-speed = 50
+speed = 100
 
 [node name="base" parent="enemy" index="0"]
 sprite_frames = SubResource("SpriteFrames_yg2f7")

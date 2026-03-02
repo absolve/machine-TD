@@ -26,6 +26,7 @@ text = "test"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
+process_callback = 0
 
 [node name="level1" parent="." instance=ExtResource("5_4xw1d")]
 
