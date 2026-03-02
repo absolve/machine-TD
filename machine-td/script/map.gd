@@ -6,7 +6,7 @@ extends Node2D
 @onready var towerUINode=$hud/towerUI
 @onready var resultScreen=$resultScreen
 @onready var level=$level1
-
+@onready var finishTimer=$Timer
 
 var gunTower=preload("res://scene/gunTower.tscn")
 var rocketTower=preload("res://scene/rocketTower.tscn")
@@ -132,14 +132,17 @@ func sellTower(money):
 func lastWave():
 	print('lastWave')
 	isLastWave=true
+	finishTimer.start()
 	pass
 	
-func finishTimer():
+func finish():
 	#判断敌人是否生产完毕和所有敌人全部消灭，游戏结束
 	if level.currentSpawner.size() > 0:
-		pass
+		finishTimer.start()
+		return
 	if get_tree().get_nodes_in_group("enemy").size() > 0:
-		pass
+		finishTimer.start()
+		return
 		
 	#所有敌人都被消灭
 	resultScreen.popup_centered()		

@@ -1,7 +1,9 @@
 extends "res://script/enemy.gd"
 
+var parent:PathFollow2D
 
 func _ready():
+	parent=get_parent()
 	pass
 	
 func hurt(_num):
@@ -10,20 +12,12 @@ func hurt(_num):
 	if hp < 0:
 		ExplosionManage.playExplosion(global_position)
 		Game.defeatEnemy.emit(reward)
-		queue_free()
+		owner.queue_free()
 
 func _physics_process(_delta):
 	if points.size() == 0:
 		return
-	var target1 = points[pointIndex]
-	#print(position.distance_to(target1) )
-	if position.distance_to(target1) < 1:
-		#print("====",pointIndex,points[pointIndex])
-		pointIndex = wrapi(pointIndex + 1, 0, points.size())
-		target1 = points[pointIndex]
-		if pointIndex == 0:
-			Game.enemyEscape.emit(lossPoints)
-			queue_free()
-	#vec = (target - position).normalized() * speed
-	position += position.direction_to(target1) * speed *_delta
-	base.look_at(target1)
+	parent.progress+=speed*_delta	
+	if parent.progress_ratio>=1:
+		Game.enemyEscape.emit(lossPoints)
+		owner.queue_free()

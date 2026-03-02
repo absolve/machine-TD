@@ -11,6 +11,7 @@ script = ExtResource("1_h08p8")
 [node name="base" type="AnimatedSprite2D" parent="."]
 
 [node name="radar" type="Area2D" parent="."]
+collision_layer = 0
 
 [node name="shape" type="CollisionShape2D" parent="radar"]
 

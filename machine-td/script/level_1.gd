@@ -59,9 +59,11 @@ func _on_spawner_timer_timeout():
 		if i.number > 0:
 			if i.type == Game.enemyType.miniTank:
 				var temp = StageData.minTank.instantiate()
-				temp.points = path1.curve.get_baked_points()
-				temp.position = temp.points[0]
-				add_child(temp)
+				path1.add_child(temp)
+				temp.find_child("enemy").points= path1.curve.get_baked_points()
+				#temp.points = path1.curve.get_baked_points()
+				#temp.position = temp.points[0]
+				
 				i.number -= 1
 		else:
 			currentSpawner.erase(i)

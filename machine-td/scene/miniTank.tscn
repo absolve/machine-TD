@@ -2,17 +2,17 @@
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_6peud"]
 [ext_resource type="Script" uid="uid://de1xh8lbgnoye" path="res://script/mini_tank.gd" id="2_pd3il"]
-[ext_resource type="Texture2D" uid="uid://dp5scyioamsud" path="res://sprite/towerDefense_tilesheet@2.png" id="3_bmskb"]
+[ext_resource type="Texture2D" uid="uid://ck67srsef3ay2" path="res://sprite/enemy@2.png" id="3_pd3il"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_6xvsg"]
-atlas = ExtResource("3_bmskb")
-region = Rect2(1920, 1408, 128, 128)
+[sub_resource type="AtlasTexture" id="AtlasTexture_bmskb"]
+atlas = ExtResource("3_pd3il")
+region = Rect2(0, 128, 128, 128)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_bmskb"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_yg2f7"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_6xvsg")
+"texture": SubResource("AtlasTexture_bmskb")
 }],
 "loop": true,
 "name": &"default",
@@ -23,8 +23,8 @@ animations = [{
 radius = 100.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pd3il"]
-atlas = ExtResource("3_bmskb")
-region = Rect2(1920, 1536, 128, 128)
+atlas = ExtResource("3_pd3il")
+region = Rect2(0, 256, 128, 128)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_pd3il"]
 animations = [{
@@ -37,26 +37,30 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_yg2f7"]
-size = Vector2(60, 60)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pd3il"]
+size = Vector2(50, 50)
 
-[node name="enemy" instance=ExtResource("1_6peud")]
+[node name="miniTank" type="PathFollow2D"]
+loop = false
+
+[node name="enemy" parent="." instance=ExtResource("1_6peud")]
 script = ExtResource("2_pd3il")
 speed = 50
-reward = 10
 
-[node name="base" parent="." index="0"]
-sprite_frames = SubResource("SpriteFrames_bmskb")
+[node name="base" parent="enemy" index="0"]
+sprite_frames = SubResource("SpriteFrames_yg2f7")
 
-[node name="radar" parent="." index="1"]
+[node name="radar" parent="enemy" index="1"]
 visible = false
 
-[node name="shape" parent="radar" index="0"]
+[node name="shape" parent="enemy/radar" index="0"]
 shape = SubResource("CircleShape2D_yg2f7")
 
-[node name="turret" parent="." index="2"]
+[node name="turret" parent="enemy" index="2"]
 sprite_frames = SubResource("SpriteFrames_pd3il")
 offset = Vector2(10, 0)
 
-[node name="shape" parent="." index="3"]
-shape = SubResource("RectangleShape2D_yg2f7")
+[node name="shape" parent="enemy" index="3"]
+shape = SubResource("RectangleShape2D_pd3il")
+
+[editable path="enemy"]
