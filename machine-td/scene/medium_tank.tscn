@@ -55,4 +55,7 @@ offset = Vector2(20, 0)
 [node name="shape" parent="enemy" index="3"]
 shape = SubResource("RectangleShape2D_6l444")
 
+[connection signal="area_entered" from="enemy/radar" to="enemy" method="_on_radar_area_entered"]
+[connection signal="area_exited" from="enemy/radar" to="enemy" method="_on_radar_area_exited"]
+
 [editable path="enemy"]

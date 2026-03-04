@@ -14,3 +14,5 @@ var allStage=[
 ]
 
 var minTank=preload("res://scene/miniTank.tscn")
+var mediumTank=preload("res://scene/medium_tank.tscn")
+var heavyTank=preload("res://scene/heavy_tank.tscn")

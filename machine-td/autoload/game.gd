@@ -5,7 +5,7 @@ enum bulletType{
 }
 
 enum enemyType{
-	miniTank,
+	miniTank,mediumTank,heavyTank
 }
 
 enum towerType{

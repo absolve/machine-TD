@@ -63,8 +63,11 @@ func _on_spawner_timer_timeout():
 				temp.find_child("enemy").points= path1.curve.get_baked_points()
 				#temp.points = path1.curve.get_baked_points()
 				#temp.position = temp.points[0]
-				
 				i.number -= 1
+			elif i.type==Game.enemyType.mediumTank:
+				pass
+			elif i.type==Game.enemyType.heavyTank:
+				pass	
 		else:
 			currentSpawner.erase(i)
 	if currentSpawner.size() > 0:

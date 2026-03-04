@@ -12,10 +12,14 @@ var target=[] #目标
 var points=[] #路径点
 var pointIndex=0
 var dead=false #是否死亡
+var rotationSpeed=10
 
 @onready var base=$base
 @onready var turret=$turret
 @onready var lifeBar=$lifeBar
 
 func hurt(_num):
+	pass
+
+func fire(t):
 	pass
