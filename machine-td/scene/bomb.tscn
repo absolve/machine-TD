@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://dx0wt0kj2d5c"]
+[gd_scene format=3 uid="uid://dx0wt0kj2d5c"]
 
 [ext_resource type="Script" uid="uid://d3yok4jd5kvnc" path="res://script/bomb.gd" id="1_owhvf"]
-[ext_resource type="Texture2D" uid="uid://dp5scyioamsud" path="res://sprite/towerDefense_tilesheet@2.png" id="2_coick"]
+[ext_resource type="Texture2D" uid="uid://tvbk66aampny" path="res://sprite/towerDefense_tilesheet@2.png" id="2_coick"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4eul8"]
+radius = 40.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bjs2y"]
 atlas = ExtResource("2_coick")
@@ -36,20 +37,20 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_xnax7")
 }],
-"loop": false,
+"loop": 0,
 "name": &"default",
-"speed": 5.0
+"speed": 10.0
 }]
 
-[node name="bomb" type="Area2D"]
+[node name="bomb" type="Area2D" unique_id=827452593]
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1_owhvf")
 
-[node name="shape" type="CollisionShape2D" parent="."]
+[node name="shape" type="CollisionShape2D" parent="." unique_id=232777936]
 shape = SubResource("CircleShape2D_4eul8")
 
-[node name="ani" type="AnimatedSprite2D" parent="."]
+[node name="ani" type="AnimatedSprite2D" parent="." unique_id=856008420]
 sprite_frames = SubResource("SpriteFrames_owhvf")
 
 [connection signal="area_shape_entered" from="." to="." method="_on_area_shape_entered"]

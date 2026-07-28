@@ -31,12 +31,14 @@ metadata/_edit_lock_ = true
 
 [node name="Label" type="Label" parent="ui" unique_id=389625941]
 layout_mode = 0
-offset_left = 752.0
-offset_top = 224.0
-offset_right = 1216.0
-offset_bottom = 281.0
+offset_left = 680.0
+offset_top = 184.0
+offset_right = 1252.0
+offset_bottom = 297.0
+theme_override_font_sizes/font_size = 80
 text = "Tower Defense"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="HBoxContainer" type="VBoxContainer" parent="ui" unique_id=442101509]
 layout_mode = 0
