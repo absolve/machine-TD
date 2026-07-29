@@ -5,10 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://v3vtbt8yry5c" path="res://scene/about_panel.tscn" id="3_0h2lm"]
 [ext_resource type="Texture2D" uid="uid://di3klrsr8aekp" path="res://sprite/background_tiled.png" id="3_1kia2"]
 [ext_resource type="Shader" uid="uid://bwycjmqkx1rbs" path="res://shader/background.gdshader" id="3_hi2bo"]
+[ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="5_si833"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1kia2"]
 shader = ExtResource("3_hi2bo")
-shader_parameter/speed = 0.5
+shader_parameter/speed = 0.1
 
 [node name="welcome" type="Node2D" unique_id=351422500]
 script = ExtResource("1_njjjx")
@@ -42,30 +43,32 @@ vertical_alignment = 1
 
 [node name="HBoxContainer" type="VBoxContainer" parent="ui" unique_id=442101509]
 layout_mode = 0
-offset_left = 792.0
-offset_top = 608.0
-offset_right = 1232.0
-offset_bottom = 811.0
+offset_left = 744.0
+offset_top = 592.0
+offset_right = 1144.0
+offset_bottom = 896.0
+theme_override_constants/separation = 20
 alignment = 1
+metadata/_edit_group_ = true
 
-[node name="Button4" type="Button" parent="ui/HBoxContainer" unique_id=1640566008]
+[node name="UIButton" parent="ui/HBoxContainer" unique_id=226549016 instance=ExtResource("5_si833")]
 layout_mode = 2
 text = "Tutorial"
 
-[node name="btnSStart" type="Button" parent="ui/HBoxContainer" unique_id=946189401]
+[node name="btnStart" parent="ui/HBoxContainer" unique_id=1077812873 instance=ExtResource("5_si833")]
 layout_mode = 2
-text = "start"
+text = "Start"
 
-[node name="Button2" type="Button" parent="ui/HBoxContainer" unique_id=388779886]
+[node name="setting" parent="ui/HBoxContainer" unique_id=1284130239 instance=ExtResource("5_si833")]
 layout_mode = 2
-text = "setting"
+text = "Setting"
 
-[node name="Button3" type="Button" parent="ui/HBoxContainer" unique_id=177138769]
+[node name="btnAbout" parent="ui/HBoxContainer" unique_id=1145162391 instance=ExtResource("5_si833")]
 layout_mode = 2
-text = "about"
+text = "About"
 
 [node name="aboutPanel" parent="." unique_id=968769467 instance=ExtResource("3_0h2lm")]
 visible = false
 
-[connection signal="pressed" from="ui/HBoxContainer/btnSStart" to="." method="_on_btn_s_start_pressed"]
-[connection signal="pressed" from="ui/HBoxContainer/Button3" to="." method="_on_button_3_pressed"]
+[connection signal="pressed" from="ui/HBoxContainer/btnStart" to="." method="_on_btn_s_start_pressed"]
+[connection signal="pressed" from="ui/HBoxContainer/btnAbout" to="." method="_on_button_3_pressed"]

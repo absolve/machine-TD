@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://4byruac2lq6d"]
+
+[ext_resource type="Script" uid="uid://05r0cy88cduv" path="res://script/ui_button.gd" id="1_ev3jx"]
+[ext_resource type="StyleBox" uid="uid://bl41nmepxt75f" path="res://theme/style/btn_press.tres" id="2_2b7kp"]
+[ext_resource type="StyleBox" uid="uid://djtnjx2ei87o2" path="res://theme/style/btn_normal.tres" id="2_q4lrg"]
+[ext_resource type="StyleBox" uid="uid://bq67tcr73iy0n" path="res://theme/style/btn_hover.tres" id="3_6obwp"]
+
+[node name="UIButton" type="Button" unique_id=1077812873]
+offset_right = 70.0
+offset_bottom = 23.0
+theme_override_styles/normal = ExtResource("2_q4lrg")
+theme_override_styles/pressed = ExtResource("2_2b7kp")
+theme_override_styles/hover = ExtResource("3_6obwp")
+script = ExtResource("1_ev3jx")
