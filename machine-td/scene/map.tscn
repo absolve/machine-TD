@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c0rd5oseij63o"]
+[gd_scene format=3 uid="uid://c0rd5oseij63o"]
 
 [ext_resource type="Script" uid="uid://cgdxoyy80vpqi" path="res://script/map.gd" id="1_rgtto"]
 [ext_resource type="PackedScene" uid="uid://8vvx43vtulw5" path="res://scene/title.tscn" id="2_4xw1d"]
@@ -7,36 +7,36 @@
 [ext_resource type="PackedScene" uid="uid://b61gsmirxvp8x" path="res://scene/level/level_1.tscn" id="5_4xw1d"]
 [ext_resource type="PackedScene" uid="uid://cfwue5nwpbqlj" path="res://scene/tower_shadow.tscn" id="6_bq37x"]
 
-[node name="map" type="Node2D"]
+[node name="map" type="Node2D" unique_id=988854810]
 script = ExtResource("1_rgtto")
 
-[node name="hud" type="CanvasLayer" parent="."]
+[node name="hud" type="CanvasLayer" parent="." unique_id=487852858]
 
-[node name="title" parent="hud" instance=ExtResource("2_4xw1d")]
+[node name="title" parent="hud" unique_id=845388962 instance=ExtResource("2_4xw1d")]
 
-[node name="towerUI" parent="hud" instance=ExtResource("3_bq37x")]
+[node name="towerUI" parent="hud" unique_id=54976183 instance=ExtResource("3_bq37x")]
 offset_left = 1640.0
 offset_right = 1640.0
 
-[node name="Button" type="Button" parent="hud"]
+[node name="Button" type="Button" parent="hud" unique_id=1786368414]
 offset_top = 500.0
 offset_right = 38.0
 offset_bottom = 531.0
 text = "test"
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=775910158]
 anchor_mode = 0
 process_callback = 0
 
-[node name="level1" parent="." instance=ExtResource("5_4xw1d")]
+[node name="level1" parent="." unique_id=1677168939 instance=ExtResource("5_4xw1d")]
 
-[node name="towerShadow" parent="." instance=ExtResource("6_bq37x")]
+[node name="towerShadow" parent="." unique_id=1500760555 instance=ExtResource("6_bq37x")]
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=1553136818]
 wait_time = 2.0
 one_shot = true
 
-[node name="resultScreen" parent="." instance=ExtResource("4_bq37x")]
+[node name="resultScreen" parent="." unique_id=1746614916 instance=ExtResource("4_bq37x")]
 visible = false
 
 [connection signal="pressed" from="hud/Button" to="." method="_on_button_pressed"]
