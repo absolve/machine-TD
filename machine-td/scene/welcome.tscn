@@ -11,6 +11,7 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1kia2"]
 shader = ExtResource("3_hi2bo")
 shader_parameter/speed = 0.1
+shader_parameter/darkness = 0.8
 
 [node name="welcome" type="Node2D" unique_id=351422500]
 script = ExtResource("1_njjjx")
