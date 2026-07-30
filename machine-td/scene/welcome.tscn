@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://di3klrsr8aekp" path="res://sprite/background_tiled.png" id="3_1kia2"]
 [ext_resource type="Shader" uid="uid://bwycjmqkx1rbs" path="res://shader/background.gdshader" id="3_hi2bo"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="5_si833"]
+[ext_resource type="Texture2D" uid="uid://dd7kyvd46ux57" path="res://sprite/book-open-cover.png" id="6_xdjj8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1kia2"]
 shader = ExtResource("3_hi2bo")
@@ -54,6 +55,7 @@ metadata/_edit_group_ = true
 [node name="UIButton" parent="ui/HBoxContainer" unique_id=226549016 instance=ExtResource("5_si833")]
 layout_mode = 2
 text = "Tutorial"
+icon = ExtResource("6_xdjj8")
 
 [node name="btnStart" parent="ui/HBoxContainer" unique_id=1077812873 instance=ExtResource("5_si833")]
 layout_mode = 2
