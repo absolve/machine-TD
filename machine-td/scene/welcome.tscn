@@ -3,15 +3,12 @@
 [ext_resource type="Script" uid="uid://dvh3dchh6mk70" path="res://script/welcome.gd" id="1_njjjx"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_hys0r"]
 [ext_resource type="PackedScene" uid="uid://v3vtbt8yry5c" path="res://scene/about_panel.tscn" id="3_0h2lm"]
-[ext_resource type="Texture2D" uid="uid://di3klrsr8aekp" path="res://sprite/background_tiled.png" id="3_1kia2"]
-[ext_resource type="Shader" uid="uid://bwycjmqkx1rbs" path="res://shader/background.gdshader" id="3_hi2bo"]
+[ext_resource type="PackedScene" uid="uid://dxgyptjosrq7w" path="res://scene/bg.tscn" id="3_xnoho"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="5_si833"]
 [ext_resource type="Texture2D" uid="uid://dd7kyvd46ux57" path="res://sprite/book-open-cover.png" id="6_xdjj8"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1kia2"]
-shader = ExtResource("3_hi2bo")
-shader_parameter/speed = 0.1
-shader_parameter/darkness = 0.8
+[ext_resource type="Texture2D" uid="uid://bsksv4xqp8slm" path="res://sprite/play-circle.png" id="7_vvofi"]
+[ext_resource type="Texture2D" uid="uid://dpriqv5u7rxvo" path="res://sprite/settings.png" id="8_vn0ct"]
+[ext_resource type="Texture2D" uid="uid://jssxjig1588u" path="res://sprite/interrogation.png" id="9_vkhmq"]
 
 [node name="welcome" type="Node2D" unique_id=351422500]
 script = ExtResource("1_njjjx")
@@ -23,14 +20,8 @@ offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("2_hys0r")
 
-[node name="bg" type="TextureRect" parent="ui" unique_id=1944570780]
-material = SubResource("ShaderMaterial_1kia2")
+[node name="bg" parent="ui" unique_id=150621738 instance=ExtResource("3_xnoho")]
 layout_mode = 0
-offset_right = 1920.0
-offset_bottom = 1080.0
-texture = ExtResource("3_1kia2")
-stretch_mode = 1
-metadata/_edit_lock_ = true
 
 [node name="Label" type="Label" parent="ui" unique_id=389625941]
 layout_mode = 0
@@ -45,10 +36,10 @@ vertical_alignment = 1
 
 [node name="HBoxContainer" type="VBoxContainer" parent="ui" unique_id=442101509]
 layout_mode = 0
-offset_left = 744.0
-offset_top = 592.0
-offset_right = 1144.0
-offset_bottom = 896.0
+offset_left = 760.0
+offset_top = 568.0
+offset_right = 1096.0
+offset_bottom = 964.0
 theme_override_constants/separation = 20
 alignment = 1
 metadata/_edit_group_ = true
@@ -61,14 +52,17 @@ icon = ExtResource("6_xdjj8")
 [node name="btnStart" parent="ui/HBoxContainer" unique_id=1077812873 instance=ExtResource("5_si833")]
 layout_mode = 2
 text = "Start"
+icon = ExtResource("7_vvofi")
 
 [node name="setting" parent="ui/HBoxContainer" unique_id=1284130239 instance=ExtResource("5_si833")]
 layout_mode = 2
 text = "Setting"
+icon = ExtResource("8_vn0ct")
 
 [node name="btnAbout" parent="ui/HBoxContainer" unique_id=1145162391 instance=ExtResource("5_si833")]
 layout_mode = 2
 text = "About"
+icon = ExtResource("9_vkhmq")
 
 [node name="aboutPanel" parent="." unique_id=968769467 instance=ExtResource("3_0h2lm")]
 visible = false

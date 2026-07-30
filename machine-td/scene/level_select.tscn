@@ -1,34 +1,40 @@
-[gd_scene load_steps=3 format=3 uid="uid://cvhqbyblwyyg0"]
+[gd_scene format=3 uid="uid://cvhqbyblwyyg0"]
 
 [ext_resource type="Script" uid="uid://b45nwil57qlrk" path="res://script/level_select.gd" id="1_jcnwc"]
+[ext_resource type="PackedScene" uid="uid://dxgyptjosrq7w" path="res://scene/bg.tscn" id="2_lc6rc"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_rch43"]
+[ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="4_xd2ss"]
 
-[node name="levelSelect" type="Node2D"]
+[node name="levelSelect" type="Node2D" unique_id=1452072642]
 script = ExtResource("1_jcnwc")
 
-[node name="ui" type="Control" parent="."]
+[node name="ui" type="Control" parent="." unique_id=1791906365]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("2_rch43")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ui"]
+[node name="bg" parent="ui" unique_id=150621738 instance=ExtResource("2_lc6rc")]
 layout_mode = 0
-offset_left = 816.0
-offset_top = 912.0
-offset_right = 1151.0
-offset_bottom = 977.0
+
+[node name="Label" type="Label" parent="ui" unique_id=528409908]
+layout_mode = 0
+offset_left = 744.0
+offset_top = 104.0
+offset_right = 1201.0
+offset_bottom = 217.0
+theme_override_font_sizes/font_size = 80
+text = "Select Level"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ui" unique_id=1887196183]
+layout_mode = 0
+offset_left = 760.0
+offset_top = 888.0
+offset_right = 1168.0
+offset_bottom = 965.0
 metadata/_edit_group_ = true
 
-[node name="Button" type="Button" parent="ui/HBoxContainer"]
+[node name="UIButton" parent="ui/HBoxContainer" unique_id=1077812873 instance=ExtResource("4_xd2ss")]
 layout_mode = 2
-text = "return"
-
-[node name="Button2" type="Button" parent="ui/HBoxContainer"]
-layout_mode = 2
-text = "start"
-
-[node name="Button3" type="Button" parent="ui/HBoxContainer"]
-layout_mode = 2
-text = "shop"
+text = "Back Menu"
