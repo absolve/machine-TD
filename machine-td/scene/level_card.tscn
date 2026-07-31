@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://r44skig17vwd"]
+
+[ext_resource type="StyleBox" uid="uid://yep3mcvh1bc7" path="res://theme/style/card_style.tres" id="1_62wgn"]
+[ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_78rwn"]
+[ext_resource type="Script" uid="uid://c50w63hcywpy2" path="res://script/level_card.gd" id="1_dy8d4"]
+
+[node name="levelCard" type="PanelContainer" unique_id=2095015538]
+offset_right = 128.0
+offset_bottom = 128.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_78rwn")
+theme_override_styles/panel = ExtResource("1_62wgn")
+script = ExtResource("1_dy8d4")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1291399432]
+layout_mode = 2
+
+[node name="num" type="Label" parent="VBoxContainer" unique_id=1551859812]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
