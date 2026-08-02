@@ -8,5 +8,8 @@ func _on_button_3_pressed():
 
 
 func _on_btn_s_start_pressed() -> void:
-	var map=load("res://scene/map.tscn")
-	get_tree().change_scene_to_packed(map)
+	#var map=load("res://scene/map.tscn")
+	#get_tree().change_scene_to_packed(map)
+	
+	
+	get_tree().change_scene_to_file("res://scene/level_select.tscn")

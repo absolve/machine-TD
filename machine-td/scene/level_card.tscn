@@ -3,12 +3,13 @@
 [ext_resource type="StyleBox" uid="uid://yep3mcvh1bc7" path="res://theme/style/card_style.tres" id="1_62wgn"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_78rwn"]
 [ext_resource type="Script" uid="uid://c50w63hcywpy2" path="res://script/level_card.gd" id="1_dy8d4"]
+[ext_resource type="PackedScene" uid="uid://dpt6basf7cnu6" path="res://scene/level_rating.tscn" id="4_bgjfb"]
+[ext_resource type="Texture2D" uid="uid://con6lnwug4pxd" path="res://sprite/Selector.png" id="5_7je8j"]
 
 [node name="levelCard" type="PanelContainer" unique_id=2095015538]
-offset_right = 128.0
-offset_bottom = 128.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+custom_minimum_size = Vector2(128, 128)
+offset_right = 256.0
+offset_bottom = 256.0
 theme = ExtResource("1_78rwn")
 theme_override_styles/panel = ExtResource("1_62wgn")
 script = ExtResource("1_dy8d4")
@@ -18,5 +19,25 @@ layout_mode = 2
 
 [node name="num" type="Label" parent="VBoxContainer" unique_id=1551859812]
 layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 90
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=436542357]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+
+[node name="levelRating" parent="VBoxContainer/MarginContainer" unique_id=640723317 instance=ExtResource("4_bgjfb")]
+layout_mode = 2
+
+[node name="selected" type="TextureRect" parent="." unique_id=987321347]
+visible = false
+layout_mode = 2
+texture = ExtResource("5_7je8j")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

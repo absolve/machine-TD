@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dtin1ky1qmkok"]
+
+[ext_resource type="StyleBox" uid="uid://yep3mcvh1bc7" path="res://theme/style/card_style.tres" id="1_kaivy"]
+
+[node name="PanelContainer" type="PanelContainer" unique_id=1767565793]
+theme_override_styles/panel = ExtResource("1_kaivy")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1490485672]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="btnStart" type="TextureButton" parent="MarginContainer" unique_id=2058281700]
+layout_mode = 2
+stretch_mode = 3

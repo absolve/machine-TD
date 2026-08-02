@@ -1,59 +1,58 @@
 extends Node
 
-enum bulletType{
-	player,enemy
+enum bulletType {
+	player, enemy
 }
 
-enum enemyType{
-	miniTank,mediumTank,heavyTank
+enum enemyType {
+	miniTank, mediumTank, heavyTank
 }
 
-enum towerType{
-	gunTower=1000,cannonTower,rocketTower
+enum towerType {
+	gunTower = 1000, cannonTower, rocketTower
 }
 
-const towerInfo={
-	towerType.gunTower:{
-	"name":"gunTower",
-	"atk":10,
-	"cost":10,
-	"reload":0.1,
-	"desc":"Standard Machine Gun Tower",
+const towerInfo = {
+	towerType.gunTower: {
+	"name": "gunTower",
+	"atk": 10,
+	"cost": 10,
+	"reload": 0.1,
+	"desc": "Standard Machine Gun Tower",
 	},
-	towerType.cannonTower:{
-	"name":"cannonTower",
-	"atk":30,
-	"cost":10,
-	"reload":0.3,
-	"desc":"",
+	towerType.cannonTower: {
+	"name": "cannonTower",
+	"atk": 30,
+	"cost": 10,
+	"reload": 0.3,
+	"desc": "",
 	},
-	towerType.rocketTower:{
-	"name":"rocketTower",
-	"atk":50,
-	"cost":10,
-	"reload":0.1,
-	"desc":"",
+	towerType.rocketTower: {
+	"name": "rocketTower",
+	"atk": 50,
+	"cost": 10,
+	"reload": 0.1,
+	"desc": "",
 	}
 }
 
 
+@warning_ignore("unused_signal")
+signal defeatEnemy # 击败敌人
+@warning_ignore("unused_signal")
+signal enemyEscape # 敌人逃脱
+@warning_ignore("unused_signal")
+signal selectTower # 选择塔
+@warning_ignore("unused_signal")
+signal placeTower # 放置塔
+@warning_ignore("unused_signal")
+signal refreshData # 游戏数据刷新
+@warning_ignore("unused_signal")
+signal sellTower # 出售塔
+@warning_ignore("unused_signal")
+signal lastWave # 最后一波
 
-@warning_ignore("unused_signal")
-signal defeatEnemy  #击败敌人
-@warning_ignore("unused_signal")
-signal enemyEscape #敌人逃脱
-@warning_ignore("unused_signal")
-signal selectTower #选择塔
-@warning_ignore("unused_signal")
-signal placeTower #放置塔
-@warning_ignore("unused_signal")
-signal refreshData   #游戏数据刷新
-@warning_ignore("unused_signal")
-signal sellTower  #出售塔
-@warning_ignore("unused_signal")
-signal lastWave #最后一波
-
-var map=null
+var map = null
 
 func addObj(obj):
 	if map:

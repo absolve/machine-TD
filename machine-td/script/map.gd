@@ -14,6 +14,8 @@ var cannonTower=preload("res://scene/cannonTower.tscn")
 
 var isLastWave=false #最后一波
 
+var cellSize=64
+
 func _ready():
 	print("map")
 	Game.map=self
@@ -39,7 +41,8 @@ func _ready():
 	titleNode.home.connect(home)
 	titleNode.speedOn.connect(speedOn)
 	titleNode.speedOff.connect(speedOff)
-	
+	queue_redraw()
+	print(int(1920.0/cellSize))
 	
 #选中塔
 func selectTower(item):
@@ -159,3 +162,10 @@ func _on_button_pressed():
 	resultScreen.popup_centered()
 	
 	pass # Replace with function body.
+
+
+func _draw() -> void:
+	for i in range(int(1920.0/cellSize)+1):
+		draw_line(Vector2(i * cellSize, 0), Vector2(i * cellSize, cellSize * (int(1920.0/cellSize))+1), Color.GRAY, 1, true)
+	for i in range(int(1080.0/cellSize)+1):
+		draw_line(Vector2(0, i * cellSize), Vector2(cellSize * (int(1920.0/cellSize)+1), i * cellSize), Color.GRAY, 1, true)

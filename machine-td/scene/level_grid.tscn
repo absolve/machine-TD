@@ -1,14 +1,8 @@
 [gd_scene format=3 uid="uid://dfm67m4vr31dg"]
 
-[ext_resource type="PackedScene" uid="uid://r44skig17vwd" path="res://scene/level_card.tscn" id="1_rxhic"]
-
 [node name="levelGrid" type="GridContainer" unique_id=500359031]
 offset_right = 376.0
 offset_bottom = 59.0
+theme_override_constants/h_separation = 40
+theme_override_constants/v_separation = 40
 columns = 6
-
-[node name="levelCard" parent="." unique_id=2095015538 instance=ExtResource("1_rxhic")]
-layout_mode = 2
-
-[node name="levelCard2" parent="." unique_id=115638659 instance=ExtResource("1_rxhic")]
-layout_mode = 2

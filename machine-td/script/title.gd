@@ -5,12 +5,12 @@ extends Control
 @onready var hpLabel=$PanelContainer/hbox/hbox2/hpLabel
 @onready var moneyLabel=$PanelContainer/hbox/hbox3/moneyLabel
 @onready var scoreLabel=$PanelContainer/hbox/hbox4/scoreLabel
-@onready var speedLabel=$PanelContainer/hbox/HBoxContainer3/hbox/HBoxContainer/speedLabel
-@onready var btnSpeed=$PanelContainer/hbox/HBoxContainer3/hbox/HBoxContainer/btnSpeed
-@onready var btnStart= $PanelContainer/hbox/HBoxContainer3/btnStart
-@onready var btnSound=$PanelContainer/hbox/HBoxContainer3/btnSound
+@onready var speedLabel=$PanelContainer/hbox/HBoxContainer3/btnFast/Label
+@onready var btnSpeed=$PanelContainer/hbox/HBoxContainer3/btnFast
+@onready var btnStart= $PanelContainer/hbox/HBoxContainer3/btnStart/MarginContainer/btnStart
+@onready var btnSound=$PanelContainer/hbox/HBoxContainer3/btnSfx/MarginContainer/btnStart
 @onready var btnMusic=$PanelContainer/hbox/HBoxContainer3/btnMusic
-@onready var btnHome=$PanelContainer/hbox/HBoxContainer3/btnHome
+@onready var btnHome=$PanelContainer/hbox/HBoxContainer3/btnHome/MarginContainer/btnStart
 
 
 signal start
@@ -45,7 +45,6 @@ var score=0:
 
 
 func _on_texture_button_toggled(toggled_on: bool) -> void:
-	print(toggled_on)
 	if toggled_on:
 		start.emit()
 	else:

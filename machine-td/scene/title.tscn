@@ -1,131 +1,140 @@
-[gd_scene load_steps=11 format=3 uid="uid://8vvx43vtulw5"]
+[gd_scene format=3 uid="uid://8vvx43vtulw5"]
 
 [ext_resource type="Script" uid="uid://svh6y8okcup5" path="res://script/title.gd" id="1_4fdtc"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_hr6ky"]
-[ext_resource type="Texture2D" uid="uid://o5p2mirmr8s6" path="res://sprite/Start_37108 (1).png" id="3_0npwg"]
-[ext_resource type="Texture2D" uid="uid://cuaueh06hc01a" path="res://sprite/PausePressed_26932.png" id="4_qaeh8"]
-[ext_resource type="Texture2D" uid="uid://3pi8175swvst" path="res://sprite/MediumArrow-Right.png" id="5_5tkpx"]
-[ext_resource type="Texture2D" uid="uid://ih1lsl8arw44" path="res://sprite/Sound-Two.png" id="5_th0ar"]
-[ext_resource type="Texture2D" uid="uid://d1c1qb7h3dlk2" path="res://sprite/Sound-None.png" id="6_5xh2k"]
-[ext_resource type="Texture2D" uid="uid://bllvjsuem5oma" path="res://sprite/Music-On.png" id="8_5tkpx"]
-[ext_resource type="Texture2D" uid="uid://b5xkid71b1rf0" path="res://sprite/Music-Off.png" id="9_glyem"]
-[ext_resource type="Texture2D" uid="uid://ogfcb767msec" path="res://sprite/Home.png" id="10_5tkpx"]
+[ext_resource type="Texture2D" uid="uid://bm7m26py6tq27" path="res://sprite/Start_37108 (1).png" id="3_0npwg"]
+[ext_resource type="StyleBox" uid="uid://dhsaatd24wa1i" path="res://theme/style/title_style.tres" id="3_glyem"]
+[ext_resource type="Texture2D" uid="uid://c0jt3uwyqgnrl" path="res://sprite/red-flag.png" id="4_8xtvp"]
+[ext_resource type="Texture2D" uid="uid://c8biuxg3ieug5" path="res://sprite/PausePressed_26932.png" id="4_qaeh8"]
+[ext_resource type="Texture2D" uid="uid://bdnius0cwgt6b" path="res://sprite/heart.png" id="5_kwewl"]
+[ext_resource type="Texture2D" uid="uid://ba8wauod7eg88" path="res://sprite/Sound-Two.png" id="5_th0ar"]
+[ext_resource type="Texture2D" uid="uid://f2qrpktrokvu" path="res://sprite/Sound-None.png" id="6_5xh2k"]
+[ext_resource type="Texture2D" uid="uid://bclj50neqlyof" path="res://sprite/coin.png" id="6_mtnbf"]
+[ext_resource type="PackedScene" uid="uid://dtin1ky1qmkok" path="res://scene/menuBtn.tscn" id="7_fh87k"]
+[ext_resource type="StyleBox" uid="uid://yep3mcvh1bc7" path="res://theme/style/card_style.tres" id="7_kwewl"]
+[ext_resource type="Texture2D" uid="uid://ddq8ly5mqnspv" path="res://sprite/Music-On.png" id="8_5tkpx"]
+[ext_resource type="Texture2D" uid="uid://cnh7eh0ff0ptq" path="res://sprite/Music-Off.png" id="9_glyem"]
+[ext_resource type="Texture2D" uid="uid://csejciuj7ribu" path="res://sprite/Home.png" id="10_5tkpx"]
 
-[node name="title" type="Control"]
+[node name="title" type="Control" unique_id=370411937]
 process_mode = 3
 layout_mode = 3
 anchors_preset = 0
 theme = ExtResource("2_hr6ky")
 script = ExtResource("1_4fdtc")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=42005360]
 layout_mode = 0
 offset_right = 1640.0
 offset_bottom = 72.0
+theme_override_styles/panel = ExtResource("3_glyem")
 
-[node name="hbox" type="HBoxContainer" parent="PanelContainer"]
+[node name="hbox" type="HBoxContainer" parent="PanelContainer" unique_id=1641971201]
 layout_mode = 2
 
-[node name="hbox1" type="HBoxContainer" parent="PanelContainer/hbox"]
+[node name="hbox1" type="HBoxContainer" parent="PanelContainer/hbox" unique_id=829498278]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="PanelContainer/hbox/hbox1"]
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/hbox/hbox1" unique_id=287785633]
 layout_mode = 2
-text = "wave:"
+texture = ExtResource("4_8xtvp")
+expand_mode = 2
 
-[node name="waveLabel" type="Label" parent="PanelContainer/hbox/hbox1"]
+[node name="waveLabel" type="Label" parent="PanelContainer/hbox/hbox1" unique_id=1251794824]
 layout_mode = 2
 text = "0"
 
-[node name="hbox2" type="HBoxContainer" parent="PanelContainer/hbox"]
+[node name="hbox2" type="HBoxContainer" parent="PanelContainer/hbox" unique_id=866919407]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="PanelContainer/hbox/hbox2"]
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/hbox/hbox2" unique_id=2023757498]
 layout_mode = 2
-text = "hp"
+texture = ExtResource("5_kwewl")
+expand_mode = 2
 
-[node name="hpLabel" type="Label" parent="PanelContainer/hbox/hbox2"]
+[node name="hpLabel" type="Label" parent="PanelContainer/hbox/hbox2" unique_id=184180904]
 layout_mode = 2
-text = "10:"
+text = "10"
 
-[node name="hbox3" type="HBoxContainer" parent="PanelContainer/hbox"]
+[node name="hbox3" type="HBoxContainer" parent="PanelContainer/hbox" unique_id=116410907]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="PanelContainer/hbox/hbox3"]
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/hbox/hbox3" unique_id=970084469]
 layout_mode = 2
-text = "money:"
+texture = ExtResource("6_mtnbf")
+expand_mode = 2
 
-[node name="moneyLabel" type="Label" parent="PanelContainer/hbox/hbox3"]
+[node name="moneyLabel" type="Label" parent="PanelContainer/hbox/hbox3" unique_id=2042860185]
 layout_mode = 2
 text = "0"
 
-[node name="hbox4" type="HBoxContainer" parent="PanelContainer/hbox"]
+[node name="hbox4" type="HBoxContainer" parent="PanelContainer/hbox" unique_id=833581043]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="PanelContainer/hbox/hbox4"]
+[node name="Label" type="Label" parent="PanelContainer/hbox/hbox4" unique_id=1435184204]
 layout_mode = 2
 text = "score:"
 
-[node name="scoreLabel" type="Label" parent="PanelContainer/hbox/hbox4"]
+[node name="scoreLabel" type="Label" parent="PanelContainer/hbox/hbox4" unique_id=785684134]
 layout_mode = 2
 text = "0"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/hbox"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/hbox" unique_id=55648942]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 2
 
-[node name="btnStart" type="TextureButton" parent="PanelContainer/hbox/HBoxContainer3"]
+[node name="btnStart" parent="PanelContainer/hbox/HBoxContainer3" unique_id=1767565793 instance=ExtResource("7_fh87k")]
 layout_mode = 2
+
+[node name="btnStart" parent="PanelContainer/hbox/HBoxContainer3/btnStart/MarginContainer" parent_id_path=PackedInt32Array(1767565793, 1490485672) index="0" unique_id=2058281700]
 toggle_mode = true
 texture_normal = ExtResource("3_0npwg")
 texture_pressed = ExtResource("4_qaeh8")
-stretch_mode = 3
 
-[node name="hbox" type="MarginContainer" parent="PanelContainer/hbox/HBoxContainer3"]
+[node name="btnFast" type="PanelContainer" parent="PanelContainer/hbox/HBoxContainer3" unique_id=1712597075]
+custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
-theme_override_constants/margin_right = 20
+theme_override_styles/panel = ExtResource("7_kwewl")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/hbox/HBoxContainer3/hbox"]
+[node name="Label" type="Label" parent="PanelContainer/hbox/HBoxContainer3/btnFast" unique_id=1094510227]
+layout_mode = 2
+text = "x1"
+horizontal_alignment = 1
+
+[node name="btnMusic" parent="PanelContainer/hbox/HBoxContainer3" unique_id=481632718 instance=ExtResource("7_fh87k")]
 layout_mode = 2
 
-[node name="btnSpeed" type="TextureButton" parent="PanelContainer/hbox/HBoxContainer3/hbox/HBoxContainer"]
-layout_mode = 2
-toggle_mode = true
-texture_normal = ExtResource("5_5tkpx")
-texture_pressed = ExtResource("5_5tkpx")
-stretch_mode = 3
-
-[node name="speedLabel" type="Label" parent="PanelContainer/hbox/HBoxContainer3/hbox/HBoxContainer"]
-layout_mode = 2
-text = "1X"
-
-[node name="btnSound" type="TextureButton" parent="PanelContainer/hbox/HBoxContainer3"]
-layout_mode = 2
-toggle_mode = true
-texture_normal = ExtResource("5_th0ar")
-texture_pressed = ExtResource("6_5xh2k")
-stretch_mode = 3
-
-[node name="btnMusic" type="TextureButton" parent="PanelContainer/hbox/HBoxContainer3"]
-layout_mode = 2
+[node name="btnStart" parent="PanelContainer/hbox/HBoxContainer3/btnMusic/MarginContainer" parent_id_path=PackedInt32Array(481632718, 1490485672) index="0" unique_id=2058281700]
 toggle_mode = true
 texture_normal = ExtResource("8_5tkpx")
 texture_pressed = ExtResource("9_glyem")
-stretch_mode = 3
 
-[node name="btnHome" type="TextureButton" parent="PanelContainer/hbox/HBoxContainer3"]
+[node name="btnSfx" parent="PanelContainer/hbox/HBoxContainer3" unique_id=1980654990 instance=ExtResource("7_fh87k")]
 layout_mode = 2
-texture_normal = ExtResource("10_5tkpx")
-stretch_mode = 3
 
-[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnStart" to="." method="_on_texture_button_toggled"]
-[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/hbox/HBoxContainer/btnSpeed" to="." method="_on_btn_speed_toggled"]
-[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnSound" to="." method="_on_btn_sound_toggled"]
-[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnMusic" to="." method="_on_btn_music_toggled"]
-[connection signal="pressed" from="PanelContainer/hbox/HBoxContainer3/btnHome" to="." method="_on_btn_home_pressed"]
+[node name="btnStart" parent="PanelContainer/hbox/HBoxContainer3/btnSfx/MarginContainer" parent_id_path=PackedInt32Array(1980654990, 1490485672) index="0" unique_id=2058281700]
+toggle_mode = true
+texture_normal = ExtResource("5_th0ar")
+texture_pressed = ExtResource("6_5xh2k")
+
+[node name="btnHome" parent="PanelContainer/hbox/HBoxContainer3" unique_id=1747648329 instance=ExtResource("7_fh87k")]
+layout_mode = 2
+
+[node name="btnStart" parent="PanelContainer/hbox/HBoxContainer3/btnHome/MarginContainer" parent_id_path=PackedInt32Array(1747648329, 1490485672) index="0" unique_id=2058281700]
+texture_normal = ExtResource("10_5tkpx")
+
+[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnStart/MarginContainer/btnStart" to="." method="_on_texture_button_toggled"]
+[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnMusic/MarginContainer/btnStart" to="." method="_on_btn_music_toggled"]
+[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnSfx/MarginContainer/btnStart" to="." method="_on_btn_sound_toggled"]
+[connection signal="pressed" from="PanelContainer/hbox/HBoxContainer3/btnHome/MarginContainer/btnStart" to="." method="_on_btn_home_pressed"]
+
+[editable path="PanelContainer/hbox/HBoxContainer3/btnStart"]
+[editable path="PanelContainer/hbox/HBoxContainer3/btnMusic"]
+[editable path="PanelContainer/hbox/HBoxContainer3/btnSfx"]
+[editable path="PanelContainer/hbox/HBoxContainer3/btnHome"]

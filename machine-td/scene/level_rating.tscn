@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://dpt6basf7cnu6"]
+
+[ext_resource type="Script" uid="uid://y57ru1vs0qvw" path="res://script/level_rating.gd" id="1_ndx5l"]
+
+[node name="levelRating" type="HBoxContainer" unique_id=640723317]
+offset_right = 88.0
+offset_bottom = 40.0
+script = ExtResource("1_ndx5l")
+
+[node name="star1" type="TextureRect" parent="." unique_id=2090069137]
+layout_mode = 2
+
+[node name="star2" type="TextureRect" parent="." unique_id=2120840015]
+layout_mode = 2
+
+[node name="star3" type="TextureRect" parent="." unique_id=911634739]
+layout_mode = 2
