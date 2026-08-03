@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://cmoo2h1nvyyws"]
+
+[ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_ahr6q"]
+[ext_resource type="Script" uid="uid://djw6tqlh5ypxo" path="res://script/setting.gd" id="1_xthoy"]
+[ext_resource type="PackedScene" uid="uid://uv64kol65sr5" path="res://scene/sound_opinion.tscn" id="3_g2to7"]
+
+[node name="setting" type="Control" unique_id=762839594]
+layout_mode = 3
+anchors_preset = 0
+theme = ExtResource("1_ahr6q")
+script = ExtResource("1_xthoy")
+
+[node name="box" type="HBoxContainer" parent="." unique_id=894367919]
+layout_mode = 0
+offset_right = 1904.0
+offset_bottom = 896.0
+
+[node name="main" type="PanelContainer" parent="box" unique_id=2092103572]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="box/main" unique_id=679768645]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="box/main/VBoxContainer" unique_id=44088827]
+layout_mode = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="box" unique_id=1053843168]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="box/PanelContainer2" unique_id=2122274050]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="box/PanelContainer2/VBoxContainer" unique_id=1052639629]
+layout_mode = 2
+size_flags_vertical = 6
+text = "Volume"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="box/PanelContainer2/VBoxContainer" unique_id=1217214539]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="soundOpinion" parent="box/PanelContainer2/VBoxContainer/VBoxContainer" unique_id=735161374 instance=ExtResource("3_g2to7")]
+layout_mode = 2
+
+[node name="soundOpinion2" parent="box/PanelContainer2/VBoxContainer/VBoxContainer" unique_id=1481147273 instance=ExtResource("3_g2to7")]
+layout_mode = 2
+
+[node name="soundOpinion3" parent="box/PanelContainer2/VBoxContainer/VBoxContainer" unique_id=271660847 instance=ExtResource("3_g2to7")]
+layout_mode = 2

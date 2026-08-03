@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://uv64kol65sr5"]
+
+[ext_resource type="Script" uid="uid://chiyafetw2vqo" path="res://script/sound_opinion.gd" id="1_cpkng"]
+
+[node name="soundOpinion" type="VBoxContainer" unique_id=735161374]
+offset_right = 112.0
+offset_bottom = 43.0
+size_flags_horizontal = 3
+script = ExtResource("1_cpkng")
+
+[node name="name" type="Label" parent="." unique_id=2088427403]
+layout_mode = 2
+uppercase = true
+
+[node name="HSlider" type="HSlider" parent="." unique_id=245821150]
+layout_mode = 2
+
+[node name="sound" type="AudioStreamPlayer2D" parent="." unique_id=269045260]
