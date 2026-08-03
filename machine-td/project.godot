@@ -63,6 +63,10 @@ zoom_out={
 ]
 }
 
+[internationalization]
+
+locale/locale_filter_mode=0
+
 [layer_names]
 
 2d_physics/layer_1="tower"
