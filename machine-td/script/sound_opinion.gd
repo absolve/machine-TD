@@ -2,7 +2,7 @@ extends VBoxContainer
 
 @export var busName='Master':
 	set(val):
-		busNameLabel.text=str(val)
+		#busNameLabel.text=str(val)
 		sound.bus=val
 		busName=val
 		
@@ -14,3 +14,8 @@ extends VBoxContainer
 
 @onready var busNameLabel=$name
 @onready var sound=$sound
+
+
+func playSound():
+	if sound.stream:
+		sound.play()

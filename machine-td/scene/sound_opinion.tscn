@@ -5,14 +5,17 @@
 [node name="soundOpinion" type="VBoxContainer" unique_id=735161374]
 offset_right = 112.0
 offset_bottom = 43.0
+theme_override_constants/separation = 10
 script = ExtResource("1_cpkng")
 
 [node name="name" type="Label" parent="." unique_id=2088427403]
 layout_mode = 2
+horizontal_alignment = 1
 uppercase = true
 
 [node name="HSlider" type="HSlider" parent="." unique_id=245821150]
 layout_mode = 2
 step = 10.0
+value = 100.0
 
 [node name="sound" type="AudioStreamPlayer2D" parent="." unique_id=269045260]

@@ -65,7 +65,7 @@ zoom_out={
 
 [internationalization]
 
-locale/locale_filter_mode=0
+locale/translations=PackedStringArray("res://lang/language.en.translation", "res://lang/language.zh.translation")
 
 [layer_names]
 

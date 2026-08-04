@@ -18,6 +18,7 @@ layout_mode = 0
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 896.0
+theme_override_constants/separation = 20
 
 [node name="main" type="PanelContainer" parent="box" unique_id=2092103572]
 layout_mode = 2
@@ -30,7 +31,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 80
-text = "General"
+text = "_General"
 horizontal_alignment = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="box/main/VBoxContainer" unique_id=138757151]
@@ -47,9 +48,9 @@ size_flags_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
-text = "Language"
+text = "_Language"
 
-[node name="OptionButton" type="OptionButton" parent="box/main/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1586112098]
+[node name="language" type="OptionButton" parent="box/main/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1586112098]
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 0
@@ -70,7 +71,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_font_sizes/font_size = 80
-text = "Volume"
+text = "_Volume"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -83,12 +84,31 @@ theme_override_constants/margin_right = 50
 [node name="VBoxContainer" type="VBoxContainer" parent="box/PanelContainer2/VBoxContainer/MarginContainer" unique_id=1217214539]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 40
 
-[node name="soundOpinion" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer" unique_id=735161374 instance=ExtResource("3_g2to7")]
+[node name="master" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer" unique_id=735161374 instance=ExtResource("3_g2to7")]
 layout_mode = 2
 
-[node name="soundOpinion2" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer" unique_id=1481147273 instance=ExtResource("3_g2to7")]
+[node name="name" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/master" index="0" unique_id=2088427403]
+text = "_Master_Volume"
+
+[node name="bg" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer" unique_id=1481147273 instance=ExtResource("3_g2to7")]
 layout_mode = 2
 
-[node name="soundOpinion3" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer" unique_id=271660847 instance=ExtResource("3_g2to7")]
+[node name="name" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/bg" index="0" unique_id=2088427403]
+text = "_Music"
+
+[node name="sfx" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer" unique_id=271660847 instance=ExtResource("3_g2to7")]
 layout_mode = 2
+
+[node name="name" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/sfx" index="0" unique_id=2088427403]
+text = "_Sound"
+
+[connection signal="item_selected" from="box/main/VBoxContainer/MarginContainer/HBoxContainer/language" to="." method="_on_option_button_item_selected"]
+[connection signal="value_changed" from="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/master/HSlider" to="." method="_on_master_value_changed"]
+[connection signal="value_changed" from="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/bg/HSlider" to="." method="_on_bg_value_changed"]
+[connection signal="value_changed" from="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/sfx/HSlider" to="." method="_on_sfx_value_changed"]
+
+[editable path="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/master"]
+[editable path="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/bg"]
+[editable path="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/sfx"]
