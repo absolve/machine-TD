@@ -8,6 +8,10 @@ var sound = preload("res://sound/Pickup.wav")
 @onready var sfx = $box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/sfx
 @onready var language=$box/main/VBoxContainer/MarginContainer/HBoxContainer/language
 
+signal  close
+
+
+
 func _ready() -> void:
 	master.busName='Master'
 	bg.busName='Bg'
@@ -35,3 +39,7 @@ func _on_sfx_value_changed(value: float):
 func _on_option_button_item_selected(index: int) -> void:
 	print(language.get_item_text(index)) 
 	TranslationServer.set_locale(language.get_item_text(index))
+
+
+func _on_btn_close_pressed() -> void:
+	close.emit()

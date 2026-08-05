@@ -1,11 +1,8 @@
-extends PopupPanel
+extends Window
+
+@onready var levelRating=$PanelContainer/VBoxContainer3/MarginContainer/vbox/levelRating
+
 
 func _ready():
-	popup_window=false
-	exclusive=true
-	#set_transient(true)
-	pass
-
-#显示弹窗	
-func showPanel():
+	levelRating.rating=1
 	pass

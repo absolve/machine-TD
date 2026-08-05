@@ -1,44 +1,72 @@
-[gd_scene load_steps=3 format=3 uid="uid://b2646ykmxfyif"]
+[gd_scene format=3 uid="uid://b2646ykmxfyif"]
 
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_wmp4s"]
 [ext_resource type="Script" uid="uid://qql75uietc82" path="res://script/result_screen.gd" id="2_h36hl"]
+[ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_biqnl"]
+[ext_resource type="PackedScene" uid="uid://dpt6basf7cnu6" path="res://scene/level_rating.tscn" id="3_x8uhl"]
 
-[node name="resultScreen" type="PopupPanel"]
+[node name="resultScreen" type="Window" unique_id=915205388]
 process_mode = 3
+transparent_bg = true
 oversampling_override = 1.0
-size = Vector2i(500, 400)
-visible = true
+size = Vector2i(800, 600)
+borderless = true
+transparent = true
 theme = ExtResource("1_wmp4s")
 script = ExtResource("2_h36hl")
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="."]
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 496.0
-offset_bottom = 396.0
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=155716288]
+offset_right = 716.0
+offset_bottom = 456.0
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="PanelContainer" unique_id=1541566441]
+layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer3"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer3" unique_id=1935673569]
 layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="vbox" type="VBoxContainer" parent="PanelContainer/VBoxContainer3/MarginContainer" unique_id=1441172966]
+layout_mode = 2
+size_flags_vertical = 3
 metadata/_edit_group_ = true
 
-[node name="Label" type="Label" parent="VBoxContainer3/VBoxContainer"]
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox" unique_id=1417774499]
 layout_mode = 2
-text = "title"
+text = "Congratulations"
+horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="VBoxContainer3/VBoxContainer"]
+[node name="Label2" type="Label" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox" unique_id=185031975]
 layout_mode = 2
 text = "score"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer3"]
+[node name="levelRating" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox" unique_id=640723317 instance=ExtResource("3_x8uhl")]
 layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/VBoxContainer3" unique_id=885608499]
+layout_mode = 2
+theme_override_constants/margin_bottom = 40
+
+[node name="hbox" type="HBoxContainer" parent="PanelContainer/VBoxContainer3/MarginContainer2" unique_id=1118499638]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 20
+alignment = 1
 metadata/_edit_group_ = true
 
-[node name="Button" type="Button" parent="VBoxContainer3/VBoxContainer2"]
+[node name="UIButton" parent="PanelContainer/VBoxContainer3/MarginContainer2/hbox" unique_id=1077812873 instance=ExtResource("3_biqnl")]
 layout_mode = 2
-text = "restart"
+text = "_Restart"
 
-[node name="Button2" type="Button" parent="VBoxContainer3/VBoxContainer2"]
+[node name="UIButton2" parent="PanelContainer/VBoxContainer3/MarginContainer2/hbox" unique_id=1241686801 instance=ExtResource("3_biqnl")]
 layout_mode = 2
-text = "resume"
+text = "_NextLevel"
+
+[node name="UIButton3" parent="PanelContainer/VBoxContainer3/MarginContainer2/hbox" unique_id=1829654265 instance=ExtResource("3_biqnl")]
+layout_mode = 2
+text = "_Main_Menu"

@@ -2,8 +2,8 @@
 
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_ahr6q"]
 [ext_resource type="Script" uid="uid://djw6tqlh5ypxo" path="res://script/setting.gd" id="1_xthoy"]
-[ext_resource type="PackedScene" uid="uid://dxgyptjosrq7w" path="res://scene/bg.tscn" id="3_2wb80"]
 [ext_resource type="PackedScene" uid="uid://uv64kol65sr5" path="res://scene/sound_opinion.tscn" id="3_g2to7"]
+[ext_resource type="Texture2D" uid="uid://xd1ujbghu3io" path="res://sprite/close.png" id="4_2wb80"]
 
 [node name="setting" type="Control" unique_id=762839594]
 layout_mode = 3
@@ -11,13 +11,10 @@ anchors_preset = 0
 theme = ExtResource("1_ahr6q")
 script = ExtResource("1_xthoy")
 
-[node name="bg" parent="." unique_id=150621738 instance=ExtResource("3_2wb80")]
-layout_mode = 0
-
 [node name="box" type="HBoxContainer" parent="." unique_id=894367919]
 layout_mode = 0
-offset_right = 1920.0
-offset_bottom = 896.0
+offset_right = 1800.0
+offset_bottom = 900.0
 theme_override_constants/separation = 20
 
 [node name="main" type="PanelContainer" parent="box" unique_id=2092103572]
@@ -104,10 +101,23 @@ layout_mode = 2
 [node name="name" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/sfx" index="0" unique_id=2088427403]
 text = "_Sound"
 
+[node name="btnClose" type="TextureButton" parent="." unique_id=1444773557]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 1720.0
+offset_top = 16.0
+offset_right = 1784.0
+offset_bottom = 80.0
+grow_horizontal = 0
+texture_normal = ExtResource("4_2wb80")
+
 [connection signal="item_selected" from="box/main/VBoxContainer/MarginContainer/HBoxContainer/language" to="." method="_on_option_button_item_selected"]
 [connection signal="value_changed" from="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/master/HSlider" to="." method="_on_master_value_changed"]
 [connection signal="value_changed" from="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/bg/HSlider" to="." method="_on_bg_value_changed"]
 [connection signal="value_changed" from="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/sfx/HSlider" to="." method="_on_sfx_value_changed"]
+[connection signal="pressed" from="btnClose" to="." method="_on_btn_close_pressed"]
 
 [editable path="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/master"]
 [editable path="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/bg"]

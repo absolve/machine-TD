@@ -37,6 +37,7 @@ wait_time = 2.0
 one_shot = true
 
 [node name="resultScreen" parent="." unique_id=1746614916 instance=ExtResource("4_bq37x")]
+position = Vector2i(0, 36)
 visible = false
 
 [connection signal="pressed" from="hud/Button" to="." method="_on_button_pressed"]
