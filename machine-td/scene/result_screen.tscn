@@ -28,6 +28,7 @@ alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 10
 
 [node name="vbox" type="VBoxContainer" parent="PanelContainer/VBoxContainer3/MarginContainer" unique_id=1441172966]
@@ -35,14 +36,16 @@ layout_mode = 2
 size_flags_vertical = 3
 metadata/_edit_group_ = true
 
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox" unique_id=1417774499]
+[node name="resultLabel" type="Label" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox" unique_id=1417774499]
 layout_mode = 2
-text = "Congratulations"
+theme_override_font_sizes/font_size = 60
+text = "_LevelCompleted"
 horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox" unique_id=185031975]
+[node name="waveLabel" type="Label" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox" unique_id=185031975]
+visible = false
 layout_mode = 2
-text = "score"
+horizontal_alignment = 1
 
 [node name="levelRating" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox" unique_id=640723317 instance=ExtResource("3_x8uhl")]
 layout_mode = 2
@@ -50,7 +53,7 @@ alignment = 1
 
 [node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/VBoxContainer3" unique_id=885608499]
 layout_mode = 2
-theme_override_constants/margin_bottom = 40
+theme_override_constants/margin_bottom = 30
 
 [node name="hbox" type="HBoxContainer" parent="PanelContainer/VBoxContainer3/MarginContainer2" unique_id=1118499638]
 layout_mode = 2

@@ -1,7 +1,9 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://em0nibpopl3n"]
+[gd_resource type="Theme" format=3 uid="uid://em0nibpopl3n"]
 
-[ext_resource type="FontFile" uid="uid://iyip2w6pe3es" path="res://font/AlibabaPuHuiTi-3-85-Bold.ttf" id="1_8ab6e"]
+[ext_resource type="FontFile" uid="uid://b8laqa86i451m" path="res://font/AlibabaPuHuiTi-3-85-Bold.ttf" id="1_8ab6e"]
+[ext_resource type="StyleBox" uid="uid://bdcoonp8pa5ip" path="res://theme/style/panel_style.tres" id="1_nrt0f"]
 
 [resource]
 default_font = ExtResource("1_8ab6e")
 default_font_size = 40
+PanelContainer/styles/panel = ExtResource("1_nrt0f")

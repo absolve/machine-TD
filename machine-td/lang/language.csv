@@ -13,5 +13,7 @@ _Start_game,Start Game,开始游戏
 _Settings,Settings,设置
 _About,About,关于
 _Tutorial,Tutorial,教程
-_Congratulations,Congratulations,恭喜过关
-_Defeat,Defeat,失败
+_LevelFailed,Level Failed,失败
+_LevelCompleted,Level Completed,过关
+_SelectLevel,Select Level,选择关卡
+_Wave,Wave,波数
