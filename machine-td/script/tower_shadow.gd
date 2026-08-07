@@ -29,41 +29,60 @@ func setInactive():
 	active = false
 	visible = false
 	placeable = false
-	
-func _physics_process(_delta):
-	if !active:
-		return
-	position = get_global_mouse_position()
-	var areas = get_overlapping_areas()
-	if areas:
-		placeable = false
-		var ownRect = Rect2(global_position - shape.shape.get_rect().size / 2,
-		shape.shape.get_rect().size)
-		var hasTower = false
-		for i in areas:
-			var shape1 = i.get_node("shape")
-			var otherRect = Rect2(i.global_position - shape1.shape.get_rect().size / 2,
-				shape1.shape.get_rect().size)
-			if i is Tower: # 判断塔是不是重叠
-				if otherRect.intersects(ownRect):
-					hasTower = true
-			else:
-				if otherRect.encloses(ownRect):
-					placeable = true
-		if hasTower:
-			#print('hasTower',hasTower)
-			placeable = false
-	else:
-		placeable = false
 
-func _input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed("click"):
-		if placeable:
-			Game.placeTower.emit(towerType)
+func  _physics_process(_delta: float) -> void:
+	if active:
+		queue_redraw()
+		pass
+
+func _draw() -> void:
+	var half_x: int = gridSize.x / 2
+	var half_y: int = gridSize.y / 2	
+
+	var start: Vector2 = Vector2.ZERO - Vector2(half_x, half_y)
+
+	for dx in range(gridSize.x):
+		for dy in range(gridSize.y):
+			draw_rect(Rect2((start+Vector2(dx, dy)-
+			Vector2(StageData.TileSize,StageData.TileSize)/2),
+			Vector2(StageData.TileSize,StageData.TileSize)),Color.INDIAN_RED)
+	
+
+
+# func _physics_process(_delta):
+# 	if !active:
+# 		return
+# 	position = get_global_mouse_position()
+# 	var areas = get_overlapping_areas()
+# 	if areas:
+# 		placeable = false
+# 		var ownRect = Rect2(global_position - shape.shape.get_rect().size / 2,
+# 		shape.shape.get_rect().size)
+# 		var hasTower = false
+# 		for i in areas:
+# 			var shape1 = i.get_node("shape")
+# 			var otherRect = Rect2(i.global_position - shape1.shape.get_rect().size / 2,
+# 				shape1.shape.get_rect().size)
+# 			if i is Tower: # 判断塔是不是重叠
+# 				if otherRect.intersects(ownRect):
+# 					hasTower = true
+# 			else:
+# 				if otherRect.encloses(ownRect):
+# 					placeable = true
+# 		if hasTower:
+# 			#print('hasTower',hasTower)
+# 			placeable = false
+# 	else:
+# 		placeable = false
+
+# func _input(_event: InputEvent) -> void:
+# 	if Input.is_action_just_pressed("click"):
+# 		if placeable:
+# 			Game.placeTower.emit(towerType)
 		
-	if Input.is_action_just_pressed("selectCancel"):
-		if active:
-			setInactive()
+# 	if Input.is_action_just_pressed("selectCancel"):
+# 		if active:
+# 			setInactive()
 	
 #func _unhandled_input(_event:InputEvent):
 	#if Input.is_action_just_pressed("click"):

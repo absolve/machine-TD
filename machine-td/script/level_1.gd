@@ -3,6 +3,7 @@ extends "res://script/base_level.gd"
 @onready var path1 = $Path2D
 
 func _ready():
+	super._ready()
 	#print("level")
 	#print(StageData.allStage)
 	#print(get_node("placeableArea2/shape").shape.get_rect())

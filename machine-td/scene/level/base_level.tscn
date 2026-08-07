@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://3y2m15k6dbu"]
 
 [ext_resource type="Script" uid="uid://b2feq1aklupua" path="res://script/base_level.gd" id="1_dxhww"]
+[ext_resource type="PackedScene" uid="uid://cfwue5nwpbqlj" path="res://scene/tower_shadow.tscn" id="2_ivasy"]
 
 [node name="baseLevel" type="Node2D" unique_id=947242125]
 script = ExtResource("1_dxhww")
@@ -12,3 +13,5 @@ script = ExtResource("1_dxhww")
 [node name="waveTimer" type="Timer" parent="." unique_id=1926411625]
 
 [node name="spawnerTimer" type="Timer" parent="." unique_id=1141747298]
+
+[node name="towerShadow" parent="." unique_id=1602345415 instance=ExtResource("2_ivasy")]

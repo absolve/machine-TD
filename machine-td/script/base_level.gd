@@ -7,21 +7,34 @@ extends Node2D
 
 @onready var waveTimer = $waveTimer
 @onready var spawnerTimer = $spawnerTimer
-
+@onready var towerShadow = $towerShadow
 
 
 var currWave = 0
 var enemyList = []
 var currentSpawner = [] # 当前生产列表
 
-var allowArea: Array[Vector2i]=[] #允许放置塔的区域
-var occupiedArea: Array[Vector2i]=[] #已占用的区域
+var allowArea: Array[Vector2i] = [] # 允许放置塔的区域
+var occupiedArea: Array[Vector2i] = [] # 已占用的区域
 
 
+func _ready() -> void:
+	Game.selectTower.connect(selectTower)
+
+
+# 选择塔
+func selectTower(type):
+	print(type)
+	var temp = Game.towerInfo.get(type)
+	towerShadow.cost = temp.cost
+	towerShadow.towerType = type
+	towerShadow.gridSize = temp.gridSize
+	towerShadow.setActive()
+
+# 将世界坐标对齐到网格
 func world_to_grid(world_pos: Vector2) -> Vector2i:
-	# 将世界坐标对齐到网格
-	var grid_x = floor(world_pos.x / StageData.TileSize)
-	var grid_y = floor(world_pos.y / StageData.TileSize)
+	var grid_x = floori(world_pos.x / StageData.TileSize)
+	var grid_y = floori(world_pos.y / StageData.TileSize)
 	return Vector2i(grid_x, grid_y)
 
 # 判断是否可以放置塔
@@ -32,15 +45,15 @@ func canPlace(coverGrids: Array[Vector2i]) -> bool:
 	return true
 
 # 获取塔占用的网格
-func getTowerCoverGrid(center_grid: Vector2i, tower_size:Vector2i) -> Array[Vector2i]:
-	var covers:Array[Vector2i] = []
+func getTowerCoverGrid(center_grid: Vector2i, tower_size: Vector2i) -> Array[Vector2i]:
+	var covers: Array[Vector2i] = []
 	# 偏移：从中心向左上角偏移一半网格
 	@warning_ignore("integer_division")
 	var half_x: int = tower_size.x / 2
 	@warning_ignore("integer_division")
 	var half_y: int = tower_size.y / 2
 
-	var start:Vector2i = center_grid - Vector2i(half_x, half_y)
+	var start: Vector2i = center_grid - Vector2i(half_x, half_y)
 
 	for dx in range(tower_size.x):
 		for dy in range(tower_size.y):
@@ -48,3 +61,19 @@ func getTowerCoverGrid(center_grid: Vector2i, tower_size:Vector2i) -> Array[Vect
 	return covers
 
 
+func _physics_process(_delta: float) -> void:
+	if towerShadow.active:
+		towerShadow.position = get_global_mouse_position()
+
+		pass
+
+	
+
+func _input(_event: InputEvent) -> void:
+	if towerShadow.active:
+		if Input.is_action_just_pressed("click"):
+			if towerShadow.placeable:
+				Game.placeTower.emit(towerShadow.towerType)
+		if Input.is_action_just_pressed("selectCancel"):
+			if towerShadow.active:
+				towerShadow.setInactive()

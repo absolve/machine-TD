@@ -34,7 +34,7 @@ layout_mode = 2
 
 [node name="hbox1" type="HBoxContainer" parent="PanelContainer/hbox" unique_id=829498278]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
 
 [node name="TextureRect" type="TextureRect" parent="PanelContainer/hbox/hbox1" unique_id=287785633]
 layout_mode = 2
@@ -42,12 +42,13 @@ texture = ExtResource("4_8xtvp")
 expand_mode = 2
 
 [node name="waveLabel" type="Label" parent="PanelContainer/hbox/hbox1" unique_id=1251794824]
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "0"
 
 [node name="hbox2" type="HBoxContainer" parent="PanelContainer/hbox" unique_id=866919407]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
 
 [node name="TextureRect" type="TextureRect" parent="PanelContainer/hbox/hbox2" unique_id=2023757498]
 layout_mode = 2
@@ -55,12 +56,13 @@ texture = ExtResource("5_kwewl")
 expand_mode = 2
 
 [node name="hpLabel" type="Label" parent="PanelContainer/hbox/hbox2" unique_id=184180904]
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "10"
 
 [node name="hbox3" type="HBoxContainer" parent="PanelContainer/hbox" unique_id=116410907]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 2
 
 [node name="TextureRect" type="TextureRect" parent="PanelContainer/hbox/hbox3" unique_id=970084469]
 layout_mode = 2
