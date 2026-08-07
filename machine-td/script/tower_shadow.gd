@@ -8,6 +8,8 @@ var placeable = false # 可放置
 var active = false # 是否活动
 var towerType = Game.towerType.gunTower # 类型
 var cost = 0 # 花费
+var gridSize:  Vector2i = Vector2i(1,1)#占用的网格宽高 (列, 行)
+
 
 func _ready():
 	print(shape.shape.get_rect())

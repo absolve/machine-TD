@@ -1,14 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://3y2m15k6dbu"]
+[gd_scene format=3 uid="uid://3y2m15k6dbu"]
 
 [ext_resource type="Script" uid="uid://b2feq1aklupua" path="res://script/base_level.gd" id="1_dxhww"]
 
-[node name="baseLevel" type="Node2D"]
+[node name="baseLevel" type="Node2D" unique_id=947242125]
 script = ExtResource("1_dxhww")
 
-[node name="bg" type="TileMapLayer" parent="."]
+[node name="bg" type="TileMapLayer" parent="." unique_id=858766704]
 
-[node name="fg" type="TileMapLayer" parent="."]
+[node name="fg" type="TileMapLayer" parent="." unique_id=750931851]
 
-[node name="waveTimer" type="Timer" parent="."]
+[node name="waveTimer" type="Timer" parent="." unique_id=1926411625]
 
-[node name="spawnerTimer" type="Timer" parent="."]
+[node name="spawnerTimer" type="Timer" parent="." unique_id=1141747298]

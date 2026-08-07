@@ -1,5 +1,7 @@
 extends Node
 
+const TileSize = 64  #网格大小
+
 #关卡的数据
 var allStage = [
 	{
