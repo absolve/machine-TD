@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://c2g3rjpp3rijm"]
+
+[ext_resource type="Script" uid="uid://2il1fme2eosd" path="res://script/toast_info.gd" id="1_b3y76"]
+
+[node name="toastInfo" type="Control" unique_id=1968260455]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_b3y76")

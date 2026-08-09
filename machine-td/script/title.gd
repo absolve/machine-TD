@@ -27,11 +27,17 @@ var hp=0:
 	set(value):
 		hp=max(value,0)
 		hpLabel.text=str(value)
+
+var currentWave:int=0:
+	set(value):
+		currentWave=value
+		waveLabel.text=str(currentWave)+"/"+str(value)
+		
 		
 var wave=1:
 	set(value):
 		wave=value
-		waveLabel.text=str(value)
+		waveLabel.text=str(currentWave)+"/"+str(value)
 		
 var money=0:
 	set(value):

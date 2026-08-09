@@ -2,19 +2,19 @@
 
 [ext_resource type="Script" uid="uid://svh6y8okcup5" path="res://script/title.gd" id="1_4fdtc"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_hr6ky"]
-[ext_resource type="Texture2D" uid="uid://bm7m26py6tq27" path="res://sprite/Start_37108 (1).png" id="3_0npwg"]
+[ext_resource type="Texture2D" uid="uid://o5p2mirmr8s6" path="res://sprite/Start_37108 (1).png" id="3_0npwg"]
 [ext_resource type="StyleBox" uid="uid://dhsaatd24wa1i" path="res://theme/style/title_style.tres" id="3_glyem"]
-[ext_resource type="Texture2D" uid="uid://c0jt3uwyqgnrl" path="res://sprite/red-flag.png" id="4_8xtvp"]
-[ext_resource type="Texture2D" uid="uid://c8biuxg3ieug5" path="res://sprite/PausePressed_26932.png" id="4_qaeh8"]
+[ext_resource type="Texture2D" uid="uid://dum87i8l8qppk" path="res://sprite/red-flag.png" id="4_8xtvp"]
+[ext_resource type="Texture2D" uid="uid://cuaueh06hc01a" path="res://sprite/PausePressed_26932.png" id="4_qaeh8"]
 [ext_resource type="Texture2D" uid="uid://bdnius0cwgt6b" path="res://sprite/heart.png" id="5_kwewl"]
-[ext_resource type="Texture2D" uid="uid://ba8wauod7eg88" path="res://sprite/Sound-Two.png" id="5_th0ar"]
-[ext_resource type="Texture2D" uid="uid://f2qrpktrokvu" path="res://sprite/Sound-None.png" id="6_5xh2k"]
+[ext_resource type="Texture2D" uid="uid://ih1lsl8arw44" path="res://sprite/Sound-Two.png" id="5_th0ar"]
+[ext_resource type="Texture2D" uid="uid://d1c1qb7h3dlk2" path="res://sprite/Sound-None.png" id="6_5xh2k"]
 [ext_resource type="Texture2D" uid="uid://bclj50neqlyof" path="res://sprite/coin.png" id="6_mtnbf"]
 [ext_resource type="PackedScene" uid="uid://dtin1ky1qmkok" path="res://scene/menuBtn.tscn" id="7_fh87k"]
 [ext_resource type="StyleBox" uid="uid://yep3mcvh1bc7" path="res://theme/style/card_style.tres" id="7_kwewl"]
-[ext_resource type="Texture2D" uid="uid://ddq8ly5mqnspv" path="res://sprite/Music-On.png" id="8_5tkpx"]
-[ext_resource type="Texture2D" uid="uid://cnh7eh0ff0ptq" path="res://sprite/Music-Off.png" id="9_glyem"]
-[ext_resource type="Texture2D" uid="uid://csejciuj7ribu" path="res://sprite/Home.png" id="10_5tkpx"]
+[ext_resource type="Texture2D" uid="uid://b5ns2yj1xdd15" path="res://sprite/Music-On.png" id="8_5tkpx"]
+[ext_resource type="Texture2D" uid="uid://b5yfaf2b87rp2" path="res://sprite/Music-Off.png" id="9_glyem"]
+[ext_resource type="Texture2D" uid="uid://ogfcb767msec" path="res://sprite/Home.png" id="10_5tkpx"]
 
 [node name="title" type="Control" unique_id=370411937]
 process_mode = 3
@@ -42,7 +42,7 @@ texture = ExtResource("4_8xtvp")
 expand_mode = 2
 
 [node name="waveLabel" type="Label" parent="PanelContainer/hbox/hbox1" unique_id=1251794824]
-custom_minimum_size = Vector2(60, 0)
+custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 text = "0"
 
@@ -56,7 +56,7 @@ texture = ExtResource("5_kwewl")
 expand_mode = 2
 
 [node name="hpLabel" type="Label" parent="PanelContainer/hbox/hbox2" unique_id=184180904]
-custom_minimum_size = Vector2(60, 0)
+custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 text = "10"
 

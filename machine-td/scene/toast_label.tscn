@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bkfsxi1kk7u88"]
+
+[ext_resource type="Script" uid="uid://ba7g1sa4luhts" path="res://script/toast_label.gd" id="1_8qnt0"]
+
+[node name="ToastLabel" type="Label" unique_id=1869999288]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 70
+script = ExtResource("1_8qnt0")

@@ -32,7 +32,7 @@ func selectTower(type):
 	towerShadow.setActive()
 
 # 将世界坐标对齐到网格
-func world_to_grid(world_pos: Vector2) -> Vector2i:
+func world2Grid(world_pos: Vector2) -> Vector2i:
 	var grid_x = floori(world_pos.x / StageData.TileSize)
 	var grid_y = floori(world_pos.y / StageData.TileSize)
 	return Vector2i(grid_x, grid_y)
@@ -40,6 +40,8 @@ func world_to_grid(world_pos: Vector2) -> Vector2i:
 # 判断是否可以放置塔
 func canPlace(coverGrids: Array[Vector2i]) -> bool:
 	for i in coverGrids:
+		if i not in allowArea:
+			return false
 		if i in occupiedArea:
 			return false
 	return true
@@ -61,19 +63,41 @@ func getTowerCoverGrid(center_grid: Vector2i, tower_size: Vector2i) -> Array[Vec
 	return covers
 
 
+# 隐藏塔阴影
+func setShadowHide():
+	towerShadow.setInactive()
+	queue_redraw()
+
+#添加已占用的区域
+func  addOccupiedArea(grid: Array[Vector2i]):
+	occupiedArea.append_array(grid)
+
+
 func _physics_process(_delta: float) -> void:
 	if towerShadow.active:
 		towerShadow.position = get_global_mouse_position()
-
-		pass
-
+		var grid = world2Grid(towerShadow.position)
+		var towerCoverGrid = getTowerCoverGrid(grid, towerShadow.gridSize)
+		# print(towerCoverGrid)
+		towerShadow.placeable = canPlace(towerCoverGrid)
+		# print(towerShadow.placeable)
+		queue_redraw()
 	
-
+	
 func _input(_event: InputEvent) -> void:
 	if towerShadow.active:
 		if Input.is_action_just_pressed("click"):
 			if towerShadow.placeable:
-				Game.placeTower.emit(towerShadow.towerType)
+				var grid = world2Grid(towerShadow.position)
+				var towerCoverGrid = getTowerCoverGrid(grid, towerShadow.gridSize)
+				Game.placeTower.emit(towerShadow.towerType,towerShadow.cost,grid, towerCoverGrid)
 		if Input.is_action_just_pressed("selectCancel"):
 			if towerShadow.active:
 				towerShadow.setInactive()
+				queue_redraw()
+
+func _draw() -> void:
+	if towerShadow.active:
+		for i in allowArea:
+			draw_rect(Rect2(Vector2(i.x * StageData.TileSize, i.y * StageData.TileSize),
+			 Vector2(StageData.TileSize, StageData.TileSize)), Color.SALMON)

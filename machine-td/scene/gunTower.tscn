@@ -1,11 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://di6u5yfi44083"]
+[gd_scene format=3 uid="uid://di6u5yfi44083"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_64uc6"]
 [ext_resource type="Script" uid="uid://h5w308vyc8yt" path="res://script/gun_tower.gd" id="2_i5mjb"]
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_5i26j"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k8n1u"]
-size = Vector2(100, 100)
+size = Vector2(64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k8n1u"]
 atlas = ExtResource("3_5i26j")
@@ -17,7 +17,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_k8n1u")
 }],
-"loop": false,
+"loop": 0,
 "name": &"default",
 "speed": 5.0
 }]
@@ -35,7 +35,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_86lx6")
 }],
-"loop": false,
+"loop": 0,
 "name": &"default",
 "speed": 5.0
 }]
@@ -77,13 +77,14 @@ _data = {
 &"fire": SubResource("Animation_k8n1u")
 }
 
-[node name="Tower" instance=ExtResource("1_64uc6")]
+[node name="Tower" unique_id=1473885297 instance=ExtResource("1_64uc6")]
 script = ExtResource("2_i5mjb")
 
 [node name="shape" parent="." index="0"]
 shape = SubResource("RectangleShape2D_k8n1u")
 
 [node name="base" parent="." index="1"]
+scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_i5mjb")
 
 [node name="radar" parent="." index="2"]
@@ -93,16 +94,24 @@ visible = false
 shape = SubResource("CircleShape2D_5i26j")
 
 [node name="turret" parent="." index="3"]
+scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_k8n1u")
 offset = Vector2(16, 0)
 
 [node name="Marker2D" parent="turret" index="0"]
 position = Vector2(45, 0)
 
+[node name="lifeBar" parent="." index="5"]
+position = Vector2(0, -51)
+
 [node name="player" parent="." index="6"]
-libraries = {
-&"": SubResource("AnimationLibrary_k4bnm")
-}
+libraries/ = SubResource("AnimationLibrary_k4bnm")
+
+[node name="ProgressBar" parent="." index="7"]
+offset_left = -32.0
+offset_top = -13.0
+offset_right = 32.0
+offset_bottom = 14.0
 
 [connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
 [connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]

@@ -7,25 +7,31 @@ extends Node2D
 @onready var resultScreen = $resultScreen
 @onready var level = $level1
 @onready var finishTimer = $Timer
+@onready var toastInfo=$hud/toastInfo
+
 
 var gunTower = preload("res://scene/gunTower.tscn")
 var rocketTower = preload("res://scene/rocketTower.tscn")
 var cannonTower = preload("res://scene/cannonTower.tscn")
 
 var isLastWave = false # 最后一波
-
 var cellSize = 64
+var debug = true
+var font
+var selectedTower = null  #选中的塔
+
 
 func _ready():
 	print("map")
 	Game.map = self
 	#Game.selectTower.connect(selectTower)
-	#Game.placeTower.connect(placeTower)
+	Game.placeTower.connect(placeTower)
 	Game.refreshData.connect(refreshData)
 	Game.defeatEnemy.connect(defeatEnemy)
 	Game.enemyEscape.connect(enemyEscape)
 	Game.sellTower.connect(sellTower)
 	Game.lastWave.connect(lastWave)
+	Game.clickTower.connect(clickTower)
 	#加载关卡
 	
 	titleNode.hp = level.health
@@ -43,6 +49,8 @@ func _ready():
 	titleNode.speedOff.connect(speedOff)
 	queue_redraw()
 	# print(int(1920.0 / cellSize))
+	font = ThemeDB.fallback_font
+	
 	
 #选中塔
 #func selectTower(item):
@@ -55,23 +63,26 @@ func _ready():
 		#i.isShow = true
 	
 #放着塔
-#func placeTower(type):
-	#print(type)
-	#if titleNode.money < towerShadow.cost:
-		#print('Insufficient funds')
-		#return
-	#var temp = null
-	#titleNode.money -= towerShadow.cost
-	#if type == Game.towerType.gunTower:
-		#temp = gunTower.instantiate()
-	#elif type == Game.towerType.cannonTower:
-		#temp = cannonTower.instantiate()
-	#elif type == Game.towerType.rocketTower:
-		#temp = rocketTower.instantiate()
-	#temp.position = towerShadow.position
-#
-	#level.add_child(temp)
-	#towerShadow.setInactive()
+func placeTower(type, cost, grid, towerCoverGrid):
+	print('placeTower',type)
+	if titleNode.money < cost:
+		print('Insufficient funds')
+		addNotice('Insufficient funds')
+		return
+	var temp = null
+	titleNode.money -= cost
+	if type == Game.towerType.gunTower:
+		temp = gunTower.instantiate()
+	elif type == Game.towerType.cannonTower:
+		temp = cannonTower.instantiate()
+	elif type == Game.towerType.rocketTower:
+		temp = rocketTower.instantiate()
+	@warning_ignore("integer_division")
+	temp.position = grid * cellSize + Vector2i(cellSize, cellSize) /2
+	temp.coverGrid = towerCoverGrid
+	level.addOccupiedArea(towerCoverGrid)
+	add_child(temp)
+	#level.setShadowHide()
 	
 		
 #更新游戏中数据
@@ -149,13 +160,33 @@ func finish():
 	#所有敌人都被消灭
 	resultScreen.popup_centered()
 
+#添加通知
+func addNotice(s, color: Color = Color.CORAL):
+	toastInfo.display(s, color)
+
+#选中塔
+func clickTower(item, selected):
+	if selected:
+		selectedTower = item
+	else:
+		selectedTower = null
+
+
+
+func _physics_process(_delta: float) -> void:
+	if debug:
+		queue_redraw()
+	pass
+
 
 func _unhandled_input(_event):
 	if Input.is_action_just_pressed("selectCancel"):
 		for i in get_tree().get_nodes_in_group("placeableArea"):
 			i.isShow = false
 		#towerShadow.setInactive()
-
+	if Input.is_action_just_pressed("click"):
+		if selectedTower:
+			selectedTower.hideSelect()
 
 func _on_button_pressed():
 	resultScreen.popup_centered()
@@ -164,7 +195,20 @@ func _on_button_pressed():
 
 
 func _draw() -> void:
-	for i in range(int(1920.0 / cellSize) + 1):
-		draw_line(Vector2(i * cellSize, 0), Vector2(i * cellSize, cellSize * (int(1920.0 / cellSize)) + 1), Color.GRAY, 1, true)
-	for i in range(int(1080.0 / cellSize) + 1):
-		draw_line(Vector2(0, i * cellSize), Vector2(cellSize * (int(1920.0 / cellSize) + 1), i * cellSize), Color.GRAY, 1, true)
+	if debug:
+		for i in range(int(1920.0 / cellSize) + 1):
+			draw_line(Vector2(i * cellSize, 0), Vector2(i * cellSize, cellSize * (int(1920.0 / cellSize)) + 1), Color.GRAY, 1, true)
+		for i in range(int(1080.0 / cellSize) + 1):
+			draw_line(Vector2(0, i * cellSize), Vector2(cellSize * (int(1920.0 / cellSize) + 1), i * cellSize), Color.GRAY, 1, true)
+		#for i in level.allowArea:
+			#draw_rect(Rect2(Vector2(i.x * cellSize, i.y * cellSize),
+			 #Vector2(cellSize, cellSize)), Color.SALMON)
+
+		# 绘制鼠标位置信息
+		var x = floor(get_local_mouse_position().x)
+		var y = floor(get_local_mouse_position().y)
+		# draw_string(font, get_local_mouse_position(), "%s-%s" % [x, y],
+		# 	HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color.WHITE)
+		draw_string(font, get_local_mouse_position() + Vector2(20, 20), "%s-%s" % [floori(x / cellSize),
+		 floori(y / cellSize)],
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 60, Color.WHEAT)

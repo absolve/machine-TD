@@ -6,6 +6,7 @@ func _ready():
 	delay = 0.3
 	delayTimer.wait_time = delay
 	sellingPrice=10
+	turret.rotation_degrees = randf() * 360
 	super._ready()
 
 

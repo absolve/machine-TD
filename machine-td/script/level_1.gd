@@ -20,6 +20,10 @@ func _ready():
 			break
 	#waveTimer.start(5)
 	#Game.refreshData.emit({'wave':wave,'health':health,'money':money})
+	allowArea.append_array([Vector2i(10,6),Vector2i(11,6),Vector2i(10,7),Vector2i(11,7)])
+	
+	
+
 
 #func waveSpawner():
 	#if currentSpawner.size() > 0:

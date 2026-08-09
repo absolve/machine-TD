@@ -9,7 +9,7 @@ var allStage = [
 		"id": 1,
 		'wave': 2,
 		'health': 20,
-		'money': 300,
+		'money': 100,
 		"enemySpawner": [ {'time': 1, 'type': Game.enemyType.miniTank, 'number': 1},
 		{'time': 2, 'type': Game.enemyType.miniTank, 'number': 2}]
 	},

@@ -54,6 +54,9 @@ signal refreshData # 游戏数据刷新
 signal sellTower # 出售塔
 @warning_ignore("unused_signal")
 signal lastWave # 最后一波
+@warning_ignore("unused_signal")
+signal clickTower
+
 
 var map = null
 
