@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dmskj8i7vlbkd"]
+[gd_scene format=3 uid="uid://dmskj8i7vlbkd"]
 
 [ext_resource type="Script" uid="uid://bj4a8gjky8pgq" path="res://script/custom_camera.gd" id="1_r38ya"]
 
-[node name="customCamera" type="Camera2D"]
+[node name="customCamera" type="Camera2D" unique_id=1331816399]
+anchor_mode = 0
 script = ExtResource("1_r38ya")

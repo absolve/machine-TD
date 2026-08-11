@@ -25,8 +25,8 @@ script = ExtResource("1_4fdtc")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=42005360]
 layout_mode = 0
-offset_right = 1640.0
-offset_bottom = 72.0
+offset_right = 1920.0
+offset_bottom = 98.0
 theme_override_styles/panel = ExtResource("3_glyem")
 
 [node name="hbox" type="HBoxContainer" parent="PanelContainer" unique_id=1641971201]
