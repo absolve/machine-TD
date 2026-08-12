@@ -3,6 +3,8 @@ extends Control
 
 @onready var info = $towerInfo
 @onready var towerList = $fc/vbox/ScrollContainer/towerList
+@onready var towerCardList = $ScrollContainer/vbox
+
 
 var towerCard = preload("res://scene/tower_card.tscn")
 
@@ -17,15 +19,21 @@ var towersData = [ {'type': 1000, 'img': tower1},
 
 
 func _ready() -> void:
+	# for i in towersData:
+	# 	var towerIcon1 = towerIcon.instantiate()
+	# 	towerIcon1.type = i.type
+	# 	towerIcon1.texture = i.img
+	# 	towerIcon1.showInfo.connect(showInfo)
+	# 	towerIcon1.hideInfo.connect(hideInfo)
+	# 	towerIcon1.select.connect(itemSelect)
+	# 	towerList.add_child(towerIcon1)
 	for i in towersData:
-		var towerIcon1 = towerIcon.instantiate()
-		towerIcon1.type = i.type
-		towerIcon1.texture = i.img
-		towerIcon1.showInfo.connect(showInfo)
-		towerIcon1.hideInfo.connect(hideInfo)
-		towerIcon1.select.connect(itemSelect)
-		towerList.add_child(towerIcon1)
-
+		var towerCard1 = towerCard.instantiate()
+		towerCardList.add_child(towerCard1)
+		towerCard1.setImg(i.img)
+		towerCard1.type = i.type
+		var temp = Game.towerInfo.get(i.type)
+		towerCard1.setCost(temp.cost)
 
 func showInfo(_type):
 	var temp = Game.towerInfo.get(_type)
