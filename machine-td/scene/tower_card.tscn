@@ -1,24 +1,44 @@
 [gd_scene format=3 uid="uid://besopm2fin3dm"]
 
+[ext_resource type="StyleBox" uid="uid://dgsf4fryb5sbt" path="res://theme/style/tower_card_style.tres" id="1_pxcfv"]
 [ext_resource type="Script" uid="uid://bvvstbroiqj0v" path="res://script/tower_card.gd" id="1_trrxv"]
-[ext_resource type="Texture2D" uid="uid://bclj50neqlyof" path="res://sprite/coin.png" id="2_8kg36"]
+[ext_resource type="Texture2D" uid="uid://4l2fst2rdd3t" path="res://sprite/tower1.png" id="2_e4uem"]
+[ext_resource type="Texture2D" uid="uid://bxjrfo1he5k0p" path="res://sprite/dollar-symbol.png" id="4_0iufg"]
+[ext_resource type="Texture2D" uid="uid://con6lnwug4pxd" path="res://sprite/Selector.png" id="5_0iufg"]
 
 [node name="towerCard" type="PanelContainer" unique_id=1898334176]
-offset_right = 128.0
+custom_minimum_size = Vector2(136, 136)
+offset_right = 136.0
 offset_bottom = 136.0
+theme_override_styles/panel = ExtResource("1_pxcfv")
 script = ExtResource("1_trrxv")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1224807837]
 layout_mode = 2
+alignment = 1
 
-[node name="img" type="TextureRect" parent="VBoxContainer" unique_id=382064191]
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer" unique_id=651567932]
+layout_mode = 2
+
+[node name="name" type="Label" parent="VBoxContainer/MarginContainer3" unique_id=1030568745]
+layout_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer" unique_id=807083845]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="img" type="TextureRect" parent="VBoxContainer/MarginContainer2" unique_id=382064191]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("2_e4uem")
 expand_mode = 2
-stretch_mode = 2
+stretch_mode = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=2078042271]
 layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer" unique_id=1833125815]
 layout_mode = 2
@@ -26,8 +46,16 @@ alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer/MarginContainer/HBoxContainer" unique_id=157680456]
 layout_mode = 2
-texture = ExtResource("2_8kg36")
-expand_mode = 2
+texture = ExtResource("4_0iufg")
+stretch_mode = 3
 
 [node name="costLabel" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer" unique_id=1363622309]
 layout_mode = 2
+
+[node name="selected" type="TextureRect" parent="." unique_id=1392114164]
+visible = false
+layout_mode = 2
+texture = ExtResource("5_0iufg")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

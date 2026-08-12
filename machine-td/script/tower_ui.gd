@@ -3,7 +3,7 @@ extends Control
 
 @onready var info = $towerInfo
 @onready var towerList = $fc/vbox/ScrollContainer/towerList
-@onready var towerCardList = $ScrollContainer/vbox
+@onready var towerCardList = $ScrollContainer/PanelContainer/vbox
 
 
 var towerCard = preload("res://scene/tower_card.tscn")
@@ -34,15 +34,22 @@ func _ready() -> void:
 		towerCard1.type = i.type
 		var temp = Game.towerInfo.get(i.type)
 		towerCard1.setCost(temp.cost)
+		towerCard1.connect("click",towerClick)
+		
+#func showInfo(_type):
+	#var temp = Game.towerInfo.get(_type)
+	#info.showDetail(temp)
+	#info.global_position = get_global_mouse_position()
+	#info.visible = true
+	#
+#func hideInfo(_type):
+	#info.visible = false
+#
+#func itemSelect(_type):
+	#Game.selectTower.emit(_type)
 
-func showInfo(_type):
-	var temp = Game.towerInfo.get(_type)
-	info.showDetail(temp)
-	info.global_position = get_global_mouse_position()
-	info.visible = true
-	
-func hideInfo(_type):
-	info.visible = false
 
-func itemSelect(_type):
-	Game.selectTower.emit(_type)
+func towerClick(type):
+	print(type)
+	Game.selectTower.emit(type)
+	pass

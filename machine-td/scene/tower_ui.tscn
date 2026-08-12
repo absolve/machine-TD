@@ -4,6 +4,7 @@
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_tg0id"]
 [ext_resource type="PackedScene" uid="uid://b6gjxxdlchyde" path="res://scene/tower_info.tscn" id="3_gwmlu"]
 [ext_resource type="Texture2D" uid="uid://bxm3c5gvyk0gs" path="res://sprite/shield.png" id="4_k2xma"]
+[ext_resource type="StyleBox" uid="uid://cr4arrgli0dam" path="res://theme/style/tower_box_style.tres" id="5_m5j1v"]
 
 [node name="towerUI" type="Control" unique_id=327671379]
 layout_mode = 3
@@ -51,7 +52,17 @@ layout_mode = 0
 offset_left = 144.0
 offset_top = 8.0
 offset_right = 1160.0
-offset_bottom = 176.0
+offset_bottom = 200.0
+mouse_filter = 0
 
-[node name="vbox" type="HBoxContainer" parent="ScrollContainer" unique_id=980793267]
+[node name="PanelContainer" type="PanelContainer" parent="ScrollContainer" unique_id=1229927872]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = ExtResource("5_m5j1v")
+
+[node name="vbox" type="HBoxContainer" parent="ScrollContainer/PanelContainer" unique_id=980793267]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 20

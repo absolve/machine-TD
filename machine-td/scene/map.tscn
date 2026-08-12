@@ -16,8 +16,10 @@ script = ExtResource("1_rgtto")
 [node name="title" parent="hud" unique_id=845388962 instance=ExtResource("2_4xw1d")]
 
 [node name="towerUI" parent="hud" unique_id=54976183 instance=ExtResource("3_bq37x")]
-offset_top = 1016.0
-offset_bottom = 1016.0
+offset_left = -8.0
+offset_top = 877.0
+offset_right = -8.0
+offset_bottom = 877.0
 
 [node name="Button" type="Button" parent="hud" unique_id=1786368414]
 offset_top = 500.0

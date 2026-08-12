@@ -24,7 +24,7 @@ const towerInfo = {
 	towerType.cannonTower: {
 	"name": "cannonTower",
 	"atk": 30,
-	"cost": 10,
+	"cost": 20,
 	"reload": 0.3,
 	"desc": "",
 	'gridSize': Vector2i(1, 1)
@@ -32,7 +32,7 @@ const towerInfo = {
 	towerType.rocketTower: {
 	"name": "rocketTower",
 	"atk": 50,
-	"cost": 10,
+	"cost": 30,
 	"reload": 0.1,
 	"desc": "",
 	'gridSize': Vector2i(1, 1)
