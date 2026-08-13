@@ -80,34 +80,34 @@ _data = {
 [node name="Tower" unique_id=1473885297 instance=ExtResource("1_64uc6")]
 script = ExtResource("2_i5mjb")
 
-[node name="shape" parent="." index="0"]
+[node name="shape" parent="." index="0" unique_id=1958475246]
 shape = SubResource("RectangleShape2D_k8n1u")
 
-[node name="base" parent="." index="1"]
+[node name="base" parent="." index="1" unique_id=1580788916]
 scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_i5mjb")
 
-[node name="radar" parent="." index="2"]
+[node name="radar" parent="." index="2" unique_id=2082783838]
 visible = false
 
-[node name="CollisionShape2D" parent="radar" index="0"]
+[node name="CollisionShape2D" parent="radar" index="0" unique_id=803920863]
 shape = SubResource("CircleShape2D_5i26j")
 
-[node name="turret" parent="." index="3"]
+[node name="turret" parent="." index="3" unique_id=1212426607]
 scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_k8n1u")
 offset = Vector2(16, 0)
 
-[node name="Marker2D" parent="turret" index="0"]
+[node name="Marker2D" parent="turret" index="0" unique_id=1564610297]
 position = Vector2(45, 0)
 
-[node name="lifeBar" parent="." index="5"]
+[node name="lifeBar" parent="." index="5" unique_id=1589605555]
 position = Vector2(0, -51)
 
-[node name="player" parent="." index="6"]
+[node name="player" parent="." index="6" unique_id=1035425773]
 libraries/ = SubResource("AnimationLibrary_k4bnm")
 
-[node name="ProgressBar" parent="." index="7"]
+[node name="ProgressBar" parent="." index="7" unique_id=1203597731]
 offset_left = -32.0
 offset_top = -13.0
 offset_right = 32.0

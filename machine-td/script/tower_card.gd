@@ -3,8 +3,8 @@ extends PanelContainer
 
 @onready var img = $VBoxContainer/MarginContainer2/img
 @onready var costLabel = $VBoxContainer/MarginContainer/HBoxContainer/costLabel
-@onready var towerName=$VBoxContainer/MarginContainer3/name
-@onready var selected=$selected
+@onready var towerName = $VBoxContainer/MarginContainer3/name
+@onready var selected = $selected
 
 @export var type: Game.towerType = Game.towerType.gunTower
 
@@ -26,8 +26,8 @@ func _gui_input(_event: InputEvent) -> void:
 
 
 func _on_mouse_entered() -> void:
-	selected.visible=true
+	selected.visible = true
 
 
 func _on_mouse_exited() -> void:
-	selected.visible=false
+	selected.visible = false

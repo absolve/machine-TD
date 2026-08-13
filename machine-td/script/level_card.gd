@@ -15,16 +15,14 @@ func _ready() -> void:
 	levelRating.rating=rating
 
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		if event.is_pressed() && event.button_index==MouseButton.MOUSE_BUTTON_LEFT:
-			print('click')
-			#accept_event()
-
-
 func _on_mouse_entered() -> void:
 	selected.visible=true
 
 
 func _on_mouse_exited() -> void:
 	selected.visible=false
+
+
+func _on_gui_input(_event):
+	if Input.is_action_just_pressed("click"):
+		print('click')

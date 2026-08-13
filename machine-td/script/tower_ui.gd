@@ -4,8 +4,9 @@ extends Control
 @onready var info = $towerInfo
 @onready var towerList = $fc/vbox/ScrollContainer/towerList
 @onready var towerCardList = $ScrollContainer/PanelContainer/vbox
+@onready var player = $player
 
-
+var isOpen = false
 var towerCard = preload("res://scene/tower_card.tscn")
 
 
@@ -34,7 +35,7 @@ func _ready() -> void:
 		towerCard1.type = i.type
 		var temp = Game.towerInfo.get(i.type)
 		towerCard1.setCost(temp.cost)
-		towerCard1.connect("click",towerClick)
+		towerCard1.connect("click", towerClick)
 		
 #func showInfo(_type):
 	#var temp = Game.towerInfo.get(_type)
@@ -52,4 +53,12 @@ func _ready() -> void:
 func towerClick(type):
 	print(type)
 	Game.selectTower.emit(type)
-	pass
+
+
+func _on_icon_gui_input(_event):
+	if Input.is_action_just_pressed("click"):
+		isOpen = !isOpen
+		if isOpen:
+			player.play("show")
+		else:
+			player.play("hide")

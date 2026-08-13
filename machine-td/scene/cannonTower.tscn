@@ -1,11 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://b8acvedo8gexp"]
+[gd_scene format=3 uid="uid://b8acvedo8gexp"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_xj8p8"]
 [ext_resource type="Script" uid="uid://bxm1puyb5lju" path="res://script/cannon_tower.gd" id="2_v83o1"]
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_v83o1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v83o1"]
-size = Vector2(100, 100)
+size = Vector2(64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lm0w6"]
 atlas = ExtResource("3_v83o1")
@@ -17,7 +17,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_lm0w6")
 }],
-"loop": false,
+"loop": 0,
 "name": &"default",
 "speed": 5.0
 }]
@@ -35,7 +35,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_sk265")
 }],
-"loop": false,
+"loop": 0,
 "name": &"default",
 "speed": 5.0
 }]
@@ -77,31 +77,40 @@ _data = {
 &"fire": SubResource("Animation_v83o1")
 }
 
-[node name="Tower" instance=ExtResource("1_xj8p8")]
+[node name="Tower" unique_id=1865535367 instance=ExtResource("1_xj8p8")]
 script = ExtResource("2_v83o1")
 
-[node name="shape" parent="." index="0"]
+[node name="shape" parent="." index="0" unique_id=1958475246]
 shape = SubResource("RectangleShape2D_v83o1")
 
-[node name="base" parent="." index="1"]
+[node name="base" parent="." index="1" unique_id=1580788916]
+scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_sk265")
 
-[node name="radar" parent="." index="2"]
+[node name="radar" parent="." index="2" unique_id=2082783838]
 visible = false
 light_mask = 0
 visibility_layer = 2
 
-[node name="CollisionShape2D" parent="radar" index="0"]
+[node name="CollisionShape2D" parent="radar" index="0" unique_id=803920863]
 shape = SubResource("CircleShape2D_v83o1")
 
-[node name="turret" parent="." index="3"]
+[node name="turret" parent="." index="3" unique_id=1212426607]
+scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_lm0w6")
 offset = Vector2(10, 0)
 
-[node name="player" parent="." index="6"]
-libraries = {
-&"": SubResource("AnimationLibrary_lm0w6")
-}
+[node name="lifeBar" parent="." index="5" unique_id=1589605555]
+position = Vector2(0, -53)
+
+[node name="player" parent="." index="6" unique_id=1035425773]
+libraries/ = SubResource("AnimationLibrary_lm0w6")
+
+[node name="ProgressBar" parent="." index="7" unique_id=1203597731]
+offset_left = -32.0
+offset_top = -13.0
+offset_right = 32.0
+offset_bottom = 14.0
 
 [connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
 [connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]
