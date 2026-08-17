@@ -6,7 +6,7 @@ extends Area2D
 
 var placeable = false # 可放置
 var active = false # 是否活动
-var towerType = Game.towerType.gunTower # 类型
+var towerType = Game.towerType.machineGunTower # 类型
 var cost = 0 # 花费
 var gridSize: Vector2i = Vector2i(1, 1) # 占用的网格宽高 (列, 行)
 var drawColor = Color.INDIAN_RED # 绘制颜色
@@ -18,7 +18,7 @@ func _ready():
 func setActive():
 	active = true
 	visible = true
-	if towerType == Game.towerType.gunTower:
+	if towerType == Game.towerType.machineGunTower:
 		ani.play("gun")
 	elif towerType == Game.towerType.cannonTower:
 		ani.play("cannon")

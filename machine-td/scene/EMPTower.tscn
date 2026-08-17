@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://b1pp2as6h5abj"]
+
+[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_cuhtv"]
+[ext_resource type="Script" uid="uid://flhkswexg6fx" path="res://script/emp_tower.gd" id="2_tc0i1"]
+
+[node name="Tower" unique_id=1676258242 instance=ExtResource("1_cuhtv")]
+script = ExtResource("2_tc0i1")

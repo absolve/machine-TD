@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bt5mt8r1qvfep"]
+
+[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_bh8ft"]
+[ext_resource type="Script" uid="uid://bqteowipjn517" path="res://script/laser_tower.gd" id="2_733d0"]
+
+[node name="Tower" unique_id=1676258242 instance=ExtResource("1_bh8ft")]
+script = ExtResource("2_733d0")

@@ -2,6 +2,7 @@ extends Area2D
 class_name Tower
 
 var hp = 0 # 防御塔血量
+var maxHp=0 #最大血量
 var radarScope = 500 # 雷达范围
 var delay = 0.1 # 开火延迟
 var target = [] # 目标集合
@@ -11,6 +12,7 @@ var rotationSpeed = 10
 var money = 0 # 花费
 var sellingPrice = 0 # 售价
 var coverGrid: Array[Vector2i] = [] # 占用的格子
+var targetValue: int = 1 # 目标价值 敌人攻击的优先级
 
 
 @onready var rader = $radar
@@ -69,7 +71,6 @@ func _on_input_event(_viewport, _event, _shape_idx):
 			#queue_redraw()
 	if Input.is_action_pressed("click"):
 		hideSelect()
-
 
 
 func _on_btn_sell_pressed():

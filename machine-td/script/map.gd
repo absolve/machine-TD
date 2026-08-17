@@ -10,7 +10,7 @@ extends Node2D
 @onready var toastInfo=$hud/toastInfo
 
 
-var gunTower = preload("res://scene/gunTower.tscn")
+var gunTower = preload("res://scene/machineGunTower.tscn")
 var rocketTower = preload("res://scene/rocketTower.tscn")
 var cannonTower = preload("res://scene/cannonTower.tscn")
 
@@ -71,7 +71,7 @@ func placeTower(type, cost, grid, towerCoverGrid):
 		return
 	var temp = null
 	titleNode.money -= cost
-	if type == Game.towerType.gunTower:
+	if type == Game.towerType.machineGunTower:
 		temp = gunTower.instantiate()
 	elif type == Game.towerType.cannonTower:
 		temp = cannonTower.instantiate()

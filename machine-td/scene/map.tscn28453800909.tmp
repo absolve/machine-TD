@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://c0rd5oseij63o"]
+
+[ext_resource type="Script" uid="uid://cgdxoyy80vpqi" path="res://script/map.gd" id="1_rgtto"]
+[ext_resource type="PackedScene" uid="uid://8vvx43vtulw5" path="res://scene/title.tscn" id="2_4xw1d"]
+[ext_resource type="PackedScene" uid="uid://clbbod4cwf6n8" path="res://scene/tower_ui.tscn" id="3_bq37x"]
+[ext_resource type="PackedScene" uid="uid://b2646ykmxfyif" path="res://scene/result_screen.tscn" id="4_bq37x"]
+[ext_resource type="PackedScene" uid="uid://c2g3rjpp3rijm" path="res://scene/toast_info.tscn" id="4_jp76l"]
+[ext_resource type="PackedScene" uid="uid://b61gsmirxvp8x" path="res://scene/level/level_1.tscn" id="5_4xw1d"]
+[ext_resource type="PackedScene" uid="uid://dmskj8i7vlbkd" path="res://scene/custom_camera.tscn" id="5_jp76l"]
+
+[node name="map" type="Node2D" unique_id=988854810]
+script = ExtResource("1_rgtto")
+
+[node name="hud" type="CanvasLayer" parent="." unique_id=487852858]
+
+[node name="title" parent="hud" unique_id=845388962 instance=ExtResource("2_4xw1d")]
+
+[node name="towerUI" parent="hud" unique_id=54976183 instance=ExtResource("3_bq37x")]
+offset_left = -8.0
+offset_top = 877.0
+offset_right = -8.0
+offset_bottom = 877.0
+
+[node name="Button" type="Button" parent="hud" unique_id=1786368414]
+offset_top = 500.0
+offset_right = 38.0
+offset_bottom = 531.0
+text = "test"
+
+[node name="toastInfo" parent="hud" unique_id=1968260455 instance=ExtResource("4_jp76l")]
+
+[node name="customCamera" parent="." unique_id=76497160 instance=ExtResource("5_jp76l")]
+
+[node name="level1" parent="." unique_id=1677168939 instance=ExtResource("5_4xw1d")]
+
+[node name="Timer" type="Timer" parent="." unique_id=1553136818]
+wait_time = 2.0
+one_shot = true
+
+[node name="resultScreen" parent="." unique_id=1746614916 instance=ExtResource("4_bq37x")]
+position = Vector2i(0, 36)
+visible = false
+
+[connection signal="pressed" from="hud/Button" to="." method="_on_button_pressed"]
+[connection signal="timeout" from="Timer" to="." method="finish"]

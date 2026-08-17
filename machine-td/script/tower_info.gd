@@ -29,7 +29,7 @@ var scopeLabel: String:
 
 func showDetail(obj):
 	towerName = str(obj.name)
-	towerDetail = str(obj.desc)
+	towerDetail = tr(obj.desc)
 	costLabel = str(obj.cost)
 	reloadLabel = str(obj.cost)
 	atkLabel = str(obj.atk)

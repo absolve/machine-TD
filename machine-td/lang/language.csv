@@ -17,3 +17,10 @@ _LevelFailed,Level Failed,失败
 _LevelCompleted,Level Completed,过关
 _SelectLevel,Select Level,选择关卡
 _Wave,Wave,波数
+_machineGunTowerDesc,"Quick Fire,Effectively combat the enemy","快速射击,有效打击敌人"
+_cannonTowerDesc,"High-power strike,Effective combat the enemy","大威力，有效打击敌人"
+_rocketTowerDesc,"Launch missiles to attack enemies, with air defense capability","发射导弹打击敌人，具有防空功能"
+_EMPTowerDesc,"Effectively slow down the enemy","有效减速敌人"
+_droneBaseDesc,"Launch drones to attack enemies, track and strike enemies over a wide range, and can target enemies in the air","出动无人机打击敌人，大范围跟踪打击敌人，可打击空中敌人"
+_teslaCoilTowerDesc,"Release electric energy to attack enemies, capable of chain attacks","释放电能打击敌人，可以连锁打击"
+_laserTowerDesc,"Laser TLock onto targets at a distance and simultaneously strike multiple enemies","远距离锁定目标，同时打击多个敌人"

@@ -4,39 +4,75 @@ enum bulletType {
 	player, enemy
 }
 
+# 敌人类型
 enum enemyType {
 	miniTank, mediumTank, heavyTank
 }
 
+# 塔类型
 enum towerType {
-	gunTower = 1000, cannonTower, rocketTower
+	machineGunTower = 1000, cannonTower, rocketTower, EMPTower,
+	droneBase, teslaCoilTower, laserTower
 }
 
+# 塔信息
 const towerInfo = {
-	towerType.gunTower: {
-	"name": "gunTower",
+	towerType.machineGunTower: {
+	"name": "machineGunTower",
 	"atk": 10,
 	"cost": 10,
 	"reload": 0.1,
-	"desc": "Standard Machine Gun Tower",
+	"desc": "_machineGunTowerDesc",
 	'gridSize': Vector2i(1, 1)
 	},
 	towerType.cannonTower: {
 	"name": "cannonTower",
 	"atk": 30,
 	"cost": 20,
-	"reload": 0.3,
-	"desc": "",
+	"reload": 0.5,
+	"desc": "_cannonTowerDesc",
 	'gridSize': Vector2i(1, 1)
 	},
 	towerType.rocketTower: {
 	"name": "rocketTower",
-	"atk": 50,
+	"atk": 20,
 	"cost": 30,
-	"reload": 0.1,
-	"desc": "",
+	"reload": 0.5,
+	"desc": "_rocketTowerDesc",
 	'gridSize': Vector2i(1, 1)
-	}
+	},
+	towerType.EMPTower: {
+	"name": "EMPTower",
+	"atk": 0,
+	"cost": 40,
+	"reload": 0,
+	"desc": "_EMPTowerDesc",
+	'gridSize': Vector2i(1, 1)
+	},
+	towerType.droneBase: {
+	"name": "droneBase",
+	"atk": 5,
+	"cost": 50,
+	"reload": 5,
+	"desc": "_droneBaseDesc",
+	'gridSize': Vector2i(2, 2)
+	},
+	towerType.teslaCoilTower: {
+	"name": "teslaCoilTower",
+	"atk": 40,
+	"cost": 50,
+	"reload": 2,
+	"desc": "_teslaCoilTowerDesc",
+	'gridSize': Vector2i(2, 2)
+	},
+	towerType.laserTower: {
+	"name": "laserTower",
+	"atk": 40,
+	"cost": 60,
+	"reload": 0.1,
+	"desc": "_laserTowerDesc",
+	'gridSize': Vector2i(2, 2)
+	},
 }
 
 

@@ -6,9 +6,10 @@ extends PanelContainer
 @onready var towerName = $VBoxContainer/MarginContainer3/name
 @onready var selected = $selected
 
-@export var type: Game.towerType = Game.towerType.gunTower
+@export var type: Game.towerType = Game.towerType.machineGunTower
 
 signal click
+signal showInfo
 
 func setImg(obj):
 	img.texture = obj
@@ -27,7 +28,7 @@ func _gui_input(_event: InputEvent) -> void:
 
 func _on_mouse_entered() -> void:
 	selected.visible = true
-
+	showInfo.emit(type)
 
 func _on_mouse_exited() -> void:
 	selected.visible = false
