@@ -24,6 +24,7 @@ func setActive():
 		ani.play("cannon")
 	elif towerType == Game.towerType.rocketTower:
 		ani.play("rocket")
+	print(gridSize)
 
 func setInactive():
 	active = false
@@ -38,65 +39,16 @@ func _physics_process(_delta: float) -> void:
 			drawColor = Color.GREEN
 
 		queue_redraw()
-		pass
+
 
 func _draw() -> void:
-	@warning_ignore("integer_division")
-	var half_x: int = gridSize.x / 2
-	@warning_ignore("integer_division")
-	var half_y: int = gridSize.y / 2
-
-	var start: Vector2 = Vector2.ZERO - Vector2(half_x, half_y)
-
+	var tile: int = StageData.TileSize
+	# 以原点为中心,计算整个占用区域的左上角(像素坐标)
+	var half: Vector2 = Vector2(gridSize.x * tile, gridSize.y * tile) * 0.5
+	var top_left: Vector2 = Vector2.ZERO - half
 	for dx in range(gridSize.x):
 		for dy in range(gridSize.y):
-			draw_rect(Rect2((start + Vector2(dx, dy) -
-			Vector2(StageData.TileSize, StageData.TileSize) / 2),
-			Vector2(StageData.TileSize, StageData.TileSize)), drawColor)
+			# 每个格子的左上角 = top_left + (dx, dy) * TileSize
+			var cell_pos: Vector2 = top_left + Vector2(dx * tile, dy * tile)
+			draw_rect(Rect2(cell_pos, Vector2(tile, tile)), drawColor)
 	
-
-# func _physics_process(_delta):
-# 	if !active:
-# 		return
-# 	position = get_global_mouse_position()
-# 	var areas = get_overlapping_areas()
-# 	if areas:
-# 		placeable = false
-# 		var ownRect = Rect2(global_position - shape.shape.get_rect().size / 2,
-# 		shape.shape.get_rect().size)
-# 		var hasTower = false
-# 		for i in areas:
-# 			var shape1 = i.get_node("shape")
-# 			var otherRect = Rect2(i.global_position - shape1.shape.get_rect().size / 2,
-# 				shape1.shape.get_rect().size)
-# 			if i is Tower: # 判断塔是不是重叠
-# 				if otherRect.intersects(ownRect):
-# 					hasTower = true
-# 			else:
-# 				if otherRect.encloses(ownRect):
-# 					placeable = true
-# 		if hasTower:
-# 			#print('hasTower',hasTower)
-# 			placeable = false
-# 	else:
-# 		placeable = false
-
-# func _input(_event: InputEvent) -> void:
-# 	if Input.is_action_just_pressed("click"):
-# 		if placeable:
-# 			Game.placeTower.emit(towerType)
-		
-# 	if Input.is_action_just_pressed("selectCancel"):
-# 		if active:
-# 			setInactive()
-	
-#func _unhandled_input(_event:InputEvent):
-	#if Input.is_action_just_pressed("click"):
-		#print(placable)
-		#if placable:
-			#print('placa')
-			#Game.placeTower.emit(towerType)
-			#get_viewport().set_input_as_handled()
-	#if Input.is_action_just_pressed("selectCancel"):
-		#if active:
-			#setInactive()

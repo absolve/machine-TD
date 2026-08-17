@@ -7,18 +7,21 @@ extends Node2D
 @onready var resultScreen = $resultScreen
 @onready var level = $level1
 @onready var finishTimer = $Timer
-@onready var toastInfo=$hud/toastInfo
+@onready var toastInfo = $hud/toastInfo
 
 
 var gunTower = preload("res://scene/machineGunTower.tscn")
 var rocketTower = preload("res://scene/rocketTower.tscn")
 var cannonTower = preload("res://scene/cannonTower.tscn")
+var EMPTower = preload("res://scene/EMPTower.tscn")
+var teslaCoilTower = preload("res://scene/teslaCoilTower.tscn")
+
 
 var isLastWave = false # 最后一波
 var cellSize = 64
 var debug = true
 var font
-var selectedTower = null  #选中的塔
+var selectedTower = null # 选中的塔
 
 
 func _ready():
@@ -63,8 +66,8 @@ func _ready():
 		#i.isShow = true
 	
 #放着塔
-func placeTower(type, cost, grid, towerCoverGrid):
-	print('placeTower',type)
+func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(1, 1)):
+	print('placeTower', type, grid, towerCoverGrid, gridSize)
 	if titleNode.money < cost:
 		print('Insufficient funds')
 		addNotice('Insufficient funds')
@@ -77,8 +80,19 @@ func placeTower(type, cost, grid, towerCoverGrid):
 		temp = cannonTower.instantiate()
 	elif type == Game.towerType.rocketTower:
 		temp = rocketTower.instantiate()
+	elif type == Game.towerType.EMPTower:
+		temp = EMPTower.instantiate()
+	elif type == Game.towerType.teslaCoilTower:
+		temp = teslaCoilTower.instantiate()
+
+
+	# grid 是鼠标所在中心格,占用块的左上角格子 = grid - (W/2, H/2)
+	# 块中心世界坐标 = top_left * cellSize + (W*cellSize, H*cellSize) / 2
 	@warning_ignore("integer_division")
-	temp.position = grid * cellSize + Vector2i(cellSize, cellSize) /2
+	var half: Vector2i = Vector2i(gridSize.x / 2, gridSize.y / 2)
+	var top_left: Vector2i = grid - half
+	var block_size: Vector2i = Vector2i(gridSize.x * cellSize, gridSize.y * cellSize)
+	temp.position = Vector2(top_left * cellSize) + Vector2(block_size * 0.5)
 	temp.coverGrid = towerCoverGrid
 	level.addOccupiedArea(towerCoverGrid)
 	add_child(temp)
@@ -170,7 +184,6 @@ func clickTower(item, selected):
 		selectedTower = item
 	else:
 		selectedTower = null
-
 
 
 func _physics_process(_delta: float) -> void:

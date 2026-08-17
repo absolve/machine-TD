@@ -16,6 +16,7 @@ var targetValue: int = 1 # 目标价值 敌人攻击的优先级
 
 
 @onready var rader = $radar
+@onready var raderShape=$radar/CollisionShape2D
 @onready var base = $base
 @onready var turret = $turret
 @onready var delayTimer = $delay
@@ -25,6 +26,8 @@ var targetValue: int = 1 # 目标价值 敌人攻击的优先级
 @onready var btnSell = $btnSell
 
 func _ready() -> void:
+	if raderShape.shape:
+		raderShape.shape.radius=radarScope
 	monitorable = false
 	set_physics_process(false)
 	var tween = create_tween()

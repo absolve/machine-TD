@@ -29,6 +29,7 @@ func selectTower(type):
 	towerShadow.cost = temp.cost
 	towerShadow.towerType = type
 	towerShadow.gridSize = temp.gridSize
+	print(temp.gridSize)
 	towerShadow.setActive()
 
 # 将世界坐标对齐到网格
@@ -90,7 +91,7 @@ func _input(_event: InputEvent) -> void:
 			if towerShadow.placeable:
 				var grid = world2Grid(towerShadow.position)
 				var towerCoverGrid = getTowerCoverGrid(grid, towerShadow.gridSize)
-				Game.placeTower.emit(towerShadow.towerType,towerShadow.cost,grid, towerCoverGrid)
+				Game.placeTower.emit(towerShadow.towerType,towerShadow.cost,grid, towerCoverGrid, towerShadow.gridSize)
 		if Input.is_action_just_pressed("selectCancel"):
 			if towerShadow.active:
 				towerShadow.setInactive()
