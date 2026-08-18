@@ -1,38 +1,42 @@
 extends "res://script/tower.gd"
 
 const MAX_TARGETS := 3 # 最多同时锁定3个目标
-const LASER_DURATION := 0.12 # 激光显示时长(略大于reload保证连续)
 const LASER_COLOR := Color(1.0, 0.2, 0.2, 1.0) # 激光颜色(红色)
+const ROTATION_SMOOTH := 8.0 # 炮管旋转平滑系数
 
 var laser_targets: Array = [] # 当前激光锁定的敌人
-var laser_timer := 0.0 # 激光显示剩余时间
 
 
 func _ready():
-	#delay = 0.1
-	#delayTimer.wait_time = delay
 	super._ready()
 
 
 func _physics_process(_delta: float):
 	# 收集最多3个有效目标
 	laser_targets = _collect_targets()
+
+	# 炮管朝向第一个目标旋转
+	if not laser_targets.is_empty() and is_instance_valid(laser_targets[0]):
+		var direction = (laser_targets[0].global_position - turret.global_position).normalized()
+		var target_angle = direction.angle()
+		turret.rotation = lerp_angle(turret.rotation, target_angle, ROTATION_SMOOTH * _delta)
+
+	# 伤害扣血: 使用 delayTimer/canShot 间隔扣血(与其他塔一致的脉冲机制)
 	if not laser_targets.is_empty() and canShot:
 		fire_lasers()
 		canShot = false
 		delayTimer.start()
-	if laser_timer > 0:
-		laser_timer -= _delta
-		queue_redraw()
+
+	# 只要有目标就持续重绘(激光视觉一直存在,不与扣血频率绑定)
+	# 注意: 目标消失时也必须 queue_redraw, 否则 _draw 不会被调用来清空画布, 会留下激光残影
+	queue_redraw()
 
 
-# 对所有锁定目标同时开火
+# 对所有锁定目标同时扣血一次(每次 atk 点伤害)
 func fire_lasers():
-	laser_timer = LASER_DURATION
 	for enemy in laser_targets:
 		if is_instance_valid(enemy) and enemy.has_method("hurt"):
 			enemy.hurt(atk)
-	queue_redraw()
 
 
 # 收集最多MAX_TARGETS个有效目标
@@ -47,7 +51,7 @@ func _collect_targets() -> Array:
 
 
 func _draw():
-	if laser_timer <= 0 or laser_targets.is_empty():
+	if laser_targets.is_empty():
 		return
 	var start = to_local(marker.global_position)
 	for enemy in laser_targets:
@@ -55,13 +59,13 @@ func _draw():
 			continue
 		var end = to_local(enemy.global_position)
 		# 外层: 电流抖动效果(每帧随机偏移产生电弧)
-		_draw_electric_arc(start, end, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.4), 12.0)
+		_draw_electric_arc(start, end, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.4), 15.0)
 		# 中层
-		draw_line(start, end, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.7), 15.0)
+		draw_line(start, end, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.7), 5.0)
 		# 内核: 粗+纯白高亮
-		draw_line(start, end, Color(1.0, 1.0, 1.0, 1.0), 2.0)
+		draw_line(start, end, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.4), 1.0)
 		# 击中点光晕
-		draw_circle(end, 12.0, Color(1.0, 1.0, 1.0, 0.5))
+		draw_circle(end, 12.0, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.5))
 		draw_circle(end, 6.0, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.8))
 
 

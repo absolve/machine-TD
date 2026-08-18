@@ -67,9 +67,9 @@ const towerInfo = {
 	},
 	towerType.laserTower: {
 	"name": "laserTower",
-	"atk": 40,
+	"atk": 4,
 	"cost": 60,
-	"reload": 0.1,
+	"reload": 1,
 	"desc": "_laserTowerDesc",
 	'gridSize': Vector2i(2, 2)
 	},

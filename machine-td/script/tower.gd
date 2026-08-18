@@ -1,9 +1,9 @@
 extends Area2D
 class_name Tower
 
-var hp = 0 # 防御塔血量
-var maxHp = 0 # 最大血量
-var radarScope = 500 # 雷达范围
+@export var hp = 0 # 防御塔血量
+@export var maxHp = 0 # 最大血量
+@export var radarScope = 500 # 雷达范围
 var delay = 0.1 # 开火延迟
 var target = [] # 目标集合
 var canShot = true

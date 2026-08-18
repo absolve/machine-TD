@@ -32,6 +32,7 @@ script = ExtResource("2_733d0")
 shape = SubResource("RectangleShape2D_axgl3")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
+z_index = -1
 sprite_frames = SubResource("SpriteFrames_027me")
 
 [node name="CollisionShape2D" parent="radar" parent_id_path=PackedInt32Array(2082783838) index="0" unique_id=803920863]
