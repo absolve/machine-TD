@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cgasdc4xix81v"]
+
+[ext_resource type="PackedScene" uid="uid://4vv5x7rd5335" path="res://scene/life_bar.tscn" id="1_e5o2c"]
+[ext_resource type="Script" uid="uid://bwy2irqiglutm" path="res://script/aircraft.gd" id="1_u1o16"]
+
+[node name="aircraft" type="Area2D" unique_id=77046293]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_u1o16")
+
+[node name="shape" type="CollisionShape2D" parent="." unique_id=1374798482]
+
+[node name="ani" type="AnimatedSprite2D" parent="." unique_id=748097984]
+
+[node name="radar" type="Area2D" parent="." unique_id=788993573]
+collision_layer = 0
+collision_mask = 0
+
+[node name="shape" type="CollisionShape2D" parent="radar" unique_id=311842238]
+
+[node name="lifeBar" parent="." unique_id=622488081 instance=ExtResource("1_e5o2c")]
+position = Vector2(0, -21)

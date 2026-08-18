@@ -15,7 +15,8 @@ var rocketTower = preload("res://scene/rocketTower.tscn")
 var cannonTower = preload("res://scene/cannonTower.tscn")
 var EMPTower = preload("res://scene/EMPTower.tscn")
 var teslaCoilTower = preload("res://scene/teslaCoilTower.tscn")
-
+var laserTower = preload("res://scene/laserTower.tscn")
+var droneBase = preload("res://scene/droneBase.tscn")
 
 var isLastWave = false # 最后一波
 var cellSize = 64
@@ -84,8 +85,17 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 		temp = EMPTower.instantiate()
 	elif type == Game.towerType.teslaCoilTower:
 		temp = teslaCoilTower.instantiate()
+	elif type == Game.towerType.laserTower:
+		temp = laserTower.instantiate()
+	elif type == Game.towerType.droneBase:
+		temp = droneBase.instantiate()
 
-
+	var info = Game.towerInfo.get(type)
+	temp.money = info.cost
+	temp.sellingPrice = temp.money / 2
+	temp.atk = info.atk
+	temp.delay = info.reload
+	
 	# grid 是鼠标所在中心格,占用块的左上角格子 = grid - (W/2, H/2)
 	# 块中心世界坐标 = top_left * cellSize + (W*cellSize, H*cellSize) / 2
 	@warning_ignore("integer_division")

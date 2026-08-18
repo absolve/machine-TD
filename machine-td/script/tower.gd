@@ -2,7 +2,7 @@ extends Area2D
 class_name Tower
 
 var hp = 0 # 防御塔血量
-var maxHp=0 #最大血量
+var maxHp = 0 # 最大血量
 var radarScope = 500 # 雷达范围
 var delay = 0.1 # 开火延迟
 var target = [] # 目标集合
@@ -13,10 +13,10 @@ var money = 0 # 花费
 var sellingPrice = 0 # 售价
 var coverGrid: Array[Vector2i] = [] # 占用的格子
 var targetValue: int = 1 # 目标价值 敌人攻击的优先级
-
+var atk: int = 0 # 攻击力
 
 @onready var rader = $radar
-@onready var raderShape=$radar/CollisionShape2D
+@onready var raderShape = $radar/CollisionShape2D
 @onready var base = $base
 @onready var turret = $turret
 @onready var delayTimer = $delay
@@ -27,7 +27,8 @@ var targetValue: int = 1 # 目标价值 敌人攻击的优先级
 
 func _ready() -> void:
 	if raderShape.shape:
-		raderShape.shape.radius=radarScope
+		raderShape.shape.radius = radarScope
+	delayTimer.wait_time = delay
 	monitorable = false
 	set_physics_process(false)
 	var tween = create_tween()

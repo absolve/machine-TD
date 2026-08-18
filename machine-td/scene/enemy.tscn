@@ -1,23 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://bpt2onorpqp5q"]
+[gd_scene format=3 uid="uid://bpt2onorpqp5q"]
 
 [ext_resource type="Script" uid="uid://c6naokb8mjbq5" path="res://script/enemy.gd" id="1_h08p8"]
 [ext_resource type="PackedScene" uid="uid://4vv5x7rd5335" path="res://scene/life_bar.tscn" id="2_f87vc"]
 
-[node name="enemy" type="Area2D" groups=["enemy"]]
+[node name="enemy" type="Area2D" unique_id=822671381 groups=["enemy"]]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_h08p8")
 
-[node name="base" type="AnimatedSprite2D" parent="."]
+[node name="base" type="AnimatedSprite2D" parent="." unique_id=1108324432]
 
-[node name="radar" type="Area2D" parent="."]
+[node name="radar" type="Area2D" parent="." unique_id=1066952876]
 collision_layer = 0
 
-[node name="shape" type="CollisionShape2D" parent="radar"]
+[node name="shape" type="CollisionShape2D" parent="radar" unique_id=1238677921]
 
-[node name="turret" type="AnimatedSprite2D" parent="."]
+[node name="turret" type="AnimatedSprite2D" parent="." unique_id=108539921]
 
-[node name="shape" type="CollisionShape2D" parent="."]
+[node name="shape" type="CollisionShape2D" parent="." unique_id=359688443]
 
-[node name="lifeBar" parent="." instance=ExtResource("2_f87vc")]
+[node name="lifeBar" parent="." unique_id=1025675865 instance=ExtResource("2_f87vc")]
 position = Vector2(0, -50)

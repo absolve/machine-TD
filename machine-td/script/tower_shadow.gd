@@ -46,9 +46,14 @@ func _draw() -> void:
 	# 以原点为中心,计算整个占用区域的左上角(像素坐标)
 	var half: Vector2 = Vector2(gridSize.x * tile, gridSize.y * tile) * 0.5
 	var top_left: Vector2 = Vector2.ZERO - half
+	# 半透明填充色, 让网格线清晰可见
+	var fill_color = Color(drawColor, 0.3)
 	for dx in range(gridSize.x):
 		for dy in range(gridSize.y):
 			# 每个格子的左上角 = top_left + (dx, dy) * TileSize
 			var cell_pos: Vector2 = top_left + Vector2(dx * tile, dy * tile)
-			draw_rect(Rect2(cell_pos, Vector2(tile, tile)), drawColor)
+			# 半透明填充
+			draw_rect(Rect2(cell_pos, Vector2(tile, tile)), fill_color, true)
+			# 网格边框
+			draw_rect(Rect2(cell_pos, Vector2(tile, tile)), drawColor, false, 2.0)
 	

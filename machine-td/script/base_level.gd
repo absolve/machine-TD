@@ -99,6 +99,12 @@ func _input(_event: InputEvent) -> void:
 
 func _draw() -> void:
 	if towerShadow.active:
+		var fill_color = Color(Color.SALMON, 0.3)
+		var t = StageData.TileSize
 		for i in allowArea:
-			draw_rect(Rect2(Vector2(i.x * StageData.TileSize, i.y * StageData.TileSize),
-			 Vector2(StageData.TileSize, StageData.TileSize)), Color.SALMON)
+			var cell_pos = Vector2(i.x * t, i.y * t)
+			var cell_size = Vector2(t, t)
+			# 半透明填充
+			draw_rect(Rect2(cell_pos, cell_size), fill_color, true)
+			# 网格边框
+			draw_rect(Rect2(cell_pos, cell_size), Color.SALMON, false, 2.0)

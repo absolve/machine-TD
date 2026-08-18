@@ -2,6 +2,40 @@
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_bh8ft"]
 [ext_resource type="Script" uid="uid://bqteowipjn517" path="res://script/laser_tower.gd" id="2_733d0"]
+[ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_0llar"]
 
-[node name="Tower" unique_id=1676258242 instance=ExtResource("1_bh8ft")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_axgl3"]
+size = Vector2(64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wfuso"]
+atlas = ExtResource("3_0llar")
+region = Rect2(640, 256, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_027me"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wfuso")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0llar"]
+radius = 128.0
+
+[node name="Tower2" unique_id=1676258242 instance=ExtResource("1_bh8ft")]
 script = ExtResource("2_733d0")
+
+[node name="shape" parent="." index="0" unique_id=1958475246]
+shape = SubResource("RectangleShape2D_axgl3")
+
+[node name="base" parent="." index="1" unique_id=1580788916]
+sprite_frames = SubResource("SpriteFrames_027me")
+
+[node name="CollisionShape2D" parent="radar" parent_id_path=PackedInt32Array(2082783838) index="0" unique_id=803920863]
+shape = SubResource("CircleShape2D_0llar")
+
+[connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
+[connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]

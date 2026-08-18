@@ -21,5 +21,5 @@ var rotationSpeed=10
 func hurt(_num):
 	pass
 
-func fire(t):
+func fire(_t):
 	pass

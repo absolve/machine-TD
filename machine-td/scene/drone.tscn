@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://beibia6n0s2lp"]
+
+[ext_resource type="PackedScene" uid="uid://cgasdc4xix81v" path="res://scene/aircraft.tscn" id="1_8wg5q"]
+[ext_resource type="Script" uid="uid://bq486lhicbx3x" path="res://script/drone.gd" id="2_jxxn5"]
+[ext_resource type="Texture2D" uid="uid://ck67srsef3ay2" path="res://sprite/enemy@2.png" id="3_il87p"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_stha5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bneum"]
+atlas = ExtResource("3_il87p")
+region = Rect2(256, 128, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_il87p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bneum")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_il87p"]
+radius = 128.0
+
+[node name="aircraft" unique_id=77046293 instance=ExtResource("1_8wg5q")]
+script = ExtResource("2_jxxn5")
+
+[node name="shape" parent="." index="0" unique_id=1374798482]
+shape = SubResource("RectangleShape2D_stha5")
+
+[node name="ani" parent="." index="1" unique_id=748097984]
+sprite_frames = SubResource("SpriteFrames_il87p")
+
+[node name="shape" parent="radar" parent_id_path=PackedInt32Array(788993573) index="0" unique_id=311842238]
+shape = SubResource("CircleShape2D_il87p")

@@ -15,13 +15,18 @@ var tower2 = preload("res://sprite/tower2.png")
 var tower3 = preload("res://sprite/tower3.png")
 var tower4 = preload("res://sprite/tower3.png")
 var tower5 = preload("res://sprite/tower3.png")
+var tower6=preload("res://sprite/tower3.png")
+var tower7=preload("res://sprite/tower3.png")
 
 var towerIcon = preload("res://scene/tower_icon.tscn")
 
 var towersData = [ {'type': Game.towerType.machineGunTower, 'img': tower1},
 {'type': 1001, 'img': tower2}, {'type': 1002, 'img': tower3},
 {'type': Game.towerType.EMPTower, 'img': tower4},
-{'type': Game.towerType.teslaCoilTower, 'img': tower5}]
+{'type': Game.towerType.teslaCoilTower, 'img': tower5},
+{'type': Game.towerType.laserTower, 'img': tower6},
+{'type': Game.towerType.droneBase, 'img': tower7},
+]
 
 
 func _ready() -> void:
