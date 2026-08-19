@@ -27,6 +27,7 @@ radius = 128.0
 
 [node name="Tower" unique_id=1676258242 instance=ExtResource("1_cuhtv")]
 script = ExtResource("2_tc0i1")
+type = 1003
 
 [node name="shape" parent="." index="0" unique_id=1958475246]
 shape = SubResource("RectangleShape2D_3c4u4")

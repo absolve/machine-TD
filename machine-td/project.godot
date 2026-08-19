@@ -26,6 +26,7 @@ EasterEgg="*res://autoload/easterEgg.gd"
 ExplosionManage="*res://scene/explosion_manage.tscn"
 SoundManage="*res://scene/sound_manage.tscn"
 StageData="*res://autoload/stageData.gd"
+TowerUpgradeManager="*uid://chlgw3pk7jvcl"
 
 [display]
 

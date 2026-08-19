@@ -50,6 +50,7 @@ _data = {
 
 [node name="Tower" unique_id=1503874794 instance=ExtResource("1_ojo5w")]
 script = ExtResource("2_kf01a")
+type = 1002
 
 [node name="shape" parent="." index="0" unique_id=1958475246]
 shape = SubResource("RectangleShape2D_f662h")

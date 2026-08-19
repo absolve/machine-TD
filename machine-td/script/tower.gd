@@ -4,6 +4,8 @@ class_name Tower
 @export var hp = 0 # 防御塔血量
 @export var maxHp = 0 # 最大血量
 @export var radarScope = 500 # 雷达范围
+@export var type: Game.towerType = Game.towerType.machineGunTower
+
 var delay = 0.1 # 开火延迟
 var target = [] # 目标集合
 var canShot = true
@@ -14,6 +16,9 @@ var sellingPrice = 0 # 售价
 var coverGrid: Array[Vector2i] = [] # 占用的格子
 var targetValue: int = 1 # 目标价值 敌人攻击的优先级
 var atk: int = 0 # 攻击力
+var level: int = 1 # 等级
+var towerExp: int = 0 # 经验值
+
 
 @onready var rader = $radar
 @onready var raderShape = $radar/CollisionShape2D
@@ -58,6 +63,24 @@ func hideSelect():
 	queue_redraw()
 	btnSell.visible = selected
 	Game.clickTower.emit(self, selected)
+
+# 增加经验
+func addExp(amount: int) -> void:
+	if level >= TowerUpgradeManager.MAX_LEVEL:
+		return
+	if TowerUpgradeManager.configs[type]["exp" + str(level)] == INF:
+		return
+	towerExp += amount
+	var threshold = TowerUpgradeManager.getExpThreshold(type, level)
+	if towerExp >= threshold:
+		levelUp()
+		towerExp -= threshold
+	
+#升级等级
+func levelUp() -> void:
+	level += 1
+	#TODO
+	
 
 func _on_delay_timeout():
 	canShot = true

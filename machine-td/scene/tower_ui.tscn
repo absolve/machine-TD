@@ -145,6 +145,7 @@ offset_top = 8.0
 offset_right = 1160.0
 offset_bottom = 200.0
 mouse_filter = 0
+mouse_force_pass_scroll_events = false
 
 [node name="PanelContainer" type="PanelContainer" parent="ScrollContainer" unique_id=1229927872]
 layout_mode = 2
