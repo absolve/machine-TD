@@ -21,7 +21,14 @@ var rotationSpeed = 10
 @onready var lifeBar = $lifeBar
 
 func hurt(_num: int, _source = null):
-	pass
+	hp -= _num
+	lifeBar.value = hp
+	if hp <= 0:
+		ExplosionManage.playExplosion(global_position)
+		Game.defeatEnemy.emit(reward)
+		owner.queue_free()
+		if _source !=null && _source is Tower:
+			_source.addExp(rewardExp)
 
 func fire(_t):
 	pass

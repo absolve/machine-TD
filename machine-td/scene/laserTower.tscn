@@ -3,9 +3,20 @@
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_bh8ft"]
 [ext_resource type="Script" uid="uid://bqteowipjn517" path="res://script/laser_tower.gd" id="2_733d0"]
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_0llar"]
+[ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_wfuso"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_axgl3"]
 size = Vector2(64, 64)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_67mi2"]
+resource_local_to_scene = true
+shader = ExtResource("3_wfuso")
+shader_parameter/enabled = 0.0
+shader_parameter/intensity = 1.0
+shader_parameter/glow_color = Color(1, 0.85, 0.3, 1)
+shader_parameter/flash_speed = 4.0
+shader_parameter/flash_amount = 0.6
+shader_parameter/edge_glow = 0.8
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wfuso"]
 atlas = ExtResource("3_0llar")
@@ -34,9 +45,13 @@ shape = SubResource("RectangleShape2D_axgl3")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
 z_index = -1
+material = SubResource("ShaderMaterial_67mi2")
 sprite_frames = SubResource("SpriteFrames_027me")
 
-[node name="CollisionShape2D" parent="radar" parent_id_path=PackedInt32Array(2082783838) index="0" unique_id=803920863]
+[node name="radar" parent="." index="2" unique_id=2082783838]
+visible = false
+
+[node name="CollisionShape2D" parent="radar" index="0" unique_id=803920863]
 shape = SubResource("CircleShape2D_0llar")
 
 [connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]

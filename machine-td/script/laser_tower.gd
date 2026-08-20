@@ -9,8 +9,15 @@ var laser_targets: Array = [] # 当前激光锁定的敌人
 
 func _ready():
 	super._ready()
-
-
+	#var mat =base.material as ShaderMaterial
+	#mat.set_shader_parameter("enabled", 1.0)
+	#var tween = create_tween()
+	#tween.tween_property(mat, "shader_parameter/intensity", 1.5, 0.15)
+	#tween.tween_interval(10.6)
+	#tween.tween_property(mat, "shader_parameter/intensity", 0.0, 0.4)
+	#tween.tween_callback(func(): mat.set_shader_parameter("enabled", 0.0))
+	
+		
 func _physics_process(_delta: float):
 	# 收集最多3个有效目标
 	laser_targets = _collect_targets()
