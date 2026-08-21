@@ -2,6 +2,9 @@ extends Node
 
 const TileSize = 64  #网格大小
 
+# 当前选中的关卡ID（由 level_select 点击时设置，map 读取后加载对应场景）
+var currentStageId: int = 1
+
 #关卡的数据
 var allStage = [
 	{
@@ -10,6 +13,7 @@ var allStage = [
 		'wave': 2,
 		'health': 20,
 		'money': 100,
+		'scene': 'res://scene/level/level_1.tscn',
 		"enemySpawner": [ {'time': 1, 'type': Game.enemyType.miniTank, 'number': 1},
 		{'time': 2, 'type': Game.enemyType.miniTank, 'number': 2}]
 	},
@@ -19,6 +23,7 @@ var allStage = [
 		'wave': 2,
 		'health': 20,
 		'money': 300,
+		'scene': 'res://scene/level/level_1.tscn',
 		"enemySpawner": [ {'time': 1, 'type': Game.enemyType.miniTank, 'number': 1},
 		{'time': 2, 'type': Game.enemyType.miniTank, 'number': 2}]
 	},

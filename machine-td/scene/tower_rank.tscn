@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://bwdh7erg7xr7y"]
+
+[ext_resource type="Script" uid="uid://d24mpncjud3h0" path="res://script/tower_rank.gd" id="1_kning"]
+[ext_resource type="Texture2D" uid="uid://dfb0ttt2f2osf" path="res://sprite/chevron.png" id="2_ngcwe"]
+[ext_resource type="Texture2D" uid="uid://dlojoct7vt8kx" path="res://sprite/chevron3.png" id="3_ngcwe"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_x1k4k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_ngcwe")
+}],
+"loop": 0,
+"name": &"lv2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_ngcwe")
+}],
+"loop": 0,
+"name": &"lv3",
+"speed": 5.0
+}]
+
+[node name="towerRank" type="Node2D" unique_id=1195618471]
+script = ExtResource("1_kning")
+
+[node name="ani" type="AnimatedSprite2D" parent="." unique_id=555367891]
+sprite_frames = SubResource("SpriteFrames_x1k4k")
+animation = &"lv3"

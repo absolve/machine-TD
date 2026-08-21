@@ -29,6 +29,7 @@ var towerExp: int = 0 # 经验值
 @onready var player = $player
 @onready var initBar = $ProgressBar
 @onready var btnSell = $btnSell
+@onready var towerRank = $towerRank
 
 func _ready() -> void:
 	if raderShape.shape:
@@ -79,8 +80,9 @@ func addExp(amount: int) -> void:
 #升级等级
 func levelUp() -> void:
 	level += 1
-	#TODO
-	
+	#TODO 升级防御塔的属性
+	towerRank.setLevel(level)
+
 
 func _on_delay_timeout():
 	canShot = true
@@ -101,5 +103,5 @@ func _on_input_event(_viewport, _event, _shape_idx):
 
 
 func _on_btn_sell_pressed():
-	Game.sellTower.emit(sellingPrice)
+	Game.sellTower.emit(sellingPrice, coverGrid)
 	queue_free()

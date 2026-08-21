@@ -20,7 +20,13 @@ var occupiedArea: Array[Vector2i] = [] # 已占用的区域
 
 func _ready() -> void:
 	Game.selectTower.connect(selectTower)
-
+	for i in StageData.allStage:
+		if levelId == i.get("id"):
+			wave = i.get("wave")
+			health = i.get("health")
+			money = i.get("money")
+			enemyList = i.get("enemySpawner")
+			break
 
 # 选择塔
 func selectTower(type):
@@ -70,9 +76,13 @@ func setShadowHide():
 	queue_redraw()
 
 #添加已占用的区域
-func  addOccupiedArea(grid: Array[Vector2i]):
+func addOccupiedArea(grid: Array[Vector2i]):
 	occupiedArea.append_array(grid)
 
+# 移除已占用的区域
+func removeOccupiedArea(grid: Array[Vector2i]):
+	for i in grid:
+		occupiedArea.erase(i)
 
 func _physics_process(_delta: float) -> void:
 	if towerShadow.active:
@@ -91,7 +101,7 @@ func _input(_event: InputEvent) -> void:
 			if towerShadow.placeable:
 				var grid = world2Grid(towerShadow.position)
 				var towerCoverGrid = getTowerCoverGrid(grid, towerShadow.gridSize)
-				Game.placeTower.emit(towerShadow.towerType,towerShadow.cost,grid, towerCoverGrid, towerShadow.gridSize)
+				Game.placeTower.emit(towerShadow.towerType, towerShadow.cost, grid, towerCoverGrid, towerShadow.gridSize)
 		if Input.is_action_just_pressed("selectCancel"):
 			if towerShadow.active:
 				towerShadow.setInactive()

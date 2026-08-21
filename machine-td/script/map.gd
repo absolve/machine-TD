@@ -5,11 +5,11 @@ extends Node2D
 @onready var titleNode = $hud/title
 @onready var towerUINode = $hud/towerUI
 @onready var resultScreen = $resultScreen
-@onready var level = $level1
+
 @onready var finishTimer = $Timer
 @onready var toastInfo = $hud/toastInfo
 
-
+var level 
 var gunTower = preload("res://scene/machineGunTower.tscn")
 var rocketTower = preload("res://scene/rocketTower.tscn")
 var cannonTower = preload("res://scene/cannonTower.tscn")
@@ -54,8 +54,30 @@ func _ready():
 	queue_redraw()
 	# print(int(1920.0 / cellSize))
 	font = ThemeDB.fallback_font
-	
-	
+	loadLevel()
+
+func loadLevel():
+	var stage_id = StageData.currentStageId
+	var stage_data: Dictionary = {}
+	for s in StageData.allStage:
+		if s.get("id") == stage_id:
+			stage_data = s
+			break
+	if stage_data.is_empty():
+		push_error("未找到关卡数据: id=" + str(stage_id))
+		return
+	var scene_path: String = stage_data.get("scene", "")
+	if scene_path.is_empty():
+		push_error("关卡未配置 scene 路径: id=" + str(stage_id))
+		return
+	var level_scene = load(scene_path)
+	var level_instance = level_scene.instantiate()
+	# 设置 levelId，使关卡 _ready() 自动加载对应数据（base_level._load_stage_data）
+	level_instance.levelId = stage_id
+	add_child(level_instance)
+	level = level_instance
+
+
 #选中塔
 #func selectTower(item):
 	#print(item)
@@ -161,9 +183,11 @@ func speedOn():
 	
 func speedOff():
 	pass
-	
-func sellTower(money):
-	print("sellTower ", money)
+
+# 出售防御塔
+func sellTower(money, coverGrid: Array[Vector2i]):
+	print("sellTower ", money, coverGrid)
+	level.removeOccupiedArea(coverGrid)
 	titleNode.money += money
 
 func lastWave():

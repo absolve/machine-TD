@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dbvhmj1j0f0i4" path="res://script/tower.gd" id="1_nxw3l"]
 [ext_resource type="PackedScene" uid="uid://4vv5x7rd5335" path="res://scene/life_bar.tscn" id="2_5eujo"]
+[ext_resource type="PackedScene" uid="uid://bwdh7erg7xr7y" path="res://scene/tower_rank.tscn" id="2_y3288"]
 [ext_resource type="Texture2D" uid="uid://ogfcb767msec" path="res://sprite/Home.png" id="3_lbuki"]
 
 [node name="Tower" type="Area2D" unique_id=1676258242]
@@ -25,6 +26,9 @@ input_pickable = false
 modulate = Color(1, 1, 1, 0.39215687)
 
 [node name="Marker2D" type="Marker2D" parent="turret" unique_id=1564610297]
+
+[node name="towerRank" parent="." unique_id=1195618471 instance=ExtResource("2_y3288")]
+position = Vector2(85, -64)
 
 [node name="delay" type="Timer" parent="." unique_id=1974424463]
 one_shot = true
