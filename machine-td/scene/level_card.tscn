@@ -10,6 +10,7 @@
 custom_minimum_size = Vector2(128, 128)
 offset_right = 256.0
 offset_bottom = 256.0
+mouse_default_cursor_shape = 2
 theme = ExtResource("1_78rwn")
 theme_override_styles/panel = ExtResource("1_62wgn")
 script = ExtResource("1_dy8d4")

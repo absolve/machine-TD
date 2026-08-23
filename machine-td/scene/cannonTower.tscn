@@ -2,10 +2,21 @@
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_xj8p8"]
 [ext_resource type="Script" uid="uid://bxm1puyb5lju" path="res://script/cannon_tower.gd" id="2_v83o1"]
+[ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_lm0w6"]
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_v83o1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v83o1"]
 size = Vector2(64, 64)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sk265"]
+resource_local_to_scene = true
+shader = ExtResource("3_lm0w6")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 50.00000237174012
+shader_parameter/flash_amplitude = 1.0000000475
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lm0w6"]
 atlas = ExtResource("3_v83o1")
@@ -24,6 +35,16 @@ animations = [{
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_v83o1"]
 radius = 300.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u4c1a"]
+resource_local_to_scene = true
+shader = ExtResource("3_lm0w6")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 50.0
+shader_parameter/flash_amplitude = 1.0
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sk265"]
 atlas = ExtResource("3_v83o1")
@@ -85,6 +106,7 @@ type = 1001
 shape = SubResource("RectangleShape2D_v83o1")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
+material = SubResource("ShaderMaterial_sk265")
 scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_sk265")
 
@@ -97,17 +119,18 @@ visibility_layer = 2
 shape = SubResource("CircleShape2D_v83o1")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
+material = SubResource("ShaderMaterial_u4c1a")
 scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_lm0w6")
 offset = Vector2(10, 0)
 
-[node name="lifeBar" parent="." index="5" unique_id=1589605555]
+[node name="lifeBar" parent="." index="6" unique_id=1589605555]
 position = Vector2(0, -53)
 
-[node name="player" parent="." index="6" unique_id=1035425773]
+[node name="player" parent="." index="7" unique_id=1035425773]
 libraries/ = SubResource("AnimationLibrary_lm0w6")
 
-[node name="ProgressBar" parent="." index="7" unique_id=1203597731]
+[node name="ProgressBar" parent="." index="8" unique_id=1203597731]
 offset_left = -32.0
 offset_top = -13.0
 offset_right = 32.0

@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://clbbod4cwf6n8" path="res://scene/tower_ui.tscn" id="3_bq37x"]
 [ext_resource type="PackedScene" uid="uid://b2646ykmxfyif" path="res://scene/result_screen.tscn" id="4_bq37x"]
 [ext_resource type="PackedScene" uid="uid://c2g3rjpp3rijm" path="res://scene/toast_info.tscn" id="4_jp76l"]
-[ext_resource type="PackedScene" uid="uid://b61gsmirxvp8x" path="res://scene/level/level_1.tscn" id="5_4xw1d"]
 [ext_resource type="PackedScene" uid="uid://dmskj8i7vlbkd" path="res://scene/custom_camera.tscn" id="5_jp76l"]
 
 [node name="map" type="Node2D" unique_id=988854810]
@@ -30,8 +29,6 @@ text = "test"
 [node name="toastInfo" parent="hud" unique_id=1968260455 instance=ExtResource("4_jp76l")]
 
 [node name="customCamera" parent="." unique_id=76497160 instance=ExtResource("5_jp76l")]
-
-[node name="level1" parent="." unique_id=1677168939 instance=ExtResource("5_4xw1d")]
 
 [node name="Timer" type="Timer" parent="." unique_id=1553136818]
 wait_time = 2.0

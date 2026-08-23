@@ -102,29 +102,6 @@ anchors_preset = 0
 theme = ExtResource("2_tg0id")
 script = ExtResource("1_yx7l2")
 
-[node name="fc" type="FoldableContainer" parent="." unique_id=2029279464]
-visible = false
-layout_mode = 0
-offset_right = 280.0
-offset_bottom = 776.0
-folded = true
-title = "tower"
-title_alignment = 1
-
-[node name="vbox" type="VBoxContainer" parent="fc" unique_id=1912618753]
-visible = false
-layout_mode = 2
-alignment = 1
-metadata/_edit_group_ = true
-
-[node name="ScrollContainer" type="ScrollContainer" parent="fc/vbox" unique_id=185773239]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="towerList" type="VBoxContainer" parent="fc/vbox/ScrollContainer" unique_id=159136998]
-layout_mode = 2
-alignment = 1
-
 [node name="towerInfo" parent="." unique_id=1894004533 instance=ExtResource("3_gwmlu")]
 visible = false
 layout_mode = 0
@@ -133,8 +110,10 @@ offset_bottom = 482.0
 
 [node name="icon" type="TextureRect" parent="." unique_id=1251248946]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 8.0
+offset_top = 48.0
+offset_right = 136.0
+offset_bottom = 176.0
 texture = ExtResource("4_k2xma")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1330017689]

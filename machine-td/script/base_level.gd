@@ -78,7 +78,8 @@ func setShadowHide():
 #添加已占用的区域
 func addOccupiedArea(grid: Array[Vector2i]):
 	occupiedArea.append_array(grid)
-
+	
+	
 # 移除已占用的区域
 func removeOccupiedArea(grid: Array[Vector2i]):
 	for i in grid:
@@ -93,19 +94,27 @@ func _physics_process(_delta: float) -> void:
 		towerShadow.placeable = canPlace(towerCoverGrid)
 		# print(towerShadow.placeable)
 		queue_redraw()
-	
-	
-func _input(_event: InputEvent) -> void:
-	if towerShadow.active:
 		if Input.is_action_just_pressed("click"):
 			if towerShadow.placeable:
-				var grid = world2Grid(towerShadow.position)
-				var towerCoverGrid = getTowerCoverGrid(grid, towerShadow.gridSize)
+				#var grid = world2Grid(towerShadow.position)
+				#var towerCoverGrid = getTowerCoverGrid(grid, towerShadow.gridSize)
 				Game.placeTower.emit(towerShadow.towerType, towerShadow.cost, grid, towerCoverGrid, towerShadow.gridSize)
 		if Input.is_action_just_pressed("selectCancel"):
 			if towerShadow.active:
 				towerShadow.setInactive()
 				queue_redraw()
+	
+#func _input(_event: InputEvent) -> void:
+	#if towerShadow.active:
+		#if Input.is_action_just_pressed("click"):
+			#if towerShadow.placeable:
+				#var grid = world2Grid(towerShadow.position)
+				#var towerCoverGrid = getTowerCoverGrid(grid, towerShadow.gridSize)
+				#Game.placeTower.emit(towerShadow.towerType, towerShadow.cost, grid, towerCoverGrid, towerShadow.gridSize)
+		#if Input.is_action_just_pressed("selectCancel"):
+			#if towerShadow.active:
+				#towerShadow.setInactive()
+				#queue_redraw()
 
 func _draw() -> void:
 	if towerShadow.active:

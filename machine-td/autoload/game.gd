@@ -22,6 +22,7 @@ const towerInfo = {
 	"atk": 10,
 	"cost": 10,
 	"reload": 0.1,
+	'scope':128,
 	"desc": "_machineGunTowerDesc",
 	'gridSize': Vector2i(1, 1)
 	},
@@ -30,6 +31,7 @@ const towerInfo = {
 	"atk": 30,
 	"cost": 20,
 	"reload": 0.5,
+	'scope':128,
 	"desc": "_cannonTowerDesc",
 	'gridSize': Vector2i(1, 1)
 	},
@@ -38,6 +40,7 @@ const towerInfo = {
 	"atk": 20,
 	"cost": 30,
 	"reload": 0.5,
+	'scope':128,
 	"desc": "_rocketTowerDesc",
 	'gridSize': Vector2i(1, 1)
 	},
@@ -46,6 +49,7 @@ const towerInfo = {
 	"atk": 0,
 	"cost": 40,
 	"reload": 0,
+	'scope':128,
 	"desc": "_EMPTowerDesc",
 	'gridSize': Vector2i(1, 1)
 	},
@@ -54,6 +58,7 @@ const towerInfo = {
 	"atk": 5,
 	"cost": 50,
 	"reload": 5,
+	'scope':128,
 	"desc": "_droneBaseDesc",
 	'gridSize': Vector2i(2, 2)
 	},
@@ -62,14 +67,16 @@ const towerInfo = {
 	"atk": 40,
 	"cost": 50,
 	"reload": 2,
+	'scope':128,
 	"desc": "_teslaCoilTowerDesc",
 	'gridSize': Vector2i(2, 2)
 	},
 	towerType.laserTower: {
 	"name": "laserTower",
-	"atk": 4,
+	"atk": 40,
 	"cost": 60,
 	"reload": 1,
+	'scope':128,
 	"desc": "_laserTowerDesc",
 	'gridSize': Vector2i(2, 2)
 	},

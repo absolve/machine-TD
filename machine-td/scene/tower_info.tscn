@@ -3,75 +3,90 @@
 [ext_resource type="Script" uid="uid://belv4jwyveg6s" path="res://script/tower_info.gd" id="1_dm3ur"]
 
 [node name="towerInfo" type="PanelContainer" unique_id=712368973]
-offset_right = 150.0
-offset_bottom = 157.0
+z_index = 10
+offset_right = 180.0
+offset_bottom = 239.0
 script = ExtResource("1_dm3ur")
 
-[node name="vbox" type="VBoxContainer" parent="." unique_id=472616738]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1924997378]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="vbox" type="VBoxContainer" parent="MarginContainer" unique_id=472616738]
 layout_mode = 2
 
-[node name="towerName" type="Label" parent="vbox" unique_id=998000817]
+[node name="towerName" type="Label" parent="MarginContainer/vbox" unique_id=998000817]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.99607843, 0.84705883, 0.2627451, 1)
+theme_override_font_sizes/font_size = 42
 text = "rocket"
 horizontal_alignment = 1
 
-[node name="hbox" type="VBoxContainer" parent="vbox" unique_id=500790674]
+[node name="hbox" type="VBoxContainer" parent="MarginContainer/vbox" unique_id=500790674]
 layout_mode = 2
 
-[node name="hbox1" type="HBoxContainer" parent="vbox/hbox" unique_id=1581277158]
+[node name="hbox1" type="HBoxContainer" parent="MarginContainer/vbox/hbox" unique_id=1581277158]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="vbox/hbox/hbox1" unique_id=1546014282]
+[node name="Label" type="Label" parent="MarginContainer/vbox/hbox/hbox1" unique_id=1546014282]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "act:"
 horizontal_alignment = 2
 
-[node name="atkLabel" type="Label" parent="vbox/hbox/hbox1" unique_id=1054183307]
+[node name="atkLabel" type="Label" parent="MarginContainer/vbox/hbox/hbox1" unique_id=1054183307]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="hbox2" type="HBoxContainer" parent="vbox/hbox" unique_id=1985331602]
+[node name="hbox2" type="HBoxContainer" parent="MarginContainer/vbox/hbox" unique_id=1985331602]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="vbox/hbox/hbox2" unique_id=459085263]
+[node name="Label2" type="Label" parent="MarginContainer/vbox/hbox/hbox2" unique_id=459085263]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "cost:"
 horizontal_alignment = 2
 
-[node name="costLabel" type="Label" parent="vbox/hbox/hbox2" unique_id=428837810]
+[node name="costLabel" type="Label" parent="MarginContainer/vbox/hbox/hbox2" unique_id=428837810]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="hbox3" type="HBoxContainer" parent="vbox/hbox" unique_id=877337731]
+[node name="hbox3" type="HBoxContainer" parent="MarginContainer/vbox/hbox" unique_id=877337731]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="vbox/hbox/hbox3" unique_id=1684961463]
+[node name="Label3" type="Label" parent="MarginContainer/vbox/hbox/hbox3" unique_id=1684961463]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "reload:"
 horizontal_alignment = 2
 
-[node name="reloadLabel" type="Label" parent="vbox/hbox/hbox3" unique_id=1628304573]
+[node name="reloadLabel" type="Label" parent="MarginContainer/vbox/hbox/hbox3" unique_id=1628304573]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="hbox4" type="HBoxContainer" parent="vbox/hbox" unique_id=1506316392]
+[node name="hbox4" type="HBoxContainer" parent="MarginContainer/vbox/hbox" unique_id=1506316392]
 layout_mode = 2
 
-[node name="Label3" type="Label" parent="vbox/hbox/hbox4" unique_id=342185457]
+[node name="Label3" type="Label" parent="MarginContainer/vbox/hbox/hbox4" unique_id=342185457]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "scope:"
 horizontal_alignment = 2
 
-[node name="scopeLabel" type="Label" parent="vbox/hbox/hbox4" unique_id=1128599958]
+[node name="scopeLabel" type="Label" parent="MarginContainer/vbox/hbox/hbox4" unique_id=1128599958]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="towerDetail" type="Label" parent="vbox" unique_id=974574719]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/vbox" unique_id=1987117239]
+layout_mode = 2
+theme_override_constants/margin_top = 20
+
+[node name="towerDetail" type="Label" parent="MarginContainer/vbox/MarginContainer" unique_id=974574719]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Launch missiles to strike the enemy"
-autowrap_mode = 1
+horizontal_alignment = 1
+autowrap_mode = 3

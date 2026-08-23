@@ -8,15 +8,15 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_axgl3"]
 size = Vector2(64, 64)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_67mi2"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wfuso"]
 resource_local_to_scene = true
 shader = ExtResource("3_wfuso")
-shader_parameter/enabled = 0.0
-shader_parameter/intensity = 1.0
-shader_parameter/glow_color = Color(1, 0.85, 0.3, 1)
-shader_parameter/flash_speed = 4.0
-shader_parameter/flash_amount = 0.6
-shader_parameter/edge_glow = 0.8
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 50.0
+shader_parameter/flash_amplitude = 1.0
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wfuso"]
 atlas = ExtResource("3_0llar")
@@ -36,16 +36,27 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_0llar"]
 radius = 128.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_axgl3"]
+resource_local_to_scene = true
+shader = ExtResource("3_wfuso")
+shader_parameter/enable_flash = true
+shader_parameter/base_brightness = 1.2
+shader_parameter/flash_speed = 4.0
+shader_parameter/flash_amplitude = 0.6
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+
 [node name="Tower2" unique_id=1676258242 instance=ExtResource("1_bh8ft")]
 script = ExtResource("2_733d0")
 type = 1006
 
 [node name="shape" parent="." index="0" unique_id=1958475246]
+visible = false
 shape = SubResource("RectangleShape2D_axgl3")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
 z_index = -1
-material = SubResource("ShaderMaterial_67mi2")
+material = SubResource("ShaderMaterial_wfuso")
 sprite_frames = SubResource("SpriteFrames_027me")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
@@ -53,6 +64,9 @@ visible = false
 
 [node name="CollisionShape2D" parent="radar" index="0" unique_id=803920863]
 shape = SubResource("CircleShape2D_0llar")
+
+[node name="turret" parent="." index="3" unique_id=1212426607]
+material = SubResource("ShaderMaterial_axgl3")
 
 [connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
 [connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]

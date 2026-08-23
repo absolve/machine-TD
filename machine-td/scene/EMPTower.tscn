@@ -3,9 +3,20 @@
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_cuhtv"]
 [ext_resource type="Script" uid="uid://flhkswexg6fx" path="res://script/emp_tower.gd" id="2_tc0i1"]
 [ext_resource type="Texture2D" uid="uid://bgmucqhp44lo6" path="res://sprite/tower_tilesheet.png" id="3_3c4u4"]
+[ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_4p7g2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3c4u4"]
 size = Vector2(64, 64)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_q7nff"]
+resource_local_to_scene = true
+shader = ExtResource("3_4p7g2")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 50.00000237174012
+shader_parameter/flash_amplitude = 1.0000000475
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4p7g2"]
 atlas = ExtResource("3_3c4u4")
@@ -25,6 +36,16 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_p16uh"]
 radius = 128.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aa2gh"]
+resource_local_to_scene = true
+shader = ExtResource("3_4p7g2")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 50.0
+shader_parameter/flash_amplitude = 1.0
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+
 [node name="Tower" unique_id=1676258242 instance=ExtResource("1_cuhtv")]
 script = ExtResource("2_tc0i1")
 type = 1003
@@ -33,6 +54,7 @@ type = 1003
 shape = SubResource("RectangleShape2D_3c4u4")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
+material = SubResource("ShaderMaterial_q7nff")
 sprite_frames = SubResource("SpriteFrames_aimcf")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
@@ -42,9 +64,12 @@ collision_layer = 16
 [node name="CollisionShape2D" parent="radar" index="0" unique_id=803920863]
 shape = SubResource("CircleShape2D_p16uh")
 
-[node name="lifeBar" parent="." index="5" unique_id=1589605555]
+[node name="turret" parent="." index="3" unique_id=1212426607]
+material = SubResource("ShaderMaterial_aa2gh")
+
+[node name="lifeBar" parent="." index="6" unique_id=1589605555]
 position = Vector2(0, -51)
 
-[node name="ProgressBar" parent="." index="7" unique_id=1203597731]
+[node name="ProgressBar" parent="." index="8" unique_id=1203597731]
 offset_left = -32.0
 offset_right = 32.0

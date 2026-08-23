@@ -2,8 +2,29 @@
 
 [ext_resource type="Script" uid="uid://dbvhmj1j0f0i4" path="res://script/tower.gd" id="1_nxw3l"]
 [ext_resource type="PackedScene" uid="uid://4vv5x7rd5335" path="res://scene/life_bar.tscn" id="2_5eujo"]
+[ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="2_uhti2"]
 [ext_resource type="PackedScene" uid="uid://bwdh7erg7xr7y" path="res://scene/tower_rank.tscn" id="2_y3288"]
 [ext_resource type="Texture2D" uid="uid://ogfcb767msec" path="res://sprite/Home.png" id="3_lbuki"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vvofi"]
+resource_local_to_scene = true
+shader = ExtResource("2_uhti2")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 50.00000237174012
+shader_parameter/flash_amplitude = 1.0000000475
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vn0ct"]
+resource_local_to_scene = true
+shader = ExtResource("2_uhti2")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 50.0
+shader_parameter/flash_amplitude = 1.0
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [node name="Tower" type="Area2D" unique_id=1676258242]
 collision_mask = 0
@@ -14,6 +35,7 @@ script = ExtResource("1_nxw3l")
 
 [node name="base" type="AnimatedSprite2D" parent="." unique_id=1580788916]
 modulate = Color(1, 1, 1, 0.39215687)
+material = SubResource("ShaderMaterial_vvofi")
 
 [node name="radar" type="Area2D" parent="." unique_id=2082783838]
 collision_layer = 0
@@ -24,6 +46,7 @@ input_pickable = false
 
 [node name="turret" type="AnimatedSprite2D" parent="." unique_id=1212426607]
 modulate = Color(1, 1, 1, 0.39215687)
+material = SubResource("ShaderMaterial_vn0ct")
 
 [node name="Marker2D" type="Marker2D" parent="turret" unique_id=1564610297]
 

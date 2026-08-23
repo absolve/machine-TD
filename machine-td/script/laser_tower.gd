@@ -43,7 +43,7 @@ func _physics_process(_delta: float):
 func fire_lasers():
 	for enemy in laser_targets:
 		if is_instance_valid(enemy) and enemy.has_method("hurt"):
-			enemy.hurt(atk)
+			enemy.hurt(atk,self)
 
 
 # 收集最多MAX_TARGETS个有效目标

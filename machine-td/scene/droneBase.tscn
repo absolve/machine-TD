@@ -2,7 +2,57 @@
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_qyteg"]
 [ext_resource type="Script" uid="uid://cnmy5uf77qffw" path="res://script/drone_base.gd" id="2_ir8sv"]
+[ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_56bs0"]
+[ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="4_wl8i8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j5ypg"]
+size = Vector2(64, 64)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wl8i8"]
+resource_local_to_scene = true
+shader = ExtResource("3_56bs0")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 50.00000237174012
+shader_parameter/flash_amplitude = 1.0000000475
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lyy2e"]
+atlas = ExtResource("4_wl8i8")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_j5ypg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lyy2e")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lyy2e"]
+resource_local_to_scene = true
+shader = ExtResource("3_56bs0")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 50.0
+shader_parameter/flash_amplitude = 1.0
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [node name="Tower" unique_id=1676258242 instance=ExtResource("1_qyteg")]
 script = ExtResource("2_ir8sv")
 type = 1004
+
+[node name="shape" parent="." index="0" unique_id=1958475246]
+shape = SubResource("RectangleShape2D_j5ypg")
+
+[node name="base" parent="." index="1" unique_id=1580788916]
+material = SubResource("ShaderMaterial_wl8i8")
+sprite_frames = SubResource("SpriteFrames_j5ypg")
+
+[node name="turret" parent="." index="3" unique_id=1212426607]
+material = SubResource("ShaderMaterial_lyy2e")

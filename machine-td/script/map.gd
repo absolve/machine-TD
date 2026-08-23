@@ -37,6 +37,7 @@ func _ready():
 	Game.lastWave.connect(lastWave)
 	Game.clickTower.connect(clickTower)
 	#加载关卡
+	loadLevel()
 	
 	titleNode.hp = level.health
 	titleNode.wave = level.wave
@@ -54,7 +55,7 @@ func _ready():
 	queue_redraw()
 	# print(int(1920.0 / cellSize))
 	font = ThemeDB.fallback_font
-	loadLevel()
+	
 
 func loadLevel():
 	var stage_id = StageData.currentStageId
@@ -223,15 +224,15 @@ func clickTower(item, selected):
 func _physics_process(_delta: float) -> void:
 	if debug:
 		queue_redraw()
-	pass
+	
 
 
 func _unhandled_input(_event):
-	if Input.is_action_just_pressed("selectCancel"):
+	if _event.is_action_pressed("selectCancel"):
 		for i in get_tree().get_nodes_in_group("placeableArea"):
 			i.isShow = false
 		#towerShadow.setInactive()
-	if Input.is_action_just_pressed("click"):
+	if _event.is_action_pressed("click"):
 		if selectedTower:
 			selectedTower.hideSelect()
 

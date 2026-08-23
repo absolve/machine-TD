@@ -1,12 +1,12 @@
 extends PanelContainer
 
 
-@onready var towerNameNode = $vbox/towerName
-@onready var atkLabelNode = $vbox/hbox/hbox1/atkLabel
-@onready var costLabelNode = $vbox/hbox/hbox2/costLabel
-@onready var reloadLabelNode = $vbox/hbox/hbox3/reloadLabel
-@onready var scopeLabelNode = $vbox/hbox/hbox4/scopeLabel
-@onready var towerDetailNode = $vbox/towerDetail
+@onready var towerNameNode = $MarginContainer/vbox/towerName
+@onready var atkLabelNode = $MarginContainer/vbox/hbox/hbox1/atkLabel
+@onready var costLabelNode = $MarginContainer/vbox/hbox/hbox2/costLabel
+@onready var reloadLabelNode = $MarginContainer/vbox/hbox/hbox3/reloadLabel
+@onready var scopeLabelNode = $MarginContainer/vbox/hbox/hbox4/scopeLabel
+@onready var towerDetailNode = $MarginContainer/vbox/MarginContainer/towerDetail
 
 var towerName: String:
 	set(value):
@@ -33,7 +33,7 @@ func showDetail(obj):
 	costLabel = str(obj.cost)
 	reloadLabel = str(obj.cost)
 	atkLabel = str(obj.atk)
-	
+	scopeLabel = str(obj.scope)
 	visible = true
 	
 func hideDetail():

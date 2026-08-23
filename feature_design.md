@@ -2,7 +2,7 @@
 
 > 本文档用于记录后续功能模块的设计方案与更新计划，便于独立开发、维护和扩展。
 >
-> **文档版本**：v1.0
+> **文档版本**：v1.1
 > **创建日期**：2026-08-19
 > **适用项目**：Machine-TD（Godot 4.7 塔防游戏）
 
@@ -14,9 +14,10 @@
 - [二、背包系统（Backpack System）](#二背包系统backpack-system)
 - [三、成就系统（Achievement System）](#三成就系统achievement-system)
 - [四、能力技能系统（Ability / Active Skill System）](#四能力技能系统ability--active-skill-system)
-- [五、防御塔升级系统（Tower Upgrade System）](#五防御塔升级系统tower-upgrade-system)
-- [六、模块更新记录](#六模块更新记录)
-- [七、后续可扩展模块（规划中）](#七后续可扩展模块规划中)
+- [五、波次进度条模块（Wave Progress Bar）](#五波次进度条模块wave-progress-bar)
+- [六、防御塔升级系统（Tower Upgrade System）](#六防御塔升级系统tower-upgrade-system)
+- [七、模块更新记录](#七模块更新记录)
+- [八、后续可扩展模块（规划中）](#八后续可扩展模块规划中)
 
 ---
 
@@ -760,9 +761,333 @@ func load() -> void:
 
 ---
 
-## 五、防御塔升级系统（Tower Upgrade System）
+## 五、波次进度条模块（Wave Progress Bar）
 
 ### 5.1 模块定位
+
+在 **`map.tscn` 右下角**放置一个水平进度条，用于实时展示**当前关卡波次推进进度**，并在进度条上**标记几个重要波次节点**（如 BOSS 波、奖励波、装备掉落波等），玩家可以一眼看到"现在第几波 / 离下一关键波还有多少 / 离通关还有多少"。
+
+**核心设计要点**：
+- **UI 独立**：进度条作为独立场景 `wave_progress_bar.tscn`，挂载到 `map.tscn/hud/` 下，不与其它 UI 控件耦合。
+- **关键波可配置**：每个关卡配置里声明哪些波是"关键波"（BOSS / 奖励 / 精英），不同关卡关键波位置不同。
+- **信号驱动**：直接监听关卡 `level.currWave` 变化（或 `Game` 新增信号）驱动 UI 刷新；不持有状态，只做展示。
+- **交互可选**：悬停关键波节点弹出 tooltip（"第5波：BOSS 重型坦克"）；点击不触发操作（纯展示）。
+
+### 5.2 文件结构
+
+```
+machine-td/
+├── script/
+│   └── wave_progress_bar.gd       # 进度条脚本（挂在自定义 Control / Panel 上）
+└── scene/
+    └── wave_progress_bar.tscn     # 进度条 UI 场景（挂载到 map.tscn/hud/）
+```
+
+> 本模块不引入 Autoload 单例：状态由 `level.currWave` 持有，UI 仅做薄渲染层。
+
+### 5.3 关键波次数据结构设计
+
+关键波次信息集成到现有 `StageData.allStage` 每个关卡条目中（新增 `key_waves` 字段）：
+
+```gdscript
+# StageData.allStage 单条示例扩展
+{
+    "id": 1,
+    "name": "第1关 - 铁原前哨",
+    "scene": "res://scene/level/level_1.tscn",
+    "wave": 10,                       # 总波数（已存在）
+    "health": 10,
+    "money": 150,
+    "enemySpawner": [...],            # 已存在
+    # ===== 新增：关键波次 =====
+    # 格式：[{ wave, type, title_key, desc_key, icon }]
+    # type 决定节点颜色和图标样式
+    "key_waves": [
+        {
+            "wave": 3,
+            "type": "reward",             # 奖励波
+            "title_key": "_wave_reward",  # 奖励波
+            "desc_key": "_wave_reward_desc", # 本波有 50% 额外金币
+            "icon": preload("res://sprite/icon_coin.png")
+        },
+        {
+            "wave": 5,
+            "type": "elite",              # 精英波
+            "title_key": "_wave_elite",   # 精英来袭
+            "desc_key": "_wave_elite_desc", # 出现两辆中型坦克
+            "icon": preload("res://sprite/icon_elite.png")
+        },
+        {
+            "wave": 8,
+            "type": "elite",
+            "title_key": "_wave_elite",
+            "desc_key": "_wave_elite_heavy_desc", # 出现重型坦克精英
+            "icon": preload("res://sprite/icon_heavy.png")
+        },
+        {
+            "wave": 10,
+            "type": "boss",               # BOSS 波
+            "title_key": "_wave_boss",    # BOSS 战
+            "desc_key": "_wave_boss_desc", # 最终 BOSS：钢铁堡垒
+            "icon": preload("res://sprite/icon_boss.png")
+        }
+    ]
+}
+```
+
+关键波次 `type` 枚举：
+
+| type      | 颜色（建议）     | 节点样式            |
+| --------- | ---------------- | ------------------- |
+| `reward`  | 金黄色 `#FFD24A` | 金币图标 + 光环     |
+| `elite`   | 紫色 `#B45CFF`   | 精英角标 + 锯齿边  |
+| `boss`    | 红色 `#FF4A4A`   | BOSS 骷髅图标 + 闪烁 |
+| `check`   | 蓝色 `#5CB8FF`   | 进度检查点（可选）  |
+
+### 5.4 UI 场景 `wave_progress_bar.tscn` 结构
+
+```
+WaveProgressBar (Control / Panel, script=wave_progress_bar.gd)
+  ├─ Label   title_lbl           "第 3 / 10 波" 标题文字 (右上对齐)
+  ├─ Panel   bar_bg              进度条背景 (圆角 6px, 半透明黑 0.6)
+  │    └─ Panel  bar_fill        进度条填充 (圆角 6px, 线性渐变蓝→青)
+  │         anchor_right = progress_ratio
+  └─ Control markers_root        关键波标记层 (填满, z_idx 高于 bar)
+       └─ * (动态创建)
+          ├─ ColorRect  pulse    (marker 到达/经过时的脉冲高亮, 可选)
+          ├─ TextureRect icon    (关键波图标)
+          └─ Label tip           (悬停时显示的 tooltip)
+```
+
+**在 map.tscn 中的位置与尺寸**：
+
+| 属性     | 值                           | 说明                                   |
+| -------- | ---------------------------- | -------------------------------------- |
+| 父节点   | `map/hud`（CanvasLayer 内） | 随相机固定，不滚动                    |
+| 锚点     | `anchors_preset = 10`        | 右下角锚定                             |
+| margin   | `right=-32, bottom=-32`      | 距右下角各 32px，与塔 UI / 能力条不重叠 |
+| 尺寸     | `width=480, height=72`       | 480px 宽，足够放下节点                 |
+| z_index  | 不低于 10                    | 覆盖在游戏画面之上，不被关卡内容遮挡   |
+
+### 5.5 进度条渲染逻辑 `wave_progress_bar.gd`
+
+```gdscript
+extends Control
+class_name WaveProgressBar
+
+# ===== 可配置（Inspector 中覆写） =====
+@export var bar_height: float = 14.0         # 进度条内部高度
+@export var marker_size: float = 28.0        # 关键波节点尺寸 (方形)
+@export var show_fraction: bool = true       # 是否显示 "3 / 10" 文字
+
+# ===== 内部节点 =====
+@onready var bar_bg: Panel = $bar_bg
+@onready var bar_fill: Panel = $bar_bg/bar_fill
+@onready var markers_root: Control = $markers_root
+@onready var title_lbl: Label = $title_lbl
+
+# ===== 数据缓存 =====
+var _total_wave: int = 0
+var _key_waves: Array = []       # 关键波列表: [{wave, type, title, desc, icon}]
+var _current_wave: int = 0       # 当前波次（0 表示还没开始）
+var _tween: Tween
+
+# ===== 对外：初始化（每关开始调用一次） =====
+func setup(total_wave: int, key_waves: Array) -> void:
+	_total_wave = total_wave
+	_key_waves = key_waves.duplicate(true) if key_waves else []
+	_current_wave = 0
+	_build_markers()
+	_refresh(animate := false)
+
+# ===== 对外：推进波次（每波开始调用） =====
+func set_current_wave(n: int) -> void:
+	var clamped := clampi(n, 0, max(1, _total_wave))
+	if clamped == _current_wave:
+		return
+	var prev := _current_wave
+	_current_wave = clamped
+	_refresh(animate := true)
+	# 若刚好跨过关键波：对该关键波节点播放脉冲高亮
+	_check_crossed_milestone(prev, clamped)
+
+# ===== 对外：追加一波（中途增加波，特殊场景备用） =====
+func bump_total_wave(new_total: int) -> void:
+	_total_wave = new_total
+	_build_markers()
+	_refresh(animate := true)
+
+# ===== UI 构建 =====
+func _build_markers() -> void:
+	# 清空旧节点
+	for c in markers_root.get_children():
+		c.queue_free()
+	if _total_wave <= 0:
+		return
+	for kw in _key_waves:
+		var w: int = int(kw.get("wave", 0))
+		if w <= 0 or w > _total_wave:
+			continue
+		var marker := _make_marker(kw)
+		# X 比例 = (w - 0.5) / total （节点中心对齐该波中点，避免 1 / total 与 N / total 贴边）
+		var ratio := float(w) / float(_total_wave)
+		ratio = clampf(ratio, 0.02, 0.98)
+		marker.position = Vector2(
+			ratio * markers_root.size.x - marker.custom_minimum_size.x * 0.5,
+			(markers_root.size.y - marker.custom_minimum_size.y) * 0.5
+		)
+		marker.set_meta("wave", w)
+		marker.set_meta("crossed", false)
+		markers_root.add_child(marker)
+
+func _make_marker(kw: Dictionary) -> Control:
+	var c := Control.new()
+	c.custom_minimum_size = Vector2(marker_size, marker_size)
+	c.mouse_filter = Control.MOUSE_FILTER_STOP
+	# 图标
+	var icon := TextureRect.new()
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.texture = kw.get("icon", null)
+	icon.anchor_right = 1.0
+	icon.anchor_bottom = 1.0
+	c.add_child(icon)
+	# 按 type 设 modulate（整体色调）
+	match kw.get("type", "check"):
+		"reward":  c.modulate = Color(1.0, 0.82, 0.29, 1.0)
+		"elite":   c.modulate = Color(0.70, 0.36, 1.0, 1.0)
+		"boss":    c.modulate = Color(1.0, 0.29, 0.29, 1.0)
+		_:         c.modulate = Color(0.36, 0.72, 1.0, 1.0)
+	# 悬停 tooltip（Label / 或复用 toast）
+	c.mouse_entered.connect(func (): _show_tip(kw, c.get_global_rect().position))
+	c.mouse_exited.connect(func (): _hide_tip())
+	return c
+
+# ===== 进度刷新 =====
+func _refresh(animate: bool = true) -> void:
+	if _tween and _tween.is_valid():
+		_tween.kill()
+	var ratio := 0.0 if _total_wave <= 0 else float(_current_wave) / float(_total_wave)
+	ratio = clampf(ratio, 0.0, 1.0)
+	title_lbl.text = "%d / %d" % [_current_wave, _total_wave] if show_fraction else ""
+	if animate:
+		_tween = create_tween()
+		_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		_tween.tween_property(bar_fill, "size",
+			Vector2(bar_bg.size.x * ratio, bar_fill.size.y), 0.25)
+	else:
+		bar_fill.size = Vector2(bar_bg.size.x * ratio, bar_fill.size.y)
+
+func _check_crossed_milestone(prev: int, curr: int) -> void:
+	for marker in markers_root.get_children():
+		var w: int = marker.get_meta("wave", 0)
+		if marker.get_meta("crossed", false):
+			continue
+		if prev < w and curr >= w:
+			marker.set_meta("crossed", true)
+			_pulse_marker(marker)
+
+func _pulse_marker(m: Control) -> void:
+	var tw := create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(m, "scale", Vector2(1.4, 1.4), 0.15)
+	tw.tween_property(m, "modulate:a", 1.0, 0.08)
+	tw.chain()
+	tw.set_parallel(true)
+	tw.tween_property(m, "scale", Vector2(1.0, 1.0), 0.25)
+	tw.tween_property(m, "modulate:a", 0.9, 0.2)
+
+# ===== tooltip（简版：右下显示，离屏自动翻转） =====
+var _tip: Label
+func _show_tip(kw: Dictionary, pos: Vector2) -> void:
+	if _tip:
+		_tip.queue_free()
+	_tip = Label.new()
+	var title := tr(kw.get("title_key", ""))
+	var desc := tr(kw.get("desc_key", ""))
+	_tip.text = "第 %d 波  %s\n%s" % [int(kw.get("wave", 0)), title, desc]
+	_tip.add_theme_font_size_override("font_size", 13)
+	_tip.add_theme_color_override("font_color", Color.WHITE)
+	_tip.modulate = Color(0, 0, 0, 0.82)
+	_tip.position = pos + Vector2(marker_size * 0.5, marker_size + 4)
+	# 防止出右/下边界
+	var vs := get_viewport().get_visible_rect().size
+	_tip.size = _tip.get_minimum_size() + Vector2(16, 10)
+	_tip.position.x = minf(_tip.position.x, maxf(0, vs.x - _tip.size.x))
+	_tip.position.y = minf(_tip.position.y, maxf(0, vs.y - _tip.size.y))
+	get_tree().root.add_child(_tip)
+
+func _hide_tip() -> void:
+	if _tip:
+		_tip.queue_free()
+		_tip = null
+```
+
+### 5.6 触发流程（与现有波次系统联动）
+
+现有波次流程在 `base_level.gd` / `level_1.gd` 的 `_on_wave_timer_timeout()` 中：`currWave += 1` 并开始该波。只需要在该处联动 UI：
+
+```
+level_1.gd  _on_wave_timer_timeout()
+  │
+  ├─ currWave += 1                 ← 已有逻辑
+  │
+  ├─ Game.wave_started.emit(currWave, self)  ← 新增信号（见 §5.7）
+  │  或直接：
+  │  Game.map.wave_progress.set_current_wave(currWave)
+  │
+  └─ 继续原有 spawner 处理...
+```
+
+**关卡开始时初始化**：
+
+```gdscript
+# base_level.gd / level_1.gd  _ready() 末尾（读取完 StageData 后）
+# 调用一次 setup 同步关键波 + 总波数
+if Game.map and Game.map.wave_progress:
+    var stage := StageData._get_stage_by_id(levelId)   # stageData 内部新增辅助函数
+    Game.map.wave_progress.setup(wave, stage.get("key_waves", []))
+    Game.map.wave_progress.set_current_wave(currWave)  # currWave 初始通常为 0
+```
+
+### 5.7 集成点
+
+| 集成点                       | 修改文件                                   | 说明                                                                     |
+| ---------------------------- | ------------------------------------------ | ------------------------------------------------------------------------ |
+| 场景挂载                     | `map.tscn`                                 | 在 `hud/` 下追加 `WaveProgressBar` 实例，命名 `waveProgress`，右下角锚定 |
+| UI 脚本引用                  | `map.gd`                                   | `@onready var wave_progress = $hud/waveProgress`                         |
+| 每关初始化（setup）          | `base_level.gd` / `level_1.gd` `_ready()`  | 读取关卡数据后调用 `setup(wave, key_waves)`                              |
+| 每波推进（set_current_wave） | `base_level.gd` `_on_wave_timer_timeout()` | `currWave += 1` 后调用 `set_current_wave(currWave)`                      |
+| 新增信号（可选解耦）         | `game.gd`                                  | `signal wave_started(wave_idx: int, level)`，便于其它模块（成就/能力）监听 |
+| StageData 辅助查询           | `stageData.gd`                             | 新增 `func get_stage(id) -> Dictionary` 便捷函数                          |
+| stage 数据扩展               | `stageData.gd` `allStage` 每条             | 为所有已配置关卡补上 `key_waves` 数组；缺省时进度条只显示"纯进度线"       |
+| 多语言文案                   | `lang/language.csv`                        | `_wave_reward` / `_wave_elite` / `_wave_boss` 及各自描述 key              |
+| 图标资源                     | `sprite/icon_*.png`                        | 奖励金币图、精英角标、BOSS 骷髅图（若缺可用几何形状临时代替）             |
+
+### 5.8 降级与空数据容错
+
+- **关卡未配置 `key_waves`**：进度条仍正常渲染"纯横线"，`_build_markers()` 得到空数组不创建节点，用户只看到 `N / total` 比例填充。
+- **`wave = 0` / 非法值**：`clampi` 与 `_total_wave <= 0` 判断兜底，进度归零、节点不渲染。
+- **超出 `total` 的关键波**：`_build_markers` 中 `w > _total_wave` 被跳过，不导致 X 坐标越界。
+- **悬停 tooltip**：若节点已 `crossed`（已过关键波），仍可悬停查看详情（历史回顾）。
+
+### 5.9 视觉示意（ASCII）
+
+```
+  ┌────────────────────────────────────────────────────────────┐
+  │                                                    3 / 10  │
+  │  3 ────▶ ██████████████████░░░░░░◈░░░★░░░░◇░░░░░░░░░◆      │
+  │                     ↑          ↑    ↑           ↑           │
+  │                当前进度      精英  奖励       BOSS(终点)     │
+  │                (30%)         (50%) (70%)      (100%)        │
+  └────────────────────────────────────────────────────────────┘
+```
+到达节点时脉冲放大一圈；已过节点保持"已跨越"微透明态，未到节点按 `type` 原色彩色显示。
+
+---
+
+## 六、防御塔升级系统（Tower Upgrade System）
+
+### 6.1 模块定位
 
 防御塔通过**击败敌人积累经验值**自动升级，**无需玩家手动操作**。每座塔共 **3 个等级**（Lv.1 初始 → Lv.2 → Lv.3 满级），即 **2 次升级**。升级后塔的攻击力、射程、射速等属性提升，并伴随视觉变化与提示。
 
@@ -771,7 +1096,7 @@ func load() -> void:
 - **配置即数据**：每种塔类型的升级数值（经验阈值、属性倍率）集中声明在数据资源中，新增塔类型只需添加条目。
 - **状态归属实例**：等级与经验值是每座塔实例自身的状态，存于 `tower.gd`；全局配置与查询由单例 `TowerUpgradeManager` 提供。
 
-### 5.2 文件结构
+### 6.2 文件结构
 
 ```
 machine-td/
@@ -783,13 +1108,13 @@ machine-td/
     └── (复用现有 tower.tscn 各塔场景，新增 level_badge 子节点)
 ```
 
-> 不新增独立 UI 场景，等级展示直接挂载到塔自身节点上（见 5.6）。
+> 不新增独立 UI 场景，等级展示直接挂载到塔自身节点上（见 6.6）。
 
-### 5.3 击杀归属改造（关键改动）
+### 6.3 击杀归属改造（关键改动）
 
 当前 `enemy.hurt(damage)` 不感知攻击者，`Game.defeatEnemy` 也是全局广播。为使"击杀者"获得经验，采用**子弹携带来源塔**方案：
 
-#### 5.3.1 子弹扩展 `bullet.gd`
+#### 6.3.1 子弹扩展 `bullet.gd`
 
 ```gdscript
 extends Area2D
@@ -804,7 +1129,7 @@ var speed = 0
 var source_tower: Tower = null    # 新增：发射该子弹的塔引用（可能为 null，兼容无主伤害）
 ```
 
-#### 5.3.2 塔 `fire()` 注入来源
+#### 6.3.2 塔 `fire()` 注入来源
 
 每个塔子类的 `fire(t)` 中实例化子弹后追加一行（以 `cannon_tower.gd` 为例）：
 
@@ -824,7 +1149,7 @@ func fire(t):
 > 所有塔子类（`machineGunTower`/`cannon_tower`/`rocket_tower`/`laser_tower`/`tesla_coil_tower` 等）的 `fire()` 均按此追加一行。
 > 对激光/电塔等"无子弹瞬时伤害"类型：在直接调用 `enemy.hurt(damage, self)` 时把 `self` 作为第二参数传入即可。
 
-#### 5.3.3 敌人 `hurt()` 接受来源
+#### 6.3.3 敌人 `hurt()` 接受来源
 
 `enemy.gd` 基类改为：
 
@@ -853,9 +1178,9 @@ func _get_exp_reward() -> int:
 
 > 子弹击中处 `i.hurt(damage)` 改为 `i.hurt(damage, source_tower)`，向后兼容（默认 `null` 表示无主伤害，不结算经验）。
 
-### 5.4 数据结构设计
+### 6.4 数据结构设计
 
-#### 5.4.1 升级配置 `tower_upgrade_data.gd`（Resource）
+#### 6.4.1 升级配置 `tower_upgrade_data.gd`（Resource）
 
 ```gdscript
 extends Resource
@@ -875,7 +1200,7 @@ class_name TowerUpgradeData
 @export var lv3_reload_mult: float = 0.7
 ```
 
-#### 5.4.2 升级管理器 `tower_upgrade_manager.gd`
+#### 6.4.2 升级管理器 `tower_upgrade_manager.gd`
 
 ```gdscript
 extends Node
@@ -925,7 +1250,7 @@ func get_mults(tower_type: int, level: int) -> Dictionary:
     return cfg.get("lv" + str(level), {"atk": 1.0, "radar": 1.0, "reload": 1.0})
 ```
 
-#### 5.4.3 塔基类扩展 `tower.gd`
+#### 6.4.3 塔基类扩展 `tower.gd`
 
 ```gdscript
 # ===== 升级状态（实例自身持有） =====
@@ -987,7 +1312,7 @@ func _play_level_up_fx() -> void:
 
 > 子类需覆写 `_get_tower_type()` 返回对应枚举（如 `return Game.towerType.cannonTower`）。
 
-### 5.5 升级数值示例
+### 6.5 升级数值示例
 
 以机枪塔（`machineGunTower`，初始 atk=10、reload=0.1、radar=500）为例：
 
@@ -997,27 +1322,27 @@ func _play_level_up_fx() -> void:
 | Lv.2 | 15  | 0.085      | 600   | 6            |
 | Lv.3 | 22  | 0.07       | 700   | 18           |
 
-### 5.6 UI 与视觉反馈
+### 6.6 UI 与视觉反馈
 
-#### 5.6.1 等级徽章
+#### 6.6.1 等级徽章
 
 - 在每个塔场景（如 `machineGunTower.tscn`）的根节点下新增 `level_badge`（`Sprite2D` 或 `Label`）。
 - 根据 `tower.level` 显示对应数量的小星（1/2/3 颗），位置在塔基座上方。
 - 满级（Lv.3）时徽章变为金色并加边框。
 
-#### 5.6.2 选中塔时显示经验条
+#### 6.6.2 选中塔时显示经验条
 
 - 选中塔（`selected == true`）时，在 `_draw()` 中除现有雷达圈外，额外绘制经验进度环/条：
   - `exp / TowerUpgradeManager.get_xp_threshold(tower_type, level)` 比例填充。
   - 满级时显示 "MAX" 文字。
 
-#### 5.6.3 升级瞬间反馈
+#### 6.6.3 升级瞬间反馈
 
 - `turret` 缩放脉冲动画（已在 `_play_level_up_fx` 中实现）。
 - `toast` 提示："机枪塔 升级到 Lv.2"。
 - 可选：塔身短暂金光着色（`modulate` tween）。
 
-### 5.7 集成点
+### 6.7 集成点
 
 | 集成点                  | 修改文件                                       | 说明                                                                                  |
 | ----------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -1032,7 +1357,7 @@ func _play_level_up_fx() -> void:
 | 选中绘制经验条          | `tower.gd` `_draw()`                           | `selected` 时绘制 exp 进度                                                            |
 | 文案                    | `lang/language.csv`                           | 添加 `_tower_level_up_suffix`（" 升级到 "）等 i18n key                               |
 
-### 5.8 设计权衡说明
+### 6.8 设计权衡说明
 
 1. **为何不引入伤害贡献追踪**：当前游戏每发子弹伤害较高、击杀归属明确（最后一下），引入"按伤害比例分经验"会增加敌人内部的伤害记录字典与每帧统计开销，且与"击败敌人后获取经验"的需求表述不符。采用"击杀者独得经验"更简单且符合需求。
 2. **为何状态放塔实例而非单例**：每座塔的等级/经验是实例私有状态，若集中到单例需要用字典 `{ tower_instance: {level, exp} }` 维护，反而增加复杂度且容易在塔被出售时遗留脏数据。塔实例销毁时状态自然释放，更干净。
@@ -1041,20 +1366,21 @@ func _play_level_up_fx() -> void:
 
 ---
 
-## 六、模块更新记录
+## 七、模块更新记录
 
 > 每次模块设计变更或新增模块时，在此追加记录，保持版本可追溯。
 
-| 日期       | 模块             | 版本 | 变更说明                                      |
-| ---------- | ---------------- | ---- | --------------------------------------------- |
-| 2026-08-19 | 背包系统         | v1.0 | 初版设计：物品/商店/背包/战斗内使用完整方案    |
-| 2026-08-19 | 成就系统         | v1.0 | 初版设计：成就定义/解锁/查看面板/游戏内提示    |
-| 2026-08-19 | 能力技能系统     | v1.0 | 初版设计：区域轰炸/防御塔无敌双能力、冷却UI    |
-| 2026-08-19 | 防御塔升级系统   | v1.0 | 初版设计：击杀积累经验自动升级、3级2升、配置化 |
+| 日期       | 模块             | 版本 | 变更说明                                               |
+| ---------- | ---------------- | ---- | ------------------------------------------------------ |
+| 2026-08-19 | 背包系统         | v1.0 | 初版设计：物品/商店/背包/战斗内使用完整方案            |
+| 2026-08-19 | 成就系统         | v1.0 | 初版设计：成就定义/解锁/查看面板/游戏内提示            |
+| 2026-08-19 | 能力技能系统     | v1.0 | 初版设计：区域轰炸/防御塔无敌双能力、冷却UI            |
+| 2026-08-19 | 防御塔升级系统   | v1.0 | 初版设计：击杀积累经验自动升级、3级2升、配置化         |
+| 2026-08-23 | 波次进度条模块   | v1.0 | 新增设计：右下角波次进度条 + 关键波节点 + 悬停 tooltip |
 
 ---
 
-## 七、后续可扩展模块（规划中）
+## 八、后续可扩展模块（规划中）
 
 以下模块为后续规划，待需求明确后补充详细设计：
 

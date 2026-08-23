@@ -8,7 +8,7 @@ var currentStageId: int = 1
 #关卡的数据
 var allStage = [
 	{
-		'name': 'stage-1',
+		'name': '1',
 		"id": 1,
 		'wave': 2,
 		'health': 20,
@@ -18,7 +18,7 @@ var allStage = [
 		{'time': 2, 'type': Game.enemyType.miniTank, 'number': 2}]
 	},
 	{
-		'name': 'stage-2',
+		'name': '2',
 		"id": 2,
 		'wave': 2,
 		'health': 20,

@@ -2,7 +2,6 @@ extends Control
 
 
 @onready var info = $towerInfo
-@onready var towerList = $fc/vbox/ScrollContainer/towerList
 @onready var towerCardList = $ScrollContainer/PanelContainer/vbox
 @onready var player = $player
 

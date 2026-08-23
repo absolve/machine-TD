@@ -69,8 +69,9 @@ func hideSelect():
 func addExp(amount: int) -> void:
 	if level >= TowerUpgradeManager.MAX_LEVEL:
 		return
-	if TowerUpgradeManager.configs[type]["exp" + str(level)] == INF:
+	if !TowerUpgradeManager.configs.has(type):
 		return
+	print('addExp',amount)
 	towerExp += amount
 	var threshold = TowerUpgradeManager.getExpThreshold(type, level)
 	if towerExp >= threshold:
@@ -79,9 +80,37 @@ func addExp(amount: int) -> void:
 	
 #升级等级
 func levelUp() -> void:
+	print('levelUp')
 	level += 1
 	#TODO 升级防御塔的属性
 	towerRank.setLevel(level)
+	playUpgradeGlow()
+	
+
+# 升级闪光: 启用 shader -> 亮度淡入 -> 闪烁 -> 淡出 -> 关闭
+func playUpgradeGlow() -> void:
+	var bm := base.material as ShaderMaterial
+	var tm := turret.material as ShaderMaterial
+	# 打开发光, intensity 从 0 开始淡入
+	
+	bm.set_shader_parameter("enable_flash", true)
+	tm.set_shader_parameter("enable_flash", true)
+
+	var tw := create_tween()
+	tw.tween_interval(1.0)   
+	tw.tween_callback(stopGlow) 
+	# tw.tween_method(setGlowIntensity, 1.0, 0.0, 0.3) # 0.3s 淡出
+	# tw.tween_callback(stopGlow)
+
+
+# func setGlowIntensity(value: float) -> void:
+# 	(base.material as ShaderMaterial).set_shader_parameter("brightness", value)
+# 	(turret.material as ShaderMaterial).set_shader_parameter("brightness", value)
+
+
+func stopGlow() -> void:
+	(base.material as ShaderMaterial).set_shader_parameter("enable_flash", false)
+	(turret.material as ShaderMaterial).set_shader_parameter("enable_flash", false)
 
 
 func _on_delay_timeout():

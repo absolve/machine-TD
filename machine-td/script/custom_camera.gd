@@ -14,9 +14,9 @@ var dragStartMouse: Vector2 = Vector2.ZERO # 按下时鼠标屏幕坐标
 var dragStartOffset: Vector2 = Vector2.ZERO # 按下时相机 offset
 
 func _unhandled_input(_event):
-	if Input.is_action_just_pressed("zoom_in"):
+	if _event.is_action_pressed("zoom_in"):
 		CameraZoom(maxZoom)
-	elif Input.is_action_just_pressed("zoom_out"):
+	elif _event.is_action_pressed("zoom_out"):
 		CameraZoom(minZoom)
 
 	# 拖动相机：使用 click（左键）
