@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://ci2x7q5rdcqf5"]
+
+[ext_resource type="Script" uid="uid://d13hhx8rptim1" path="res://script/wave_progress_bar.gd" id="1_fetnh"]
+
+[node name="waveProgressBar" type="Control" unique_id=1398223869]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_fetnh")
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=1051688396]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 40.0
+step = 1.0
+show_percentage = false

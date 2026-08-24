@@ -763,325 +763,124 @@ func load() -> void:
 
 ## 五、波次进度条模块（Wave Progress Bar）
 
-### 5.1 模块定位
+### 5.1 模块定位（植物大战僵尸风格 · 极简版）
 
-在 **`map.tscn` 右下角**放置一个水平进度条，用于实时展示**当前关卡波次推进进度**，并在进度条上**标记几个重要波次节点**（如 BOSS 波、奖励波、装备掉落波等），玩家可以一眼看到"现在第几波 / 离下一关键波还有多少 / 离通关还有多少"。
+参考《植物大战僵尸》关卡底部的进度条：
 
-**核心设计要点**：
-- **UI 独立**：进度条作为独立场景 `wave_progress_bar.tscn`，挂载到 `map.tscn/hud/` 下，不与其它 UI 控件耦合。
-- **关键波可配置**：每个关卡配置里声明哪些波是"关键波"（BOSS / 奖励 / 精英），不同关卡关键波位置不同。
-- **信号驱动**：直接监听关卡 `level.currWave` 变化（或 `Game` 新增信号）驱动 UI 刷新；不持有状态，只做展示。
-- **交互可选**：悬停关键波节点弹出 tooltip（"第5波：BOSS 重型坦克"）；点击不触发操作（纯展示）。
+- **一条长进度条**放在 `map.tscn` **右下角**，条内只有**几个阶段旗帜**（小旗子，不区分类型）。
+- **起点 = 当前关卡**图标（或小旗帜），**终点 = BOSS 脸图标**，中间按 3 等分位置放若干阶段旗。
+- 小车头（或小图标）沿进度条从起点移动到终点，表示当前波次进度。
+- **无 tooltip、无分类、无动效**，只做一眼能看懂的进度展示。
 
 ### 5.2 文件结构
 
 ```
 machine-td/
 ├── script/
-│   └── wave_progress_bar.gd       # 进度条脚本（挂在自定义 Control / Panel 上）
+│   └── wave_progress_bar.gd
 └── scene/
-    └── wave_progress_bar.tscn     # 进度条 UI 场景（挂载到 map.tscn/hud/）
+    └── wave_progress_bar.tscn
 ```
 
-> 本模块不引入 Autoload 单例：状态由 `level.currWave` 持有，UI 仅做薄渲染层。
+### 5.3 极简数据配置
 
-### 5.3 关键波次数据结构设计
-
-关键波次信息集成到现有 `StageData.allStage` 每个关卡条目中（新增 `key_waves` 字段）：
+不在 stage 里写 `key_waves`。**每关只有 3 个阶段旗**，由脚本按总波数均匀计算位置（1/3、2/3、终点 BOSS）：
 
 ```gdscript
-# StageData.allStage 单条示例扩展
-{
-    "id": 1,
-    "name": "第1关 - 铁原前哨",
-    "scene": "res://scene/level/level_1.tscn",
-    "wave": 10,                       # 总波数（已存在）
-    "health": 10,
-    "money": 150,
-    "enemySpawner": [...],            # 已存在
-    # ===== 新增：关键波次 =====
-    # 格式：[{ wave, type, title_key, desc_key, icon }]
-    # type 决定节点颜色和图标样式
-    "key_waves": [
-        {
-            "wave": 3,
-            "type": "reward",             # 奖励波
-            "title_key": "_wave_reward",  # 奖励波
-            "desc_key": "_wave_reward_desc", # 本波有 50% 额外金币
-            "icon": preload("res://sprite/icon_coin.png")
-        },
-        {
-            "wave": 5,
-            "type": "elite",              # 精英波
-            "title_key": "_wave_elite",   # 精英来袭
-            "desc_key": "_wave_elite_desc", # 出现两辆中型坦克
-            "icon": preload("res://sprite/icon_elite.png")
-        },
-        {
-            "wave": 8,
-            "type": "elite",
-            "title_key": "_wave_elite",
-            "desc_key": "_wave_elite_heavy_desc", # 出现重型坦克精英
-            "icon": preload("res://sprite/icon_heavy.png")
-        },
-        {
-            "wave": 10,
-            "type": "boss",               # BOSS 波
-            "title_key": "_wave_boss",    # BOSS 战
-            "desc_key": "_wave_boss_desc", # 最终 BOSS：钢铁堡垒
-            "icon": preload("res://sprite/icon_boss.png")
-        }
-    ]
-}
+# wave_progress_bar.gd
+@export var flag_count: int = 3  # 中间阶段旗数量，默认 3（植物大战僵尸即 3 段）
+# 位置自动计算：
+#   阶段 1 = ceil(total * 0.33)
+#   阶段 2 = ceil(total * 0.66)
+#   BOSS   = total（终点）
 ```
 
-关键波次 `type` 枚举：
-
-| type      | 颜色（建议）     | 节点样式            |
-| --------- | ---------------- | ------------------- |
-| `reward`  | 金黄色 `#FFD24A` | 金币图标 + 光环     |
-| `elite`   | 紫色 `#B45CFF`   | 精英角标 + 锯齿边  |
-| `boss`    | 红色 `#FF4A4A`   | BOSS 骷髅图标 + 闪烁 |
-| `check`   | 蓝色 `#5CB8FF`   | 进度检查点（可选）  |
-
-### 5.4 UI 场景 `wave_progress_bar.tscn` 结构
+### 5.4 UI 场景结构（简单）
 
 ```
-WaveProgressBar (Control / Panel, script=wave_progress_bar.gd)
-  ├─ Label   title_lbl           "第 3 / 10 波" 标题文字 (右上对齐)
-  ├─ Panel   bar_bg              进度条背景 (圆角 6px, 半透明黑 0.6)
-  │    └─ Panel  bar_fill        进度条填充 (圆角 6px, 线性渐变蓝→青)
-  │         anchor_right = progress_ratio
-  └─ Control markers_root        关键波标记层 (填满, z_idx 高于 bar)
-       └─ * (动态创建)
-          ├─ ColorRect  pulse    (marker 到达/经过时的脉冲高亮, 可选)
-          ├─ TextureRect icon    (关键波图标)
-          └─ Label tip           (悬停时显示的 tooltip)
+wave_progress_bar   Control, size=420x64, 锚右下, script=wave_progress_bar.gd
+ └─ bar_bg          Panel, 半透明深灰底, size=400x16, position=(10,28), 圆角 4
+     └─ bar_fill    Panel, 青绿渐变填充, size=0x16, 圆角 4, 宽度随进度 Tween
+     └─ start_icon  TextureRect, position=(-24, -8), size=32x32, 关卡小图标
+     └─ flag_1      TextureRect, position=(?, -8), 32x32, 阶段小旗
+     └─ flag_2      TextureRect, position=(?, -8), 32x32, 阶段小旗
+     └─ boss_icon   TextureRect, position=(392, -20), 48x48, BOSS 脸/终点旗
+     └─ cart        TextureRect, position=(?, -4), 40x24, 小推车车头(当前进度)
 ```
 
-**在 map.tscn 中的位置与尺寸**：
-
-| 属性     | 值                           | 说明                                   |
-| -------- | ---------------------------- | -------------------------------------- |
-| 父节点   | `map/hud`（CanvasLayer 内） | 随相机固定，不滚动                    |
-| 锚点     | `anchors_preset = 10`        | 右下角锚定                             |
-| margin   | `right=-32, bottom=-32`      | 距右下角各 32px，与塔 UI / 能力条不重叠 |
-| 尺寸     | `width=480, height=72`       | 480px 宽，足够放下节点                 |
-| z_index  | 不低于 10                    | 覆盖在游戏画面之上，不被关卡内容遮挡   |
-
-### 5.5 进度条渲染逻辑 `wave_progress_bar.gd`
+### 5.5 脚本 `wave_progress_bar.gd`（极简）
 
 ```gdscript
 extends Control
-class_name WaveProgressBar
 
-# ===== 可配置（Inspector 中覆写） =====
-@export var bar_height: float = 14.0         # 进度条内部高度
-@export var marker_size: float = 28.0        # 关键波节点尺寸 (方形)
-@export var show_fraction: bool = true       # 是否显示 "3 / 10" 文字
+@onready var bar_bg = $bar_bg
+@onready var bar_fill = $bar_bg/bar_fill
+@onready var cart = $bar_bg/cart
+@onready var flag_1 = $bar_bg/flag_1
+@onready var flag_2 = $bar_bg/flag_2
+@onready var boss_icon = $bar_bg/boss_icon
+@onready var start_icon = $bar_bg/start_icon
 
-# ===== 内部节点 =====
-@onready var bar_bg: Panel = $bar_bg
-@onready var bar_fill: Panel = $bar_bg/bar_fill
-@onready var markers_root: Control = $markers_root
-@onready var title_lbl: Label = $title_lbl
-
-# ===== 数据缓存 =====
-var _total_wave: int = 0
-var _key_waves: Array = []       # 关键波列表: [{wave, type, title, desc, icon}]
-var _current_wave: int = 0       # 当前波次（0 表示还没开始）
+var _total: int = 0
 var _tween: Tween
 
-# ===== 对外：初始化（每关开始调用一次） =====
-func setup(total_wave: int, key_waves: Array) -> void:
-	_total_wave = total_wave
-	_key_waves = key_waves.duplicate(true) if key_waves else []
-	_current_wave = 0
-	_build_markers()
-	_refresh(animate := false)
+# 每关开始调用一次
+func setup(total_wave: int) -> void:
+	_total = maxi(total_wave, 1)
+	# 两个阶段旗按 1/3、2/3 放置
+	var w: float = bar_bg.size.x
+	flag_1.position.x = roundi(w * 0.33) - flag_1.size.x * 0.5
+	flag_2.position.x = roundi(w * 0.66) - flag_2.size.x * 0.5
+	boss_icon.position.x = w - boss_icon.size.x * 0.5
+	# 初始进度 0
+	_refresh(0, false)
 
-# ===== 对外：推进波次（每波开始调用） =====
-func set_current_wave(n: int) -> void:
-	var clamped := clampi(n, 0, max(1, _total_wave))
-	if clamped == _current_wave:
-		return
-	var prev := _current_wave
-	_current_wave = clamped
-	_refresh(animate := true)
-	# 若刚好跨过关键波：对该关键波节点播放脉冲高亮
-	_check_crossed_milestone(prev, clamped)
+# 每波开始推进（currWave 从 1..total）
+func set_wave(wave: int) -> void:
+	_refresh(clampf(float(wave) / float(_total), 0.0, 1.0), true)
 
-# ===== 对外：追加一波（中途增加波，特殊场景备用） =====
-func bump_total_wave(new_total: int) -> void:
-	_total_wave = new_total
-	_build_markers()
-	_refresh(animate := true)
-
-# ===== UI 构建 =====
-func _build_markers() -> void:
-	# 清空旧节点
-	for c in markers_root.get_children():
-		c.queue_free()
-	if _total_wave <= 0:
-		return
-	for kw in _key_waves:
-		var w: int = int(kw.get("wave", 0))
-		if w <= 0 or w > _total_wave:
-			continue
-		var marker := _make_marker(kw)
-		# X 比例 = (w - 0.5) / total （节点中心对齐该波中点，避免 1 / total 与 N / total 贴边）
-		var ratio := float(w) / float(_total_wave)
-		ratio = clampf(ratio, 0.02, 0.98)
-		marker.position = Vector2(
-			ratio * markers_root.size.x - marker.custom_minimum_size.x * 0.5,
-			(markers_root.size.y - marker.custom_minimum_size.y) * 0.5
-		)
-		marker.set_meta("wave", w)
-		marker.set_meta("crossed", false)
-		markers_root.add_child(marker)
-
-func _make_marker(kw: Dictionary) -> Control:
-	var c := Control.new()
-	c.custom_minimum_size = Vector2(marker_size, marker_size)
-	c.mouse_filter = Control.MOUSE_FILTER_STOP
-	# 图标
-	var icon := TextureRect.new()
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.texture = kw.get("icon", null)
-	icon.anchor_right = 1.0
-	icon.anchor_bottom = 1.0
-	c.add_child(icon)
-	# 按 type 设 modulate（整体色调）
-	match kw.get("type", "check"):
-		"reward":  c.modulate = Color(1.0, 0.82, 0.29, 1.0)
-		"elite":   c.modulate = Color(0.70, 0.36, 1.0, 1.0)
-		"boss":    c.modulate = Color(1.0, 0.29, 0.29, 1.0)
-		_:         c.modulate = Color(0.36, 0.72, 1.0, 1.0)
-	# 悬停 tooltip（Label / 或复用 toast）
-	c.mouse_entered.connect(func (): _show_tip(kw, c.get_global_rect().position))
-	c.mouse_exited.connect(func (): _hide_tip())
-	return c
-
-# ===== 进度刷新 =====
-func _refresh(animate: bool = true) -> void:
+func _refresh(ratio: float, animate: bool) -> void:
 	if _tween and _tween.is_valid():
 		_tween.kill()
-	var ratio := 0.0 if _total_wave <= 0 else float(_current_wave) / float(_total_wave)
-	ratio = clampf(ratio, 0.0, 1.0)
-	title_lbl.text = "%d / %d" % [_current_wave, _total_wave] if show_fraction else ""
+	var bar_w: float = bar_bg.size.x
+	# 进度条宽度
+	var target_fill_w: float = bar_w * ratio
 	if animate:
-		_tween = create_tween()
+		_tween = create_tween().set_parallel(true)
 		_tween.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-		_tween.tween_property(bar_fill, "size",
-			Vector2(bar_bg.size.x * ratio, bar_fill.size.y), 0.25)
+		_tween.tween_property(bar_fill, "size:x", target_fill_w, 0.3)
+		# 小车头沿条移动（车头中心位置 = 进度 - 半车宽）
+		var cart_x: float = bar_w * ratio - cart.size.x * 0.5
+		_tween.tween_property(cart, "position:x", cart_x, 0.3)
 	else:
-		bar_fill.size = Vector2(bar_bg.size.x * ratio, bar_fill.size.y)
-
-func _check_crossed_milestone(prev: int, curr: int) -> void:
-	for marker in markers_root.get_children():
-		var w: int = marker.get_meta("wave", 0)
-		if marker.get_meta("crossed", false):
-			continue
-		if prev < w and curr >= w:
-			marker.set_meta("crossed", true)
-			_pulse_marker(marker)
-
-func _pulse_marker(m: Control) -> void:
-	var tw := create_tween()
-	tw.set_parallel(true)
-	tw.tween_property(m, "scale", Vector2(1.4, 1.4), 0.15)
-	tw.tween_property(m, "modulate:a", 1.0, 0.08)
-	tw.chain()
-	tw.set_parallel(true)
-	tw.tween_property(m, "scale", Vector2(1.0, 1.0), 0.25)
-	tw.tween_property(m, "modulate:a", 0.9, 0.2)
-
-# ===== tooltip（简版：右下显示，离屏自动翻转） =====
-var _tip: Label
-func _show_tip(kw: Dictionary, pos: Vector2) -> void:
-	if _tip:
-		_tip.queue_free()
-	_tip = Label.new()
-	var title := tr(kw.get("title_key", ""))
-	var desc := tr(kw.get("desc_key", ""))
-	_tip.text = "第 %d 波  %s\n%s" % [int(kw.get("wave", 0)), title, desc]
-	_tip.add_theme_font_size_override("font_size", 13)
-	_tip.add_theme_color_override("font_color", Color.WHITE)
-	_tip.modulate = Color(0, 0, 0, 0.82)
-	_tip.position = pos + Vector2(marker_size * 0.5, marker_size + 4)
-	# 防止出右/下边界
-	var vs := get_viewport().get_visible_rect().size
-	_tip.size = _tip.get_minimum_size() + Vector2(16, 10)
-	_tip.position.x = minf(_tip.position.x, maxf(0, vs.x - _tip.size.x))
-	_tip.position.y = minf(_tip.position.y, maxf(0, vs.y - _tip.size.y))
-	get_tree().root.add_child(_tip)
-
-func _hide_tip() -> void:
-	if _tip:
-		_tip.queue_free()
-		_tip = null
+		bar_fill.size.x = target_fill_w
+		cart.position.x = bar_w * ratio - cart.size.x * 0.5
 ```
 
-### 5.6 触发流程（与现有波次系统联动）
+### 5.6 集成点（2 处调用，1 处挂载）
 
-现有波次流程在 `base_level.gd` / `level_1.gd` 的 `_on_wave_timer_timeout()` 中：`currWave += 1` 并开始该波。只需要在该处联动 UI：
+| 集成点 | 修改位置 | 代码 |
+|--------|---------|------|
+| 挂载 | `map.tscn` `hud/` 下 | 拖 `wave_progress_bar.tscn`，命名 `waveProgress`，锚右下，`margin=(right=-32, bottom=-32)` |
+| 引用 | `map.gd` | `@onready var wave_progress = $hud/waveProgress` |
+| 初始化 | `base_level.gd` `_ready()` 末尾 | `if Game.map: Game.map.wave_progress.setup(wave)` |
+| 推进 | `base_level.gd` `_on_wave_timer_timeout()` 中 `currWave += 1` 后 | `if Game.map: Game.map.wave_progress.set_wave(currWave)` |
 
-```
-level_1.gd  _on_wave_timer_timeout()
-  │
-  ├─ currWave += 1                 ← 已有逻辑
-  │
-  ├─ Game.wave_started.emit(currWave, self)  ← 新增信号（见 §5.7）
-  │  或直接：
-  │  Game.map.wave_progress.set_current_wave(currWave)
-  │
-  └─ 继续原有 spawner 处理...
-```
-
-**关卡开始时初始化**：
-
-```gdscript
-# base_level.gd / level_1.gd  _ready() 末尾（读取完 StageData 后）
-# 调用一次 setup 同步关键波 + 总波数
-if Game.map and Game.map.wave_progress:
-    var stage := StageData._get_stage_by_id(levelId)   # stageData 内部新增辅助函数
-    Game.map.wave_progress.setup(wave, stage.get("key_waves", []))
-    Game.map.wave_progress.set_current_wave(currWave)  # currWave 初始通常为 0
-```
-
-### 5.7 集成点
-
-| 集成点                       | 修改文件                                   | 说明                                                                     |
-| ---------------------------- | ------------------------------------------ | ------------------------------------------------------------------------ |
-| 场景挂载                     | `map.tscn`                                 | 在 `hud/` 下追加 `WaveProgressBar` 实例，命名 `waveProgress`，右下角锚定 |
-| UI 脚本引用                  | `map.gd`                                   | `@onready var wave_progress = $hud/waveProgress`                         |
-| 每关初始化（setup）          | `base_level.gd` / `level_1.gd` `_ready()`  | 读取关卡数据后调用 `setup(wave, key_waves)`                              |
-| 每波推进（set_current_wave） | `base_level.gd` `_on_wave_timer_timeout()` | `currWave += 1` 后调用 `set_current_wave(currWave)`                      |
-| 新增信号（可选解耦）         | `game.gd`                                  | `signal wave_started(wave_idx: int, level)`，便于其它模块（成就/能力）监听 |
-| StageData 辅助查询           | `stageData.gd`                             | 新增 `func get_stage(id) -> Dictionary` 便捷函数                          |
-| stage 数据扩展               | `stageData.gd` `allStage` 每条             | 为所有已配置关卡补上 `key_waves` 数组；缺省时进度条只显示"纯进度线"       |
-| 多语言文案                   | `lang/language.csv`                        | `_wave_reward` / `_wave_elite` / `_wave_boss` 及各自描述 key              |
-| 图标资源                     | `sprite/icon_*.png`                        | 奖励金币图、精英角标、BOSS 骷髅图（若缺可用几何形状临时代替）             |
-
-### 5.8 降级与空数据容错
-
-- **关卡未配置 `key_waves`**：进度条仍正常渲染"纯横线"，`_build_markers()` 得到空数组不创建节点，用户只看到 `N / total` 比例填充。
-- **`wave = 0` / 非法值**：`clampi` 与 `_total_wave <= 0` 判断兜底，进度归零、节点不渲染。
-- **超出 `total` 的关键波**：`_build_markers` 中 `w > _total_wave` 被跳过，不导致 X 坐标越界。
-- **悬停 tooltip**：若节点已 `crossed`（已过关键波），仍可悬停查看详情（历史回顾）。
-
-### 5.9 视觉示意（ASCII）
+### 5.7 视觉示意（植物大战僵尸风格）
 
 ```
-  ┌────────────────────────────────────────────────────────────┐
-  │                                                    3 / 10  │
-  │  3 ────▶ ██████████████████░░░░░░◈░░░★░░░░◇░░░░░░░░░◆      │
-  │                     ↑          ↑    ↑           ↑           │
-  │                当前进度      精英  奖励       BOSS(终点)     │
-  │                (30%)         (50%) (70%)      (100%)        │
-  └────────────────────────────────────────────────────────────┘
+    ┌─────────────────────────────────────────────────┐
+    │                                                 │
+    │ 🏴 ░░░░░░░█ ████▒▒▒░░ ▼ ░░░░🏴░░░░░░░░░ 💀     │
+    │   ↑         ╱车╲                   ↑            │
+    │ 起点旗   小推车(当前)           BOSS终点        │
+    │           10 / 20 波                             │
+    └─────────────────────────────────────────────────┘
 ```
-到达节点时脉冲放大一圈；已过节点保持"已跨越"微透明态，未到节点按 `type` 原色彩色显示。
+
+- 条中两个 🏴 阶段旗只做"视觉锚点"，不带分类和文字。
+- 小推车沿条走，和进度条一起移动，Tween 0.3s 平滑。
+- 不做 tooltip、不做脉冲动画、不做关键波高亮，保持极简。
 
 ---
 

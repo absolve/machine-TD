@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://clbbod4cwf6n8" path="res://scene/tower_ui.tscn" id="3_bq37x"]
 [ext_resource type="PackedScene" uid="uid://b2646ykmxfyif" path="res://scene/result_screen.tscn" id="4_bq37x"]
 [ext_resource type="PackedScene" uid="uid://c2g3rjpp3rijm" path="res://scene/toast_info.tscn" id="4_jp76l"]
+[ext_resource type="PackedScene" uid="uid://ci2x7q5rdcqf5" path="res://scene/wave_progress_bar.tscn" id="5_7ac5c"]
 [ext_resource type="PackedScene" uid="uid://dmskj8i7vlbkd" path="res://scene/custom_camera.tscn" id="5_jp76l"]
 
 [node name="map" type="Node2D" unique_id=988854810]
@@ -27,6 +28,12 @@ offset_bottom = 531.0
 text = "test"
 
 [node name="toastInfo" parent="hud" unique_id=1968260455 instance=ExtResource("4_jp76l")]
+
+[node name="waveProgressBar" parent="hud" unique_id=1398223869 instance=ExtResource("5_7ac5c")]
+offset_left = 1552.0
+offset_top = 1008.0
+offset_right = 1552.0
+offset_bottom = 1008.0
 
 [node name="customCamera" parent="." unique_id=76497160 instance=ExtResource("5_jp76l")]
 
