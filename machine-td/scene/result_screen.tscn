@@ -62,14 +62,14 @@ theme_override_constants/separation = 20
 alignment = 1
 metadata/_edit_group_ = true
 
-[node name="UIButton" parent="PanelContainer/VBoxContainer3/MarginContainer2/hbox" unique_id=1077812873 instance=ExtResource("3_biqnl")]
+[node name="btnRestart" parent="PanelContainer/VBoxContainer3/MarginContainer2/hbox" unique_id=1077812873 instance=ExtResource("3_biqnl")]
 layout_mode = 2
 text = "_Restart"
 
-[node name="UIButton2" parent="PanelContainer/VBoxContainer3/MarginContainer2/hbox" unique_id=1241686801 instance=ExtResource("3_biqnl")]
+[node name="btnNextLevel" parent="PanelContainer/VBoxContainer3/MarginContainer2/hbox" unique_id=1241686801 instance=ExtResource("3_biqnl")]
 layout_mode = 2
 text = "_NextLevel"
 
-[node name="UIButton3" parent="PanelContainer/VBoxContainer3/MarginContainer2/hbox" unique_id=1829654265 instance=ExtResource("3_biqnl")]
+[node name="btnMenu" parent="PanelContainer/VBoxContainer3/MarginContainer2/hbox" unique_id=1829654265 instance=ExtResource("3_biqnl")]
 layout_mode = 2
 text = "_Main_Menu"

@@ -9,7 +9,7 @@ extends Node2D
 @onready var finishTimer = $Timer
 @onready var toastInfo = $hud/toastInfo
 
-var level 
+var level
 var gunTower = preload("res://scene/machineGunTower.tscn")
 var rocketTower = preload("res://scene/rocketTower.tscn")
 var cannonTower = preload("res://scene/cannonTower.tscn")
@@ -36,6 +36,11 @@ func _ready():
 	Game.sellTower.connect(sellTower)
 	Game.lastWave.connect(lastWave)
 	Game.clickTower.connect(clickTower)
+	
+	resultScreen.btnRestart.pressed.connect(restart)
+	resultScreen.btnNextLevel.pressed.connect(nextLevel)
+	resultScreen.btnMenu.pressed.connect(returnHome)
+		
 	#加载关卡
 	loadLevel()
 	
@@ -220,12 +225,19 @@ func clickTower(item, selected):
 	else:
 		selectedTower = null
 
+func restart():
+	get_tree().reload_current_scene.call_deferred()
+
+func nextLevel():
+	SceneTransition.change_scene("res://scene/level_select.tscn")
+
+func returnHome():
+	SceneTransition.change_scene("res://scene/welcome.tscn")
 
 func _physics_process(_delta: float) -> void:
 	if debug:
 		queue_redraw()
 	
-
 
 func _unhandled_input(_event):
 	if _event.is_action_pressed("selectCancel"):
