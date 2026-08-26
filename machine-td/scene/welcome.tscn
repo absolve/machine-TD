@@ -78,6 +78,8 @@ visible = false
 borderless = true
 transparent = true
 popup_window = true
+content_scale_mode = 1
+content_scale_aspect = 2
 theme = ExtResource("2_hys0r")
 
 [node name="setting" parent="settingPanel" unique_id=762839594 instance=ExtResource("9_vvofi")]

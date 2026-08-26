@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bte4101axvluu"]
+
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_t0tkm"]
+[ext_resource type="Script" uid="uid://c4gbv6mjgogn3" path="res://script/suicideTruck.gd" id="2_t0tkm"]
+
+[node name="suicideTruck" type="PathFollow2D" unique_id=141115296]
+
+[node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_t0tkm")]
+script = ExtResource("2_t0tkm")
+
+[editable path="enemy"]

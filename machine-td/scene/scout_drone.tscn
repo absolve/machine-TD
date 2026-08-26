@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://clmx8ett0xjc4"]
+
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_0nn78"]
+[ext_resource type="Script" uid="uid://d2jv764laroxq" path="res://script/scoutDrone.gd" id="2_ebxfp"]
+
+[node name="scoutDrone" type="PathFollow2D" unique_id=307050002]
+
+[node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_0nn78")]
+script = ExtResource("2_ebxfp")
+
+[editable path="enemy"]

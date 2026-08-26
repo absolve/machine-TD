@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://byk4oxb8xh4mt"]
+
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_b0qyy"]
+[ext_resource type="Script" uid="uid://6bj63bxtt0se" path="res://script/armoredTank.gd" id="2_qt7lt"]
+
+[node name="armoredTank" type="PathFollow2D" unique_id=1332764235]
+
+[node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_b0qyy")]
+script = ExtResource("2_qt7lt")
+
+[editable path="enemy"]

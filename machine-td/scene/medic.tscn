@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://d26lygqytd0pn"]
+
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_267h0"]
+[ext_resource type="Script" uid="uid://nlpg2kpom2rd" path="res://script/medic.gd" id="2_f8m5b"]
+
+[node name="medic" type="PathFollow2D" unique_id=591944571]
+
+[node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_267h0")]
+script = ExtResource("2_f8m5b")
+
+[editable path="enemy"]

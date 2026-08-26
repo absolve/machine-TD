@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://d0rphrpnptggf"]
+
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_pf4om"]
+[ext_resource type="Script" uid="uid://dmwoueqiwnwnp" path="res://script/assaultBuggy.gd" id="2_2w7f8"]
+
+[node name="assaultBuggy" type="PathFollow2D" unique_id=839491182]
+
+[node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_pf4om")]
+script = ExtResource("2_2w7f8")
+
+[editable path="enemy"]
