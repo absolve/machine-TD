@@ -37,6 +37,7 @@ size = Vector2(50, 50)
 
 [node name="enemy" parent="." instance=ExtResource("1_qx3dm")]
 script = ExtResource("2_wtbxn")
+enemyType = 1
 lossPoints = 2
 
 [node name="base" parent="enemy" index="0"]

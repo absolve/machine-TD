@@ -4,6 +4,7 @@ var parent:PathFollow2D
 
 func _ready() -> void:
 	parent=get_parent()
+	setupEnemyInfo()
 	
 
 #func hurt(_num: int, _source = null):

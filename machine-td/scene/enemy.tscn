@@ -21,3 +21,6 @@ collision_layer = 0
 
 [node name="lifeBar" parent="." unique_id=1025675865 instance=ExtResource("2_f87vc")]
 position = Vector2(0, -50)
+
+[node name="delay" type="Timer" parent="." unique_id=692711619]
+one_shot = true

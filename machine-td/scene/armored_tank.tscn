@@ -7,5 +7,6 @@
 
 [node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_b0qyy")]
 script = ExtResource("2_qt7lt")
+enemyType = 3
 
 [editable path="enemy"]

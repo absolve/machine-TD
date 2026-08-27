@@ -1,10 +1,12 @@
 extends "res://script/enemy.gd"
 
-var parent:PathFollow2D
+var parent: PathFollow2D
+var bullet = preload("res://scene/enemy_bullet.tscn")
 
 
 func _ready() -> void:
-	parent=get_parent()
+	parent = get_parent()
+	setupEnemyInfo()
 
 #func hurt(_num: int, _source = null):
 	#hp -= _num
@@ -15,19 +17,28 @@ func _ready() -> void:
 		#owner.queue_free()
 
 func fire(t):
+	if not is_instance_valid(t):
+		return
+	if canShot:
+		canShot = false
+		var b = bullet.instantiate()
+		b.global_position = turret.global_position
+		b.angle = turret.global_rotation
+		b.damage = atk
+		b.target = t
+		Game.addObj(b)
+		delayTimer.start()
 	
-	pass
-
 
 func _physics_process(_delta):
 	if points.size() == 0:
 		return
-	parent.progress+=speed*_delta	
-	if parent.progress_ratio>=1:
+	parent.progress += speed * _delta
+	if parent.progress_ratio >= 1:
 		Game.enemyEscape.emit(lossPoints)
 		owner.queue_free()
-	if target.size()>0:
-		var temp =target[0]
+	if target.size() > 0:
+		var temp = target[0]
 		var direction = (temp.global_position - turret.global_position).normalized()
 		var target_angle = direction.angle()
 		turret.rotation = lerp_angle(turret.rotation, target_angle, rotationSpeed * _delta)

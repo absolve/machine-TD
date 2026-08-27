@@ -45,6 +45,7 @@ loop = false
 
 [node name="enemy" parent="." instance=ExtResource("1_6peud")]
 script = ExtResource("2_pd3il")
+enemyType = 0
 speed = 100
 
 [node name="base" parent="enemy" index="0"]

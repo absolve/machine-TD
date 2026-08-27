@@ -8,6 +8,7 @@ extends Node2D
 @onready var waveTimer = $waveTimer
 @onready var spawnerTimer = $spawnerTimer
 @onready var towerShadow = $towerShadow
+@onready var path1 = get_node_or_null("Path2D")
 
 
 var currWave = 0
@@ -53,6 +54,58 @@ func canPlace(coverGrids: Array[Vector2i]) -> bool:
 			return false
 	return true
 
+# 开始生成敌人
+func start():
+	waveTimer.start()
+
+func _on_wave_timer_timeout():
+	if currentSpawner.size() > 0:
+		waveTimer.start()
+		return
+	if get_tree().get_nodes_in_group("enemy").size() > 0:
+		waveTimer.start()
+		return
+
+	currWave += 1
+	for spawn_info in enemyList:
+		if int(spawn_info.get("time", 0)) == currWave:
+			currentSpawner.append(spawn_info.duplicate())
+
+	if currentSpawner.size() > 0:
+		spawnerTimer.start()
+	if currWave >= wave:
+		Game.lastWave.emit()
+		return
+	waveTimer.start()
+
+func _on_spawner_timer_timeout():
+	for spawn_info in currentSpawner.duplicate():
+		if int(spawn_info.get("number", 0)) <= 0:
+			currentSpawner.erase(spawn_info)
+			continue
+		_spawn_enemy(spawn_info)
+		spawn_info["number"] -= 1
+
+	if currentSpawner.size() > 0:
+		spawnerTimer.start()
+
+func _spawn_enemy(spawn_info: Dictionary):
+	if path1 == null or path1.curve == null:
+		push_error("关卡缺少 Path2D 或路径曲线")
+		return
+	var scene = StageData.enemyScenes.get(spawn_info.get("type"))
+	if scene == null:
+		push_error("未配置敌人场景: type=" + str(spawn_info.get("type")))
+		return
+	var enemy_instance = scene.instantiate()
+	path1.add_child(enemy_instance)
+	var enemy_node = enemy_instance.get_node_or_null("enemy")
+	if enemy_node == null:
+		push_error("敌人场景缺少 enemy 节点: " + str(scene.resource_path))
+		enemy_instance.queue_free()
+		return
+	enemy_node.points = path1.curve.get_baked_points()
+
 # 获取塔占用的网格
 func getTowerCoverGrid(center_grid: Vector2i, tower_size: Vector2i) -> Array[Vector2i]:
 	var covers: Array[Vector2i] = []
@@ -62,11 +115,11 @@ func getTowerCoverGrid(center_grid: Vector2i, tower_size: Vector2i) -> Array[Vec
 	@warning_ignore("integer_division")
 	var half_y: int = tower_size.y / 2
 
-	var start: Vector2i = center_grid - Vector2i(half_x, half_y)
+	var startGrid: Vector2i = center_grid - Vector2i(half_x, half_y)
 
 	for dx in range(tower_size.x):
 		for dy in range(tower_size.y):
-			covers.append(start + Vector2i(dx, dy))
+			covers.append(startGrid + Vector2i(dx, dy))
 	return covers
 
 

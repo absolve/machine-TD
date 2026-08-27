@@ -1,7 +1,5 @@
 extends "res://script/base_level.gd"
 
-@onready var path1 = $Path2D
-
 func _ready():
 	super._ready()
 	#print("level")
@@ -29,51 +27,3 @@ func _ready():
 	#if currentSpawner.size() > 0:
 		#pass
 	#pass
-
-#开始生产
-func start():
-	waveTimer.start()
-
-
-func _on_wave_timer_timeout():
-	print("_on_wave_timer_timeout")
-	if currentSpawner.size() > 0:
-		waveTimer.start()
-		return
-	if currentSpawner.size() == 0 && get_tree().get_nodes_in_group("enemy").size() > 0:
-		waveTimer.start()
-		return
-			
-	currWave += 1 #波次默认从0开始
-	
-	for i in enemyList:
-		if int(i.time) == currWave: #当前波次的成产敌人都获取出来
-			currentSpawner.push_back(i)
-	if currentSpawner.size() > 0:  #当前波次需要生产的敌人
-		spawnerTimer.start()
-	if currWave >= wave:
-		print("end")
-		Game.lastWave.emit()
-		return
-	waveTimer.start()
-	
-
-func _on_spawner_timer_timeout():
-	print("_on_spawner_timer_timeout")
-	for i in currentSpawner:
-		if i.number > 0:
-			if i.type == Game.enemyType.miniTank:
-				var temp = StageData.minTank.instantiate()
-				path1.add_child(temp)
-				temp.find_child("enemy").points= path1.curve.get_baked_points()
-				#temp.points = path1.curve.get_baked_points()
-				#temp.position = temp.points[0]
-				i.number -= 1
-			elif i.type==Game.enemyType.mediumTank:
-				pass
-			elif i.type==Game.enemyType.heavyTank:
-				pass	
-		else:
-			currentSpawner.erase(i)
-	if currentSpawner.size() > 0:
-		spawnerTimer.start()

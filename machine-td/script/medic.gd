@@ -7,3 +7,4 @@ var parent: PathFollow2D
 
 func _ready():
 	parent = get_parent()
+	setupEnemyInfo()

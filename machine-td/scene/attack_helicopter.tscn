@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://dir1trynkle6v"]
+
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_t3cxq"]
+[ext_resource type="Script" uid="uid://cob11qts6pxo8" path="res://script/attackHelicopter.gd" id="2_holci"]
+
+[node name="attackHelicopter" type="PathFollow2D" unique_id=703604371]
+
+[node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_t3cxq")]
+script = ExtResource("2_holci")
+enemyType = 9
+
+[editable path="enemy"]
