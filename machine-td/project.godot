@@ -22,12 +22,14 @@ config/icon="res://icon.svg"
 [autoload]
 
 Game="*res://autoload/game.gd"
+UserData="*res://autoload/userData.gd"
 EasterEgg="*res://autoload/easterEgg.gd"
 ExplosionManage="*res://scene/explosion_manage.tscn"
 SoundManage="*res://scene/sound_manage.tscn"
 StageData="*res://autoload/stageData.gd"
 TowerUpgradeManager="*uid://chlgw3pk7jvcl"
 SceneTransition="*uid://bv2bhtgypppue"
+AchievementManager="*res://autoload/achievement_manager.gd"
 
 [display]
 

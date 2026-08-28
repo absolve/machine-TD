@@ -8,10 +8,13 @@ extends HBoxContainer
 var starFull = preload("res://sprite/star-4.png")
 var starEmpty = preload("res://sprite/star-2.png")
 
-var rating: int = 0:
+var _rating: int = 0
+var rating: int:
 	set(val):
-		rating=val
+		_rating = clampi(val, 0, 3)
 		updateRating()
+	get:
+		return _rating
 
 func _ready() -> void:
 	pass

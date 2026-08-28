@@ -6,6 +6,7 @@ extends Area2D
 var blastRadius = 50 # 爆炸范围
 var objList = []
 var damage = 40 # 伤害
+var source_tower: Tower = null
 var hasDamage = false
 
 
@@ -17,7 +18,7 @@ func _physics_process(_delta):
 	if hasDamage:
 		for i in objList:
 			if i is Enemy:
-				i.hurt(damage)
+				i.hurt(damage, source_tower)
 		hasDamage = false
 
  

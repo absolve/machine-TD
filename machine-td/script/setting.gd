@@ -18,26 +18,37 @@ func _ready() -> void:
 	master.sound.stream = sound
 	bg.sound.stream = sound
 	sfx.sound.stream = sound
-	
-	print(OS.get_locale_language())
+	master.setVolume(UserData.masterVolume)
+	bg.setVolume(UserData.musicVolume)
+	sfx.setVolume(UserData.sfxVolume)
+	#var language_index := language.get_item_text(0) == UserData.language ? 0 : 1
+	#language.select(language_index)
+	TranslationServer.set_locale(UserData.language)
 
 func _on_master_value_changed(value: float):
+	UserData.masterVolume = int(value)
+	UserData.saveSettings()
 	master.volume = value / 100
 	master.playSound()
 
 func _on_bg_value_changed(value: float):
+	UserData.musicVolume = int(value)
+	UserData.saveSettings()
 	bg.volume = value / 100
 	bg.playSound()
 
 	
 func _on_sfx_value_changed(value: float):
+	UserData.sfxVolume = int(value)
+	UserData.saveSettings()
 	sfx.volume = value / 100
 	sfx.playSound()
 
 
 func _on_option_button_item_selected(index: int) -> void:
-	print(language.get_item_text(index))
-	TranslationServer.set_locale(language.get_item_text(index))
+	UserData.language = language.get_item_text(index)
+	UserData.saveSettings()
+	TranslationServer.set_locale(UserData.language)
 
 
 func _on_btn_close_pressed() -> void:

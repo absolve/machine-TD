@@ -25,6 +25,7 @@ func fire(t):
 		var temp = bullet.instantiate()
 		temp.position = marker.global_position
 		temp.angle = position.direction_to(t.global_position).angle()
+		temp.source_tower = self
 		Game.addObj(temp)
 		canShot = false
 		delayTimer.start()

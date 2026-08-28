@@ -31,7 +31,7 @@ func showDetail(obj):
 	towerName = str(obj.name)
 	towerDetail = tr(obj.desc)
 	costLabel = str(obj.cost)
-	reloadLabel = str(obj.cost)
+	reloadLabel = str(obj.reload)
 	atkLabel = str(obj.atk)
 	scopeLabel = str(obj.scope)
 	visible = true

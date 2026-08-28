@@ -13,8 +13,6 @@ func _ready():
 		raderShape.shape = CircleShape2D.new()
 	rader.area_entered.connect(_on_radar_area_entered)
 	rader.area_exited.connect(_on_radar_area_exited)
-	delay = 5
-	delayTimer.wait_time = delay
 	super._ready()
 	
 

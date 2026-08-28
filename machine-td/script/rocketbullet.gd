@@ -18,5 +18,7 @@ func _physics_process(delta):
 	if temp:
 		var b=bomb.instantiate()
 		b.global_position=global_position
+		b.damage = source_tower.atk if is_instance_valid(source_tower) else damage
+		b.source_tower = source_tower
 		Game.addObj(b)
 		queue_free()

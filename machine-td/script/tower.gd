@@ -80,9 +80,17 @@ func addExp(amount: int) -> void:
 	
 #升级等级
 func levelUp() -> void:
-	print('levelUp')
 	level += 1
-	#TODO 升级防御塔的属性
+	var levelConfig: Dictionary = TowerUpgradeManager.getLevelConfig(type, level)
+	if levelConfig.has("atk"):
+		atk = levelConfig.atk
+	if levelConfig.has("reload"):
+		delay = levelConfig.reload
+		delayTimer.wait_time = delay
+	if levelConfig.has("scope"):
+		radarScope = levelConfig.scope
+		if raderShape.shape:
+			raderShape.shape.radius = radarScope
 	towerRank.setLevel(level)
 	playUpgradeGlow()
 	

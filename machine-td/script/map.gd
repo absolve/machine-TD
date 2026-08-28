@@ -43,6 +43,8 @@ func _ready():
 		
 	#加载关卡
 	loadLevel()
+	AudioServer.set_bus_mute(AudioServer.get_bus_index("Sfx"), UserData.sfxMuted)
+	AudioServer.set_bus_mute(AudioServer.get_bus_index("Bg"), UserData.musicMuted)
 	
 	titleNode.hp = level.health
 	titleNode.wave = level.wave
@@ -61,7 +63,7 @@ func _ready():
 	# print(int(1920.0 / cellSize))
 	font = ThemeDB.fallback_font
 	
-
+#载入关卡
 func loadLevel():
 	var stage_id = StageData.currentStageId
 	var stage_data: Dictionary = {}
@@ -123,6 +125,7 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 	temp.sellingPrice = temp.money / 2
 	temp.atk = info.atk
 	temp.delay = info.reload
+	temp.radarScope = info.scope
 	
 	# grid 是鼠标所在中心格,占用块的左上角格子 = grid - (W/2, H/2)
 	# 块中心世界坐标 = top_left * cellSize + (W*cellSize, H*cellSize) / 2
@@ -158,8 +161,10 @@ func enemyEscape(point):
 	if titleNode.hp - point < 0:
 		print('game over')
 		pauseGame()
+		resultScreen.setResult(true)
+		resultScreen.levelRating.rating = 0
 		resultScreen.popup_centered()
-	
+
 	titleNode.hp -= point
 
 func startGame():
@@ -170,16 +175,24 @@ func pauseGame():
 	get_tree().paused = true
 
 func soundOn():
-	pass
+	AudioServer.set_bus_mute(AudioServer.get_bus_index("Sfx"), false)
+	UserData.sfxMuted = false
+	UserData.saveSettings()
 	
 func soundOff():
-	pass
+	AudioServer.set_bus_mute(AudioServer.get_bus_index("Sfx"), true)
+	UserData.sfxMuted = true
+	UserData.saveSettings()
 	
 func musicOn():
-	pass
+	AudioServer.set_bus_mute(AudioServer.get_bus_index("Bg"), false)
+	UserData.musicMuted = false
+	UserData.saveSettings()
 	
 func musicOff():
-	pass
+	AudioServer.set_bus_mute(AudioServer.get_bus_index("Bg"), true)
+	UserData.musicMuted = true
+	UserData.saveSettings()
 
 func home():
 	pass
@@ -212,7 +225,20 @@ func finish():
 		return
 		
 	#所有敌人都被消灭
+	resultScreen.setResult(false)
+	resultScreen.levelRating.rating = calculateStars()
 	resultScreen.popup_centered()
+
+# 根据基地剩余生命计算三档星级
+func calculateStars() -> int:
+	if titleNode.hp <= 0:
+		return 0
+	var health_ratio := float(titleNode.hp) / float(level.health)
+	if health_ratio >= 1.0:
+		return 3
+	if health_ratio >= 0.5:
+		return 2
+	return 1
 
 #添加通知
 func addNotice(s, color: Color = Color.CORAL):
