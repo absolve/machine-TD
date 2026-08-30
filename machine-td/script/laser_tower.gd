@@ -19,6 +19,7 @@ func _ready():
 	
 		
 func _physics_process(_delta: float):
+	super._physics_process(_delta)
 	# 收集最多3个有效目标
 	laser_targets = _collect_targets()
 

@@ -11,6 +11,7 @@ func _ready():
 
 
 func _physics_process(_delta):
+	super._physics_process(_delta)
 	var temp = getTarget()
 	if temp:
 		var direction = (temp.global_position - turret.global_position).normalized()

@@ -11,7 +11,8 @@ anchors_preset = 0
 theme = ExtResource("1_ahr6q")
 script = ExtResource("1_xthoy")
 
-[node name="box" type="HBoxContainer" parent="." unique_id=894367919]
+[node name="box" type="HBoxContainer" parent="." unique_ivisible = false
+d=894367919]
 layout_mode = 0
 offset_right = 1800.0
 offset_bottom = 900.0

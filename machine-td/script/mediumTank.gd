@@ -1,6 +1,6 @@
 extends "res://script/enemy.gd"
 
-var parent: PathFollow2D
+
 var bullet = preload("res://scene/enemy_bullet.tscn")
 
 

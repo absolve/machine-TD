@@ -18,7 +18,7 @@ var targetValue: int = 1 # 目标价值 敌人攻击的优先级
 var atk: int = 0 # 攻击力
 var level: int = 1 # 等级
 var towerExp: int = 0 # 经验值
-
+var initTime = 1 #初始化时间 秒
 
 @onready var rader = $radar
 @onready var raderShape = $radar/CollisionShape2D
@@ -31,6 +31,9 @@ var towerExp: int = 0 # 经验值
 @onready var btnSell = $btnSell
 @onready var towerRank = $towerRank
 
+var radarSweepAngle := 0.0
+const RADAR_SCAN_SPEED := 1.8
+
 func _ready() -> void:
 	if raderShape.shape:
 		raderShape.shape.radius = radarScope
@@ -38,8 +41,14 @@ func _ready() -> void:
 	monitorable = false
 	set_physics_process(false)
 	var tween = create_tween()
-	tween.tween_property(initBar, "value", 100, 1)
+	tween.tween_property(initBar, "value", 100, initTime)
 	tween.tween_callback(init)
+
+func _physics_process(delta: float) -> void:
+	if not selected:
+		return
+	radarSweepAngle = fmod(radarSweepAngle + delta * RADAR_SCAN_SPEED, TAU)
+	queue_redraw()
 	
 func getTarget():
 	var temp = null
@@ -71,7 +80,7 @@ func addExp(amount: int) -> void:
 		return
 	if !TowerUpgradeManager.configs.has(type):
 		return
-	print('addExp',amount)
+	print('addExp', amount)
 	towerExp += amount
 	var threshold = TowerUpgradeManager.getExpThreshold(type, level)
 	if towerExp >= threshold:
@@ -105,8 +114,8 @@ func playUpgradeGlow() -> void:
 	tm.set_shader_parameter("enable_flash", true)
 
 	var tw := create_tween()
-	tw.tween_interval(1.0)   
-	tw.tween_callback(stopGlow) 
+	tw.tween_interval(1.0)
+	tw.tween_callback(stopGlow)
 	# tw.tween_method(setGlowIntensity, 1.0, 0.0, 0.3) # 0.3s 淡出
 	# tw.tween_callback(stopGlow)
 
@@ -126,8 +135,37 @@ func _on_delay_timeout():
 	
 
 func _draw():
-	if selected:
-		draw_circle(Vector2.ZERO, radarScope, Color(0.1, 0.1, 0.1, 0.2))
+	if not selected:
+		return
+	var radar_color := Color(0.25, 0.75, 1.0, 1.0)
+	draw_circle(Vector2.ZERO, radarScope, Color(radar_color.r, radar_color.g, radar_color.b, 0.12))
+	draw_arc(Vector2.ZERO, radarScope, 0.0, TAU, 64, Color(radar_color.r, radar_color.g, radar_color.b, 0.8), 2.0)
+	for i in range(1, 4):
+		var r = radarScope * (i / 4.0)
+		draw_arc(Vector2.ZERO, r, 0.0, TAU, 64, Color(radar_color.r, radar_color.g, radar_color.b, 0.15), 1.0)
+	var segments := 24
+	var tail_span := PI / 3.0
+	for s in range(segments):
+		var t = float(s) / segments
+		var a = radarSweepAngle - tail_span * t
+		var alpha = (1.0 - t) * 0.5
+		var next_a = radarSweepAngle - tail_span * (float(s + 1) / segments)
+		var p1 = Vector2(cos(a), sin(a)) * radarScope
+		var p2 = Vector2(cos(next_a), sin(next_a)) * radarScope
+		draw_polygon(
+			PackedVector2Array([Vector2.ZERO, p1, p2]),
+			PackedColorArray([
+				Color(radar_color.r, radar_color.g, radar_color.b, alpha),
+				Color(radar_color.r, radar_color.g, radar_color.b, alpha),
+				Color(radar_color.r, radar_color.g, radar_color.b, 0.0)
+			])
+		)
+	draw_line(
+		Vector2.ZERO,
+		Vector2(cos(radarSweepAngle), sin(radarSweepAngle)) * radarScope,
+		Color(radar_color.r, radar_color.g, radar_color.b, 1.0),
+		2.0
+	)
 	
 
 func _on_input_event(_viewport, _event, _shape_idx):

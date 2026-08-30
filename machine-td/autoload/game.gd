@@ -29,6 +29,7 @@ const towerInfo = {
 	"cost": 20,
 	"reload": 0.2,
 	'scope': 300,
+	"initTime": 0.6,
 	"desc": "_machineGunTowerDesc",
 	'gridSize': Vector2i(1, 1)
 	},
@@ -38,6 +39,7 @@ const towerInfo = {
 	"cost": 35,
 	"reload": 0.8,
 	'scope': 320,
+	"initTime": 0.9,
 	"desc": "_cannonTowerDesc",
 	'gridSize': Vector2i(1, 1)
 	},
@@ -47,6 +49,7 @@ const towerInfo = {
 	"cost": 50,
 	"reload": 1.5,
 	'scope': 350,
+	"initTime": 1.2,
 	"desc": "_rocketTowerDesc",
 	'gridSize': Vector2i(1, 1)
 	},
@@ -56,6 +59,7 @@ const towerInfo = {
 	"cost": 45,
 	"reload": 4.0,
 	'scope': 280,
+	"initTime": 1.5,
 	"desc": "_EMPTowerDesc",
 	'gridSize': Vector2i(1, 1)
 	},
@@ -65,6 +69,7 @@ const towerInfo = {
 	"cost": 65,
 	"reload": 0.6,
 	'scope': 400,
+	"initTime": 1.3,
 	"desc": "_droneBaseDesc",
 	'gridSize': Vector2i(2, 2)
 	},
@@ -74,6 +79,7 @@ const towerInfo = {
 	"cost": 65,
 	"reload": 1.5,
 	'scope': 400,
+	"initTime": 1.4,
 	"desc": "_teslaCoilTowerDesc",
 	'gridSize': Vector2i(2, 2)
 	},
@@ -83,6 +89,7 @@ const towerInfo = {
 	"cost": 90,
 	"reload": 1,
 	'scope': 450,
+	"initTime": 1.6,
 	"desc": "_laserTowerDesc",
 	'gridSize': Vector2i(2, 2)
 	},
@@ -99,22 +106,22 @@ const enemyInfo = {
 	enemyType.miniTank: {
 		"name": "miniTank",
 		"hp": 100, "speed": 100, "reward": 5, "lossPoints": 1, "rewardExp": 2,
-		"armor": 0.0, "flying": false, "atk": 0, "shootDelay": 1.0
+		"armor": 0.05, "flying": false, "atk": 0, "shootDelay": 1.0
 	},
 	enemyType.mediumTank: {
 		"name": "mediumTank",
 		"hp": 200, "speed": 100, "reward": 8, "lossPoints": 2, "rewardExp": 4,
-		"armor": 0.0, "flying": false, "atk": 15, "shootDelay": 1.5
+		"armor": 0.15, "flying": false, "atk": 15, "shootDelay": 1.5
 	},
 	enemyType.heavyTank: {
 		"name": "heavyTank",
 		"hp": 600, "speed": 50, "reward": 20, "lossPoints": 3, "rewardExp": 10,
-		"armor": 0.2, "flying": false, "atk": 0, "shootDelay": 1.0
+		"armor": 0.4, "flying": false, "atk": 0, "shootDelay": 1.0
 	},
 	enemyType.armoredTank: {
 		"name": "armoredTank",
 		"hp": 400, "speed": 50, "reward": 15, "lossPoints": 2, "rewardExp": 8,
-		"armor": 0.5, "flying": false, "atk": 0, "shootDelay": 1.0
+		"armor": 0.6, "flying": false, "atk": 0, "shootDelay": 1.0
 	},
 	enemyType.assaultBuggy: {
 		"name": "assaultBuggy",
@@ -124,7 +131,7 @@ const enemyInfo = {
 	enemyType.medic: {
 		"name": "medic",
 		"hp": 120, "speed": 100, "reward": 10, "lossPoints": 1, "rewardExp": 5,
-		"armor": 0.0, "flying": false, "atk": 0, "shootDelay": 1.0
+		"armor": 0.1, "flying": false, "atk": 30, "shootDelay": 3.0
 	},
 	enemyType.suicideTruck: {
 		"name": "suicideTruck",
@@ -134,7 +141,7 @@ const enemyInfo = {
 	enemyType.missileTruck: {
 		"name": "missileTruck",
 		"hp": 180, "speed": 50, "reward": 12, "lossPoints": 2, "rewardExp": 6,
-		"armor": 0.0, "flying": false, "atk": 35, "shootDelay": 3.0
+		"armor": 0.25, "flying": false, "atk": 35, "shootDelay": 3.0
 	},
 	enemyType.scoutDrone: {
 		"name": "scoutDrone",
@@ -144,7 +151,7 @@ const enemyInfo = {
 	enemyType.attackHelicopter: {
 		"name": "attackHelicopter",
 		"hp": 280, "speed": 100, "reward": 15, "lossPoints": 2, "rewardExp": 8,
-		"armor": 0.0, "flying": true, "atk": 5, "shootDelay": 0.5
+		"armor": 0.2, "flying": true, "atk": 5, "shootDelay": 0.5
 	},
 }
 

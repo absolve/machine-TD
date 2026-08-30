@@ -2,11 +2,45 @@
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_t3cxq"]
 [ext_resource type="Script" uid="uid://cob11qts6pxo8" path="res://script/attackHelicopter.gd" id="2_holci"]
+[ext_resource type="Texture2D" uid="uid://2ubt70bo4eq" path="res://sprite/Hel_12.png" id="3_holci"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_x8uhl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_holci")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_holci"]
+radius = 300.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bf21r"]
+size = Vector2(50, 50)
 
 [node name="attackHelicopter" type="PathFollow2D" unique_id=703604371]
 
 [node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_t3cxq")]
 script = ExtResource("2_holci")
 enemyType = 9
+
+[node name="base" parent="enemy" index="0" unique_id=1108324432]
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_x8uhl")
+
+[node name="radar" parent="enemy" index="1" unique_id=1066952876]
+visible = false
+
+[node name="shape" parent="enemy/radar" index="0" unique_id=1238677921]
+shape = SubResource("CircleShape2D_holci")
+
+[node name="shape" parent="enemy" index="3" unique_id=359688443]
+shape = SubResource("RectangleShape2D_bf21r")
+
+[connection signal="area_entered" from="enemy/radar" to="enemy" method="_on_radar_area_entered"]
+[connection signal="area_exited" from="enemy/radar" to="enemy" method="_on_radar_area_exited"]
 
 [editable path="enemy"]

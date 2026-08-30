@@ -22,6 +22,8 @@ var dead = false # 是否死亡
 var rotationSpeed = 10
 var canShot = true
 
+var parent: PathFollow2D
+
 @onready var base = $base
 @onready var turret = $turret
 @onready var lifeBar = $lifeBar
@@ -46,13 +48,25 @@ func setupEnemyInfo():
 	if delayTimer and delayTimer.has_method("start"):
 		delayTimer.wait_time = shootDelay
 	if lifeBar:
-		lifeBar.max_value = hp
+		lifeBar.maxHp = hp
 		lifeBar.value = hp
 
 #受到伤害
-func hurt(_num: int, _source = null):
-	hp -= _num
-	lifeBar.value = hp
+# 物理伤害会按 armor 进行减免：实际伤害 = 原伤害 * (1 - armor)
+# armor 取值范围 0~1，1 表示 100% 减免，0 表示不减伤
+# 能量伤害忽略 armor
+func hurt(_num: int, _source = null, _damage_type: String = "physical"):
+	var actual_damage: float = float(_num)
+	if _damage_type == "physical":
+		actual_damage *= max(0.0, 1.0 - armor)
+	elif _damage_type == "energy":
+		actual_damage = float(_num)
+	else:
+		actual_damage *= max(0.0, 1.0 - armor)
+
+	hp -= int(max(0.0, ceil(actual_damage)))
+	if lifeBar:
+		lifeBar.value = hp
 	if hp <= 0:
 		ExplosionManage.playExplosion(global_position)
 		Game.defeatEnemy.emit(reward)
@@ -69,3 +83,12 @@ func addHp(_num: int):
 
 func fire(_t):
 	pass
+
+
+func _physics_process(_delta):
+	if points.size() == 0:
+		return
+	parent.progress += speed * _delta
+	if parent.progress_ratio >= 1:
+		Game.enemyEscape.emit(lossPoints)
+		owner.queue_free()

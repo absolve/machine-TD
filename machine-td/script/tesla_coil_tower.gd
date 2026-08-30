@@ -18,6 +18,7 @@ func _ready() -> void:
 	
 
 func _physics_process(_delta: float) -> void:
+	super._physics_process(_delta)
 	var t = getTarget()
 	if t and canShot:
 		fire_lightning(t)

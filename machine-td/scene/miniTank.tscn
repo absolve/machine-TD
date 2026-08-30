@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bf8vkrw335d0"]
+[gd_scene format=3 uid="uid://bf8vkrw335d0"]
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_6peud"]
 [ext_resource type="Script" uid="uid://de1xh8lbgnoye" path="res://script/mini_tank.gd" id="2_pd3il"]
@@ -14,7 +14,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_bmskb")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 5.0
 }]
@@ -32,7 +32,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_pd3il")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 5.0
 }]
@@ -40,28 +40,27 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pd3il"]
 size = Vector2(50, 50)
 
-[node name="miniTank" type="PathFollow2D"]
+[node name="miniTank" type="PathFollow2D" unique_id=246877366]
 loop = false
 
-[node name="enemy" parent="." instance=ExtResource("1_6peud")]
+[node name="enemy" parent="." unique_id=15711297 instance=ExtResource("1_6peud")]
 script = ExtResource("2_pd3il")
-enemyType = 0
 speed = 100
 
-[node name="base" parent="enemy" index="0"]
+[node name="base" parent="enemy" index="0" unique_id=1108324432]
 sprite_frames = SubResource("SpriteFrames_yg2f7")
 
-[node name="radar" parent="enemy" index="1"]
+[node name="radar" parent="enemy" index="1" unique_id=1066952876]
 visible = false
 
-[node name="shape" parent="enemy/radar" index="0"]
+[node name="shape" parent="enemy/radar" index="0" unique_id=1238677921]
 shape = SubResource("CircleShape2D_yg2f7")
 
-[node name="turret" parent="enemy" index="2"]
+[node name="turret" parent="enemy" index="2" unique_id=108539921]
 sprite_frames = SubResource("SpriteFrames_pd3il")
 offset = Vector2(10, 0)
 
-[node name="shape" parent="enemy" index="3"]
+[node name="shape" parent="enemy" index="3" unique_id=359688443]
 shape = SubResource("RectangleShape2D_pd3il")
 
 [editable path="enemy"]

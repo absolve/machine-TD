@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cl81ctkd5r2ko"]
+[gd_scene format=3 uid="uid://cl81ctkd5r2ko"]
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_qx3dm"]
 [ext_resource type="Script" uid="uid://vkcyyjp6uwco" path="res://script/mediumTank.gd" id="2_wtbxn"]
@@ -11,7 +11,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("3_6l444")
 }],
-"loop": false,
+"loop": 0,
 "name": &"default",
 "speed": 5.0
 }]
@@ -25,7 +25,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("4_04xjq")
 }],
-"loop": false,
+"loop": 0,
 "name": &"default",
 "speed": 5.0
 }]
@@ -33,27 +33,27 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6l444"]
 size = Vector2(50, 50)
 
-[node name="mediumTank" type="PathFollow2D"]
+[node name="mediumTank" type="PathFollow2D" unique_id=1324031594]
 
-[node name="enemy" parent="." instance=ExtResource("1_qx3dm")]
+[node name="enemy" parent="." unique_id=1947084074 instance=ExtResource("1_qx3dm")]
 script = ExtResource("2_wtbxn")
-enemyType = 1
 lossPoints = 2
+enemyType = 1
 
-[node name="base" parent="enemy" index="0"]
+[node name="base" parent="enemy" index="0" unique_id=1108324432]
 sprite_frames = SubResource("SpriteFrames_wtbxn")
 
-[node name="radar" parent="enemy" index="1"]
+[node name="radar" parent="enemy" index="1" unique_id=1066952876]
 visible = false
 
-[node name="shape" parent="enemy/radar" index="0"]
+[node name="shape" parent="enemy/radar" index="0" unique_id=1238677921]
 shape = SubResource("CircleShape2D_04xjq")
 
-[node name="turret" parent="enemy" index="2"]
+[node name="turret" parent="enemy" index="2" unique_id=108539921]
 sprite_frames = SubResource("SpriteFrames_6l444")
 offset = Vector2(20, 0)
 
-[node name="shape" parent="enemy" index="3"]
+[node name="shape" parent="enemy" index="3" unique_id=359688443]
 shape = SubResource("RectangleShape2D_6l444")
 
 [connection signal="area_entered" from="enemy/radar" to="enemy" method="_on_radar_area_entered"]
