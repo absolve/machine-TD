@@ -1,0 +1,21 @@
+[gd_scene format=4 uid="uid://c3p4w7n1raj2f"]
+
+[ext_resource type="PackedScene" uid="uid://3y2m15k6dbu" path="res://scene/level/base_level.tscn" id="1_5p0kh"]
+[ext_resource type="Script" uid="uid://c9v3t6k2m5p1q" path="res://script/level_5.gd" id="2_5p0kh"]
+
+[sub_resource type="Curve2D" id="Curve2D_5p0kh"]
+_data = {
+"points": PackedVector2Array(-80, 500, 0, 0, -80, 500, 0, 0, 0, 0, 150, 500, 0, 0, 0, 0, 150, 920, 0, 0, 0, 0, 820, 920, 0, 0, 0, 0, 820, 180, 0, 0, 0, 0, 1450, 180, 0, 0, 0, 0, 1450, 820, 0, 0, 0, 0, 1920, 820),
+"point_count": 8
+}
+
+[node name="level5" unique_id=1022616648 instance=ExtResource("1_5p0kh")]
+script = ExtResource("2_5p0kh")
+levelId = 5
+
+[node name="Path2D" type="Path2D" parent="." index="4"]
+position = Vector2(0, 0)
+curve = SubResource("Curve2D_5p0kh")
+
+[connection signal="timeout" from="waveTimer" to="." method="_on_wave_timer_timeout"]
+[connection signal="timeout" from="spawnerTimer" to="." method="_on_spawner_timer_timeout"]

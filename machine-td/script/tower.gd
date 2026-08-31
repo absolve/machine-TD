@@ -30,6 +30,7 @@ var initTime = 1 #初始化时间 秒
 @onready var initBar = $ProgressBar
 @onready var btnSell = $btnSell
 @onready var towerRank = $towerRank
+@onready var lifeBar=$lifeBar
 
 var radarSweepAngle := 0.0
 const RADAR_SCAN_SPEED := 1.8
@@ -132,6 +133,23 @@ func stopGlow() -> void:
 
 func _on_delay_timeout():
 	canShot = true
+
+func hurt(_num: int, _source = null, _damage_type: String = "physical"):
+	if hp <= 0:
+		return
+	var actual_damage: float = float(_num)
+	if _damage_type == "physical":
+		actual_damage *= 1.0
+	elif _damage_type == "energy":
+		actual_damage = float(_num)
+	else:
+		actual_damage *= 1.0
+	
+	hp -= int(max(0.0, ceil(actual_damage)))
+	if lifeBar:
+		lifeBar.value = hp
+	if hp <= 0:
+		queue_free()
 	
 
 func _draw():
@@ -173,7 +191,7 @@ func _on_input_event(_viewport, _event, _shape_idx):
 		#if event.is_pressed()&& event.button_index==MouseButton.MOUSE_BUTTON_LEFT:
 			#selected=!selected
 			#queue_redraw()
-	if Input.is_action_pressed("click"):
+	if Input.is_action_just_pressed("click"):
 		hideSelect()
 
 

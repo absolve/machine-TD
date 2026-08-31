@@ -1,0 +1,11 @@
+extends "res://script/base_level.gd"
+
+func _ready():
+	super._ready()
+	allowArea.append_array([
+		Vector2i(4, 6), Vector2i(5, 6), Vector2i(6, 6), Vector2i(7, 6),
+		Vector2i(8, 6), Vector2i(9, 6), Vector2i(10, 6), Vector2i(10, 5),
+		Vector2i(11, 5), Vector2i(12, 5), Vector2i(13, 5), Vector2i(14, 5),
+		Vector2i(15, 5), Vector2i(15, 6), Vector2i(16, 6), Vector2i(17, 6),
+		Vector2i(18, 6), Vector2i(18, 7), Vector2i(19, 7), Vector2i(19, 8)
+	])
