@@ -5,8 +5,8 @@
 
 [sub_resource type="Curve2D" id="Curve2D_5p0kh"]
 _data = {
-"points": PackedVector2Array(-80, 500, 0, 0, -80, 500, 0, 0, 0, 0, 150, 500, 0, 0, 0, 0, 150, 920, 0, 0, 0, 0, 820, 920, 0, 0, 0, 0, 820, 180, 0, 0, 0, 0, 1450, 180, 0, 0, 0, 0, 1450, 820, 0, 0, 0, 0, 1920, 820),
-"point_count": 8
+"points": PackedVector2Array(0, 0, 0, 0, 360, -80, 0, 0, 0, 0, 360, 760, 0, 0, 0, 0, 1560, 760, 0, 0, 0, 0, 1560, 240, 0, 0, 0, 0, 1920, 240),
+"point_count": 5
 }
 
 [node name="level5" unique_id=1022616648 instance=ExtResource("1_5p0kh")]
