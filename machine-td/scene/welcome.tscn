@@ -69,22 +69,14 @@ icon = ExtResource("9_vkhmq")
 
 [node name="aboutPanel" parent="." unique_id=968769467 instance=ExtResource("3_0h2lm")]
 visible = false
+min_size = Vector2i(980, 560)
+max_size = Vector2i(16384, 16384)
 
-[node name="settingPanel" type="Window" parent="." unique_id=2037719743]
-transparent_bg = true
-oversampling_override = 1.0
-size = Vector2i(1800, 900)
+[node name="setting" parent="." unique_id=762839594 instance=ExtResource("9_vvofi")]
 visible = false
-borderless = true
-transparent = true
-popup_window = true
-content_scale_mode = 1
-content_scale_aspect = 2
-theme = ExtResource("2_hys0r")
 
-[node name="setting" parent="settingPanel" unique_id=762839594 instance=ExtResource("9_vvofi")]
-
+[connection signal="pressed" from="ui/HBoxContainer/UIButton" to="." method="_on_tutorial_pressed"]
 [connection signal="pressed" from="ui/HBoxContainer/btnStart" to="." method="_on_btn_s_start_pressed"]
 [connection signal="pressed" from="ui/HBoxContainer/setting" to="." method="_on_setting_pressed"]
 [connection signal="pressed" from="ui/HBoxContainer/btnAbout" to="." method="_on_button_3_pressed"]
-[connection signal="close" from="settingPanel/setting" to="." method="_on_setting_close"]
+[connection signal="close" from="setting" to="." method="_on_setting_close"]

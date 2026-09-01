@@ -1,12 +1,12 @@
-extends Control
+extends Window
 
 var sound = preload("res://sound/Pickup.wav")
 
 
-@onready var master = $box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/master
-@onready var bg = $box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/bg
-@onready var sfx = $box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/sfx
-@onready var language = $box/main/VBoxContainer/MarginContainer/HBoxContainer/language
+@onready var master = $box/VBoxContainer/volumeBox/VBoxContainer/master
+@onready var bg = $box/VBoxContainer/volumeBox/VBoxContainer/bg
+@onready var sfx = $box/VBoxContainer/volumeBox/VBoxContainer/sfx
+@onready var language = $box/VBoxContainer/languageBox/HBoxContainer/language
 
 signal close
 

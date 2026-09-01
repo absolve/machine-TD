@@ -1,11 +1,16 @@
 extends Node2D
 
-@onready var aboutPanel=$aboutPanel
-@onready var settingPanel=$settingPanel
+@onready var aboutPanel = $aboutPanel
+@onready var settingPanel = $setting
 
 
 func _on_button_3_pressed():
 	aboutPanel.popup_centered()
+
+
+func _on_tutorial_pressed() -> void:
+	StageData.currentStageId = 0
+	SceneTransition.change_scene("res://scene/map.tscn")
 
 
 func _on_btn_s_start_pressed() -> void:

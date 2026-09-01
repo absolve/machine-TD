@@ -66,15 +66,27 @@ func _draw():
 		if not is_instance_valid(enemy):
 			continue
 		var end = to_local(enemy.global_position)
-		# 外层: 电流抖动效果(每帧随机偏移产生电弧)
-		_draw_electric_arc(start, end, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.4), 15.0)
-		# 中层
-		draw_line(start, end, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.7), 5.0)
-		# 内核: 粗+纯白高亮
-		draw_line(start, end, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.4), 1.0)
+		_draw_laser_beam(start, end, LASER_COLOR)
 		# 击中点光晕
 		draw_circle(end, 12.0, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.5))
 		draw_circle(end, 6.0, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.8))
+
+
+func _draw_laser_beam(start: Vector2, end: Vector2, base_color: Color) -> void:
+	var direction = end - start
+	if direction.length_squared() <= 0.0001:
+		return
+	var perp = Vector2(-direction.y, direction.x).normalized()
+	for i in range(-4, 5):
+		var offset_ratio = float(i) / 4.0
+		var distance_from_center = abs(offset_ratio)
+		var offset = perp * offset_ratio * 9.0
+		var alpha = clamp(0.12 + (1.0 - distance_from_center) * 0.8, 0.12, 0.9)
+		var width = clamp(1.0 + (1.0 - distance_from_center) * 7.0, 1.0, 8.0)
+		draw_line(start + offset, end + offset, Color(base_color.r, base_color.g, base_color.b, alpha), width)
+	# 中间最亮的核心
+	draw_line(start, end, Color(base_color.r, base_color.g, base_color.b, 0.95), 2.6)
+	draw_line(start, end, Color(1.0, 1.0, 1.0, 0.7), 0.8)
 
 
 # 绘制电流抖动电弧: 沿直线分段, 每段随机垂直偏移

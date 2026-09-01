@@ -107,12 +107,7 @@ func _generate_segment(from: Vector2, to: Vector2, segments: int, jitter: float)
 func _draw():
 	if lightning_timer <= 0 or jagged_points.size() < 2:
 		return
-	# 外发光: 宽+低透明
-	draw_polyline(jagged_points, Color(LIGHTNING_COLOR.r, LIGHTNING_COLOR.g, LIGHTNING_COLOR.b, 0.3), 6.0, true)
-	# 中层
-	draw_polyline(jagged_points, Color(LIGHTNING_COLOR.r, LIGHTNING_COLOR.g, LIGHTNING_COLOR.b, 0.7), 3.0, true)
-	# 内核: 细+纯白高亮
-	draw_polyline(jagged_points, Color(1.0, 1.0, 1.0, 1.0), 1.0, true)
+	_draw_lightning_path(jagged_points, LIGHTNING_COLOR, 8.0, 1.2, 0.25, 0.75)
 	# 每个击中点画一个光晕
 	for enemy in chain_targets:
 		var p = to_local(enemy.global_position)
@@ -120,6 +115,18 @@ func _draw():
 		draw_circle(p, 5.0, Color(LIGHTNING_COLOR.r, LIGHTNING_COLOR.g, LIGHTNING_COLOR.b, 0.8))
 
 
+func _draw_lightning_path(points: PackedVector2Array, base_color: Color, max_width: float, min_width: float, outer_alpha: float, inner_alpha: float) -> void:
+	if points.size() < 2:
+		return
+	for i in range(points.size() - 1):
+		var t = float(i) / float(max(points.size() - 2, 1))
+		var width = lerp(max_width, min_width, t)
+		var alpha = lerp(outer_alpha, 0.2, t)
+		var start = points[i]
+		var end = points[i + 1]
+		draw_line(start, end, Color(base_color.r, base_color.g, base_color.b, alpha), width * 1.5)
+		draw_line(start, end, Color(base_color.r, base_color.g, base_color.b, inner_alpha), max(width * 0.45, 1.0))
+		draw_line(start, end, Color(1.0, 1.0, 1.0, clamp(alpha * 0.9, 0.0, 1.0)), max(width * 0.18, 0.6))
 
 
 

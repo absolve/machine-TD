@@ -7,11 +7,15 @@ _Master_Volume,Master Volume,主音量
 _Music,Music,音乐
 _Sound,Sound,音效
 _Restart,Restart,重新开始
+_Resume,Resume,返回游戏
 _NextLevel,Next Level,下一关
 _Main_Menu,Main Menu,主菜单
 _Start_game,Start Game,开始游戏
 _Settings,Settings,设置
 _About,About,关于
+_About_Title,About the Game,关于游戏
+_About_Text,"[b]Simple Tower Defense[/b]\n\nBuild towers, stop incoming waves, and survive as long as you can.\nEach level teaches a different battle rhythm and reward system.\nThe goal is to protect the base, manage resources, and improve your defense line.","[b]简易塔防[/b]\n\n建造防御塔，阻止敌人进攻，并尽可能保住基地。\n每一关都有不同的节奏和奖励节奏，考验你的资源管理和布局能力。\n目标是守住基地、合理建塔、不断提升防线。"
+_Close,Close,关闭
 _Tutorial,Tutorial,教程
 _LevelFailed,Level Failed,失败
 _LevelCompleted,Level Completed,过关

@@ -5,9 +5,11 @@ extends Node2D
 @onready var titleNode = $hud/title
 @onready var towerUINode = $hud/towerUI
 @onready var resultScreen = $resultScreen
+@onready var pauseMenu = $pauseMenu
 
 @onready var finishTimer = $Timer
 @onready var toastInfo = $hud/toastInfo
+@onready var waveProgressBar = $hud/waveProgressBar
 
 var level
 var gunTower = preload("res://scene/machineGunTower.tscn")
@@ -40,6 +42,9 @@ func _ready():
 	resultScreen.btnRestart.pressed.connect(restart)
 	resultScreen.btnNextLevel.pressed.connect(nextLevel)
 	resultScreen.btnMenu.pressed.connect(returnHome)
+	pauseMenu.resumePressed.connect(resumeGame)
+	pauseMenu.restartPressed.connect(restart)
+	pauseMenu.menuPressed.connect(returnHome)
 		
 	#加载关卡
 	loadLevel()
@@ -49,6 +54,7 @@ func _ready():
 	titleNode.hp = level.health
 	titleNode.wave = level.wave
 	titleNode.money = level.money
+	syncWaveProgressBar()
 	#titleNode.score=level.score
 	titleNode.start.connect(startGame)
 	titleNode.pause.connect(pauseGame)
@@ -59,7 +65,7 @@ func _ready():
 	titleNode.home.connect(home)
 	titleNode.speedOn.connect(speedOn)
 	titleNode.speedOff.connect(speedOff)
-	queue_redraw()
+	#queue_redraw()
 	# print(int(1920.0 / cellSize))
 	font = ThemeDB.fallback_font
 	
@@ -84,7 +90,17 @@ func loadLevel():
 	level_instance.levelId = stage_id
 	add_child(level_instance)
 	level = level_instance
+	syncWaveProgressBar()
 
+func syncWaveProgressBar() -> void:
+	if level == null or waveProgressBar == null:
+		return
+	var total_wave: float = max(float(level.wave), 1.0)
+	var current_wave: float = 0.0
+	if "currWave" in level:
+		current_wave = float(level.currWave)
+	waveProgressBar.maxProgress = total_wave
+	waveProgressBar.set_progress(current_wave)
 
 #选中塔
 #func selectTower(item):
@@ -152,6 +168,7 @@ func refreshData(dict):
 		titleNode.money = dict.money
 	if dict.score:
 		titleNode.score = dict.score
+	syncWaveProgressBar()
 
 #获得奖励
 func defeatEnemy(point):
@@ -171,9 +188,16 @@ func enemyEscape(point):
 func startGame():
 	get_tree().paused = false
 	level.start()
+	syncWaveProgressBar()
 
 func pauseGame():
 	get_tree().paused = true
+	if not pauseMenu.visible:
+		pauseMenu.popup_centered()
+
+func resumeGame():
+	pauseMenu.hide()
+	get_tree().paused = false
 
 func soundOn():
 	AudioServer.set_bus_mute(AudioServer.get_bus_index("Sfx"), false)
@@ -196,7 +220,7 @@ func musicOff():
 	UserData.saveSettings()
 
 func home():
-	pass
+	pauseGame()
 
 func speedOn():
 	pass
@@ -253,12 +277,14 @@ func clickTower(item, selected):
 		selectedTower = null
 
 func restart():
+	get_tree().paused = false
 	get_tree().reload_current_scene.call_deferred()
 
 func nextLevel():
 	SceneTransition.change_scene("res://scene/level_select.tscn")
 
 func returnHome():
+	get_tree().paused = false
 	SceneTransition.change_scene("res://scene/welcome.tscn")
 
 func _physics_process(_delta: float) -> void:

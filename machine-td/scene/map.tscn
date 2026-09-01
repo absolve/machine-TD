@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c2g3rjpp3rijm" path="res://scene/toast_info.tscn" id="4_jp76l"]
 [ext_resource type="PackedScene" uid="uid://ci2x7q5rdcqf5" path="res://scene/wave_progress_bar.tscn" id="5_7ac5c"]
 [ext_resource type="PackedScene" uid="uid://dmskj8i7vlbkd" path="res://scene/custom_camera.tscn" id="5_jp76l"]
+[ext_resource type="PackedScene" uid="uid://cv37m245ebfbr" path="res://scene/pause_menu.tscn" id="6_pause"]
 
 [node name="map" type="Node2D" unique_id=988854810]
 script = ExtResource("1_rgtto")
@@ -43,6 +44,9 @@ one_shot = true
 
 [node name="resultScreen" parent="." unique_id=1746614916 instance=ExtResource("4_bq37x")]
 position = Vector2i(0, 36)
+visible = false
+
+[node name="pauseMenu" parent="." unique_id=1869636577 instance=ExtResource("6_pause")]
 visible = false
 
 [connection signal="pressed" from="hud/Button" to="." method="_on_button_pressed"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bapkogsulgmm4"]
+[gd_scene format=3 uid="uid://bapkogsulgmm4"]
 
 [ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet.tscn" id="1_4btjf"]
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="2_cn0lh"]
@@ -16,12 +16,14 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_j7yms")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 5.0
 }]
 
-[node name="cannonBullet" instance=ExtResource("1_4btjf")]
+[node name="cannonBullet" unique_id=1386573325 instance=ExtResource("1_4btjf")]
+collision_layer = 0
+collision_mask = 2
 script = ExtResource("2_jhiub")
 
 [node name="shape" parent="." index="0"]

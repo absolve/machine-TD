@@ -1,6 +1,28 @@
 [gd_scene format=3 uid="uid://ci2x7q5rdcqf5"]
 
 [ext_resource type="Script" uid="uid://d13hhx8rptim1" path="res://script/wave_progress_bar.gd" id="1_fetnh"]
+[ext_resource type="Shader" uid="uid://db516slrm4x4d" path="res://shader/wave_progress_glow.gdshader" id="2_l4j0n"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]
+bg_color = Color(0.12, 0.14, 0.14, 0.85)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2"]
+bg_color = Color(0.23, 0.9, 0.38, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7mx5n"]
+shader = ExtResource("2_l4j0n")
+shader_parameter/glow_width = 0.3
+shader_parameter/pulse_speed = 7.0
+shader_parameter/pulse_strength = 1.1
+shader_parameter/alpha = 0.8
 
 [node name="waveProgressBar" type="Control" unique_id=1398223869]
 layout_mode = 3
@@ -11,5 +33,18 @@ script = ExtResource("1_fetnh")
 layout_mode = 0
 offset_right = 320.0
 offset_bottom = 40.0
+theme_override_styles/background = SubResource("StyleBoxFlat_1")
+theme_override_styles/fill = SubResource("StyleBoxFlat_2")
 step = 1.0
 show_percentage = false
+
+[node name="GlowOverlay" type="ColorRect" parent="ProgressBar" unique_id=1492189395]
+visible = false
+material = SubResource("ShaderMaterial_7mx5n")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)

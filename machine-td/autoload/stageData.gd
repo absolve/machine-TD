@@ -8,6 +8,29 @@ var currentStageId: int = 1
 #关卡的数据
 var allStage = [
 	{
+		'name': 'Tutorial',
+		"id": 0,
+		'type': '教程',
+		'category': '新手教程',
+		'description': '基础教学关卡，沿着一条简单直线展开，逐一了解各类敌人的威胁与节奏',
+		'wave': 10,
+		'health': 25,
+		'money': 1200,
+		'scene': 'res://scene/level/level_tutorial.tscn',
+		"enemySpawner": [
+			{'time': 1, 'type': Game.enemyType.miniTank, 'number': 1},
+			{'time': 2, 'type': Game.enemyType.mediumTank, 'number': 1},
+			{'time': 3, 'type': Game.enemyType.heavyTank, 'number': 1},
+			{'time': 4, 'type': Game.enemyType.armoredTank, 'number': 1},
+			{'time': 5, 'type': Game.enemyType.assaultBuggy, 'number': 1},
+			{'time': 6, 'type': Game.enemyType.medic, 'number': 1},
+			{'time': 7, 'type': Game.enemyType.suicideTruck, 'number': 1},
+			{'time': 8, 'type': Game.enemyType.missileTruck, 'number': 1},
+			{'time': 9, 'type': Game.enemyType.scoutDrone, 'number': 1},
+			{'time': 10, 'type': Game.enemyType.attackHelicopter, 'number': 1}
+		]
+	},
+	{
 		'name': '1',
 		"id": 1,
 		'type': '草地',

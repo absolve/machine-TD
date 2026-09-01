@@ -1,26 +1,65 @@
-[gd_scene load_steps=2 format=3 uid="uid://v3vtbt8yry5c"]
+[gd_scene format=3 uid="uid://v3vtbt8yry5c"]
 
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_qs0ou"]
+[ext_resource type="Script" uid="uid://b6k1p768pwknc" path="res://script/about_panel.gd" id="2_5mklv"]
 
-[node name="aboutPanel" type="PopupPanel"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aimcf"]
+
+[node name="aboutPanel" type="PopupPanel" unique_id=968686525]
 oversampling_override = 1.0
-size = Vector2i(1024, 600)
+size = Vector2i(980, 900)
 visible = true
-min_size = Vector2i(1024, 600)
+min_size = Vector2i(640, 360)
+max_size = Vector2i(1400, 900)
 theme = ExtResource("1_qs0ou")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_aimcf")
+script = ExtResource("2_5mklv")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 1020.0
-offset_bottom = 596.0
+[node name="OuterMargin" type="MarginContainer" parent="." unique_id=2052520945]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 22
 
-[node name="vbox" type="VBoxContainer" parent="ScrollContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="OuterMargin" unique_id=644165595]
+layout_mode = 2
+
+[node name="InnerMargin" type="MarginContainer" parent="OuterMargin/PanelContainer" unique_id=889741681]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="VBoxContainer" type="VBoxContainer" parent="OuterMargin/PanelContainer/InnerMargin" unique_id=1033346259]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/separation = 18
 
-[node name="RichTextLabel" type="RichTextLabel" parent="ScrollContainer/vbox"]
+[node name="titleLabel" type="Label" parent="OuterMargin/PanelContainer/InnerMargin/VBoxContainer" unique_id=1720018912]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "_About_Title"
+horizontal_alignment = 1
+
+[node name="contentLabel" type="RichTextLabel" parent="OuterMargin/PanelContainer/InnerMargin/VBoxContainer" unique_id=1913083079]
 layout_mode = 2
 size_flags_vertical = 3
-text = "about"
+bbcode_enabled = true
+text = "_About_Text"
+fit_content = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="OuterMargin/PanelContainer/InnerMargin/VBoxContainer" unique_id=717775638]
+layout_mode = 2
+alignment = 1
+
+[node name="btnClose" type="Button" parent="OuterMargin/PanelContainer/InnerMargin/VBoxContainer/HBoxContainer" unique_id=852330420]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "_Close"

@@ -5,50 +5,59 @@
 [ext_resource type="PackedScene" uid="uid://uv64kol65sr5" path="res://scene/sound_opinion.tscn" id="3_g2to7"]
 [ext_resource type="Texture2D" uid="uid://xd1ujbghu3io" path="res://sprite/close.png" id="4_2wb80"]
 
-[node name="setting" type="Control" unique_id=762839594]
-layout_mode = 3
-anchors_preset = 0
+[node name="setting" type="Window" unique_id=762839594]
+process_mode = 3
+transparent_bg = true
+oversampling_override = 1.0
+size = Vector2i(1800, 900)
+visible = false
+borderless = true
+transparent = true
+popup_window = true
+content_scale_mode = 1
+content_scale_aspect = 2
 theme = ExtResource("1_ahr6q")
 script = ExtResource("1_xthoy")
 
-[node name="box" type="HBoxContainer" parent="." unique_ivisible = false
-d=894367919]
-layout_mode = 0
-offset_right = 1800.0
-offset_bottom = 900.0
-theme_override_constants/separation = 20
+[node name="box" type="PanelContainer" parent="." unique_id=2092103572]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -484.0
+offset_top = -344.25
+offset_right = 484.0
+offset_bottom = 344.25
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="main" type="PanelContainer" parent="box" unique_id=2092103572]
+[node name="VBoxContainer" type="VBoxContainer" parent="box" unique_id=679768645]
 layout_mode = 2
-size_flags_horizontal = 3
+theme_override_constants/separation = 24
 
-[node name="VBoxContainer" type="VBoxContainer" parent="box/main" unique_id=679768645]
+[node name="Label" type="Label" parent="box/VBoxContainer" unique_id=636524758]
 layout_mode = 2
-
-[node name="Label" type="Label" parent="box/main/VBoxContainer" unique_id=636524758]
-layout_mode = 2
-size_flags_vertical = 6
 theme_override_font_sizes/font_size = 80
 text = "_General"
 horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="box/main/VBoxContainer" unique_id=138757151]
+[node name="languageBox" type="MarginContainer" parent="box/VBoxContainer" unique_id=138757151]
 layout_mode = 2
-size_flags_vertical = 3
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_right = 50
 
-[node name="HBoxContainer" type="HBoxContainer" parent="box/main/VBoxContainer/MarginContainer" unique_id=44088827]
+[node name="HBoxContainer" type="HBoxContainer" parent="box/VBoxContainer/languageBox" unique_id=44088827]
 layout_mode = 2
 size_flags_vertical = 2
 
-[node name="Label" type="Label" parent="box/main/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1244014655]
+[node name="Label" type="Label" parent="box/VBoxContainer/languageBox/HBoxContainer" unique_id=1244014655]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
 text = "_Language"
 
-[node name="language" type="OptionButton" parent="box/main/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1586112098]
+[node name="language" type="OptionButton" parent="box/VBoxContainer/languageBox/HBoxContainer" unique_id=1586112098]
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 0
@@ -58,68 +67,48 @@ popup/item_0/id = 0
 popup/item_1/text = "zh"
 popup/item_1/id = 1
 
-[node name="PanelContainer2" type="PanelContainer" parent="box" unique_id=1053843168]
+[node name="volumeBox" type="MarginContainer" parent="box/VBoxContainer" unique_id=293431896]
 layout_mode = 2
-size_flags_horizontal = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 40
 
-[node name="VBoxContainer" type="VBoxContainer" parent="box/PanelContainer2" unique_id=2122274050]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="box/PanelContainer2/VBoxContainer" unique_id=1052639629]
-layout_mode = 2
-size_flags_vertical = 6
-theme_override_font_sizes/font_size = 80
-text = "_Volume"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="MarginContainer" type="MarginContainer" parent="box/PanelContainer2/VBoxContainer" unique_id=293431896]
+[node name="VBoxContainer" type="VBoxContainer" parent="box/VBoxContainer/volumeBox" unique_id=1217214539]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_left = 50
-theme_override_constants/margin_right = 50
+theme_override_constants/separation = 28
 
-[node name="VBoxContainer" type="VBoxContainer" parent="box/PanelContainer2/VBoxContainer/MarginContainer" unique_id=1217214539]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 40
-
-[node name="master" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer" unique_id=735161374 instance=ExtResource("3_g2to7")]
+[node name="master" parent="box/VBoxContainer/volumeBox/VBoxContainer" unique_id=735161374 instance=ExtResource("3_g2to7")]
 layout_mode = 2
 
-[node name="name" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/master" index="0" unique_id=2088427403]
+[node name="name" parent="box/VBoxContainer/volumeBox/VBoxContainer/master" index="0" unique_id=2088427403]
 text = "_Master_Volume"
 
-[node name="bg" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer" unique_id=1481147273 instance=ExtResource("3_g2to7")]
+[node name="bg" parent="box/VBoxContainer/volumeBox/VBoxContainer" unique_id=1481147273 instance=ExtResource("3_g2to7")]
 layout_mode = 2
 
-[node name="name" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/bg" index="0" unique_id=2088427403]
+[node name="name" parent="box/VBoxContainer/volumeBox/VBoxContainer/bg" index="0" unique_id=2088427403]
 text = "_Music"
 
-[node name="sfx" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer" unique_id=271660847 instance=ExtResource("3_g2to7")]
+[node name="sfx" parent="box/VBoxContainer/volumeBox/VBoxContainer" unique_id=271660847 instance=ExtResource("3_g2to7")]
 layout_mode = 2
 
-[node name="name" parent="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/sfx" index="0" unique_id=2088427403]
+[node name="name" parent="box/VBoxContainer/volumeBox/VBoxContainer/sfx" index="0" unique_id=2088427403]
 text = "_Sound"
 
 [node name="btnClose" type="TextureButton" parent="." unique_id=1444773557]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = 1720.0
-offset_top = 16.0
-offset_right = 1784.0
-offset_bottom = 80.0
-grow_horizontal = 0
+offset_left = 1280.0
+offset_top = 136.0
+offset_right = 1344.0
+offset_bottom = 200.0
 texture_normal = ExtResource("4_2wb80")
 
-[connection signal="item_selected" from="box/main/VBoxContainer/MarginContainer/HBoxContainer/language" to="." method="_on_option_button_item_selected"]
-[connection signal="value_changed" from="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/master/HSlider" to="." method="_on_master_value_changed"]
-[connection signal="value_changed" from="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/bg/HSlider" to="." method="_on_bg_value_changed"]
-[connection signal="value_changed" from="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/sfx/HSlider" to="." method="_on_sfx_value_changed"]
+[connection signal="item_selected" from="box/VBoxContainer/languageBox/HBoxContainer/language" to="." method="_on_option_button_item_selected"]
+[connection signal="value_changed" from="box/VBoxContainer/volumeBox/VBoxContainer/master/HSlider" to="." method="_on_master_value_changed"]
+[connection signal="value_changed" from="box/VBoxContainer/volumeBox/VBoxContainer/bg/HSlider" to="." method="_on_bg_value_changed"]
+[connection signal="value_changed" from="box/VBoxContainer/volumeBox/VBoxContainer/sfx/HSlider" to="." method="_on_sfx_value_changed"]
 [connection signal="pressed" from="btnClose" to="." method="_on_btn_close_pressed"]
 
-[editable path="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/master"]
-[editable path="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/bg"]
-[editable path="box/PanelContainer2/VBoxContainer/MarginContainer/VBoxContainer/sfx"]
+[editable path="box/VBoxContainer/volumeBox/VBoxContainer/master"]
+[editable path="box/VBoxContainer/volumeBox/VBoxContainer/bg"]
+[editable path="box/VBoxContainer/volumeBox/VBoxContainer/sfx"]

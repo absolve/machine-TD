@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://cv37m245ebfbr"]
+
+[ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_theme"]
+[ext_resource type="Script" uid="uid://c82d6iaytyl4p" path="res://script/pause_menu.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_button"]
+
+[node name="pauseMenu" type="Window" unique_id=431099984]
+process_mode = 3
+transparent_bg = true
+oversampling_override = 1.0
+size = Vector2i(1920, 1080)
+borderless = true
+transparent = true
+theme = ExtResource("1_theme")
+script = ExtResource("2_script")
+
+[node name="bg" type="ColorRect" parent="." unique_id=2142516651]
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 0.18431373)
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1134434306]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -210.0
+offset_right = 250.0
+offset_bottom = 210.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=805513974]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="title" type="Label" parent="PanelContainer/VBoxContainer" unique_id=1792542520]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+theme_override_font_sizes/font_size = 52
+text = "Pause"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="buttons" type="VBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=690473855]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="btnResume" parent="PanelContainer/VBoxContainer/buttons" unique_id=184412865 instance=ExtResource("3_button")]
+custom_minimum_size = Vector2(220, 54)
+layout_mode = 2
+text = "_Resume"
+
+[node name="btnRestart" parent="PanelContainer/VBoxContainer/buttons" unique_id=242551112 instance=ExtResource("3_button")]
+custom_minimum_size = Vector2(220, 54)
+layout_mode = 2
+text = "_Restart"
+
+[node name="btnMenu" parent="PanelContainer/VBoxContainer/buttons" unique_id=1242211185 instance=ExtResource("3_button")]
+custom_minimum_size = Vector2(220, 54)
+layout_mode = 2
+text = "_Main_Menu"

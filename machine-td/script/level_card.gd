@@ -26,6 +26,6 @@ func _on_mouse_exited() -> void:
 
 
 func _on_gui_input(_event):
-	if _event is InputEventMouseButton && _event.is_action_just_pressed("click"):
+	if _event is InputEventMouseButton && _event.is_action_pressed("click"):
 		if !isLock:
 			click.emit(levelId)
