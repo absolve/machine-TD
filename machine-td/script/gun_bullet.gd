@@ -4,7 +4,7 @@ extends "res://script/bullet.gd"
 func _ready():
 	lifetime = 3
 	vec = Vector2(500, 0).rotated(angle)
-	damage = source_tower.atk if is_instance_valid(source_tower) else 20
+	#damage = source_tower.atk if is_instance_valid(source_tower) else 20
 
 func _physics_process(delta):
 	timer += delta

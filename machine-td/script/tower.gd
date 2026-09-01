@@ -152,6 +152,11 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 		queue_free()
 	
 
+func get_muzzle_position() -> Vector2:
+	if is_instance_valid(marker):
+		return marker.global_position
+	return global_position
+
 func _draw():
 	if not selected:
 		return

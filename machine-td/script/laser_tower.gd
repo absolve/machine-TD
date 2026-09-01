@@ -8,6 +8,7 @@ var laser_targets: Array = [] # 当前激光锁定的敌人
 
 
 func _ready():
+	turret.rotation = randf() * TAU
 	super._ready()
 	#var mat =base.material as ShaderMaterial
 	#mat.set_shader_parameter("enabled", 1.0)

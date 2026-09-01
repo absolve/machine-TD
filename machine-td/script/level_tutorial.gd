@@ -2,14 +2,6 @@ extends "res://script/base_level.gd"
 
 func _ready() -> void:
 	super._ready()
-	var path := get_node_or_null("Path2D")
-	if path == null:
-		return
-	var curve := Curve2D.new()
-	curve.add_point(Vector2(0, 320))
-	curve.add_point(Vector2(1600, 320))
-	path.curve = curve
-	path1 = path
 
 	# 教程关卡使用一条简单直线路线，沿路径两侧预留少量可建造区域
 	allowArea.append_array([

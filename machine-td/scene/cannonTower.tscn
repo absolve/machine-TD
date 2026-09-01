@@ -124,6 +124,9 @@ scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_lm0w6")
 offset = Vector2(10, 0)
 
+[node name="Marker2D" parent="turret" index="0" unique_id=1564610297]
+position = Vector2(45, 0)
+
 [node name="lifeBar" parent="." index="6" unique_id=1589605555]
 position = Vector2(0, -53)
 

@@ -5,29 +5,37 @@ var bullet = preload("res://scene/cannon_bullet.tscn")
 
 
 func _ready():
+	turret.rotation = randf() * TAU
 	super._ready()
 
 func _physics_process(_delta):
 	super._physics_process(_delta)
 	var temp = getTarget()
-	if temp:
-		var direction = (temp.global_position - turret.global_position).normalized()
-		var target_angle = direction.angle()
-		#turret.rotate(deg_to_rad(90))
-		turret.rotation = lerp_angle(turret.rotation, target_angle, rotationSpeed * _delta)
-		#turret.look_at(temp.global_position)
-		if abs(turret.rotation - target_angle) < .1:
-			fire(temp)
+	if temp == null:
+		return
+
+	var muzzle_pos = get_muzzle_position()
+	var direction = temp.global_position - muzzle_pos
+	if direction.length_squared() < 0.01:
+		return
+
+	var target_angle = direction.angle()
+	var current_angle = turret.rotation
+	var angle_diff := wrapf(target_angle - current_angle, -PI, PI)
+	turret.rotation = current_angle + angle_diff * min(1.0, rotationSpeed * _delta)
+
+	if abs(angle_diff) < 0.12:
+		fire(temp)
 
 func fire(t):
 	#print("fire")
 	if canShot:
 		player.play("fire")
 		var temp = bullet.instantiate()
-		temp.position = marker.global_position
-		temp.angle = position.direction_to(t.global_position).angle()
+		temp.position = get_muzzle_position()
+		temp.angle = (t.global_position - get_muzzle_position()).angle()
 		temp.source_tower = self
-		temp.damage=atk
+		temp.damage = atk
 		Game.addObj(temp)
 		canShot = false
 		delayTimer.start()
