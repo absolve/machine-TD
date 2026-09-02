@@ -33,19 +33,11 @@ animations = [{
 size = Vector2(40, 40)
 
 [node name="medic" type="PathFollow2D" unique_id=591944571]
+loop = false
 
 [node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_267h0")]
 script = ExtResource("2_f8m5b")
-hp = null
-speed = null
-reward = null
-lossPoints = null
-rewardExp = null
 enemyType = 5
-armor = null
-flying = null
-atk = null
-shootDelay = null
 
 [node name="base" parent="enemy" index="0" unique_id=1108324432]
 sprite_frames = SubResource("SpriteFrames_nojol")

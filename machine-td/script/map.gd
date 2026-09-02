@@ -166,13 +166,13 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 #更新游戏中数据
 func refreshData(dict):
 	print(dict)
-	if dict.hp:
+	if dict.get("hp") != null:
 		titleNode.hp = dict.hp
-	if dict.wave:
-		titleNode.wave = dict.wave
-	if dict.money:
+	if dict.get("wave") != null:
+		titleNode.currentWave = dict.wave
+	if dict.get("money") != null:
 		titleNode.money = dict.money
-	if dict.score:
+	if dict.get("score") != null:
 		titleNode.score = dict.score
 	syncWaveProgressBar()
 

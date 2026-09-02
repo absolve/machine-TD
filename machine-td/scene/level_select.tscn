@@ -22,28 +22,30 @@ layout_mode = 0
 [node name="Label" type="Label" parent="ui" unique_id=528409908]
 layout_mode = 0
 offset_left = 704.0
-offset_top = 100.0
-offset_right = 1218.0
-offset_bottom = 227.0
+offset_top = 75.0
+offset_right = 1239.0
+offset_bottom = 202.0
 theme_override_font_sizes/font_size = 90
 text = "_SelectLevel"
 horizontal_alignment = 1
 
-[node name="levels" type="HBoxContainer" parent="ui" unique_id=835426219]
+[node name="levels" type="GridContainer" parent="ui" unique_id=835426219]
 clip_contents = true
 layout_mode = 0
 offset_left = 135.0
-offset_top = 296.0
+offset_top = 237.0
 offset_right = 1785.0
-offset_bottom = 806.0
-metadata/_edit_lock_ = true
+offset_bottom = 805.0
+theme_override_constants/h_separation = 40
+theme_override_constants/v_separation = 40
+columns = 6
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ui" unique_id=1887196183]
 layout_mode = 0
 offset_left = 720.0
-offset_top = 904.0
+offset_top = 931.0
 offset_right = 1128.0
-offset_bottom = 981.0
+offset_bottom = 1008.0
 alignment = 1
 metadata/_edit_group_ = true
 

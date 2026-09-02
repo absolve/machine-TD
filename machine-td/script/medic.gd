@@ -9,10 +9,12 @@ func _ready():
 
 func fire(t):
 	if canShot:
+		canShot = false
 		for i in t:
 			if is_instance_valid(i):
 				i.addHp(atk)
-
+		delayTimer.start()
+		
 func _physics_process(_delta):
 	if points.size() == 0:
 		return
@@ -24,8 +26,10 @@ func _physics_process(_delta):
 		fire(target)
 
 func _on_radar_area_entered(area: Area2D) -> void:
-	target.append(area)
+	if area !=self:
+		target.append(area)
 
 
 func _on_radar_area_exited(area: Area2D) -> void:
-	target.erase(area)
+	if area !=self:
+		target.erase(area)

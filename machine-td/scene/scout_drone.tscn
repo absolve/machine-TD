@@ -23,6 +23,7 @@ animations = [{
 size = Vector2(30, 30)
 
 [node name="scoutDrone" type="PathFollow2D" unique_id=307050002]
+loop = false
 
 [node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_0nn78")]
 script = ExtResource("2_ebxfp")

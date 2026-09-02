@@ -4,24 +4,20 @@ extends Node2D
 @onready var descriptionPanel = $ui/descriptionPanel
 
 
-var levelGrid = preload("res://scene/level_grid.tscn")
 var levelCard = preload("res://scene/level_card.tscn")
 
 
 func _ready() -> void:
-	var temp = levelGrid.instantiate()
-	for i in range(StageData.allStage.size()):
+	for stage in StageData.allStage:
+		if stage.has('selectable')&& stage.selectable==false:
+			continue
 		var card = levelCard.instantiate()
-		card.level = StageData.allStage[i]['name']
-		card.levelId = StageData.allStage[i]['id']
+		card.level = stage['name']
+		card.levelId = stage['id']
 		card.click.connect(loadMap)
 		#TODO 关卡是否解锁根据用户记录判断
-		card.isLock = false
-		temp.add_child(card)
-		if i % 12 == 0 && i != 0:
-			levelsNode.add_child(temp)
-			temp = levelGrid.instantiate()
-	levelsNode.add_child(temp)
+		card.isLock = not stage.get('selectable', true)
+		levelsNode.add_child(card)
 
 
 # 加载地图

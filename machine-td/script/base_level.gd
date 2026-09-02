@@ -67,6 +67,7 @@ func _on_wave_timer_timeout():
 		return
 
 	currWave += 1
+	Game.refreshData.emit({'wave': currWave})
 	for spawn_info in enemyList:
 		if int(spawn_info.get("time", 0)) == currWave:
 			currentSpawner.append(spawn_info.duplicate())

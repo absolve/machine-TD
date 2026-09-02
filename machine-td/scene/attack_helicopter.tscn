@@ -22,6 +22,7 @@ radius = 300.0
 size = Vector2(50, 50)
 
 [node name="attackHelicopter" type="PathFollow2D" unique_id=703604371]
+loop = false
 
 [node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_t3cxq")]
 script = ExtResource("2_holci")

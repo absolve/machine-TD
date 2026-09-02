@@ -10,6 +10,7 @@ var allStage = [
 	{
 		'name': 'Tutorial',
 		"id": 0,
+		'selectable': false,
 		'type': '教程',
 		'category': '新手教程',
 		'description': '基础教学关卡，沿着一条简单直线展开，逐一了解各类敌人的威胁与节奏',

@@ -145,7 +145,7 @@ const enemyInfo = {
 	enemyType.medic: {
 		"name": "medic",
 		"hp": 120, "speed": 100, "reward": 10, "lossPoints": 1, "rewardExp": 5,
-		"armor": 0.1, "flying": false, "atk": 30, "shootDelay": 3.0
+		"armor": 0.1, "flying": false, "atk": 20, "shootDelay": 8.0
 	},
 	enemyType.suicideTruck: {
 		"name": "suicideTruck",

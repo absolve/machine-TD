@@ -33,6 +33,7 @@ animations = [{
 size = Vector2(30, 30)
 
 [node name="assaultBuggy" type="PathFollow2D" unique_id=839491182]
+loop = false
 
 [node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_pf4om")]
 script = ExtResource("2_2w7f8")

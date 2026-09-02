@@ -34,6 +34,7 @@ animations = [{
 size = Vector2(50, 50)
 
 [node name="missileTruck" type="PathFollow2D" unique_id=541201298]
+loop = false
 
 [node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_wfafo")]
 script = ExtResource("2_6ddhx")
