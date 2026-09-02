@@ -29,21 +29,32 @@ var initTime = 1 #初始化时间 秒
 @onready var player = $player
 @onready var initBar = $ProgressBar
 @onready var btnSell = $btnSell
+@onready var sellPriceLabel = $sellPriceLabel
 @onready var towerRank = $towerRank
 @onready var lifeBar=$lifeBar
+@onready var towerStatusUi = $towerStatusUi
 
 var radarSweepAngle := 0.0
 const RADAR_SCAN_SPEED := 1.8
 
 func _ready() -> void:
+	if btnSell:
+		btnSell.texture_normal = preload("res://sprite/dollar-symbol.png")
 	if raderShape.shape:
 		raderShape.shape.radius = radarScope
+	if maxHp <= 0 and hp > 0:
+		maxHp = hp
+	if hp <= 0 and maxHp > 0:
+		hp = maxHp
 	delayTimer.wait_time = delay
 	monitorable = false
 	set_physics_process(false)
 	var tween = create_tween()
 	tween.tween_property(initBar, "value", 100, initTime)
 	tween.tween_callback(init)
+	call_deferred("update_status_ui")
+	if towerStatusUi:
+		towerStatusUi.position = Vector2(0, 90)
 
 func _physics_process(delta: float) -> void:
 	if not selected:
@@ -73,13 +84,18 @@ func hideSelect():
 	selected = !selected
 	queue_redraw()
 	btnSell.visible = selected
+	if sellPriceLabel:
+		sellPriceLabel.visible = selected
+	update_status_ui()
 	Game.clickTower.emit(self, selected)
 
 # 增加经验
 func addExp(amount: int) -> void:
 	if level >= TowerUpgradeManager.MAX_LEVEL:
+		update_status_ui()
 		return
 	if !TowerUpgradeManager.configs.has(type):
+		update_status_ui()
 		return
 	print('addExp', amount)
 	towerExp += amount
@@ -87,6 +103,22 @@ func addExp(amount: int) -> void:
 	if towerExp >= threshold:
 		levelUp()
 		towerExp -= threshold
+	update_status_ui()
+
+func update_status_ui() -> void:
+	if maxHp <= 0:
+		maxHp = max(hp, 1)
+	if lifeBar:
+		lifeBar.maxHp = maxHp
+		lifeBar.value = hp
+	if sellPriceLabel:
+		sellPriceLabel.text = str(int(sellingPrice))
+		sellPriceLabel.visible = selected
+	if towerStatusUi:
+		var threshold = 1
+		if level < TowerUpgradeManager.MAX_LEVEL and TowerUpgradeManager.configs.has(type):
+			threshold = int(TowerUpgradeManager.getExpThreshold(type, level))
+		towerStatusUi.set_status(hp, maxHp, towerExp, threshold, selected)
 	
 #升级等级
 func levelUp() -> void:
@@ -103,6 +135,7 @@ func levelUp() -> void:
 			raderShape.shape.radius = radarScope
 	towerRank.setLevel(level)
 	playUpgradeGlow()
+	update_status_ui()
 	
 
 # 升级闪光: 启用 shader -> 亮度淡入 -> 闪烁 -> 淡出 -> 关闭
@@ -146,8 +179,12 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 		actual_damage *= 1.0
 	
 	hp -= int(max(0.0, ceil(actual_damage)))
+	if maxHp <= 0:
+		maxHp = max(hp, 1)
 	if lifeBar:
+		lifeBar.maxHp = maxHp
 		lifeBar.value = hp
+	update_status_ui()
 	if hp <= 0:
 		queue_free()
 	

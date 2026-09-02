@@ -1,60 +1,56 @@
 extends Node
 
 # 场景过渡动画全局管理器
-# 动画分两段: 1.方块盖满 2.切换场景后方块消失
+# 现在使用简单版: 黑色全屏淡入 -> 资源加载 -> 黑色全屏淡出
 
 # 用法: SceneTransition.change_scene("res://scene/welcome.tscn")
 
-const SHADER := preload("res://shader/scene_transition.gdshader")
-const DEFAULT_DURATION := 0.8
+const DEFAULT_DURATION := 0.6
 const SCREEN_SIZE := Vector2(1920, 1080)
 
 var canvas_layer: CanvasLayer
 var color_rect: ColorRect
-var shader_mat: ShaderMaterial
 var is_transitioning := false
-
+var pending_scene_path: String = ""
+var pending_duration: float = 0.0
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	canvas_layer = CanvasLayer.new()
-	canvas_layer.layer = 100 # 覆盖所有 UI 层
+	canvas_layer.layer = 100
+	canvas_layer.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(canvas_layer)
 
 	color_rect = ColorRect.new()
 	color_rect.color = Color.BLACK
 	color_rect.size = SCREEN_SIZE
-	color_rect.mouse_filter = Control.MOUSE_FILTER_STOP # 过渡期间屏蔽鼠标输入
-	shader_mat = ShaderMaterial.new()
-	shader_mat.shader = SHADER
-	shader_mat.set_shader_parameter("progress", 0.0)
-	color_rect.material = shader_mat
+	color_rect.position = Vector2.ZERO
+	color_rect.anchor_right = 1.0
+	color_rect.anchor_bottom = 1.0
+	color_rect.offset_left = 0
+	color_rect.offset_top = 0
+	color_rect.offset_right = 0
+	color_rect.offset_bottom = 0
+	color_rect.mouse_filter = Control.MOUSE_FILTER_STOP
+	color_rect.modulate = Color(1, 1, 1, 0.0)
+	color_rect.z_index = 100
 	color_rect.visible = false
 	canvas_layer.add_child(color_rect)
 
-
-# 切换到指定场景, 分两段播放过渡动画
+# 切换到指定场景: 先淡入黑屏，后台加载场景，加载完后再淡出黑屏
 func change_scene(path: String, duration: float = DEFAULT_DURATION) -> void:
 	if is_transitioning:
 		return
 	is_transitioning = true
+	pending_scene_path = path
+	pending_duration = duration
 	color_rect.visible = true
-	shader_mat.set_shader_parameter("progress", 0.0)
+	color_rect.modulate = Color(1, 1, 1, 0.0)
 
-	var half := duration * 0.5
-
-	# 单个 Tween 串联两段动画, 避免 await 跨场景时序问题
 	var tween := create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	# 阶段1: 方块从底行翻转盖满 (progress 0 -> 0.5)
-	tween.tween_method(_set_progress, 0.0, 0.5, half)
-	# 在方块完全盖住屏幕时切换场景
-	tween.tween_callback(_switch_scene.bind(path))
-	# 等待新场景加载 (用 interval 而非 process_frame, 不受场景切换影响)
-	tween.tween_interval(0.1)
-	# 阶段2: 方块从底行收缩消失 (progress 0.5 -> 1.0)
-	tween.tween_method(_set_progress, 0.5, 1.0, half)
-	# 收尾
-	tween.tween_callback(_on_finished)
+	tween.tween_property(color_rect, "modulate:a", 1.0, maxf(duration * 0.5, 0.12))
+	tween.tween_callback(_start_scene_load)
 
 
 # 过渡期间消费所有输入事件, 防止点击穿透到下层场景
@@ -62,15 +58,44 @@ func _input(_event: InputEvent) -> void:
 	if is_transitioning:
 		get_viewport().set_input_as_handled()
 
+func _start_scene_load() -> void:
+	var err := ResourceLoader.load_threaded_request(pending_scene_path)
+	if err != OK:
+		push_error("SceneTransition load failed: %s" % pending_scene_path)
+		_on_finished()
+		return
+	call_deferred("_monitor_scene_load")
 
-func _set_progress(value: float) -> void:
-	shader_mat.set_shader_parameter("progress", value)
+func _monitor_scene_load() -> void:
+	while is_transitioning:
+		var status := ResourceLoader.load_threaded_get_status(pending_scene_path)
+		if status == ResourceLoader.THREAD_LOAD_LOADED:
+			var packed_scene := ResourceLoader.load_threaded_get(pending_scene_path)
+			if packed_scene is PackedScene:
+				_switch_scene(packed_scene)
+				_play_fade_out()
+			else:
+				push_error("SceneTransition loaded non-PackedScene: %s" % pending_scene_path)
+				_on_finished()
+			return
+		elif status == ResourceLoader.THREAD_LOAD_FAILED:
+			push_error("SceneTransition failed to load: %s" % pending_scene_path)
+			_on_finished()
+			return
+		await get_tree().process_frame
 
+func _switch_scene(scene: PackedScene) -> void:
+	get_tree().change_scene_to_packed(scene)
 
-func _switch_scene(path: String) -> void:
-	get_tree().change_scene_to_file(path)
+func _play_fade_out() -> void:
+	var tween := create_tween()
+	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.tween_property(color_rect, "modulate:a", 0.0, maxf(pending_duration * 0.5, 0.12))
+	tween.tween_callback(_on_finished)
 
 func _on_finished() -> void:
-	shader_mat.set_shader_parameter("progress", 0.0)
+	color_rect.modulate = Color(1, 1, 1, 0.0)
 	color_rect.visible = false
+	pending_scene_path = ""
+	pending_duration = 0.0
 	is_transitioning = false

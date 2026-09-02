@@ -80,6 +80,19 @@ horizontal_alignment = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="hbox5" type="HBoxContainer" parent="MarginContainer/vbox/hbox" unique_id=358211971]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="MarginContainer/vbox/hbox/hbox5" unique_id=544471322]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "hp:"
+horizontal_alignment = 2
+
+[node name="hpLabel" type="Label" parent="MarginContainer/vbox/hbox/hbox5" unique_id=202992009]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/vbox" unique_id=1987117239]
 layout_mode = 2
 theme_override_constants/margin_top = 20

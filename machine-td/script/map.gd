@@ -142,7 +142,13 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 	temp.atk = info.atk
 	temp.delay = info.reload
 	temp.radarScope = info.scope
+	temp.maxHp = int(info.get("maxHp", info.get("hp", 100)))
+	temp.hp = int(info.get("hp", temp.maxHp))
 	temp.initTime = info.get("initTime", temp.initTime)
+	if temp.maxHp <= 0:
+		temp.maxHp = max(1, temp.hp)
+	if temp.hp <= 0:
+		temp.hp = temp.maxHp
 	
 	# grid 是鼠标所在中心格,占用块的左上角格子 = grid - (W/2, H/2)
 	# 块中心世界坐标 = top_left * cellSize + (W*cellSize, H*cellSize) / 2

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dbvhmj1j0f0i4" path="res://script/tower.gd" id="1_nxw3l"]
 [ext_resource type="PackedScene" uid="uid://4vv5x7rd5335" path="res://scene/life_bar.tscn" id="2_5eujo"]
+[ext_resource type="PackedScene" uid="uid://ba0gq4f8o0nq5" path="res://scene/tower_status_ui.tscn" id="3_b5c7q"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="2_uhti2"]
 [ext_resource type="PackedScene" uid="uid://bwdh7erg7xr7y" path="res://scene/tower_rank.tscn" id="2_y3288"]
 [ext_resource type="Texture2D" uid="uid://ogfcb767msec" path="res://sprite/Home.png" id="3_lbuki"]
@@ -59,6 +60,9 @@ one_shot = true
 [node name="lifeBar" parent="." unique_id=1589605555 instance=ExtResource("2_5eujo")]
 position = Vector2(0, -70)
 
+[node name="towerStatusUi" parent="." unique_id=123456789 instance=ExtResource("3_b5c7q")]
+position = Vector2(0, 90)
+
 [node name="player" type="AnimationPlayer" parent="." unique_id=1035425773]
 
 [node name="ProgressBar" type="ProgressBar" parent="." unique_id=1203597731]
@@ -76,10 +80,22 @@ grow_vertical = 2
 
 [node name="btnSell" type="TextureButton" parent="." unique_id=711166033]
 visible = false
-offset_left = 40.0
-offset_right = 96.0
-offset_bottom = 56.0
+offset_left = -20.0
+offset_top = 144.0
+offset_right = 20.0
+offset_bottom = 184.0
 texture_normal = ExtResource("3_lbuki")
+stretch_mode = 5
+
+[node name="sellPriceLabel" type="Label" parent="." unique_id=331535608]
+visible = false
+offset_left = 24.0
+offset_top = 152.0
+offset_right = 104.0
+offset_bottom = 182.0
+text = "20"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]
 [connection signal="timeout" from="delay" to="." method="_on_delay_timeout"]

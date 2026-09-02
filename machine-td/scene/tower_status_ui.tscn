@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://ba0gq4f8o0nq5"]
+
+[ext_resource type="Script" path="res://script/tower_status_ui.gd" id="1_5otdr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2d3y2"]
+bg_color = Color(0.2, 0.08, 0.08, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_size = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x1r7m"]
+bg_color = Color(0.21960784, 0.9882353, 0.011764706, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mqj84"]
+bg_color = Color(0.12, 0.18, 0.32, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0g5ob"]
+bg_color = Color(0.45, 0.68, 1.0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="towerStatusUi" type="Node2D" unique_id=389775847]
+script = ExtResource("1_5otdr")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=632777016]
+offset_left = -60.0
+offset_top = 8.0
+offset_right = 60.0
+offset_bottom = 74.0
+alignment = 1
+
+[node name="HpRow" type="HBoxContainer" parent="VBoxContainer" unique_id=504241947]
+layout_mode = 2
+alignment = 1
+
+[node name="hpLabel" type="Label" parent="VBoxContainer/HpRow" unique_id=856278521]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+text = "100/100"
+
+[node name="hpBar" type="ProgressBar" parent="VBoxContainer" unique_id=344760594]
+custom_minimum_size = Vector2(120, 10)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_2d3y2")
+theme_override_styles/fill = SubResource("StyleBoxFlat_x1r7m")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="ExpRow" type="HBoxContainer" parent="VBoxContainer" unique_id=842620212]
+layout_mode = 2
+alignment = 1
+
+[node name="expLabel" type="Label" parent="VBoxContainer/ExpRow" unique_id=839934672]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 1
+text = "0/10"
+
+[node name="expBar" type="ProgressBar" parent="VBoxContainer" unique_id=196666331]
+custom_minimum_size = Vector2(120, 10)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_mqj84")
+theme_override_styles/fill = SubResource("StyleBoxFlat_0g5ob")
+step = 1.0
+value = 0.0
+show_percentage = false

@@ -6,6 +6,7 @@ extends PanelContainer
 @onready var costLabelNode = $MarginContainer/vbox/hbox/hbox2/costLabel
 @onready var reloadLabelNode = $MarginContainer/vbox/hbox/hbox3/reloadLabel
 @onready var scopeLabelNode = $MarginContainer/vbox/hbox/hbox4/scopeLabel
+@onready var hpLabelNode = $MarginContainer/vbox/hbox/hbox5/hpLabel
 @onready var towerDetailNode = $MarginContainer/vbox/MarginContainer/towerDetail
 
 var towerName: String:
@@ -26,6 +27,9 @@ var reloadLabel: String:
 var scopeLabel: String:
 	set(value):
 		scopeLabelNode.text = value
+var hpLabel: String:
+	set(value):
+		hpLabelNode.text = value
 
 func showDetail(obj):
 	towerName = str(obj.name)
@@ -34,6 +38,7 @@ func showDetail(obj):
 	reloadLabel = str(obj.reload)
 	atkLabel = str(obj.atk)
 	scopeLabel = str(obj.scope)
+	hpLabel = str(obj.get("hp", obj.get("maxHp", 0)))
 	visible = true
 	
 func hideDetail():

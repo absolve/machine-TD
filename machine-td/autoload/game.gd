@@ -28,70 +28,84 @@ const towerInfo = {
 	"atk": 20,
 	"cost": 20,
 	"reload": 0.2,
-	'scope': 300,
+	"scope": 300,
+	"hp": 120,
+	"maxHp": 120,
 	"initTime": 0.6,
 	"desc": "_machineGunTowerDesc",
-	'gridSize': Vector2i(1, 1)
+	"gridSize": Vector2i(1, 1)
 	},
 	towerType.cannonTower: {
 	"name": "cannonTower",
 	"atk": 30,
 	"cost": 35,
 	"reload": 0.8,
-	'scope': 320,
+	"scope": 320,
+	"hp": 180,
+	"maxHp": 180,
 	"initTime": 0.9,
 	"desc": "_cannonTowerDesc",
-	'gridSize': Vector2i(1, 1)
+	"gridSize": Vector2i(1, 1)
 	},
 	towerType.rocketTower: {
 	"name": "rocketTower",
 	"atk": 40,
 	"cost": 50,
 	"reload": 1.5,
-	'scope': 350,
+	"scope": 350,
+	"hp": 220,
+	"maxHp": 220,
 	"initTime": 1.2,
 	"desc": "_rocketTowerDesc",
-	'gridSize': Vector2i(1, 1)
+	"gridSize": Vector2i(1, 1)
 	},
 	towerType.EMPTower: {
 	"name": "EMPTower",
 	"atk": 0,
 	"cost": 45,
 	"reload": 4.0,
-	'scope': 280,
+	"scope": 280,
+	"hp": 150,
+	"maxHp": 150,
 	"initTime": 1.5,
 	"desc": "_EMPTowerDesc",
-	'gridSize': Vector2i(1, 1)
+	"gridSize": Vector2i(1, 1)
 	},
 	towerType.droneBase: {
 	"name": "droneBase",
 	"atk": 8,
 	"cost": 65,
 	"reload": 0.6,
-	'scope': 400,
+	"scope": 400,
+	"hp": 200,
+	"maxHp": 200,
 	"initTime": 1.3,
 	"desc": "_droneBaseDesc",
-	'gridSize': Vector2i(2, 2)
+	"gridSize": Vector2i(2, 2)
 	},
 	towerType.teslaCoilTower: {
 	"name": "teslaCoilTower",
 	"atk": 25,
 	"cost": 65,
 	"reload": 1.5,
-	'scope': 400,
+	"scope": 400,
+	"hp": 240,
+	"maxHp": 240,
 	"initTime": 1.4,
 	"desc": "_teslaCoilTowerDesc",
-	'gridSize': Vector2i(2, 2)
+	"gridSize": Vector2i(2, 2)
 	},
 	towerType.laserTower: {
 	"name": "laserTower",
 	"atk": 30,
 	"cost": 90,
 	"reload": 1,
-	'scope': 450,
+	"scope": 450,
+	"hp": 260,
+	"maxHp": 260,
 	"initTime": 1.6,
 	"desc": "_laserTowerDesc",
-	'gridSize': Vector2i(2, 2)
+	"gridSize": Vector2i(2, 2)
 	},
 }
 

@@ -7,8 +7,7 @@
 
 [node name="aboutPanel" type="PopupPanel" unique_id=968686525]
 oversampling_override = 1.0
-size = Vector2i(980, 900)
-visible = true
+size = Vector2i(640, 360)
 min_size = Vector2i(640, 360)
 max_size = Vector2i(1400, 900)
 theme = ExtResource("1_qs0ou")
@@ -16,6 +15,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_aimcf")
 script = ExtResource("2_5mklv")
 
 [node name="OuterMargin" type="MarginContainer" parent="." unique_id=2052520945]
+custom_maximum_size = Vector2(980, 900)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
