@@ -6,7 +6,12 @@ extends PopupPanel
 
 
 func _ready() -> void:
-	titleLabel.text = tr("_About_Title")
-	contentLabel.text = tr("_About_Text")
-	closeButton.text = tr("_Close")
+	#TranslationServer.translation_changed.connect(_refresh_text)
+	#_refresh_text()
 	closeButton.pressed.connect(hide)
+
+
+#func _refresh_text() -> void:
+	#titleLabel.text = tr("_About_Title")
+	#contentLabel.text = tr("_About_Text")
+	#closeButton.text = tr("_Close")

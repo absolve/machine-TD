@@ -9,16 +9,24 @@ extends PanelContainer
 @onready var num = $VBoxContainer/num
 @onready var levelRating = $VBoxContainer/MarginContainer/levelRating
 @onready var selected = $selected
+@onready var lockLabel = $lockLabel
 
 signal click
 
 func _ready() -> void:
 	num.text = str(level)
 	levelRating.rating = rating
+	levelRating.visible = true
+	levelRating.modulate.a = 1.0 if rating > 0 else 0.0
+	if isLock:
+		modulate = Color(0.45, 0.45, 0.45, 0.75)
+		lockLabel.visible = true
+	else:
+		lockLabel.visible = false
 	
 
 func _on_mouse_entered() -> void:
-	selected.visible = true
+	selected.visible = not isLock
 
 
 func _on_mouse_exited() -> void:

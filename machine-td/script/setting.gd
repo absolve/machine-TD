@@ -12,6 +12,17 @@ signal close
 
 
 func _ready() -> void:
+	language.clear()
+	var selected_index = 0
+	var current_language_code = getLanguageCode(UserData.language)
+	for language_info in Game.language:
+		var language_code: String = language_info.get('code', 'en')
+		language.add_item(language_info.get('text', language_code))
+		language.set_item_metadata(language.item_count - 1, language_code)
+		if language_code == current_language_code:
+			selected_index = language.item_count - 1
+	language.select(selected_index)
+	UserData.language = current_language_code
 	master.busName = 'Master'
 	bg.busName = 'Bg'
 	sfx.busName = 'Sfx'
@@ -21,9 +32,13 @@ func _ready() -> void:
 	master.setVolume(UserData.masterVolume)
 	bg.setVolume(UserData.musicVolume)
 	sfx.setVolume(UserData.sfxVolume)
-	#var language_index := language.get_item_text(0) == UserData.language ? 0 : 1
-	#language.select(language_index)
 	TranslationServer.set_locale(UserData.language)
+
+func getLanguageCode(language_value: String) -> String:
+	for language_info in Game.language:
+		if language_value == language_info.get('code', '') or language_value == language_info.get('text', ''):
+			return language_info.get('code', 'en')
+	return Game.language[0].get('code', 'en') if not Game.language.is_empty() else 'en'
 
 func _on_master_value_changed(value: float):
 	UserData.masterVolume = int(value)
@@ -46,7 +61,7 @@ func _on_sfx_value_changed(value: float):
 
 
 func _on_option_button_item_selected(index: int) -> void:
-	UserData.language = language.get_item_text(index)
+	UserData.language = str(language.get_item_metadata(index))
 	UserData.saveSettings()
 	TranslationServer.set_locale(UserData.language)
 

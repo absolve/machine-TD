@@ -68,12 +68,11 @@ text = "_About"
 icon = ExtResource("9_vkhmq")
 
 [node name="aboutPanel" parent="." unique_id=968769467 instance=ExtResource("3_0h2lm")]
-visible = false
+size = Vector2i(980, 560)
 min_size = Vector2i(980, 560)
 max_size = Vector2i(16384, 16384)
 
 [node name="setting" parent="." unique_id=762839594 instance=ExtResource("9_vvofi")]
-visible = false
 
 [connection signal="pressed" from="ui/HBoxContainer/UIButton" to="." method="_on_tutorial_pressed"]
 [connection signal="pressed" from="ui/HBoxContainer/btnStart" to="." method="_on_btn_s_start_pressed"]

@@ -54,6 +54,7 @@ func _ready():
 	titleNode.hp = level.health
 	titleNode.wave = level.wave
 	titleNode.money = level.money
+	titleNode.score = UserData.score
 	syncWaveProgressBar()
 	#titleNode.score=level.score
 	titleNode.start.connect(startGame)
@@ -255,9 +256,12 @@ func finish():
 		finishTimer.start()
 		return
 		
-	#所有敌人都被消灭
+	#所有敌人都被消灭，记录最高评分、奖励和下一关解锁状态
+	var rating = calculateStars()
+	UserData.recordStageCompletion(StageData.currentStageId, rating)
+	titleNode.score = UserData.score
 	resultScreen.setResult(false)
-	resultScreen.levelRating.rating = calculateStars()
+	resultScreen.levelRating.rating = rating
 	resultScreen.popup_centered()
 
 # 根据基地剩余生命计算三档星级

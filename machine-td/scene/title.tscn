@@ -100,6 +100,7 @@ texture_normal = ExtResource("3_0npwg")
 texture_pressed = ExtResource("4_qaeh8")
 
 [node name="btnFast" type="PanelContainer" parent="PanelContainer/hbox/HBoxContainer3" unique_id=1712597075]
+visible = false
 custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("7_kwewl")

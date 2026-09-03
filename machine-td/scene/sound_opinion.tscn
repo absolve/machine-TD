@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://uv64kol65sr5"]
 
 [ext_resource type="Script" uid="uid://chiyafetw2vqo" path="res://script/sound_opinion.gd" id="1_cpkng"]
+[ext_resource type="StyleBox" uid="uid://cle6jdorqb37c" path="res://theme/style/volume_slider.tres" id="2_slider"]
+[ext_resource type="StyleBox" uid="uid://kg32f8byq5ty" path="res://theme/style/volume_slider_area.tres" id="3_slider_area"]
+[ext_resource type="StyleBox" path="res://theme/style/volume_slider_fill.tres" id="4_slider_fill"]
 
 [node name="soundOpinion" type="VBoxContainer" unique_id=735161374]
 offset_right = 112.0
@@ -14,7 +17,12 @@ horizontal_alignment = 1
 uppercase = true
 
 [node name="HSlider" type="HSlider" parent="." unique_id=245821150]
+custom_minimum_size = Vector2(360, 28)
 layout_mode = 2
+theme_override_constants/grabber_offset = 0
+theme_override_styles/slider = ExtResource("2_slider")
+theme_override_styles/grabber_area = ExtResource("3_slider_area")
+theme_override_styles/grabber_area_highlight = ExtResource("4_slider_fill")
 step = 10.0
 value = 100.0
 

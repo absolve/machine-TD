@@ -14,14 +14,16 @@ func _ready() -> void:
 		var card = levelCard.instantiate()
 		card.level = stage['name']
 		card.levelId = stage['id']
+		card.rating = UserData.getStageRating(stage['id'])
 		card.click.connect(loadMap)
-		#TODO 关卡是否解锁根据用户记录判断
-		card.isLock = not stage.get('selectable', true)
+		card.isLock = not UserData.isStageUnlocked(stage['id'])
 		levelsNode.add_child(card)
 
 
 # 加载地图
 func loadMap(levelId: int) -> void:
+	if not UserData.isStageUnlocked(levelId):
+		return
 	StageData.currentStageId = levelId
 	# get_tree().change_scene_to_file("res://scene/map.tscn")
 	SceneTransition.change_scene("res://scene/map.tscn")

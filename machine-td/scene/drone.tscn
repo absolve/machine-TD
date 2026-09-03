@@ -33,5 +33,8 @@ shape = SubResource("RectangleShape2D_stha5")
 [node name="ani" parent="." index="1" unique_id=748097984]
 sprite_frames = SubResource("SpriteFrames_il87p")
 
-[node name="shape" parent="radar" parent_id_path=PackedInt32Array(788993573) index="0" unique_id=311842238]
+[node name="radar" parent="." index="2" unique_id=788993573]
+visible = false
+
+[node name="shape" parent="radar" index="0" unique_id=311842238]
 shape = SubResource("CircleShape2D_il87p")

@@ -45,7 +45,7 @@ func setupEnemyInfo():
 	flying = bool(info.get("flying", flying))
 	atk = int(info.get("atk", atk))
 	shootDelay = float(info.get("shootDelay", shootDelay))
-	if delayTimer and delayTimer.has_method("start"):
+	if shootDelay > 0:
 		delayTimer.wait_time = shootDelay
 	if lifeBar:
 		lifeBar.maxHp = hp

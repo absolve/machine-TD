@@ -169,6 +169,12 @@ const enemyInfo = {
 	},
 }
 
+#支持的语言
+const language = [{'text': 'English', 'code': 'en' ,'id':0},
+ {'text': '简体中文', 'code': 'zh' ,'id':1}]
+	
+
+
 @warning_ignore("unused_signal")
 signal defeatEnemy # 击败敌人
 @warning_ignore("unused_signal")

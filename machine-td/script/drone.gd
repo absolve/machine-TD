@@ -1,108 +1,133 @@
 extends "res://script/aircraft.gd"
 
-var home_base = null # 所属基地
-var orbit_angle := 0.0 # 当前轨道角度
-var orbit_radius := 100.0 # 基础轨道半径
-var orbit_speed := 1.5 # 轨道角速度(弧度/秒)
-var radius_var_amp := 25.0 # 半径波动幅度
-var radius_var_freq := 2.0 # 主波动频率
-var radius_var_freq2 := 3.7 # 次波动频率(不同频避免重复)
-var angle_wobble_amp := 0.15 # 角度抖动幅度
-var angle_wobble_freq := 1.3 # 角度抖动频率
-var time := 0.0
-var current_target = null # 当前锁定的敌人
-var current_center := Vector2.ZERO # 当前轨道中心(平滑过渡)
-var center_initialized := false
-var canShot = true
+const BULLET = preload("res://scene/gunBullet.tscn")
+const FLIGHT_SPEED := 220.0
+const ORBIT_RADIUS := 150.0
+const ORBIT_SPEED := 1.0
+
+enum FlightState { BASE_ORBIT, ATTACK_APPROACH, TARGET_ORBIT, RETURN_TO_BASE }
+
+var home_base = null
+var formation_index := 0
+var formation_count := 1
+var orbit_phase := 0.0
+var orbit_time := 0.0
+var current_target = null
+var flight_state := FlightState.BASE_ORBIT
 var fire_cooldown := 0.0
-var fire_delay := 0.5 # 开火间隔
+var fire_interval := 0.6
+var bullet_damage := 8
+var turn_rate := 6.0
 
 
-func _ready():
-	# 设置雷达检测敌人(layer 2), 信号在代码中连接避免重构场景
-	radar.collision_mask = 2
-	radar.area_entered.connect(_on_radar_area_entered)
-	radar.area_exited.connect(_on_radar_area_exited)
-	# 每架无人机参数随机化, 让运动轨迹各不相同
-	orbit_speed = randf_range(0.2, 1.0)
-	orbit_radius = randf_range(85.0, 115.0)
-	radius_var_amp = randf_range(20.0, 30.0)
-	radius_var_freq = randf_range(1.5, 2.5)
-	radius_var_freq2 = randf_range(3.0, 4.5)
-	angle_wobble_amp = randf_range(0.1, 0.2)
-	angle_wobble_freq = randf_range(1.0, 1.6)
+func _ready() -> void:
+	var drone_info: Dictionary = Game.towerInfo.get(Game.towerType.droneBase, {})
+	bullet_damage = int(drone_info.get("atk", bullet_damage))
+	fire_interval = float(drone_info.get("reload", fire_interval))
 
 
-func _physics_process(delta):
-	# 基地不存在时自动销毁
+func _physics_process(delta: float) -> void:
 	if not home_base or not is_instance_valid(home_base):
 		queue_free()
 		return
-	time += delta
-	orbit_angle += orbit_speed * delta
-	# 先更新目标
+
+	fire_cooldown = max(fire_cooldown - delta, 0.0)
+	# 所有无人机共用同一个相位时钟，任何时刻都按 orbit_phase 均匀分布，不会打乱阵型
+	orbit_time = fmod(orbit_time + ORBIT_SPEED * delta, TAU)
 	_update_target()
-	# 首帧初始化轨道中心
-	if not center_initialized:
-		current_center = home_base.global_position
-		center_initialized = true
-	# 确定轨道中心: 有敌人时围绕敌人, 无敌人时围绕基地
-	var target_center = home_base.global_position
-	if current_target and is_instance_valid(current_target):
-		target_center = current_target.global_position
-	# 平滑过渡轨道中心(从基地到敌人或敌人到基地)
-	current_center = current_center.lerp(target_center, 2.0 * delta)
-	# 灵动绕圈: 基础轨道 + 多频率半径波动 + 角度微抖, 非死板圆周
-	var r = orbit_radius
-	r += sin(time * radius_var_freq) * radius_var_amp
-	r += sin(time * radius_var_freq2) * radius_var_amp * 0.4
-	var a = orbit_angle + sin(time * angle_wobble_freq) * angle_wobble_amp
-	var offset = Vector2(cos(a), sin(a)) * r
-	global_position = current_center + offset
-	# 朝向
-	var target_angle: float
-	if current_target and is_instance_valid(current_target):
-		# 有敌人时朝向敌人
-		target_angle = (current_target.global_position - global_position).angle()
-		# 尝试开火(子弹发射功能后续实现)
-		if canShot:
-			fire()
-			canShot = false
-			fire_cooldown = fire_delay
-	else:
-		# 无敌人时朝向运动方向(轨道切线)
-		target_angle = Vector2(-sin(a), cos(a)).angle()
-	rotation = lerp_angle(rotation, target_angle, 10 * delta)
-	# 开火冷却
-	if not canShot:
-		fire_cooldown -= delta
-		if fire_cooldown <= 0:
-			canShot = true
+	match flight_state:
+		FlightState.BASE_ORBIT:
+			if current_target:
+				flight_state = FlightState.ATTACK_APPROACH
+			else:
+				_orbit_around(home_base.global_position)
+		FlightState.ATTACK_APPROACH:
+			if not current_target:
+				flight_state = FlightState.RETURN_TO_BASE
+			else:
+				var attack_slot = current_target.global_position + _get_orbit_offset()
+				if global_position.distance_to(attack_slot) <= FLIGHT_SPEED * delta:
+					# 已贴近自己的槽位，平滑切入环绕（偏差小于一帧移动距离）
+					global_position = attack_slot
+					flight_state = FlightState.TARGET_ORBIT
+				else:
+					_move_to(attack_slot, delta)
+		FlightState.TARGET_ORBIT:
+			if not current_target:
+				flight_state = FlightState.RETURN_TO_BASE
+			else:
+				_orbit_around(current_target.global_position)
+				if fire_cooldown <= 0.0:
+					_fire_at_target()
+					fire_cooldown = fire_interval
+		FlightState.RETURN_TO_BASE:
+			var return_slot = home_base.global_position + _get_orbit_offset()
+			if global_position.distance_to(return_slot) <= FLIGHT_SPEED * delta:
+				global_position = return_slot
+				flight_state = FlightState.BASE_ORBIT
+				current_target = null
+			else:
+				_move_to(return_slot, delta)
 
 
-# 更新当前目标: 选择最近的敌人
-func _update_target():
+func setup_drone(base, index: int, count: int) -> void:
+	home_base = base
+	formation_index = index
+	formation_count = max(count, 1)
+	orbit_phase = TAU * formation_index / formation_count
+	orbit_time = 0.0
+	global_position = base.global_position + Vector2.from_angle(orbit_phase) * ORBIT_RADIUS
+	turn_rate = randf_range(5.5, 7.5)
+
+
+func _update_target() -> void:
+	var defense_targets: Array = home_base.target if home_base else []
+	if current_target and is_instance_valid(current_target) and defense_targets.has(current_target):
+		return
+
 	current_target = null
-	var best_dist = INF
-	for t in target:
-		if not is_instance_valid(t):
+	if flight_state == FlightState.TARGET_ORBIT or flight_state == FlightState.ATTACK_APPROACH:
+		flight_state = FlightState.RETURN_TO_BASE
+	var nearest_distance := INF
+	for enemy in defense_targets:
+		if not is_instance_valid(enemy):
 			continue
-		var d = global_position.distance_to(t.global_position)
-		if d < best_dist:
-			best_dist = d
-			current_target = t
+		var distance := global_position.distance_to(enemy.global_position)
+		if distance < nearest_distance:
+			nearest_distance = distance
+			current_target = enemy
+	if current_target and flight_state == FlightState.RETURN_TO_BASE:
+		flight_state = FlightState.ATTACK_APPROACH
 
 
-# 开火(子弹发射功能后续实现)
-func fire():
-	if current_target and is_instance_valid(current_target):
-		# TODO: 实现子弹发射
-		pass
+func _move_to(destination: Vector2, delta: float) -> void:
+	var distance = global_position.distance_to(destination)
+	if distance <= 0.01:
+		return
+	var step = min(FLIGHT_SPEED * delta, distance)
+	var target_direction = global_position.direction_to(destination)
+	var turn_amount = turn_rate * delta
+	var direction_angle = rotate_toward(rotation, target_direction.angle(), turn_amount)
+	var direction = Vector2.from_angle(direction_angle)
+	global_position += direction * step
+	rotation = direction_angle
 
 
-func _on_radar_area_entered(area):
-	target.append(area)
+func _orbit_around(center: Vector2) -> void:
+	var position_offset = _get_orbit_offset()
+	var tangent = Vector2(-position_offset.y, position_offset.x).normalized()
+	global_position = center + position_offset
+	rotation = tangent.angle()
 
 
-func _on_radar_area_exited(area):
-	target.erase(area)
+func _get_orbit_offset() -> Vector2:
+	return Vector2.from_angle(orbit_time + orbit_phase) * ORBIT_RADIUS
+
+
+func _fire_at_target() -> void:
+	var bullet = BULLET.instantiate()
+	bullet.global_position = global_position
+	bullet.angle = (current_target.global_position - global_position).angle()
+	bullet.source_tower = home_base
+	bullet.damage = bullet_damage
+	Game.addObj(bullet)

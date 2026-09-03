@@ -25,9 +25,8 @@ func init():
 func _spawn_drones():
 	for i in range(DRONE_COUNT):
 		var d = drone.instantiate()
+		d.setup_drone(self, i, DRONE_COUNT)
 		Game.addObj(d)
-		d.home_base = self
-		d.orbit_angle = TAU * i / DRONE_COUNT # 均匀分布起始角度
 		drones.append(d)
 
 

@@ -54,5 +54,8 @@ shape = SubResource("RectangleShape2D_j5ypg")
 material = SubResource("ShaderMaterial_wl8i8")
 sprite_frames = SubResource("SpriteFrames_j5ypg")
 
+[node name="radar" parent="." index="2" unique_id=2082783838]
+visible = false
+
 [node name="turret" parent="." index="3" unique_id=1212426607]
 material = SubResource("ShaderMaterial_lyy2e")

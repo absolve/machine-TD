@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 
 # 场景过渡动画全局管理器
 # 现在使用简单版: 黑色全屏淡入 -> 资源加载 -> 黑色全屏淡出
@@ -15,6 +15,7 @@ var pending_scene_path: String = ""
 var pending_duration: float = 0.0
 
 func _ready() -> void:
+	z_index=999
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	canvas_layer = CanvasLayer.new()
 	canvas_layer.layer = 100
