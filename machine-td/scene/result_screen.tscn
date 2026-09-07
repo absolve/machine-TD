@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://qql75uietc82" path="res://script/result_screen.gd" id="2_h36hl"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_biqnl"]
 [ext_resource type="PackedScene" uid="uid://dpt6basf7cnu6" path="res://scene/level_rating.tscn" id="3_x8uhl"]
+[ext_resource type="Texture2D" uid="uid://bclj50neqlyof" path="res://sprite/coin.png" id="4_coin"]
 
 [node name="resultScreen" type="Window" unique_id=915205388]
 process_mode = 3
@@ -66,6 +67,25 @@ horizontal_alignment = 1
 [node name="levelRating" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox" unique_id=640723317 instance=ExtResource("3_x8uhl")]
 layout_mode = 2
 alignment = 1
+
+[node name="gemRewardRow" type="HBoxContainer" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox" unique_id=480516927]
+visible = false
+layout_mode = 2
+alignment = 1
+
+[node name="gemIcon" type="TextureRect" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox/gemRewardRow" unique_id=135115867]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("4_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="gemRewardLabel" type="Label" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox/gemRewardRow" unique_id=714254083]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 28
+text = "获得宝石：+0"
+horizontal_alignment = 1
 
 [node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/VBoxContainer3" unique_id=885608499]
 layout_mode = 2

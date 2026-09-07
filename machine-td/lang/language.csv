@@ -19,6 +19,7 @@ _Close,Close,关闭
 _Tutorial,Tutorial,教程
 _LevelFailed,Level Failed,失败
 _LevelCompleted,Level Completed,过关
+_GemReward,Gems earned: +%d,获得宝石：+%d
 _SelectLevel,Select Level,选择关卡
 _Wave,Wave,波数
 _machineGunTowerDesc,"Quick Fire,Effectively combat the enemy","快速射击,有效打击敌人"
