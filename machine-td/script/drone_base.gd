@@ -31,7 +31,7 @@ func _spawn_drones():
 
 
 func _on_radar_area_entered(area):
-	target.push_back(area)
+	add_target(area)
 
 
 func _on_radar_area_exited(area):

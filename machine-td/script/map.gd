@@ -138,6 +138,7 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 		temp = droneBase.instantiate()
 
 	var info = Game.towerInfo.get(type)
+	temp.type = type
 	temp.money = info.cost
 	temp.sellingPrice = temp.money / 2
 	temp.atk = info.atk

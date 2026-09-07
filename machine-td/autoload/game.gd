@@ -61,7 +61,7 @@ const towerInfo = {
 	},
 	towerType.EMPTower: {
 	"name": "EMPTower",
-	"atk": 0,
+	"atk": 50,
 	"cost": 45,
 	"reload": 4.0,
 	"scope": 280,

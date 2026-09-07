@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var hpBar = $VBoxContainer/hpBar
 @onready var expBar = $VBoxContainer/expBar
+@onready var nameLabel = $VBoxContainer/nameLabel
 @onready var hpLabel = $VBoxContainer/HpRow/hpLabel
 @onready var expLabel = $VBoxContainer/ExpRow/expLabel
 
@@ -10,12 +11,15 @@ var hp: int = 100
 var currExp: int = 0
 var exp_needed: int = 10
 var selected: bool = false
+var tower_name: String = "Tower"
 
 func _ready() -> void:
 	refresh()
 	visible = false
 
 func refresh() -> void:
+	if nameLabel:
+		nameLabel.text = tower_name
 	if hpBar:
 		hpBar.max_value = max(1, max_hp)
 		hpBar.value = clamp(hp, 0, hpBar.max_value)
@@ -31,12 +35,13 @@ func refresh() -> void:
 			expLabel.text = "%d/%d" % [currExp, exp_needed]
 	visible = selected
 
-func set_status(_hp: int, _max_hp: int, _currExp: int, _exp_needed: int, _selected: bool = false) -> void:
+func set_status(_hp: int, _max_hp: int, _currExp: int, _exp_needed: int, _selected: bool = false, _tower_name: String = "Tower") -> void:
 	hp = _hp
 	max_hp = max(1, _max_hp)
 	currExp = _currExp
 	exp_needed = max(1, _exp_needed)
 	selected = _selected
+	tower_name = _tower_name
 	refresh()
 
 func show_status() -> void:

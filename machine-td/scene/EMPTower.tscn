@@ -8,7 +8,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3c4u4"]
 size = Vector2(64, 64)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_q7nff"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4p7g2"]
 resource_local_to_scene = true
 shader = ExtResource("3_4p7g2")
 shader_parameter/enable_flash = false
@@ -36,7 +36,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_p16uh"]
 radius = 128.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_aa2gh"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_q7nff"]
 resource_local_to_scene = true
 shader = ExtResource("3_4p7g2")
 shader_parameter/enable_flash = false
@@ -54,7 +54,7 @@ type = 1003
 shape = SubResource("RectangleShape2D_3c4u4")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
-material = SubResource("ShaderMaterial_q7nff")
+material = SubResource("ShaderMaterial_4p7g2")
 sprite_frames = SubResource("SpriteFrames_aimcf")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
@@ -65,11 +65,11 @@ collision_layer = 16
 shape = SubResource("CircleShape2D_p16uh")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
-material = SubResource("ShaderMaterial_aa2gh")
+material = SubResource("ShaderMaterial_q7nff")
 
 [node name="lifeBar" parent="." index="6" unique_id=1589605555]
 position = Vector2(0, -51)
 
-[node name="ProgressBar" parent="." index="8" unique_id=1203597731]
+[node name="ProgressBar" parent="." index="9" unique_id=1203597731]
 offset_left = -32.0
 offset_right = 32.0

@@ -1,10 +1,11 @@
 extends "res://script/tower.gd"
 
 const MAX_TARGETS := 3 # 最多同时锁定3个目标
-const LASER_COLOR := Color(1.0, 0.2, 0.2, 1.0) # 激光颜色(红色)
+const LASER_COLOR := Color(0.05, 1.0, 0.48, 1.0) # 绿色电浆激光
 const ROTATION_SMOOTH := 8.0 # 炮管旋转平滑系数
 
 var laser_targets: Array = [] # 当前激光锁定的敌人
+var beam_time := 0.0
 
 
 func _ready():
@@ -21,6 +22,7 @@ func _ready():
 		
 func _physics_process(_delta: float):
 	super._physics_process(_delta)
+	beam_time += _delta
 	# 收集最多3个有效目标
 	laser_targets = _collect_targets()
 
@@ -52,7 +54,7 @@ func fire_lasers():
 func _collect_targets() -> Array:
 	var result: Array = []
 	for t in target:
-		if is_instance_valid(t):
+		if is_instance_valid(t) and can_target(t):
 			result.append(t)
 			if result.size() >= MAX_TARGETS:
 				break
@@ -60,6 +62,7 @@ func _collect_targets() -> Array:
 
 
 func _draw():
+	super._draw()
 	if laser_targets.is_empty():
 		return
 	var start = to_local(marker.global_position)
@@ -69,8 +72,8 @@ func _draw():
 		var end = to_local(enemy.global_position)
 		_draw_laser_beam(start, end, LASER_COLOR)
 		# 击中点光晕
-		draw_circle(end, 12.0, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.5))
-		draw_circle(end, 6.0, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.8))
+		draw_circle(end, 6.0, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.5))
+		draw_circle(end, 3.0, Color(LASER_COLOR.r, LASER_COLOR.g, LASER_COLOR.b, 0.8))
 
 
 func _draw_laser_beam(start: Vector2, end: Vector2, base_color: Color) -> void:
@@ -78,16 +81,26 @@ func _draw_laser_beam(start: Vector2, end: Vector2, base_color: Color) -> void:
 	if direction.length_squared() <= 0.0001:
 		return
 	var perp = Vector2(-direction.y, direction.x).normalized()
-	for i in range(-4, 5):
-		var offset_ratio = float(i) / 4.0
-		var distance_from_center = abs(offset_ratio)
-		var offset = perp * offset_ratio * 9.0
-		var alpha = clamp(0.12 + (1.0 - distance_from_center) * 0.8, 0.12, 0.9)
-		var width = clamp(1.0 + (1.0 - distance_from_center) * 7.0, 1.0, 8.0)
-		draw_line(start + offset, end + offset, Color(base_color.r, base_color.g, base_color.b, alpha), width)
-	# 中间最亮的核心
-	draw_line(start, end, Color(base_color.r, base_color.g, base_color.b, 0.95), 2.6)
-	draw_line(start, end, Color(1.0, 1.0, 1.0, 0.7), 0.8)
+	var beam_points := _build_beam_points(start, end, perp, 6.0)
+	# 宽而柔和的绿色外晕
+	draw_polyline(beam_points, Color(base_color.r, base_color.g, base_color.b, 0.16), 7.0, true)
+	draw_polyline(beam_points, Color(base_color.r, base_color.g, base_color.b, 0.28), 4.0, true)
+	# 高亮的电浆主体与白绿色核心
+	draw_polyline(beam_points, Color(0.0, 1.0, 0.34, 0.9), 2.2, true)
+	draw_polyline(beam_points, Color(0.72, 1.0, 0.84, 1.0), 1.0, true)
+
+func _build_beam_points(start: Vector2, end: Vector2, perp: Vector2, amplitude: float) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	var segment_count := 18
+	for i in range(segment_count + 1):
+		var progress := float(i) / segment_count
+		var point := start.lerp(end, progress)
+		if i != 0 and i != segment_count:
+			var wave := sin(beam_time * 42.0 + float(i) * 2.7)
+			var flicker := sin(beam_time * 71.0 + float(i) * 5.1) * 0.35
+			point += perp * (wave + flicker) * amplitude
+		points.append(point)
+	return points
 
 
 # 绘制电流抖动电弧: 沿直线分段, 每段随机垂直偏移
@@ -106,7 +119,7 @@ func _draw_electric_arc(start: Vector2, end: Vector2, color: Color, width: float
 
 
 func _on_radar_area_entered(area: Area2D) -> void:
-	target.push_back(area)
+	add_target(area)
 
 
 func _on_radar_area_exited(area: Area2D) -> void:

@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://dbvhmj1j0f0i4" path="res://script/tower.gd" id="1_nxw3l"]
 [ext_resource type="PackedScene" uid="uid://4vv5x7rd5335" path="res://scene/life_bar.tscn" id="2_5eujo"]
-[ext_resource type="PackedScene" uid="uid://ba0gq4f8o0nq5" path="res://scene/tower_status_ui.tscn" id="3_b5c7q"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="2_uhti2"]
 [ext_resource type="PackedScene" uid="uid://bwdh7erg7xr7y" path="res://scene/tower_rank.tscn" id="2_y3288"]
+[ext_resource type="PackedScene" uid="uid://ba0gq4f8o0nq5" path="res://scene/tower_status_ui.tscn" id="3_b5c7q"]
 [ext_resource type="Texture2D" uid="uid://ogfcb767msec" path="res://sprite/Home.png" id="3_lbuki"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vvofi"]
@@ -80,19 +80,19 @@ grow_vertical = 2
 
 [node name="btnSell" type="TextureButton" parent="." unique_id=711166033]
 visible = false
-offset_left = -20.0
-offset_top = 144.0
-offset_right = 20.0
-offset_bottom = 184.0
+offset_left = 93.0
+offset_top = 140.0
+offset_right = 149.0
+offset_bottom = 196.0
 texture_normal = ExtResource("3_lbuki")
 stretch_mode = 5
 
 [node name="sellPriceLabel" type="Label" parent="." unique_id=331535608]
 visible = false
-offset_left = 24.0
-offset_top = 152.0
-offset_right = 104.0
-offset_bottom = 182.0
+offset_left = 160.0
+offset_top = 160.0
+offset_right = 240.0
+offset_bottom = 190.0
 text = "20"
 horizontal_alignment = 1
 vertical_alignment = 1

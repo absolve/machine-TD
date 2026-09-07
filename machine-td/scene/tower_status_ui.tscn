@@ -1,6 +1,21 @@
 [gd_scene format=3 uid="uid://ba0gq4f8o0nq5"]
 
-[ext_resource type="Script" path="res://script/tower_status_ui.gd" id="1_5otdr"]
+[ext_resource type="Script" uid="uid://exeh0xvwqw41" path="res://script/tower_status_ui.gd" id="1_5otdr"]
+[ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_ui2vm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.035, 0.055, 0.09, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25, 0.65, 0.78, 0.7)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2d3y2"]
 bg_color = Color(0.2, 0.08, 0.08, 1)
@@ -25,7 +40,7 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0g5ob"]
-bg_color = Color(0.45, 0.68, 1.0, 1)
+bg_color = Color(0.45, 0.68, 1, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -34,12 +49,31 @@ corner_radius_bottom_left = 4
 [node name="towerStatusUi" type="Node2D" unique_id=389775847]
 script = ExtResource("1_5otdr")
 
+[node name="Panel" type="Panel" parent="." unique_id=1946323517]
+offset_left = -78.0
+offset_top = -4.0
+offset_right = 78.0
+offset_bottom = 82.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=632777016]
-offset_left = -60.0
-offset_top = 8.0
-offset_right = 60.0
-offset_bottom = 74.0
+offset_left = -68.0
+offset_top = 4.0
+offset_right = 68.0
+offset_bottom = 78.0
+theme = ExtResource("2_ui2vm")
 alignment = 1
+
+[node name="nameLabel" type="Label" parent="VBoxContainer" unique_id=1973486438]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.95, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 14
+text = "Tower"
+horizontal_alignment = 1
 
 [node name="HpRow" type="HBoxContainer" parent="VBoxContainer" unique_id=504241947]
 layout_mode = 2
@@ -48,8 +82,10 @@ alignment = 1
 [node name="hpLabel" type="Label" parent="VBoxContainer/HpRow" unique_id=856278521]
 layout_mode = 2
 size_flags_horizontal = 3
-horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 0.78, 0.72, 1)
+theme_override_font_sizes/font_size = 11
 text = "100/100"
+horizontal_alignment = 1
 
 [node name="hpBar" type="ProgressBar" parent="VBoxContainer" unique_id=344760594]
 custom_minimum_size = Vector2(120, 10)
@@ -67,8 +103,10 @@ alignment = 1
 [node name="expLabel" type="Label" parent="VBoxContainer/ExpRow" unique_id=839934672]
 layout_mode = 2
 size_flags_horizontal = 3
-horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.7, 0.82, 1, 1)
+theme_override_font_sizes/font_size = 11
 text = "0/10"
+horizontal_alignment = 1
 
 [node name="expBar" type="ProgressBar" parent="VBoxContainer" unique_id=196666331]
 custom_minimum_size = Vector2(120, 10)
@@ -76,5 +114,4 @@ layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_mqj84")
 theme_override_styles/fill = SubResource("StyleBoxFlat_0g5ob")
 step = 1.0
-value = 0.0
 show_percentage = false

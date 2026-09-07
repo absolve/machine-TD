@@ -66,6 +66,7 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 
 	hp -= int(max(0.0, ceil(actual_damage)))
 	if lifeBar:
+		lifeBar.visible = true
 		lifeBar.value = hp
 	if hp <= 0:
 		ExplosionManage.playExplosion(global_position)

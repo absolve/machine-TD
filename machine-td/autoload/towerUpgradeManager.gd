@@ -42,8 +42,8 @@ const configs: Dictionary = {
 	Game.towerType.EMPTower: {
 		"exp2": 16,
 		"exp3": 36,
-		"lv2": {"atk": 0, "reload": 3.4, "scope": 315},
-		"lv3": {"atk": 0, "reload": 2.8, "scope": 350},
+		"lv2": {"atk": 55, "reload": 3.4, "scope": 315},
+		"lv3": {"atk": 60, "reload": 2.8, "scope": 350},
 	},
 }
 

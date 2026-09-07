@@ -105,9 +105,10 @@ func _generate_segment(from: Vector2, to: Vector2, segments: int, jitter: float)
 	return arr
 
 func _draw():
+	super._draw()
 	if lightning_timer <= 0 or jagged_points.size() < 2:
 		return
-	_draw_lightning_path(jagged_points, LIGHTNING_COLOR, 8.0, 1.2, 0.25, 0.75)
+	_draw_lightning_path(jagged_points, LIGHTNING_COLOR, 13.0, 1.0, 0.25, 0.75)
 	# 每个击中点画一个光晕
 	for enemy in chain_targets:
 		var p = to_local(enemy.global_position)
@@ -119,9 +120,13 @@ func _draw_lightning_path(points: PackedVector2Array, base_color: Color, max_wid
 	if points.size() < 2:
 		return
 	for i in range(points.size() - 1):
-		var t = float(i) / float(max(points.size() - 2, 1))
-		var width = lerp(max_width, min_width, t)
-		var alpha = lerp(outer_alpha, 0.2, t)
+		var chain_index = i / 6
+		var chain_count = maxi(1, int(ceil(float(points.size() - 1) / 6.0)))
+		var chain_ratio = float(chain_index) / float(max(chain_count - 1, 1))
+		var chain_scale = lerp(1.0, 0.42, chain_ratio)
+		var segment_progress := float(i % 6) / 5.0
+		var width = lerp(max_width, min_width, segment_progress) * chain_scale
+		var alpha = lerp(outer_alpha, 0.2, segment_progress)
 		var start = points[i]
 		var end = points[i + 1]
 		draw_line(start, end, Color(base_color.r, base_color.g, base_color.b, alpha), width * 1.5)
@@ -131,7 +136,7 @@ func _draw_lightning_path(points: PackedVector2Array, base_color: Color, max_wid
 
 
 func _on_radar_area_entered(area: Area2D) -> void:
-	target.push_back(area)
+	add_target(area)
 
 
 func _on_radar_area_exited(area: Area2D) -> void:

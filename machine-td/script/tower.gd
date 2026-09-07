@@ -71,6 +71,18 @@ func getTarget():
 	
 	return temp
 
+func can_target(area: Area2D) -> bool:
+	if not is_instance_valid(area) or not area is Enemy:
+		return false
+	var can_target_air := type == Game.towerType.droneBase or type == Game.towerType.laserTower
+	return not area.flying or can_target_air
+
+func add_target(area: Area2D) -> void:
+	if not can_target(area):
+		return
+	if not target.has(area):
+		target.push_back(area)
+
 func init():
 	initBar.visible = false
 	base.modulate.a = 1
@@ -109,6 +121,7 @@ func update_status_ui() -> void:
 	if maxHp <= 0:
 		maxHp = max(hp, 1)
 	if lifeBar:
+		lifeBar.visible = true
 		lifeBar.maxHp = maxHp
 		lifeBar.value = hp
 	if sellPriceLabel:
@@ -118,7 +131,8 @@ func update_status_ui() -> void:
 		var threshold = 1
 		if level < TowerUpgradeManager.MAX_LEVEL and TowerUpgradeManager.configs.has(type):
 			threshold = int(TowerUpgradeManager.getExpThreshold(type, level))
-		towerStatusUi.set_status(hp, maxHp, towerExp, threshold, selected)
+		var tower_name := str(Game.towerInfo.get(type, {}).get("name", "Tower"))
+		towerStatusUi.set_status(hp, maxHp, towerExp, threshold, selected, tower_name)
 	
 #升级等级
 func levelUp() -> void:
