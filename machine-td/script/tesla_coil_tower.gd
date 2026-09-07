@@ -4,6 +4,7 @@ const MAX_CHAIN := 4 # 闪电最多链4个敌人
 const LIGHTNING_DURATION := 0.18 # 单次闪电显示时长
 const FLICKER_INTERVAL := 0.03 # 闪电抖动重算间隔
 const CHAIN_MAX_DIST := 220.0 # 链间最大距离
+const CHAIN_DAMAGE_FALLOFF := 0.75 # 每次跳跃保留75%的伤害
 const LIGHTNING_COLOR := Color(0.45, 0.85, 1.0, 1.0) # 闪电主色(青蓝)
 
 var chain_targets: Array = [] # 当前闪电链上的敌人(按顺序)
@@ -45,15 +46,23 @@ func _physics_process(_delta: float) -> void:
 # 触发闪电: 以某个敌人为起点,收集最多MAX_CHAIN个链上敌人并显示特效
 func fire_lightning(initial_target):
 	chain_targets = _collect_chain(initial_target)
+	_apply_chain_damage()
 	lightning_timer = LIGHTNING_DURATION
 	flicker_timer = 0.0
 	_regenerate_jagged_points()
 	queue_redraw()
-	# TODO: 在此对 chain_targets 中每个敌人施加伤害/减速
-	
+
+func _apply_chain_damage() -> void:
+	var damage := float(atk)
+	for enemy in chain_targets:
+		if is_instance_valid(enemy) and enemy.has_method("hurt"):
+			enemy.hurt(max(1, int(round(damage))), self, "energy")
+		damage *= CHAIN_DAMAGE_FALLOFF
 	
 # 贪心收集链上敌人: 从首个敌人开始,每次找最近的未使用目标
 func _collect_chain(first) -> Array:
+	if not is_instance_valid(first) or not can_target(first):
+		return []
 	var result: Array = [first]
 	var used: Dictionary = {first: true}
 	var current = first
@@ -61,7 +70,7 @@ func _collect_chain(first) -> Array:
 		var next = null
 		var best_dist = CHAIN_MAX_DIST
 		for t in target:
-			if used.has(t):
+			if used.has(t) or not is_instance_valid(t) or not can_target(t):
 				continue
 			var d = t.global_position.distance_to(current.global_position)
 			if d < best_dist:

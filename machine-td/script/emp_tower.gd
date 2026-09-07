@@ -11,7 +11,7 @@ func _ready() -> void:
 	super._ready()
 
 func _on_radar_area_entered(area: Area2D) -> void:
-	if area is Enemy and not target.has(area):
+	if area is Enemy and not area.flying and not target.has(area):
 		target.append(area)
 		_apply_slow(area, true)
 
