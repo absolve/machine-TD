@@ -3,6 +3,8 @@ extends Window
 @onready var levelRating = $PanelContainer/VBoxContainer3/MarginContainer/vbox/levelRating
 @onready var resultLabel = $PanelContainer/VBoxContainer3/MarginContainer/vbox/resultLabel
 @onready var waveLabel = $PanelContainer/VBoxContainer3/MarginContainer/vbox/waveLabel
+@onready var gemRewardRow = $PanelContainer/VBoxContainer3/MarginContainer/vbox/gemRewardRow
+@onready var gemRewardLabel = $PanelContainer/VBoxContainer3/MarginContainer/vbox/gemRewardRow/gemRewardLabel
 @onready var btnRestart:Button=$PanelContainer/VBoxContainer3/MarginContainer2/hbox/btnRestart
 @onready var btnNextLevel:Button=$PanelContainer/VBoxContainer3/MarginContainer2/hbox/btnNextLevel
 @onready var btnMenu:Button=$PanelContainer/VBoxContainer3/MarginContainer2/hbox/btnMenu
@@ -21,8 +23,13 @@ func setResult(_isFailed: bool):
 	isFailed = _isFailed
 	if isFailed:
 		resultLabel.text = tr("_LevelFailed")
+		gemRewardRow.visible = false
 	else:
 		resultLabel.text = tr("_LevelCompleted")
+
+func setGemReward(amount: int) -> void:
+	gemRewardLabel.text = tr("_GemReward") % amount
+	gemRewardRow.visible = amount > 0
 
 
 func _on_btn_restart_pressed():

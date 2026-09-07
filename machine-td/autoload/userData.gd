@@ -36,9 +36,7 @@ func getPlayerDataPath() -> String:
 
 #获取文件路径
 func getFilePath(file_name: String) -> String:
-	if OS.has_feature("web") or OS.has_feature("editor"):
-		return "user://" + file_name
-	return OS.get_executable_path().get_base_dir().path_join(file_name)
+	return "user://" + file_name
 
 #获取设置
 func loadSettings() -> void:
@@ -93,7 +91,9 @@ func savePlayerData() -> void:
 	config.set_value("player", "stageRatings", stageRatings)
 	config.set_value("achievements", "unlocked", unlockedAchievements)
 	config.set_value("achievements", "progress", achievementProgress)
-	config.save(playerDataPath)
+	var error := config.save(playerDataPath)
+	if error != OK:
+		push_error("无法保存玩家进度: %s (%s)" % [playerDataPath, error])
 
 func isStageUnlocked(stage_id: int) -> bool:
 	return stage_id == 1 or stage_id in unlockedStages
@@ -101,17 +101,26 @@ func isStageUnlocked(stage_id: int) -> bool:
 func getStageRating(stage_id: int) -> int:
 	return int(stageRatings.get(str(stage_id), stageRatings.get(stage_id, 0)))
 
-func recordStageCompletion(stage_id: int, rating: int) -> void:
+func recordStageCompletion(stage_id: int, rating: int) -> int:
 	rating = clampi(rating, 0, 3)
 	var old_rating := getStageRating(stage_id)
+	var first_completion := not stageRatings.has(str(stage_id)) and not stageRatings.has(stage_id)
 	if rating > old_rating:
 		stageRatings[str(stage_id)] = rating
 	if stage_id not in unlockedStages:
 		unlockedStages.append(stage_id)
 	var next_stage_id := stage_id + 1
-	if next_stage_id <= 15 and next_stage_id not in unlockedStages:
-		unlockedStages.append(next_stage_id)
-	var reward_gem = max(rating - old_rating, 0)
+	for stage in StageData.allStage:
+		if int(stage.get("id", -1)) == next_stage_id:
+			if next_stage_id not in unlockedStages:
+				unlockedStages.append(next_stage_id)
+			break
+	var reward_gem := 0
+	for stage in StageData.allStage:
+		if int(stage.get("id", -1)) == stage_id:
+			reward_gem = int(stage.get("gemReward", 0)) if first_completion else 0
+			break
 	gem += reward_gem
 	score += rating * 100
 	savePlayerData()
+	return reward_gem

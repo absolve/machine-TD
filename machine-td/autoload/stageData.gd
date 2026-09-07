@@ -10,6 +10,7 @@ var allStage = [
 	{
 		'name': 'Tutorial',
 		"id": 0,
+		"gemReward": 3,
 		'selectable': false,
 		'type': '教程',
 		'category': '新手教程',
@@ -34,6 +35,7 @@ var allStage = [
 	{
 		'name': '1',
 		"id": 1,
+		"gemReward": 5,
 		'type': '草地',
 		'category': '草地训练场',
 		'description': '第一片草地训练场，路线开阔，适合熟悉防守节奏',
@@ -50,6 +52,7 @@ var allStage = [
 	{
 		'name': '2',
 		"id": 2,
+		"gemReward": 6,
 		'type': '草地',
 		'category': '草地边缘',
 		'description': '草地边缘道路较为开阔，适合练习分流与机枪覆盖',
@@ -72,6 +75,7 @@ var allStage = [
 	{
 		'name': '3',
 		"id": 3,
+		"gemReward": 7,
 		'type': '草地',
 		'category': '草地入口',
 		'description': '草地入口道路变窄，开始引入重型目标和压制路线',
@@ -93,6 +97,7 @@ var allStage = [
 	{
 		'name': '4',
 		"id": 4,
+		"gemReward": 8,
 		'type': '工厂',
 		'category': '工厂入口',
 		'description': '工厂入口道路转角增多，适合分流与自爆威胁处理',
@@ -120,6 +125,7 @@ var allStage = [
 	{
 		'name': '5',
 		"id": 5,
+		"gemReward": 9,
 		'type': '工厂',
 		'category': '工厂中段',
 		'description': '工厂中段夹道更长，导弹车和重型单位威胁开始出现',
@@ -149,6 +155,7 @@ var allStage = [
 	{
 		'name': '6',
 		"id": 6,
+		"gemReward": 10,
 		'type': '工厂',
 		'category': '工厂后场',
 		'description': '工厂后场通道更长，首次出现空地混合攻击',
@@ -180,6 +187,7 @@ var allStage = [
 	{
 		'name': '7',
 		"id": 7,
+		"gemReward": 11,
 		'type': '沙漠',
 		'category': '沙漠前线',
 		'description': '沙漠前线道路更长，敌人密度开始明显提升',
@@ -211,6 +219,7 @@ var allStage = [
 	{
 		'name': '8',
 		"id": 8,
+		"gemReward": 12,
 		'type': '沙漠',
 		'category': '沙漠据点',
 		'description': '沙漠据点道路更窄，空中和远程单位密度显著提高',
@@ -243,6 +252,7 @@ var allStage = [
 	{
 		'name': '9',
 		"id": 9,
+		"gemReward": 13,
 		'type': '沙漠',
 		'category': '沙漠末端',
 		'description': '沙漠末端高数量敌群压境，防线需要持续压制',
@@ -276,6 +286,7 @@ var allStage = [
 	{
 		'name': '10',
 		"id": 10,
+		"gemReward": 14,
 		'type': '沙漠',
 		'category': '沙漠决战',
 		'description': '沙漠决战综合考验地面、空中和远程防守',
@@ -310,6 +321,7 @@ var allStage = [
 	{
 		'name': '11',
 		"id": 11,
+		"gemReward": 15,
 		'category': '高压挑战',
 		'description': '高密度重型单位开始连续出现',
 		'wave': 14,
@@ -344,6 +356,7 @@ var allStage = [
 	{
 		'name': '12',
 		"id": 12,
+		"gemReward": 16,
 		'category': '高压挑战',
 		'description': '应对持续的多类型复合波次',
 		'wave': 15,
@@ -379,6 +392,7 @@ var allStage = [
 	{
 		'name': '13',
 		"id": 13,
+		"gemReward": 17,
 		'category': '高压挑战',
 		'description': '远程火力和重型单位同步增强',
 		'wave': 16,
@@ -415,6 +429,7 @@ var allStage = [
 	{
 		'name': '14',
 		"id": 14,
+		"gemReward": 18,
 		'category': '高压挑战',
 		'description': '高数量、高强度的综合防守',
 		'wave': 17,
@@ -452,6 +467,7 @@ var allStage = [
 	{
 		'name': '15',
 		"id": 15,
+		"gemReward": 20,
 		'category': '高压挑战',
 		'description': '最终关卡，迎接最大规模的敌群',
 		'wave': 18,
