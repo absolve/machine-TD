@@ -32,6 +32,9 @@ func _ready() -> void:
 	master.setVolume(UserData.masterVolume)
 	bg.setVolume(UserData.musicVolume)
 	sfx.setVolume(UserData.sfxVolume)
+	master.slider.value_changed.connect(_on_master_value_changed)
+	bg.slider.value_changed.connect(_on_bg_value_changed)
+	sfx.slider.value_changed.connect(_on_sfx_value_changed)
 	TranslationServer.set_locale(UserData.language)
 
 func getLanguageCode(language_value: String) -> String:

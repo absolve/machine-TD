@@ -33,6 +33,7 @@ var initTime = 1 #初始化时间 秒
 @onready var towerRank = $towerRank
 @onready var lifeBar=$lifeBar
 @onready var towerStatusUi = $towerStatusUi
+@onready var deploySound=$deploySound
 
 var radarSweepAngle := 0.0
 const RADAR_SCAN_SPEED := 1.8
@@ -49,6 +50,7 @@ func _ready() -> void:
 	delayTimer.wait_time = delay
 	monitorable = false
 	set_physics_process(false)
+	deploySound.play()
 	var tween = create_tween()
 	tween.tween_property(initBar, "value", 100, initTime)
 	tween.tween_callback(init)

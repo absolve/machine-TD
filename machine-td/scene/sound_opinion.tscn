@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://chiyafetw2vqo" path="res://script/sound_opinion.gd" id="1_cpkng"]
 [ext_resource type="StyleBox" uid="uid://cle6jdorqb37c" path="res://theme/style/volume_slider.tres" id="2_slider"]
 [ext_resource type="StyleBox" uid="uid://kg32f8byq5ty" path="res://theme/style/volume_slider_area.tres" id="3_slider_area"]
-[ext_resource type="StyleBox" path="res://theme/style/volume_slider_fill.tres" id="4_slider_fill"]
+[ext_resource type="StyleBox" uid="uid://carg8hluk7mmh" path="res://theme/style/volume_slider_fill.tres" id="4_slider_fill"]
 
 [node name="soundOpinion" type="VBoxContainer" unique_id=735161374]
 offset_right = 112.0
@@ -26,4 +26,4 @@ theme_override_styles/grabber_area_highlight = ExtResource("4_slider_fill")
 step = 10.0
 value = 100.0
 
-[node name="sound" type="AudioStreamPlayer2D" parent="." unique_id=269045260]
+[node name="sound" type="AudioStreamPlayer" parent="." unique_id=269045260]

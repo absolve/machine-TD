@@ -3,6 +3,11 @@ extends Node2D
 @onready var aboutPanel = $aboutPanel
 @onready var settingPanel = $setting
 
+func _ready() -> void:
+	var sfx_bus := AudioServer.get_bus_index("Sfx")
+	if sfx_bus >= 0:
+		AudioServer.set_bus_mute(sfx_bus, UserData.sfxMuted)
+
 
 func _on_button_3_pressed():
 	aboutPanel.popup_centered()
