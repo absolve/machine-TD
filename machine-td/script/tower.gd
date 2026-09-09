@@ -32,7 +32,6 @@ var initTime = 1 #初始化时间 秒
 @onready var sellPriceLabel = $sellPriceLabel
 @onready var towerRank = $towerRank
 @onready var lifeBar=$lifeBar
-@onready var towerStatusUi = $towerStatusUi
 @onready var deploySound=$deploySound
 
 var radarSweepAngle := 0.0
@@ -55,8 +54,6 @@ func _ready() -> void:
 	tween.tween_property(initBar, "value", 100, initTime)
 	tween.tween_callback(init)
 	call_deferred("update_status_ui")
-	if towerStatusUi:
-		towerStatusUi.position = Vector2(0, 90)
 
 func _physics_process(delta: float) -> void:
 	if not selected:
@@ -129,12 +126,6 @@ func update_status_ui() -> void:
 	if sellPriceLabel:
 		sellPriceLabel.text = str(int(sellingPrice))
 		sellPriceLabel.visible = selected
-	if towerStatusUi:
-		var threshold = 1
-		if level < TowerUpgradeManager.MAX_LEVEL and TowerUpgradeManager.configs.has(type):
-			threshold = int(TowerUpgradeManager.getExpThreshold(type, level))
-		var tower_name := str(Game.towerInfo.get(type, {}).get("name", "Tower"))
-		towerStatusUi.set_status(hp, maxHp, towerExp, threshold, selected, tower_name)
 	
 #升级等级
 func levelUp() -> void:
@@ -254,5 +245,7 @@ func _on_input_event(_viewport, _event, _shape_idx):
 
 
 func _on_btn_sell_pressed():
+	if selected:
+		hideSelect() # 出售前先取消选中，让右侧信息面板与地图状态同步清理
 	Game.sellTower.emit(sellingPrice, coverGrid)
 	queue_free()

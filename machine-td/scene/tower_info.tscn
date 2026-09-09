@@ -1,105 +1,134 @@
 [gd_scene format=3 uid="uid://b6gjxxdlchyde"]
 
 [ext_resource type="Script" uid="uid://belv4jwyveg6s" path="res://script/tower_info.gd" id="1_dm3ur"]
+[ext_resource type="StyleBox" uid="uid://dgsf4fryb5sbt" path="res://theme/style/tower_card_style.tres" id="2_card"]
 
 [node name="towerInfo" type="PanelContainer" unique_id=712368973]
 z_index = 10
 offset_right = 180.0
 offset_bottom = 239.0
+theme_override_styles/panel = ExtResource("2_card")
 script = ExtResource("1_dm3ur")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1924997378]
 layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
 
 [node name="vbox" type="VBoxContainer" parent="MarginContainer" unique_id=472616738]
 layout_mode = 2
+theme_override_constants/separation = 8
 
-[node name="towerName" type="Label" parent="MarginContainer/vbox" unique_id=998000817]
+[node name="nameLabel" type="Label" parent="MarginContainer/vbox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.99607843, 0.84705883, 0.2627451, 1)
-theme_override_font_sizes/font_size = 42
-text = "rocket"
-horizontal_alignment = 1
-
-[node name="hbox" type="VBoxContainer" parent="MarginContainer/vbox" unique_id=500790674]
-layout_mode = 2
-
-[node name="hbox1" type="HBoxContainer" parent="MarginContainer/vbox/hbox" unique_id=1581277158]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MarginContainer/vbox/hbox/hbox1" unique_id=1546014282]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "act:"
-horizontal_alignment = 2
-
-[node name="atkLabel" type="Label" parent="MarginContainer/vbox/hbox/hbox1" unique_id=1054183307]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="hbox2" type="HBoxContainer" parent="MarginContainer/vbox/hbox" unique_id=1985331602]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="MarginContainer/vbox/hbox/hbox2" unique_id=459085263]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "cost:"
-horizontal_alignment = 2
-
-[node name="costLabel" type="Label" parent="MarginContainer/vbox/hbox/hbox2" unique_id=428837810]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="hbox3" type="HBoxContainer" parent="MarginContainer/vbox/hbox" unique_id=877337731]
-layout_mode = 2
-
-[node name="Label3" type="Label" parent="MarginContainer/vbox/hbox/hbox3" unique_id=1684961463]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "reload:"
-horizontal_alignment = 2
-
-[node name="reloadLabel" type="Label" parent="MarginContainer/vbox/hbox/hbox3" unique_id=1628304573]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="hbox4" type="HBoxContainer" parent="MarginContainer/vbox/hbox" unique_id=1506316392]
-layout_mode = 2
-
-[node name="Label3" type="Label" parent="MarginContainer/vbox/hbox/hbox4" unique_id=342185457]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "scope:"
-horizontal_alignment = 2
-
-[node name="scopeLabel" type="Label" parent="MarginContainer/vbox/hbox/hbox4" unique_id=1128599958]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="hbox5" type="HBoxContainer" parent="MarginContainer/vbox/hbox" unique_id=358211971]
-layout_mode = 2
-
-[node name="Label4" type="Label" parent="MarginContainer/vbox/hbox/hbox5" unique_id=544471322]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "hp:"
-horizontal_alignment = 2
-
-[node name="hpLabel" type="Label" parent="MarginContainer/vbox/hbox/hbox5" unique_id=202992009]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/vbox" unique_id=1987117239]
-layout_mode = 2
-theme_override_constants/margin_top = 20
-
-[node name="towerDetail" type="Label" parent="MarginContainer/vbox/MarginContainer" unique_id=974574719]
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
-text = "Launch missiles to strike the enemy"
+theme_override_colors/font_color = Color(0.75, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 40
 horizontal_alignment = 1
 autowrap_mode = 3
+text = "Tower"
+
+[node name="HeadSep" type="HSeparator" parent="MarginContainer/vbox"]
+layout_mode = 2
+
+[node name="Stats" type="VBoxContainer" parent="MarginContainer/vbox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="atkRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/atkRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "ATK"
+
+[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/atkRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 2
+
+[node name="reloadRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/reloadRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "Fire Rate"
+
+[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/reloadRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 2
+
+[node name="scopeRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/scopeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "Range"
+
+[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/scopeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 2
+
+[node name="costRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/costRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "Cost"
+
+[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/costRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.996, 0.847, 0.263, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 2
+
+[node name="hpRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/hpRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "HP"
+
+[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/hpRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.78, 0.72, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 2
+
+[node name="descMargin" type="MarginContainer" parent="MarginContainer/vbox"]
+layout_mode = 2
+theme_override_constants/margin_top = 14
+
+[node name="descLabel" type="Label" parent="MarginContainer/vbox/descMargin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.84, 0.9, 1)
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+autowrap_mode = 3
+

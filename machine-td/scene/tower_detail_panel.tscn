@@ -1,0 +1,250 @@
+[gd_scene format=3 uid="uid://v82shl8uewyp"]
+
+[ext_resource type="Script" uid="uid://hxvwv35g8vae" path="res://script/tower_detail_panel.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.035, 0.055, 0.09, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.25, 0.65, 0.78, 0.75)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_bg"]
+bg_color = Color(0.2, 0.08, 0.08, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_fill"]
+bg_color = Color(0.3, 0.86, 0.28, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_exp_bg"]
+bg_color = Color(0.1, 0.16, 0.3, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_exp_fill"]
+bg_color = Color(0.45, 0.68, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="towerDetailPanel" type="PanelContainer" unique_id=1938422127]
+visible = false
+theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+script = ExtResource("1_script")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=804658247]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=2049328764]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Header" type="HBoxContainer" parent="Margin/VBox" unique_id=1748830099]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="nameLabel" type="Label" parent="Margin/VBox/Header" unique_id=2029388966]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.75, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 40
+text = "Tower"
+autowrap_mode = 3
+
+[node name="levelLabel" type="Label" parent="Margin/VBox/Header" unique_id=1859570407]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.996, 0.847, 0.263, 1)
+theme_override_font_sizes/font_size = 32
+text = "Lv.1"
+vertical_alignment = 1
+
+[node name="HpRow" type="HBoxContainer" parent="Margin/VBox" unique_id=1157839692]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="hpTitle" type="Label" parent="Margin/VBox/HpRow" unique_id=1743126514]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.72, 0.82, 0.9, 1)
+theme_override_font_sizes/font_size = 30
+text = "HP"
+
+[node name="hpValueLabel" type="Label" parent="Margin/VBox/HpRow" unique_id=1628300491]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.78, 0.72, 1)
+theme_override_font_sizes/font_size = 30
+text = "0/0"
+horizontal_alignment = 2
+
+[node name="hpBar" type="ProgressBar" parent="Margin/VBox" unique_id=2067904571]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_hp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hp_fill")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="ExpRow" type="HBoxContainer" parent="Margin/VBox" unique_id=804797796]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="expTitle" type="Label" parent="Margin/VBox/ExpRow" unique_id=1306133830]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.72, 0.82, 0.9, 1)
+theme_override_font_sizes/font_size = 30
+text = "EXP"
+
+[node name="expValueLabel" type="Label" parent="Margin/VBox/ExpRow" unique_id=216819150]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.82, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "0/0"
+horizontal_alignment = 2
+
+[node name="expBar" type="ProgressBar" parent="Margin/VBox" unique_id=1845142744]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_exp_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_exp_fill")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="Sep1" type="HSeparator" parent="Margin/VBox" unique_id=292168789]
+layout_mode = 2
+
+[node name="Stats" type="VBoxContainer" parent="Margin/VBox" unique_id=2108046269]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="atkRow" type="HBoxContainer" parent="Margin/VBox/Stats" unique_id=1018893766]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Stats/atkRow" unique_id=164427798]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "ATK"
+
+[node name="Value" type="Label" parent="Margin/VBox/Stats/atkRow" unique_id=136812127]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "0"
+horizontal_alignment = 2
+
+[node name="reloadRow" type="HBoxContainer" parent="Margin/VBox/Stats" unique_id=1789709400]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Stats/reloadRow" unique_id=689469216]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "Fire Rate"
+
+[node name="Value" type="Label" parent="Margin/VBox/Stats/reloadRow" unique_id=1504718325]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "0/s"
+horizontal_alignment = 2
+
+[node name="scopeRow" type="HBoxContainer" parent="Margin/VBox/Stats" unique_id=1940847185]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Stats/scopeRow" unique_id=828027850]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "Range"
+
+[node name="Value" type="Label" parent="Margin/VBox/Stats/scopeRow" unique_id=113399219]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "0"
+horizontal_alignment = 2
+
+[node name="Sep2" type="HSeparator" parent="Margin/VBox" unique_id=2127914765]
+layout_mode = 2
+
+[node name="Economy" type="VBoxContainer" parent="Margin/VBox" unique_id=1194794355]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="costRow" type="HBoxContainer" parent="Margin/VBox/Economy" unique_id=284969194]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Economy/costRow" unique_id=283591275]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "Cost"
+
+[node name="Value" type="Label" parent="Margin/VBox/Economy/costRow" unique_id=1340180672]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.996, 0.847, 0.263, 1)
+theme_override_font_sizes/font_size = 30
+text = "0"
+horizontal_alignment = 2
+
+[node name="sellRow" type="HBoxContainer" parent="Margin/VBox/Economy" unique_id=1889499659]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Economy/sellRow" unique_id=778869185]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "Sell Price"
+
+[node name="Value" type="Label" parent="Margin/VBox/Economy/sellRow" unique_id=851309914]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.996, 0.847, 0.263, 1)
+theme_override_font_sizes/font_size = 30
+text = "0"
+horizontal_alignment = 2
+
+[node name="hintLabel" type="Label" parent="Margin/VBox" unique_id=346373248]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.62, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "Click the tower again or empty ground to deselect."
+autowrap_mode = 3

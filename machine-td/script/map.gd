@@ -10,6 +10,7 @@ extends Node2D
 @onready var finishTimer = $Timer
 @onready var toastInfo = $hud/toastInfo
 @onready var waveProgressBar = $hud/waveProgressBar
+@onready var towerDetailPanel = $hud/towerDetailPanel
 
 var level
 var gunTower = preload("res://scene/machineGunTower.tscn")
@@ -284,9 +285,19 @@ func addNotice(s, color: Color = Color.CORAL):
 #选中塔
 func clickTower(item, selected):
 	if selected:
+		# 保持同一时间只选中一座塔，先取消之前选中的
+		if selectedTower != null and selectedTower != item and is_instance_valid(selectedTower):
+			var oldTower = selectedTower
+			selectedTower = null # 先清空，避免 hideSelect 触发的回调把状态弄乱
+			oldTower.hideSelect()
 		selectedTower = item
+		if towerDetailPanel:
+			towerDetailPanel.show_tower(item)
 	else:
-		selectedTower = null
+		if selectedTower == item:
+			selectedTower = null
+		if towerDetailPanel:
+			towerDetailPanel.clear()
 
 func restart():
 	get_tree().paused = false
@@ -310,7 +321,7 @@ func _unhandled_input(_event):
 			i.isShow = false
 		#towerShadow.setInactive()
 	if _event.is_action_pressed("click"):
-		if selectedTower:
+		if selectedTower and is_instance_valid(selectedTower):
 			selectedTower.hideSelect()
 
 func _on_button_pressed():

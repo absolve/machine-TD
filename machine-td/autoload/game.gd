@@ -198,3 +198,24 @@ var map = null
 func addObj(obj):
 	if map:
 		map.add_child(obj)
+
+# 塔的本地化显示名 key（对应 lang/language.csv 中 _TowerName_*）
+const towerDisplayNameKeys = {
+	towerType.machineGunTower: "_TowerName_machineGun",
+	towerType.cannonTower: "_TowerName_cannon",
+	towerType.rocketTower: "_TowerName_rocket",
+	towerType.EMPTower: "_TowerName_emp",
+	towerType.droneBase: "_TowerName_drone",
+	towerType.teslaCoilTower: "_TowerName_tesla",
+	towerType.laserTower: "_TowerName_laser",
+}
+
+# 取塔的显示名（多语言；语言文件未导入时回退英文原名）
+func get_tower_display_name(tower_type) -> String:
+	var info: Dictionary = towerInfo.get(tower_type, {})
+	var fallback := str(info.get("name", "Tower"))
+	var key := str(towerDisplayNameKeys.get(tower_type, ""))
+	if key.is_empty():
+		return fallback
+	var translated := tr(key)
+	return fallback if translated == key else translated

@@ -19,9 +19,15 @@ alignment = 1
 
 [node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer" unique_id=651567932]
 layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_right = 6
 
 [node name="name" type="Label" parent="VBoxContainer/MarginContainer3" unique_id=1030568745]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+text_overrun_behavior = 3
 
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer" unique_id=807083845]
 layout_mode = 2
@@ -45,12 +51,16 @@ layout_mode = 2
 alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer/MarginContainer/HBoxContainer" unique_id=157680456]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 texture = ExtResource("4_0iufg")
-stretch_mode = 3
+stretch_mode = 5
 
 [node name="costLabel" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer" unique_id=1363622309]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.996, 0.847, 0.263, 1)
+theme_override_font_sizes/font_size = 24
+text = "0"
 
 [node name="selected" type="TextureRect" parent="." unique_id=1392114164]
 visible = false

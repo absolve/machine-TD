@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://ci2x7q5rdcqf5" path="res://scene/wave_progress_bar.tscn" id="5_7ac5c"]
 [ext_resource type="PackedScene" uid="uid://dmskj8i7vlbkd" path="res://scene/custom_camera.tscn" id="5_jp76l"]
 [ext_resource type="PackedScene" uid="uid://cv37m245ebfbr" path="res://scene/pause_menu.tscn" id="6_pause"]
+[ext_resource type="PackedScene" uid="uid://v82shl8uewyp" path="res://scene/tower_detail_panel.tscn" id="7_panel"]
 
 [node name="map" type="Node2D" unique_id=988854810]
 script = ExtResource("1_rgtto")
@@ -23,6 +24,7 @@ offset_right = -8.0
 offset_bottom = 877.0
 
 [node name="Button" type="Button" parent="hud" unique_id=1786368414]
+visible = false
 offset_top = 500.0
 offset_right = 38.0
 offset_bottom = 531.0
@@ -35,6 +37,12 @@ offset_left = 1552.0
 offset_top = 1008.0
 offset_right = 1552.0
 offset_bottom = 1008.0
+
+[node name="towerDetailPanel" parent="hud" unique_id=830242403 instance=ExtResource("7_panel")]
+offset_left = 1536.0
+offset_top = 150.0
+offset_right = 1896.0
+offset_bottom = 850.0
 
 [node name="customCamera" parent="." unique_id=76497160 instance=ExtResource("5_jp76l")]
 

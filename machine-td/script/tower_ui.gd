@@ -44,6 +44,7 @@ func _ready() -> void:
 		towerCard1.type = i.type
 		var temp = Game.towerInfo.get(i.type)
 		towerCard1.setCost(temp.cost)
+		towerCard1.setTowerName(Game.get_tower_display_name(i.type))
 		towerCard1.connect("click", towerClick)
 		towerCard1.showInfo.connect(showTowerInfo)
 		towerCard1.connect("mouse_exited", hideTowerInfo)
@@ -65,7 +66,7 @@ func showTowerInfo(type):
 	var temp = Game.towerInfo.get(type)
 	# 先移到屏幕外，避免在旧位置闪烁
 	info.global_position = Vector2(-99999, -99999)
-	info.showDetail(temp)
+	info.showDetail(temp, type)
 	# 等待一帧让布局更新，获取正确的尺寸
 	await get_tree().process_frame
 	var info_size = info.size

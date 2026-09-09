@@ -29,3 +29,18 @@ _EMPTowerDesc,"Effectively slow down the enemy","有效减速敌人"
 _droneBaseDesc,"Launch drones to attack enemies, track and strike enemies over a wide range, and can target enemies in the air","出动无人机打击敌人，大范围跟踪打击敌人，可打击空中敌人"
 _teslaCoilTowerDesc,"Release electric energy to attack enemies, capable of chain attacks","释放电能打击敌人，可以连锁打击"
 _laserTowerDesc,"Laser TLock onto targets at a distance and simultaneously strike multiple enemies","远距离锁定目标，同时打击多个敌人"
+_TowerName_machineGun,Machine Gun Tower,机枪塔
+_TowerName_cannon,Cannon Tower,加农炮塔
+_TowerName_rocket,Rocket Tower,火箭炮塔
+_TowerName_emp,EMP Tower,EMP干扰塔
+_TowerName_drone,Drone Base,无人机基地
+_TowerName_tesla,Tesla Coil Tower,特斯拉线圈塔
+_TowerName_laser,Laser Tower,激光塔
+_HP,HP,血量
+_EXP,EXP,经验
+_Atk,ATK,攻击
+_FireRate,Fire Rate,射速
+_Range,Range,范围
+_Cost,Cost,造价
+_SellPrice,Sell Price,出售价
+_PanelHint,Click the tower again or empty ground to deselect.,再次点击该塔或点击空地取消选择。
