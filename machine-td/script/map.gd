@@ -11,6 +11,7 @@ extends Node2D
 @onready var toastInfo = $hud/toastInfo
 @onready var waveProgressBar = $hud/waveProgressBar
 @onready var towerDetailPanel = $hud/towerDetailPanel
+@onready var enemyDetailPanel = $hud/enemyDetailPanel
 
 var level
 var gunTower = preload("res://scene/machineGunTower.tscn")
@@ -26,6 +27,8 @@ var cellSize = 64
 var debug = true
 var font
 var selectedTower = null # 选中的塔
+# 最近一次“选中敌人”的时刻(毫秒)：用于避免同一击又被 _unhandled_input 当成点空地而立刻取消
+var _enemy_click_msec := -1000
 
 
 func _ready():
@@ -39,6 +42,7 @@ func _ready():
 	Game.sellTower.connect(sellTower)
 	Game.lastWave.connect(lastWave)
 	Game.clickTower.connect(clickTower)
+	Game.clickEnemy.connect(clickEnemy)
 	
 	resultScreen.btnRestart.pressed.connect(restart)
 	resultScreen.btnNextLevel.pressed.connect(nextLevel)
@@ -285,6 +289,8 @@ func addNotice(s, color: Color = Color.CORAL):
 #选中塔
 func clickTower(item, selected):
 	if selected:
+		# 右侧信息面板同一时间只服务一个目标：选中塔时收起敌人面板
+		clearEnemyDetail()
 		# 保持同一时间只选中一座塔，先取消之前选中的
 		if selectedTower != null and selectedTower != item and is_instance_valid(selectedTower):
 			var oldTower = selectedTower
@@ -298,6 +304,32 @@ func clickTower(item, selected):
 			selectedTower = null
 		if towerDetailPanel:
 			towerDetailPanel.clear()
+
+#选中敌人（由 enemy.gd 的 input_event 触发）
+# 敌人与塔共用屏幕右侧同一个信息面板槽位，两者互斥：选中敌人会先取消已选中的塔
+func clickEnemy(enemy):
+	if enemy == null or not is_instance_valid(enemy):
+		return
+	_enemy_click_msec = Time.get_ticks_msec()
+	# 再次点击同一个敌人 -> 取消选中
+	if enemyDetailPanel and enemyDetailPanel.visible and enemyDetailPanel.enemy == enemy:
+		enemyDetailPanel.clear()
+		return
+	_deselectTower()
+	if enemyDetailPanel:
+		enemyDetailPanel.show_enemy(enemy)
+
+# 收起敌人信息面板
+func clearEnemyDetail():
+	if enemyDetailPanel:
+		enemyDetailPanel.clear()
+
+# 取消当前选中的塔（不递归触发敌人选中）
+func _deselectTower():
+	if selectedTower != null and is_instance_valid(selectedTower):
+		var oldTower = selectedTower
+		selectedTower = null # 先清空，避免 hideSelect 触发的回调把状态弄乱
+		oldTower.hideSelect()
 
 func restart():
 	get_tree().paused = false
@@ -321,6 +353,9 @@ func _unhandled_input(_event):
 			i.isShow = false
 		#towerShadow.setInactive()
 	if _event.is_action_pressed("click"):
+		# 这一击若刚选中了敌人，就不要再当成“点空地”把面板取消掉
+		if Time.get_ticks_msec() - _enemy_click_msec > 150:
+			clearEnemyDetail()
 		if selectedTower and is_instance_valid(selectedTower):
 			selectedTower.hideSelect()
 

@@ -12,6 +12,7 @@ class_name Enemy
 @export var flying: bool = false # 空中单位（仅无人机/激光塔可命中）
 @export var atk: int = 0 # 攻击力（对抗型有效，推进型为0）
 @export var shootDelay: float = 1.0 # 开火间隔秒（对抗型有效）
+@export var radarScope: float = 0.0 # 雷达半径(像素)：对抗/支援型的攻击或支援范围，0 表示不参战
 var maxHp: int = 100 # 最大血量（初始化时由 hp 同步）
 
 var vec = Vector2.ZERO
@@ -28,6 +29,8 @@ var parent: PathFollow2D
 @onready var turret = $turret
 @onready var lifeBar = $lifeBar
 @onready var delayTimer = $delay
+@onready var radar = $radar
+@onready var radarShape = $radar/shape
 
 # 从 Game.enemyInfo 读取本敌人的基础数值进行初始化
 # 由各敌人子类在 _ready() 中调用（此时 @onready 节点已就绪）
@@ -45,11 +48,41 @@ func setupEnemyInfo():
 	flying = bool(info.get("flying", flying))
 	atk = int(info.get("atk", atk))
 	shootDelay = float(info.get("shootDelay", shootDelay))
+	radarScope = float(info.get("scope", radarScope))
 	if shootDelay > 0:
 		delayTimer.wait_time = shootDelay
 	if lifeBar:
 		lifeBar.maxHp = hp
 		lifeBar.value = hp
+	_applyRadarScope()
+
+
+# 按 radarScope 同步雷达碰撞体半径（数值唯一来源是 Game.enemyInfo 的 scope 字段）
+# 推进型(radarScope <= 0)不参战，直接关闭雷达侦测，避免空转物理检测
+# 场景里没有配置 radar/shape 形状的敌人（自爆车、侦察无人机）在这里按需补一个圆形碰撞体
+func _applyRadarScope() -> void:
+	if radar == null or radarShape == null:
+		return
+	if radarScope <= 0.0:
+		radar.monitoring = false
+		return
+	var circle := radarShape.shape as CircleShape2D
+	if circle == null:
+		circle = CircleShape2D.new()
+		radarShape.shape = circle
+	circle.radius = radarScope
+	radar.monitoring = true
+
+
+# 点击敌人：通知地图选中它
+# 这里主动把事件标记为已处理，阻止它继续传导到 map._unhandled_input 的“点空地取消选中”，
+# 否则刚弹出的敌人信息面板会被同一击立刻收起来
+func _on_input_event(_viewport, _event, _shape_idx):
+	if _event.is_action_pressed("click"):
+		var vp := get_viewport()
+		if vp:
+			vp.set_input_as_handled()
+		Game.clickEnemy.emit(self)
 
 #受到伤害
 # 物理伤害会按 armor 进行减免：实际伤害 = 原伤害 * (1 - armor)

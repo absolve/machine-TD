@@ -1,9 +1,69 @@
-[gd_resource type="Theme" format=3 uid="uid://em0nibpopl3n"]
+[gd_resource type="Theme" load_steps=17 format=3 uid="uid://em0nibpopl3n"]
 
-[ext_resource type="FontFile" uid="uid://iyip2w6pe3es" path="res://font/AlibabaPuHuiTi-3-85-Bold.ttf" id="1_8ab6e"]
-[ext_resource type="StyleBox" uid="uid://bdcoonp8pa5ip" path="res://theme/style/panel_style.tres" id="1_nrt0f"]
+[ext_resource type="FontFile" uid="uid://iyip2w6pe3es" path="res://font/AlibabaPuHuiTi-3-85-Bold.ttf" id="1_font"]
+[ext_resource type="StyleBox" uid="uid://bdcoonp8pa5ip" path="res://theme/style/panel_style.tres" id="1_panel"]
+[ext_resource type="StyleBox" uid="uid://djtnjx2ei87o2" path="res://theme/style/btn_normal.tres" id="1_btnn"]
+[ext_resource type="StyleBox" uid="uid://bq67tcr73iy0n" path="res://theme/style/btn_hover.tres" id="1_btnh"]
+[ext_resource type="StyleBox" uid="uid://bl41nmepxt75f" path="res://theme/style/btn_press.tres" id="1_btnp"]
+[ext_resource type="StyleBox" path="res://theme/style/btn_focus.tres" id="1_btnf"]
+[ext_resource type="StyleBox" path="res://theme/style/btn_disabled.tres" id="1_btnd"]
+[ext_resource type="StyleBox" path="res://theme/style/option_normal.tres" id="1_optn"]
+[ext_resource type="StyleBox" path="res://theme/style/option_hover.tres" id="1_opth"]
+[ext_resource type="StyleBox" path="res://theme/style/option_pressed.tres" id="1_optp"]
+[ext_resource type="StyleBox" path="res://theme/style/popup_menu_panel.tres" id="1_menup"]
+[ext_resource type="StyleBox" path="res://theme/style/popup_menu_hover.tres" id="1_menuh"]
+[ext_resource type="StyleBox" path="res://theme/style/separator.tres" id="1_sep"]
+[ext_resource type="StyleBox" path="res://theme/style/scroll_bg.tres" id="1_scrb"]
+[ext_resource type="StyleBox" path="res://theme/style/scroll_grabber.tres" id="1_scrg"]
+[ext_resource type="StyleBox" path="res://theme/style/scroll_grabber_hi.tres" id="1_scrh"]
 
 [resource]
-default_font = ExtResource("1_8ab6e")
+default_font = ExtResource("1_font")
 default_font_size = 40
-PanelContainer/styles/panel = ExtResource("1_nrt0f")
+Button/colors/font_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
+Button/colors/font_disabled_color = Color(0.47843137, 0.49411765, 0.5176471, 1)
+Button/colors/font_focus_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/styles/disabled = ExtResource("1_btnd")
+Button/styles/focus = ExtResource("1_btnf")
+Button/styles/hover = ExtResource("1_btnh")
+Button/styles/normal = ExtResource("1_btnn")
+Button/styles/pressed = ExtResource("1_btnp")
+HScrollBar/styles/grabber = ExtResource("1_scrg")
+HScrollBar/styles/grabber_highlight = ExtResource("1_scrh")
+HScrollBar/styles/grabber_pressed = ExtResource("1_scrh")
+HScrollBar/styles/scroll = ExtResource("1_scrb")
+HSeparator/styles/separator = ExtResource("1_sep")
+Label/colors/font_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
+OptionButton/colors/font_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
+OptionButton/colors/font_disabled_color = Color(0.47843137, 0.49411765, 0.5176471, 1)
+OptionButton/colors/font_focus_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
+OptionButton/colors/font_hover_color = Color(1, 1, 1, 1)
+OptionButton/colors/font_pressed_color = Color(1, 1, 1, 1)
+OptionButton/constants/arrow_margin = 8
+OptionButton/styles/disabled = ExtResource("1_btnd")
+OptionButton/styles/focus = ExtResource("1_btnf")
+OptionButton/styles/hover = ExtResource("1_opth")
+OptionButton/styles/normal = ExtResource("1_optn")
+OptionButton/styles/pressed = ExtResource("1_optp")
+Panel/styles/panel = ExtResource("1_panel")
+PanelContainer/styles/panel = ExtResource("1_panel")
+PopupMenu/colors/font_accelerator_color = Color(0.6039216, 0.627451, 0.6509804, 1)
+PopupMenu/colors/font_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
+PopupMenu/colors/font_disabled_color = Color(0.47843137, 0.49411765, 0.5176471, 1)
+PopupMenu/colors/font_hover_color = Color(1, 1, 1, 1)
+PopupMenu/colors/font_separator_color = Color(0.6039216, 0.627451, 0.6509804, 1)
+PopupMenu/constants/item_end_padding = 10
+PopupMenu/constants/item_start_padding = 10
+PopupMenu/constants/v_separation = 6
+PopupMenu/styles/hover = ExtResource("1_menuh")
+PopupMenu/styles/panel = ExtResource("1_menup")
+PopupMenu/styles/separator = ExtResource("1_sep")
+PopupPanel/styles/panel = ExtResource("1_panel")
+RichTextLabel/colors/default_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
+VScrollBar/styles/grabber = ExtResource("1_scrg")
+VScrollBar/styles/grabber_highlight = ExtResource("1_scrh")
+VScrollBar/styles/grabber_pressed = ExtResource("1_scrh")
+VScrollBar/styles/scroll = ExtResource("1_scrb")
+VSeparator/styles/separator = ExtResource("1_sep")

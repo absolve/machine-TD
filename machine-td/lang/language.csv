@@ -44,3 +44,30 @@ _Range,Range,范围
 _Cost,Cost,造价
 _SellPrice,Sell Price,出售价
 _PanelHint,Click the tower again or empty ground to deselect.,再次点击该塔或点击空地取消选择。
+_Speed,Speed,移动速度
+_Armor,Armor,护甲
+_Flying,Flying,飞行
+_Yes,Yes,是
+_No,No,否
+_Reward,Kill Reward,击杀奖励
+_EscapeCost,Escape Loss,逃脱扣血
+_RewardExp,Kill EXP,击杀经验
+_Dps,DPS,每秒伤害
+_OneShot,One-shot,一次性
+_EnemyPanelHint,Click the enemy again or empty ground to deselect.,再次点击该敌人或点击空地取消选择。
+_EnemyName_miniTank,Mini Tank,迷你坦克
+_EnemyName_mediumTank,Medium Tank,中型坦克
+_EnemyName_heavyTank,Heavy Tank,重型坦克
+_EnemyName_armoredTank,Armored Tank,装甲坦克
+_EnemyName_assaultBuggy,Assault Buggy,突击车
+_EnemyName_medic,Repair Truck,维修车
+_EnemyName_suicideTruck,Suicide Truck,自爆车
+_EnemyName_missileTruck,Missile Truck,导弹车
+_EnemyName_scoutDrone,Scout Drone,侦察无人机
+_EnemyName_attackHelicopter,Attack Helicopter,攻击直升机
+_EnemyRole_pusher,Pusher,推进型
+_EnemyRole_attacker,Attacker,对抗型
+_EnemyRole_support,Support,支援型
+_EnemyRole_bomber,Suicide Bomber,自爆型
+_EnemyRole_siege,Siege,远程打击型
+_EnemyRole_air,Air Unit,空中单位

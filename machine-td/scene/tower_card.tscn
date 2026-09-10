@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://con6lnwug4pxd" path="res://sprite/Selector.png" id="5_0iufg"]
 
 [node name="towerCard" type="PanelContainer" unique_id=1898334176]
-custom_minimum_size = Vector2(136, 136)
+custom_minimum_size = Vector2(140, 140)
 offset_right = 136.0
 offset_bottom = 136.0
 theme_override_styles/panel = ExtResource("1_pxcfv")
@@ -20,7 +20,9 @@ alignment = 1
 [node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer" unique_id=651567932]
 layout_mode = 2
 theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
 
 [node name="name" type="Label" parent="VBoxContainer/MarginContainer3" unique_id=1030568745]
 layout_mode = 2

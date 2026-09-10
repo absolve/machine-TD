@@ -1,12 +1,14 @@
 [gd_scene format=3 uid="uid://b6gjxxdlchyde"]
 
 [ext_resource type="Script" uid="uid://belv4jwyveg6s" path="res://script/tower_info.gd" id="1_dm3ur"]
-[ext_resource type="StyleBox" uid="uid://dgsf4fryb5sbt" path="res://theme/style/tower_card_style.tres" id="2_card"]
+[ext_resource type="StyleBox" path="res://theme/style/tower_panel_style.tres" id="2_card"]
+[ext_resource type="StyleBox" path="res://theme/style/tower_separator.tres" id="3_sep"]
 
 [node name="towerInfo" type="PanelContainer" unique_id=712368973]
 z_index = 10
+custom_maximum_size = Vector2(-1, 500)
 offset_right = 180.0
-offset_bottom = 239.0
+offset_bottom = 377.0
 theme_override_styles/panel = ExtResource("2_card")
 script = ExtResource("1_dm3ur")
 
@@ -21,114 +23,114 @@ theme_override_constants/margin_bottom = 14
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="nameLabel" type="Label" parent="MarginContainer/vbox"]
+[node name="nameLabel" type="Label" parent="MarginContainer/vbox" unique_id=656208800]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.95, 1, 1)
 theme_override_font_sizes/font_size = 40
+text = "Tower"
 horizontal_alignment = 1
 autowrap_mode = 3
-text = "Tower"
 
-[node name="HeadSep" type="HSeparator" parent="MarginContainer/vbox"]
+[node name="HeadSep" type="HSeparator" parent="MarginContainer/vbox" unique_id=341532519]
 layout_mode = 2
+theme_override_styles/separator = ExtResource("3_sep")
 
-[node name="Stats" type="VBoxContainer" parent="MarginContainer/vbox"]
+[node name="Stats" type="VBoxContainer" parent="MarginContainer/vbox" unique_id=942709857]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="atkRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats"]
+[node name="atkRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats" unique_id=427046387]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/atkRow"]
+[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/atkRow" unique_id=1584676472]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
 theme_override_font_sizes/font_size = 26
 text = "ATK"
 
-[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/atkRow"]
+[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/atkRow" unique_id=808169720]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
 
-[node name="reloadRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats"]
+[node name="reloadRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats" unique_id=162806093]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/reloadRow"]
+[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/reloadRow" unique_id=1142803374]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
 theme_override_font_sizes/font_size = 26
 text = "Fire Rate"
 
-[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/reloadRow"]
+[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/reloadRow" unique_id=1877328183]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
 
-[node name="scopeRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats"]
+[node name="scopeRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats" unique_id=993475416]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/scopeRow"]
+[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/scopeRow" unique_id=1361255530]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
 theme_override_font_sizes/font_size = 26
 text = "Range"
 
-[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/scopeRow"]
+[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/scopeRow" unique_id=2089328838]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
 
-[node name="costRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats"]
+[node name="costRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats" unique_id=1749486466]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/costRow"]
+[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/costRow" unique_id=1650797794]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
 theme_override_font_sizes/font_size = 26
 text = "Cost"
 
-[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/costRow"]
+[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/costRow" unique_id=1074264299]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.996, 0.847, 0.263, 1)
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
 
-[node name="hpRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats"]
+[node name="hpRow" type="HBoxContainer" parent="MarginContainer/vbox/Stats" unique_id=1850051860]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/hpRow"]
+[node name="Title" type="Label" parent="MarginContainer/vbox/Stats/hpRow" unique_id=385369497]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
 theme_override_font_sizes/font_size = 26
 text = "HP"
 
-[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/hpRow"]
+[node name="Value" type="Label" parent="MarginContainer/vbox/Stats/hpRow" unique_id=657816425]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.78, 0.72, 1)
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 2
 
-[node name="descMargin" type="MarginContainer" parent="MarginContainer/vbox"]
+[node name="descMargin" type="MarginContainer" parent="MarginContainer/vbox" unique_id=643734098]
 layout_mode = 2
 theme_override_constants/margin_top = 14
 
-[node name="descLabel" type="Label" parent="MarginContainer/vbox/descMargin"]
+[node name="descLabel" type="Label" parent="MarginContainer/vbox/descMargin" unique_id=958889545]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.78, 0.84, 0.9, 1)
 theme_override_font_sizes/font_size = 22
 horizontal_alignment = 1
 autowrap_mode = 3
-

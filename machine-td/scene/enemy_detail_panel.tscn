@@ -1,0 +1,266 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://script/enemy_detail_panel.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
+[ext_resource type="StyleBox" path="res://theme/style/tower_panel_style.tres" id="3_panel"]
+[ext_resource type="StyleBox" path="res://theme/style/tower_bar_bg.tres" id="4_barbg"]
+[ext_resource type="StyleBox" path="res://theme/style/tower_hp_fill.tres" id="5_hpfill"]
+[ext_resource type="StyleBox" path="res://theme/style/tower_separator.tres" id="6_sep"]
+
+[node name="enemyDetailPanel" type="PanelContainer"]
+visible = false
+theme = ExtResource("2_theme")
+theme_override_styles/panel = ExtResource("3_panel")
+script = ExtResource("1_script")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Header" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="nameLabel" type="Label" parent="Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.75, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 36
+text = "Enemy"
+autowrap_mode = 3
+
+[node name="roleLabel" type="Label" parent="Margin/VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.996, 0.847, 0.263, 1)
+theme_override_font_sizes/font_size = 22
+text = "Role"
+vertical_alignment = 1
+
+[node name="HpRow" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="hpTitle" type="Label" parent="Margin/VBox/HpRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.72, 0.82, 0.9, 1)
+theme_override_font_sizes/font_size = 26
+text = "HP"
+
+[node name="hpValueLabel" type="Label" parent="Margin/VBox/HpRow"]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.78, 0.72, 1)
+theme_override_font_sizes/font_size = 26
+text = "0/0"
+horizontal_alignment = 2
+
+[node name="hpBar" type="ProgressBar" parent="Margin/VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+theme_override_styles/background = ExtResource("4_barbg")
+theme_override_styles/fill = ExtResource("5_hpfill")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="Sep1" type="HSeparator" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_styles/separator = ExtResource("6_sep")
+
+[node name="Stats" type="VBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="atkRow" type="HBoxContainer" parent="Margin/VBox/Stats"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Stats/atkRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "ATK"
+
+[node name="Value" type="Label" parent="Margin/VBox/Stats/atkRow"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 26
+text = "0"
+horizontal_alignment = 2
+
+[node name="reloadRow" type="HBoxContainer" parent="Margin/VBox/Stats"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Stats/reloadRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "Fire Rate"
+
+[node name="Value" type="Label" parent="Margin/VBox/Stats/reloadRow"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 26
+text = "0/s"
+horizontal_alignment = 2
+
+[node name="dpsRow" type="HBoxContainer" parent="Margin/VBox/Stats"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Stats/dpsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "DPS"
+
+[node name="Value" type="Label" parent="Margin/VBox/Stats/dpsRow"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.6, 1)
+theme_override_font_sizes/font_size = 26
+text = "0"
+horizontal_alignment = 2
+
+[node name="Sep2" type="HSeparator" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_styles/separator = ExtResource("6_sep")
+
+[node name="Attr" type="VBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="speedRow" type="HBoxContainer" parent="Margin/VBox/Attr"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Attr/speedRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "Speed"
+
+[node name="Value" type="Label" parent="Margin/VBox/Attr/speedRow"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 26
+text = "0"
+horizontal_alignment = 2
+
+[node name="armorRow" type="HBoxContainer" parent="Margin/VBox/Attr"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Attr/armorRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "Armor"
+
+[node name="Value" type="Label" parent="Margin/VBox/Attr/armorRow"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 26
+text = "0%"
+horizontal_alignment = 2
+
+[node name="flyingRow" type="HBoxContainer" parent="Margin/VBox/Attr"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Attr/flyingRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "Flying"
+
+[node name="Value" type="Label" parent="Margin/VBox/Attr/flyingRow"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 26
+text = "No"
+horizontal_alignment = 2
+
+[node name="Sep3" type="HSeparator" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_styles/separator = ExtResource("6_sep")
+
+[node name="Reward" type="VBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="rewardRow" type="HBoxContainer" parent="Margin/VBox/Reward"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Reward/rewardRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "Kill Reward"
+
+[node name="Value" type="Label" parent="Margin/VBox/Reward/rewardRow"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.996, 0.847, 0.263, 1)
+theme_override_font_sizes/font_size = 26
+text = "0"
+horizontal_alignment = 2
+
+[node name="escapeRow" type="HBoxContainer" parent="Margin/VBox/Reward"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Reward/escapeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "Escape Loss"
+
+[node name="Value" type="Label" parent="Margin/VBox/Reward/escapeRow"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.62, 0.58, 1)
+theme_override_font_sizes/font_size = 26
+text = "0"
+horizontal_alignment = 2
+
+[node name="expRow" type="HBoxContainer" parent="Margin/VBox/Reward"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Reward/expRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 26
+text = "Kill EXP"
+
+[node name="Value" type="Label" parent="Margin/VBox/Reward/expRow"]
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.82, 1, 1)
+theme_override_font_sizes/font_size = 26
+text = "0"
+horizontal_alignment = 2
+
+[node name="hintLabel" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.62, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "Click the enemy again or empty ground to deselect."
+autowrap_mode = 3

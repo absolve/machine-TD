@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dmskj8i7vlbkd" path="res://scene/custom_camera.tscn" id="5_jp76l"]
 [ext_resource type="PackedScene" uid="uid://cv37m245ebfbr" path="res://scene/pause_menu.tscn" id="6_pause"]
 [ext_resource type="PackedScene" uid="uid://v82shl8uewyp" path="res://scene/tower_detail_panel.tscn" id="7_panel"]
+[ext_resource type="PackedScene" path="res://scene/enemy_detail_panel.tscn" id="8_enemy"]
 
 [node name="map" type="Node2D" unique_id=988854810]
 script = ExtResource("1_rgtto")
@@ -39,6 +40,12 @@ offset_right = 1552.0
 offset_bottom = 1008.0
 
 [node name="towerDetailPanel" parent="hud" unique_id=830242403 instance=ExtResource("7_panel")]
+offset_left = 1536.0
+offset_top = 150.0
+offset_right = 1896.0
+offset_bottom = 850.0
+
+[node name="enemyDetailPanel" parent="hud" unique_id=830242404 instance=ExtResource("8_enemy")]
 offset_left = 1536.0
 offset_top = 150.0
 offset_right = 1896.0

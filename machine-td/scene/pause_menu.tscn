@@ -17,7 +17,7 @@ script = ExtResource("2_script")
 [node name="bg" type="ColorRect" parent="." unique_id=2142516651]
 offset_right = 1920.0
 offset_bottom = 1080.0
-color = Color(0, 0, 0, 0.18431373)
+color = Color(0, 0, 0, 0.55)
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1134434306]
 anchors_preset = 8

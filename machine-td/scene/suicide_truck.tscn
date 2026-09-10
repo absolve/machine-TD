@@ -2,6 +2,36 @@
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_t0tkm"]
 [ext_resource type="Script" uid="uid://c4gbv6mjgogn3" path="res://script/suicideTruck.gd" id="2_t0tkm"]
+[ext_resource type="Texture2D" uid="uid://wwik17nyfvgg" path="res://sprite/tankBody_huge_outline.png" id="3_dvu8v"]
+[ext_resource type="Texture2D" uid="uid://dfpa7wrynluk" path="res://sprite/tankDark_barrel1_outline.png" id="4_h52wa"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_m5j1v"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_dvu8v")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_t0tkm"]
+radius = 150.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vnqy1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_h52wa")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t0tkm"]
+size = Vector2(50, 50)
 
 [node name="suicideTruck" type="PathFollow2D" unique_id=141115296]
 loop = false
@@ -9,5 +39,24 @@ loop = false
 [node name="enemy" parent="." unique_id=822671381 instance=ExtResource("1_t0tkm")]
 script = ExtResource("2_t0tkm")
 enemyType = 6
+
+[node name="base" parent="enemy" index="0" unique_id=1108324432]
+sprite_frames = SubResource("SpriteFrames_m5j1v")
+
+[node name="radar" parent="enemy" index="1" unique_id=1066952876]
+visible = false
+
+[node name="shape" parent="enemy/radar" index="0" unique_id=1238677921]
+shape = SubResource("CircleShape2D_t0tkm")
+
+[node name="turret" parent="enemy" index="2" unique_id=108539921]
+sprite_frames = SubResource("SpriteFrames_vnqy1")
+offset = Vector2(8, 0)
+
+[node name="shape" parent="enemy" index="3" unique_id=359688443]
+shape = SubResource("RectangleShape2D_t0tkm")
+
+[connection signal="area_entered" from="enemy/radar" to="enemy" method="_on_radar_area_entered"]
+[connection signal="area_exited" from="enemy/radar" to="enemy" method="_on_radar_area_exited"]
 
 [editable path="enemy"]

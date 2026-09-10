@@ -26,3 +26,5 @@ position = Vector2(0, -50)
 
 [node name="delay" type="Timer" parent="." unique_id=692711619]
 one_shot = true
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]

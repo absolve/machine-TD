@@ -17,6 +17,7 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_x8u7t"]
+radius = 180.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ebyho"]
 animations = [{
