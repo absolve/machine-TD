@@ -71,3 +71,20 @@ _EnemyRole_support,Support,支援型
 _EnemyRole_bomber,Suicide Bomber,自爆型
 _EnemyRole_siege,Siege,远程打击型
 _EnemyRole_air,Air Unit,空中单位
+_LevelTitleFmt,Level %s,第 %s 关
+_LevelIntel,Level Briefing,关卡情报
+_BaseHealth,Base HP,基地生命
+_StartMoney,Start Money,初始金币
+_GemRewardShort,Gem Reward,宝石奖励
+_TotalEnemies,Total Enemies,敌人总数
+_EnemyTypes,Enemy Types,敌人种类
+_EnemyIntel,Enemy Intel,敌方情报
+_EnemyColName,Enemy,敌人
+_EnemyColRole,Role,定位
+_EnemyColCount,Count,数量
+_EnemyColHp,HP,血量
+_EnemyColSpeed,Speed,速度
+_EnemyColAir,Air,空中
+_BeginBattle,Begin Battle,开始战斗
+_IntelHint,"Close this window, then press Start to begin the battle.",关闭本窗口后点击开始按钮进入战斗。
+_NoEnemyData,No enemy data for this level.,本关暂无敌人数据。

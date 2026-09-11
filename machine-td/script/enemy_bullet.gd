@@ -20,5 +20,6 @@ func _check_hit():
 	for area in get_overlapping_areas():
 		if area.has_method("hurt"):
 			area.hurt(damage)
+			spawn_hit_effect()
 			queue_free()
 			return

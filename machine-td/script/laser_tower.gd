@@ -2,6 +2,7 @@ extends "res://script/tower.gd"
 
 const MAX_TARGETS := 3 # 最多同时锁定3个目标
 const ROTATION_SMOOTH := 8.0 # 炮管旋转平滑系数
+const LASER_EFFECT_SCENE := preload("res://scene/laser_muzzle_effect.tscn") # 开火粒子（贴图见 EffectAssets）
 
 var laser_targets: Array = [] # 当前激光锁定的敌人
 
@@ -40,11 +41,21 @@ func _physics_process(_delta: float):
 	queue_redraw()
 
 
-# 对所有锁定目标同时扣血一次(每次 atk 点伤害)
+# 对所有锁定目标同时扣血一次(每次 atk 点伤害)，并在炮口与命中点播放开火粒子
 func fire_lasers():
+	_spawn_laser_effect(get_muzzle_position())
 	for enemy in laser_targets:
 		if is_instance_valid(enemy) and enemy.has_method("hurt"):
 			enemy.hurt(atk,self)
+			_spawn_laser_effect(enemy.global_position)
+
+
+# 播放一次开火粒子特效（素材可在 EffectAssets 中统一替换）
+func _spawn_laser_effect(pos: Vector2) -> void:
+	var effect := LASER_EFFECT_SCENE.instantiate()
+	Game.addObj(effect)
+	# 加入场景树后再设置全局坐标，避免父节点偏移导致位置错误
+	effect.global_position = pos
 
 
 # 收集最多MAX_TARGETS个有效目标

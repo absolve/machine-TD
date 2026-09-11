@@ -12,6 +12,7 @@ extends Node2D
 @onready var waveProgressBar = $hud/waveProgressBar
 @onready var towerDetailPanel = $hud/towerDetailPanel
 @onready var enemyDetailPanel = $hud/enemyDetailPanel
+@onready var levelIntroPanel = $levelIntroPanel
 
 var level
 var gunTower = preload("res://scene/machineGunTower.tscn")
@@ -27,6 +28,7 @@ var cellSize = 64
 var debug = true
 var font
 var selectedTower = null # 选中的塔
+var stageData: Dictionary = {} # 当前关卡配置（用于关卡情报弹窗）
 # 最近一次“选中敌人”的时刻(毫秒)：用于避免同一击又被 _unhandled_input 当成点空地而立刻取消
 var _enemy_click_msec := -1000
 
@@ -74,6 +76,14 @@ func _ready():
 	#queue_redraw()
 	# print(int(1920.0 / cellSize))
 	font = ThemeDB.fallback_font
+	# 地图加载完成后弹出关卡情报，方便玩家查看本关敌人类型
+	show_level_intro()
+
+#显示关卡情报弹窗（关卡名 + 本关敌人类型等信息）
+func show_level_intro() -> void:
+	if levelIntroPanel == null:
+		return
+	levelIntroPanel.show_level(stageData)
 	
 #载入关卡
 func loadLevel():
@@ -86,6 +96,7 @@ func loadLevel():
 	if stage_data.is_empty():
 		push_error("未找到关卡数据: id=" + str(stage_id))
 		return
+	stageData = stage_data
 	var scene_path: String = stage_data.get("scene", "")
 	if scene_path.is_empty():
 		push_error("关卡未配置 scene 路径: id=" + str(stage_id))

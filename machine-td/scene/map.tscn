@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://cv37m245ebfbr" path="res://scene/pause_menu.tscn" id="6_pause"]
 [ext_resource type="PackedScene" uid="uid://v82shl8uewyp" path="res://scene/tower_detail_panel.tscn" id="7_panel"]
 [ext_resource type="PackedScene" path="res://scene/enemy_detail_panel.tscn" id="8_enemy"]
+[ext_resource type="PackedScene" path="res://scene/level_intro_panel.tscn" id="9_intro"]
 
 [node name="map" type="Node2D" unique_id=988854810]
 script = ExtResource("1_rgtto")
@@ -50,6 +51,8 @@ offset_left = 1536.0
 offset_top = 150.0
 offset_right = 1896.0
 offset_bottom = 850.0
+
+[node name="levelIntroPanel" parent="." unique_id=990114276 instance=ExtResource("9_intro")]
 
 [node name="customCamera" parent="." unique_id=76497160 instance=ExtResource("5_jp76l")]
 

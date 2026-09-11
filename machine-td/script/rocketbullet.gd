@@ -11,6 +11,7 @@ func _ready():
 func _spawn_bomb() -> void:
 	if is_queued_for_deletion():
 		return
+	spawn_hit_effect()
 	var bomb = bomb_scene.instantiate()
 	bomb.global_position = global_position
 	bomb.damage = source_tower.atk if is_instance_valid(source_tower) else damage

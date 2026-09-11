@@ -16,4 +16,5 @@ func _physics_process(delta):
 		for i in temp:
 			if i.has_method("hurt"):
 				i.hurt(damage)
+		spawn_hit_effect()
 		queue_free()
