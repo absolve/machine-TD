@@ -1,5 +1,7 @@
 extends Node
 
+signal tower_leveled_up(tower, level) # 防御塔升级（成就统计用）
+
 const MAX_LEVEL: int = 3  # 最大等级
 
 const configs: Dictionary = {
@@ -47,6 +49,12 @@ const configs: Dictionary = {
 	},
 }
 
+# 不参与升级的塔
+# EMP 干扰塔只做减速、不造成任何伤害，因此拿不到击杀经验，默认停在 Lv.1。
+# 它的 lv2 / lv3 配置保留在 configs 里，将来如果给它接上独立经验来源
+# （例如"减速覆盖时长"或"助攻计数"），把这里删掉即可直接启用。
+const NON_UPGRADABLE: Array = [Game.towerType.EMPTower]
+
 # 获取当前等级的经验阈值
 func getExpThreshold(towerType: Game.towerType, currentLevel: int) :
 	match currentLevel:
@@ -56,6 +64,10 @@ func getExpThreshold(towerType: Game.towerType, currentLevel: int) :
 			return configs[towerType]["exp3"]	
 		_:
 			return INF
+
+# 该塔类型是否参与升级：既要有效配置，也不能在排除名单里
+func canUpgrade(towerType) -> bool:
+	return configs.has(towerType) and not (towerType in NON_UPGRADABLE)
 
 # 获取目标等级的最终属性
 func getLevelConfig(towerType: Game.towerType, targetLevel: int) -> Dictionary:

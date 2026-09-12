@@ -88,3 +88,26 @@ _EnemyColAir,Air,空中
 _BeginBattle,Begin Battle,开始战斗
 _IntelHint,"Close this window, then press Start to begin the battle.",关闭本窗口后点击开始按钮进入战斗。
 _NoEnemyData,No enemy data for this level.,本关暂无敌人数据。
+_Achievements,Achievements,成就
+_AchievementUnlocked,Unlocked,已解锁
+_AchievementLocked,Locked,未解锁
+_AchvHoverHint,Hover an achievement to see its details,把鼠标移到成就上查看详情
+_AchievementToast,Achievement Unlocked,成就达成
+_Achv_first_defense_name,First Defense,初次防守
+_Achv_first_defense_desc,Complete level 1,完成第 1 关
+_Achv_ground_breaker_name,Ground Breaker,地面清扫者
+_Achv_ground_breaker_desc,Defeat 100 ground enemies in total,累计击败 100 个地面敌人
+_Achv_iron_hunter_name,Iron Hunter,重装猎手
+_Achv_iron_hunter_desc,Defeat 20 heavy or armored tanks in total,累计击败 20 个重型坦克或装甲坦克
+_Achv_sky_guardian_name,Sky Guardian,天空守卫
+_Achv_sky_guardian_desc,Defeat 30 air enemies in total,累计击败 30 个空中敌人
+_Achv_full_armory_name,Full Armory,全域火力
+_Achv_full_armory_desc,Use 7 kinds of towers in one level,同一关中使用过 7 种防御塔
+_Achv_chain_reaction_name,Chain Reaction,连锁反应
+_Achv_chain_reaction_desc,Defeat 5 enemies with Tesla or Rocket towers in one run,单局内使用 Tesla 或火箭塔击败 5 个敌人
+_Achv_veteran_tower_name,Veteran Tower,老兵塔
+_Achv_veteran_tower_desc,Level any tower up to level 3,任意一座塔升至 3 级
+_Achv_perfect_base_name,Perfect Base,零损防线
+_Achv_perfect_base_desc,Complete any level without losing base HP,不损失基地生命完成任意关卡
+_Achv_route_master_name,Route Master,路线掌控者
+_Achv_route_master_desc,Win a multi-route level with no enemies escaping,在多路线关卡中胜利且没有敌人逃脱

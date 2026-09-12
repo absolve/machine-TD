@@ -13,6 +13,7 @@ extends Node2D
 @onready var towerDetailPanel = $hud/towerDetailPanel
 @onready var enemyDetailPanel = $hud/enemyDetailPanel
 @onready var levelIntroPanel = $levelIntroPanel
+@onready var achievementTracker = $achievementTracker
 
 var level
 var gunTower = preload("res://scene/machineGunTower.tscn")
@@ -178,6 +179,9 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 	temp.coverGrid = towerCoverGrid
 	level.addOccupiedArea(towerCoverGrid)
 	add_child(temp)
+	# 记录本局用过的塔类型（全域火力成就）
+	if achievementTracker:
+		achievementTracker.record_tower_built(type)
 	#level.setShadowHide()
 	
 		
@@ -200,14 +204,21 @@ func defeatEnemy(point):
 
 #敌人逃脱
 func enemyEscape(point):
-	if titleNode.hp - point < 0:
-		print('game over')
-		pauseGame()
-		resultScreen.setResult(true)
-		resultScreen.levelRating.rating = 0
-		resultScreen.popup_centered()
+	# 先扣血再判定：hp 归零（而不是变成负数）就算基地被打爆
+	titleNode.hp = maxi(0, titleNode.hp - point)
+	if titleNode.hp <= 0:
+		_on_defense_failed()
 
-	titleNode.hp -= point
+# 基地被打爆：直接进入失败结算
+# 这里刻意不调用 pauseGame()，否则暂停菜单会和结算窗叠在一起
+func _on_defense_failed() -> void:
+	if resultScreen.visible:
+		return
+	get_tree().paused = true
+	resultScreen.setResult(true)
+	resultScreen.levelRating.rating = 0
+	resultScreen.setGemReward(0)
+	resultScreen.popup_centered()
 
 func startGame():
 	get_tree().paused = false
@@ -275,6 +286,11 @@ func finish():
 		
 	#所有敌人都被消灭，记录最高评分、奖励和下一关解锁状态
 	var rating = calculateStars()
+	# rating 为 0 表示基地已经被打爆，不算通关：不写星级、不解锁关卡、不发宝石
+	# （失败结算已经在 _on_defense_failed() 里弹过了，这里直接结束）
+	if rating <= 0:
+		return
+	record_achievements(rating)
 	var gem_reward := UserData.recordStageCompletion(StageData.currentStageId, rating)
 	titleNode.score = UserData.score
 	resultScreen.setResult(false)
@@ -292,6 +308,27 @@ func calculateStars() -> int:
 	if health_ratio >= 0.5:
 		return 2
 	return 1
+
+# 通关结算时提交成就进度
+# rating 为 0 表示基地被打爆，不算通关，不记录任何通关类成就
+func record_achievements(rating: int) -> void:
+	if achievementTracker == null or rating <= 0:
+		return
+	# 基地全程没掉血 <=> 没有任何敌人逃脱
+	var flawless: bool = titleNode.hp >= level.health
+	achievementTracker.record_stage_cleared(StageData.currentStageId, flawless, _is_multi_route_level())
+
+# 关卡是否有多条行军路线（存在多条 Path2D）
+func _is_multi_route_level() -> bool:
+	if level == null:
+		return false
+	var path_count := 0
+	for child in level.get_children():
+		if child is Path2D:
+			path_count += 1
+			if path_count > 1:
+				return true
+	return false
 
 #添加通知
 func addNotice(s, color: Color = Color.CORAL):

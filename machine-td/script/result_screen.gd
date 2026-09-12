@@ -24,8 +24,11 @@ func setResult(_isFailed: bool):
 	if isFailed:
 		resultLabel.text = tr("_LevelFailed")
 		gemRewardRow.visible = false
+		# 失败时没有下一关可去
+		btnNextLevel.visible = false
 	else:
 		resultLabel.text = tr("_LevelCompleted")
+		btnNextLevel.visible = true
 
 func setGemReward(amount: int) -> void:
 	gemRewardLabel.text = tr("_GemReward") % amount

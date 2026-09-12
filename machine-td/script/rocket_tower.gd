@@ -29,7 +29,8 @@ func _physics_process(_delta):
 func fire(t):
 	#print("fire")
 	if canShot:
-		#player.play("fire")
+		player.play("fire")
+		play_muzzle_flash(t.global_position)
 		var temp = bullet.instantiate()
 		temp.position = get_muzzle_position()
 		temp.angle = (t.global_position - get_muzzle_position()).angle()

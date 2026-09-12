@@ -1,22 +1,28 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://lelhwtky6d1x"]
 
-[ext_resource type="Script" path="res://script/level_intro_panel.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c1c8dhkiht5op" path="res://script/level_intro_panel.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
 [ext_resource type="StyleBox" path="res://theme/style/tower_panel_style.tres" id="3_panel"]
 [ext_resource type="StyleBox" path="res://theme/style/tower_separator.tres" id="4_sep"]
 
-[node name="levelIntroPanel" type="PopupPanel"]
+[node name="levelIntroPanel" type="PopupPanel" unique_id=235618938]
 oversampling_override = 1.0
 size = Vector2i(1040, 760)
+visible = true
 min_size = Vector2i(900, 600)
 theme = ExtResource("2_theme")
 theme_override_styles/panel = ExtResource("3_panel")
 script = ExtResource("1_script")
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="Margin" type="MarginContainer" parent="." unique_id=1879031230]
+custom_maximum_size = Vector2(-1, 800)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 1028.0
+offset_bottom = 748.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 28
@@ -24,54 +30,54 @@ theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 28
 theme_override_constants/margin_bottom = 24
 
-[node name="VBox" type="VBoxContainer" parent="Margin"]
+[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=1194444775]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="titleLabel" type="Label" parent="Margin/VBox"]
+[node name="titleLabel" type="Label" parent="Margin/VBox" unique_id=1609726902]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.996, 0.847, 0.263, 1)
 theme_override_font_sizes/font_size = 46
 text = "Level 1"
 horizontal_alignment = 1
 
-[node name="subtitleLabel" type="Label" parent="Margin/VBox"]
+[node name="subtitleLabel" type="Label" parent="Margin/VBox" unique_id=597241234]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.82, 0.9, 1)
 theme_override_font_sizes/font_size = 22
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="InfoBox" type="HBoxContainer" parent="Margin/VBox"]
+[node name="InfoBox" type="HBoxContainer" parent="Margin/VBox" unique_id=2111861966]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Sep1" type="HSeparator" parent="Margin/VBox"]
+[node name="Sep1" type="HSeparator" parent="Margin/VBox" unique_id=216744191]
 layout_mode = 2
 theme_override_styles/separator = ExtResource("4_sep")
 
-[node name="intelTitle" type="Label" parent="Margin/VBox"]
+[node name="intelTitle" type="Label" parent="Margin/VBox" unique_id=806693396]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.95, 1, 1)
 theme_override_font_sizes/font_size = 30
 text = "Enemy Intel"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Margin/VBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Margin/VBox" unique_id=562534420]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="enemyList" type="VBoxContainer" parent="Margin/VBox/ScrollContainer"]
+[node name="enemyList" type="VBoxContainer" parent="Margin/VBox/ScrollContainer" unique_id=261896943]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="Footer" type="HBoxContainer" parent="Margin/VBox"]
+[node name="Footer" type="HBoxContainer" parent="Margin/VBox" unique_id=710652941]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="hintLabel" type="Label" parent="Margin/VBox/Footer"]
+[node name="hintLabel" type="Label" parent="Margin/VBox/Footer" unique_id=1546803785]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.62, 0.72, 0.85, 1)
@@ -79,7 +85,7 @@ theme_override_font_sizes/font_size = 20
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="btnStart" type="Button" parent="Margin/VBox/Footer"]
+[node name="btnStart" type="Button" parent="Margin/VBox/Footer" unique_id=1697291592]
 custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 text = "Begin Battle"

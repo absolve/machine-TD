@@ -1,15 +1,38 @@
 [gd_scene format=3 uid="uid://cq5ajf7h5g7lc"]
 
 [ext_resource type="Script" uid="uid://bawykixets33u" path="res://script/achievement_panel.gd" id="1_3u4rb"]
+[ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail"]
+content_margin_left = 20.0
+content_margin_top = 14.0
+content_margin_right = 20.0
+content_margin_bottom = 14.0
+bg_color = Color(0.10196079, 0.10588235, 0.11764706, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.23529412, 0.25098041, 0.2627451, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="achievementPanel" type="Control" unique_id=1920206854]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 0
+theme = ExtResource("2_theme")
 script = ExtResource("1_3u4rb")
+
+[node name="bg" type="ColorRect" parent="." unique_id=1920206855]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 0
+color = Color(0, 0, 0, 0.62)
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=2128144188]
 layout_mode = 1
@@ -27,19 +50,85 @@ grow_vertical = 2
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Label" type="Label" parent="PanelContainer/VBoxContainer" unique_id=543356194]
+[node name="Header" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=1920206856]
 layout_mode = 2
-theme_override_font_sizes/font_size = 42
-text = "成就"
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/Header" unique_id=543356194]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 56
+text = "_Achievements"
 horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="btnClose" type="Button" parent="PanelContainer/VBoxContainer/Header" unique_id=1920206857]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 32
+text = "_Close"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/VBoxContainer" unique_id=393917016]
 layout_mode = 2
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
 follow_focus = true
 
 [node name="GridContainer" type="GridContainer" parent="PanelContainer/VBoxContainer/ScrollContainer" unique_id=1242284189]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 20
-columns = 3
+columns = 5
+
+[node name="DetailBox" type="PanelContainer" parent="PanelContainer/VBoxContainer" unique_id=1920206858]
+custom_minimum_size = Vector2(0, 152)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_detail")
+
+[node name="DetailHBox" type="HBoxContainer" parent="PanelContainer/VBoxContainer/DetailBox" unique_id=1920206859]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="IconCenter" type="CenterContainer" parent="PanelContainer/VBoxContainer/DetailBox/DetailHBox" unique_id=1920206860]
+layout_mode = 2
+
+[node name="detailIcon" type="TextureRect" parent="PanelContainer/VBoxContainer/DetailBox/DetailHBox/IconCenter" unique_id=1920206861]
+custom_minimum_size = Vector2(104, 104)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DetailVBox" type="VBoxContainer" parent="PanelContainer/VBoxContainer/DetailBox/DetailHBox" unique_id=1920206862]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 6
+
+[node name="DetailHeader" type="HBoxContainer" parent="PanelContainer/VBoxContainer/DetailBox/DetailHBox/DetailVBox" unique_id=1920206863]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="detailName" type="Label" parent="PanelContainer/VBoxContainer/DetailBox/DetailHBox/DetailVBox/DetailHeader" unique_id=1920206864]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 36
+text = "Achievement"
+vertical_alignment = 1
+
+[node name="detailStatus" type="Label" parent="PanelContainer/VBoxContainer/DetailBox/DetailHBox/DetailVBox/DetailHeader" unique_id=1920206865]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+vertical_alignment = 1
+
+[node name="detailDesc" type="Label" parent="PanelContainer/VBoxContainer/DetailBox/DetailHBox/DetailVBox" unique_id=1920206866]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+autowrap_mode = 3
+
+[node name="detailProgress" type="Label" parent="PanelContainer/VBoxContainer/DetailBox/DetailHBox/DetailVBox" unique_id=1920206867]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/Header/btnClose" to="." method="_on_btn_close_pressed"]

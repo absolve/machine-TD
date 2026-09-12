@@ -70,6 +70,7 @@ func _collect_targets() -> Array:
 
 
 func _draw():
+	super._draw()
 	if laser_targets.is_empty():
 		return
 	var start = to_local(marker.global_position)

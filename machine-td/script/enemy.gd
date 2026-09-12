@@ -104,6 +104,8 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 	if hp <= 0:
 		ExplosionManage.playExplosion(global_position)
 		Game.defeatEnemy.emit(reward)
+		# 成就统计需要知道敌人类型和击杀来源，必须在节点释放之前发出
+		Game.enemyDefeated.emit(self, _source)
 		owner.queue_free()
 		if _source != null && _source is Tower:
 			_source.addExp(rewardExp)
@@ -117,6 +119,13 @@ func addHp(_num: int):
 
 func fire(_t):
 	pass
+
+
+# 开火冷却结束：复位 canShot，允许下一次开火
+# 对抗型敌人（中型坦克 / 导弹车 / 攻击直升机 / 维修车）开火后会把 canShot 置 false
+# 并启动 delay 定时器，靠这个回调复位，否则整局只会开火一次
+func _on_delay_timeout() -> void:
+	canShot = true
 
 
 func _physics_process(_delta):

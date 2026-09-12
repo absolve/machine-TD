@@ -33,6 +33,9 @@ var initTime = 1 #初始化时间 秒
 @onready var towerRank = $towerRank
 @onready var lifeBar=$lifeBar
 @onready var deploySound=$deploySound
+@onready var spark=$spark
+# 开火特效播放器：只有配置了炮口闪光的塔才有这个节点，其余塔为 null
+@onready var sparkPlayer = get_node_or_null("sparkPlayer")
 
 var radarSweepAngle := 0.0
 const RADAR_SCAN_SPEED := 1.8
@@ -105,10 +108,10 @@ func addExp(amount: int) -> void:
 	if level >= TowerUpgradeManager.MAX_LEVEL:
 		update_status_ui()
 		return
-	if !TowerUpgradeManager.configs.has(type):
+	# 没有升级配置、或被明确排除的塔（如 EMP 干扰塔）不参与升级
+	if not TowerUpgradeManager.canUpgrade(type):
 		update_status_ui()
 		return
-	print('addExp', amount)
 	towerExp += amount
 	var threshold = TowerUpgradeManager.getExpThreshold(type, level)
 	if towerExp >= threshold:
@@ -143,6 +146,7 @@ func levelUp() -> void:
 	towerRank.setLevel(level)
 	playUpgradeGlow()
 	update_status_ui()
+	TowerUpgradeManager.tower_leveled_up.emit(self, level)
 	
 
 # 升级闪光: 启用 shader -> 亮度淡入 -> 闪烁 -> 淡出 -> 关闭
@@ -200,6 +204,16 @@ func get_muzzle_position() -> Vector2:
 	if is_instance_valid(marker):
 		return marker.global_position
 	return global_position
+
+
+# 开火特效：把炮口闪光转到目标方向，并播放一次 spark 动画
+# spark 是挂在塔根节点下的（不跟着炮管转），所以这里要手动设一次朝向
+# 没有配置 sparkPlayer 的塔（EMP / 特斯拉 / 激光 / 无人机基地）会自动跳过
+func play_muzzle_flash(target_position: Vector2) -> void:
+	if spark == null or sparkPlayer == null:
+		return
+	spark.rotation = (target_position - marker.global_position).angle()
+	sparkPlayer.play("spark")
 
 func _draw():
 	if not selected:

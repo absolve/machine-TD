@@ -120,6 +120,8 @@ func _draw():
 	_draw_lightning_path(jagged_points, LIGHTNING_COLOR, 13.0, 1.0, 0.25, 0.75)
 	# 每个击中点画一个光晕
 	for enemy in chain_targets:
+		if !is_instance_valid(enemy):
+			continue
 		var p = to_local(enemy.global_position)
 		draw_circle(p, 10.0, Color(1.0, 1.0, 1.0, 0.5))
 		draw_circle(p, 5.0, Color(LIGHTNING_COLOR.r, LIGHTNING_COLOR.g, LIGHTNING_COLOR.b, 0.8))

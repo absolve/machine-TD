@@ -30,6 +30,7 @@ func fire(t):
 	#print("fire")
 	if canShot:
 		player.play("fire")
+		play_muzzle_flash(t.global_position)
 		var temp = bullet.instantiate()
 		temp.position = marker.global_position
 		temp.angle = (t.global_position - marker.global_position).angle()

@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=17 format=3 uid="uid://em0nibpopl3n"]
+[gd_resource type="Theme" load_steps=18 format=3 uid="uid://em0nibpopl3n"]
 
 [ext_resource type="FontFile" uid="uid://iyip2w6pe3es" path="res://font/AlibabaPuHuiTi-3-85-Bold.ttf" id="1_font"]
 [ext_resource type="StyleBox" uid="uid://bdcoonp8pa5ip" path="res://theme/style/panel_style.tres" id="1_panel"]
@@ -16,6 +16,7 @@
 [ext_resource type="StyleBox" path="res://theme/style/scroll_bg.tres" id="1_scrb"]
 [ext_resource type="StyleBox" path="res://theme/style/scroll_grabber.tres" id="1_scrg"]
 [ext_resource type="StyleBox" path="res://theme/style/scroll_grabber_hi.tres" id="1_scrh"]
+[ext_resource type="StyleBox" path="res://theme/style/tooltip_panel.tres" id="1_tip"]
 
 [resource]
 default_font = ExtResource("1_font")
@@ -62,6 +63,9 @@ PopupMenu/styles/panel = ExtResource("1_menup")
 PopupMenu/styles/separator = ExtResource("1_sep")
 PopupPanel/styles/panel = ExtResource("1_panel")
 RichTextLabel/colors/default_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
+TooltipLabel/colors/font_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
+TooltipLabel/font_sizes/font_size = 22
+TooltipPanel/styles/panel = ExtResource("1_tip")
 VScrollBar/styles/grabber = ExtResource("1_scrg")
 VScrollBar/styles/grabber_highlight = ExtResource("1_scrh")
 VScrollBar/styles/grabber_pressed = ExtResource("1_scrh")

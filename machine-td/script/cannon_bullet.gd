@@ -15,6 +15,7 @@ func _physics_process(delta):
 	if temp:
 		for i in temp:
 			if i.has_method("hurt"):
-				i.hurt(damage)
+				# 带上发射者，敌人死亡时才能把经验算给这座塔
+				i.hurt(damage, source_tower)
 		spawn_hit_effect()
 		queue_free()

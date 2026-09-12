@@ -4,73 +4,82 @@ signal achievement_unlocked(achievement_id: String, achievement: Dictionary)
 
 const ACHIEVEMENTS: Dictionary = {
 	"first_defense": {
-		"name": "初次防守",
+		"name": "_Achv_first_defense_name",
 		"category": "stage",
-		"description": "完成第 1 关",
+		"description": "_Achv_first_defense_desc",
+		"icon": "res://sprite/red-flag.png",
 		"target": 1,
 		"reward_gem": 10,
 		"reward_title": ""
 	},
 	"ground_breaker": {
-		"name": "地面清扫者",
+		"name": "_Achv_ground_breaker_name",
 		"category": "combat",
-		"description": "累计击败 100 个地面敌人",
+		"description": "_Achv_ground_breaker_desc",
+		"icon": "res://sprite/tankBody_blue_outline.png",
 		"target": 100,
 		"reward_gem": 15,
 		"reward_title": ""
 	},
 	"iron_hunter": {
-		"name": "重装猎手",
+		"name": "_Achv_iron_hunter_name",
 		"category": "combat",
-		"description": "累计击败 20 个重型坦克或装甲坦克",
+		"description": "_Achv_iron_hunter_desc",
+		"icon": "res://sprite/tankBody_bigRed_outline.png",
 		"target": 20,
 		"reward_gem": 20,
 		"reward_title": ""
 	},
 	"sky_guardian": {
-		"name": "天空守卫",
+		"name": "_Achv_sky_guardian_name",
 		"category": "combat",
-		"description": "累计击败 30 个空中敌人",
+		"description": "_Achv_sky_guardian_desc",
+		"icon": "res://sprite/Hel_12.png",
 		"target": 30,
 		"reward_gem": 20,
 		"reward_title": "天空守卫"
 	},
 	"full_armory": {
-		"name": "全域火力",
+		"name": "_Achv_full_armory_name",
 		"category": "build",
-		"description": "同一关中使用过 7 种防御塔",
+		"description": "_Achv_full_armory_desc",
+		"icon": "res://sprite/tower2.png",
 		"target": 7,
 		"reward_gem": 25,
 		"reward_title": ""
 	},
 	"chain_reaction": {
-		"name": "连锁反应",
+		"name": "_Achv_chain_reaction_name",
 		"category": "build",
-		"description": "单局内使用 Tesla 或火箭塔击败 5 个敌人",
+		"description": "_Achv_chain_reaction_desc",
+		"icon": "res://sprite/bolt.png",
 		"target": 5,
 		"reward_gem": 15,
 		"reward_title": ""
 	},
 	"veteran_tower": {
-		"name": "老兵塔",
+		"name": "_Achv_veteran_tower_name",
 		"category": "growth",
-		"description": "任意一座塔升至 3 级",
+		"description": "_Achv_veteran_tower_desc",
+		"icon": "res://sprite/star-4.png",
 		"target": 3,
 		"reward_gem": 20,
 		"reward_title": ""
 	},
 	"perfect_base": {
-		"name": "零损防线",
+		"name": "_Achv_perfect_base_name",
 		"category": "stage",
-		"description": "不损失基地生命完成任意关卡",
+		"description": "_Achv_perfect_base_desc",
+		"icon": "res://sprite/shield.png",
 		"target": 1,
 		"reward_gem": 30,
 		"reward_title": ""
 	},
 	"route_master": {
-		"name": "路线掌控者",
+		"name": "_Achv_route_master_name",
 		"category": "stage",
-		"description": "在多路线关卡中胜利且没有敌人逃脱",
+		"description": "_Achv_route_master_desc",
+		"icon": "res://sprite/SolidArrow-Right.png",
 		"target": 1,
 		"reward_gem": 30,
 		"reward_title": "路线掌控者"

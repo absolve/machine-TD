@@ -27,6 +27,8 @@ shader_parameter/flash_amplitude = 1.0
 shader_parameter/outline_thickness = 2.0
 shader_parameter/outline_color = Color(1, 1, 1, 1)
 
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hwngx"]
+
 [node name="Tower" type="Area2D" unique_id=1676258242]
 collision_mask = 0
 input_pickable = false
@@ -51,6 +53,10 @@ material = SubResource("ShaderMaterial_vn0ct")
 
 [node name="Marker2D" type="Marker2D" parent="turret" unique_id=1564610297]
 
+[node name="spark" type="AnimatedSprite2D" parent="." unique_id=2136824957]
+visible = false
+z_index = 1
+
 [node name="towerRank" parent="." unique_id=1195618471 instance=ExtResource("2_y3288")]
 position = Vector2(85, -64)
 
@@ -61,6 +67,7 @@ one_shot = true
 position = Vector2(0, -70)
 
 [node name="player" type="AnimationPlayer" parent="." unique_id=1035425773]
+libraries/ = SubResource("AnimationLibrary_hwngx")
 
 [node name="ProgressBar" type="ProgressBar" parent="." unique_id=1203597731]
 anchors_preset = 8

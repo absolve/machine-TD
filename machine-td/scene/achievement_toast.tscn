@@ -1,0 +1,77 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://script/achievement_toast.gd" id="1_toast"]
+[ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_toast"]
+content_margin_left = 18.0
+content_margin_top = 14.0
+content_margin_right = 18.0
+content_margin_bottom = 14.0
+bg_color = Color(0.09, 0.11, 0.16, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.74, 0.34, 0.92)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_color = Color(0.85, 0.74, 0.34, 0.22)
+shadow_size = 12
+
+[node name="achievementToast" type="PanelContainer"]
+visible = false
+custom_minimum_size = Vector2(440, 140)
+offset_left = 1920.0
+offset_top = 860.0
+offset_right = 2360.0
+offset_bottom = 1000.0
+mouse_filter = 2
+theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("StyleBoxFlat_toast")
+script = ExtResource("1_toast")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="iconCenter" type="CenterContainer" parent="HBox"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="icon" type="TextureRect" parent="HBox/iconCenter"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="vbox" type="VBoxContainer" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="headerLabel" type="Label" parent="HBox/vbox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.996, 0.847, 0.263, 1)
+theme_override_font_sizes/font_size = 22
+text = "_AchievementToast"
+
+[node name="nameLabel" type="Label" parent="HBox/vbox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 34
+clip_text = true
+
+[node name="descLabel" type="Label" parent="HBox/vbox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.72, 0.76, 0.82, 1)
+theme_override_font_sizes/font_size = 20
+text_overrun_behavior = 3

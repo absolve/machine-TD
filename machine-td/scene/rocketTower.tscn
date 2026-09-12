@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_ojo5w"]
 [ext_resource type="Script" uid="uid://ba0syy3x76icx" path="res://script/rocket_tower.gd" id="2_kf01a"]
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_f662h"]
+[ext_resource type="Texture2D" uid="uid://cqfjqk8bkohut" path="res://sprite/towerDefense_tile295.png" id="4_spark"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f662h"]
 size = Vector2(64, 64)
@@ -41,11 +42,112 @@ animations = [{
 }]
 
 [sub_resource type="Animation" id="Animation_f662h"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("turret:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_rocket_fire"]
 resource_name = "fire"
+length = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("turret:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.08, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-8, 0), Vector2(0, 0)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_0vk61"]
 _data = {
-&"fire": SubResource("Animation_f662h")
+&"RESET": SubResource("Animation_f662h"),
+&"fire": SubResource("Animation_rocket_fire")
+}
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_spark"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_spark")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Animation" id="Animation_spark_reset"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("spark:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("spark:modulate:a")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_spark"]
+resource_name = "spark"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("spark:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.26666668),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("spark:modulate:a")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_spark"]
+_data = {
+&"RESET": SubResource("Animation_spark_reset"),
+&"spark": SubResource("Animation_spark")
 }
 
 [node name="Tower" unique_id=1503874794 instance=ExtResource("1_ojo5w")]
@@ -74,13 +176,21 @@ sprite_frames = SubResource("SpriteFrames_4ky5n")
 [node name="Marker2D" parent="turret" index="0" unique_id=1564610297]
 position = Vector2(45, 0)
 
-[node name="lifeBar" parent="." index="5" unique_id=1589605555]
+[node name="spark" parent="." index="4" unique_id=2136824957]
+sprite_frames = SubResource("SpriteFrames_spark")
+offset = Vector2(34, 0)
+
+[node name="lifeBar" parent="." index="7" unique_id=1589605555]
 position = Vector2(0, -53)
 
-[node name="player" parent="." index="6" unique_id=1035425773]
+[node name="player" parent="." index="8" unique_id=1035425773]
 libraries/ = SubResource("AnimationLibrary_0vk61")
 
-[node name="ProgressBar" parent="." index="7" unique_id=1203597731]
+[node name="sparkPlayer" type="AnimationPlayer" parent="." index="9" unique_id=2136824958]
+libraries/ = SubResource("AnimationLibrary_spark")
+speed_scale = 2.0
+
+[node name="ProgressBar" parent="." index="10" unique_id=1203597731]
 offset_left = -32.0
 offset_top = -17.0
 offset_right = 32.0

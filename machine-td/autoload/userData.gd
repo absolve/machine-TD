@@ -103,6 +103,10 @@ func getStageRating(stage_id: int) -> int:
 
 func recordStageCompletion(stage_id: int, rating: int) -> int:
 	rating = clampi(rating, 0, 3)
+	# rating 为 0 表示基地被打爆，不算通关：
+	# 不记星级、不解锁关卡、不发宝石（这里兜底，防止调用方漏判）
+	if rating <= 0:
+		return 0
 	var old_rating := getStageRating(stage_id)
 	var first_completion := not stageRatings.has(str(stage_id)) and not stageRatings.has(stage_id)
 	if rating > old_rating:

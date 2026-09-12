@@ -196,6 +196,8 @@ signal lastWave # 最后一波
 signal clickTower
 @warning_ignore("unused_signal")
 signal clickEnemy # 点击敌人（在地图上选中敌人，由 enemy.gd 的 input_event 发出）
+@warning_ignore("unused_signal")
+signal enemyDefeated(enemy, source) # 敌人被击杀（成就统计用；在节点释放前发出）
 
 
 var map = null

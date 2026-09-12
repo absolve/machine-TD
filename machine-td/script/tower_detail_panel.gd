@@ -76,8 +76,8 @@ func refresh() -> void:
 	hp_bar.value = clampi(t.hp, 0, max_hp)
 	hp_value_label.text = "%d/%d" % [maxi(0, t.hp), max_hp]
 
-	# 经验（满级 / 无升级配置时显示 MAX）
-	var maxed: bool = t.level >= TowerUpgradeManager.MAX_LEVEL or not TowerUpgradeManager.configs.has(t.type)
+	# 经验（满级 / 该塔不参与升级时显示 MAX）
+	var maxed: bool = t.level >= TowerUpgradeManager.MAX_LEVEL or not TowerUpgradeManager.canUpgrade(t.type)
 	if maxed:
 		exp_bar.max_value = 1
 		exp_bar.value = 1

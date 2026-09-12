@@ -4,8 +4,6 @@
 [ext_resource type="Script" uid="uid://bq486lhicbx3x" path="res://script/drone.gd" id="2_jxxn5"]
 [ext_resource type="Texture2D" uid="uid://ck67srsef3ay2" path="res://sprite/enemy@2.png" id="3_il87p"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_stha5"]
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_bneum"]
 atlas = ExtResource("3_il87p")
 region = Rect2(256, 128, 128, 128)
@@ -21,20 +19,27 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_il87p"]
-radius = 128.0
+[sub_resource type="Gradient" id="Gradient_trail"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(0.55, 0.9, 1, 0, 0.55, 0.9, 1, 0.35, 0.62, 0.95, 1, 1)
+
+[sub_resource type="Curve" id="Curve_trail"]
+_data = [Vector2(0, 0.15), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
 
 [node name="aircraft" unique_id=77046293 instance=ExtResource("1_8wg5q")]
 script = ExtResource("2_jxxn5")
 
-[node name="shape" parent="." index="0" unique_id=1374798482]
-shape = SubResource("RectangleShape2D_stha5")
-
-[node name="ani" parent="." index="1" unique_id=748097984]
+[node name="ani" parent="." index="0" unique_id=748097984]
 sprite_frames = SubResource("SpriteFrames_il87p")
 
-[node name="radar" parent="." index="2" unique_id=788993573]
-visible = false
-
-[node name="shape" parent="radar" index="0" unique_id=311842238]
-shape = SubResource("CircleShape2D_il87p")
+[node name="trail" type="Line2D" parent="." index="1"]
+top_level = true
+z_index = -1
+width = 7.0
+default_color = Color(0.55, 0.9, 1, 1)
+gradient = SubResource("Gradient_trail")
+width_curve = SubResource("Curve_trail")
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2

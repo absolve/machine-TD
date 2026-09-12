@@ -10,7 +10,9 @@
 [ext_resource type="PackedScene" uid="uid://cv37m245ebfbr" path="res://scene/pause_menu.tscn" id="6_pause"]
 [ext_resource type="PackedScene" uid="uid://v82shl8uewyp" path="res://scene/tower_detail_panel.tscn" id="7_panel"]
 [ext_resource type="PackedScene" path="res://scene/enemy_detail_panel.tscn" id="8_enemy"]
-[ext_resource type="PackedScene" path="res://scene/level_intro_panel.tscn" id="9_intro"]
+[ext_resource type="PackedScene" uid="uid://lelhwtky6d1x" path="res://scene/level_intro_panel.tscn" id="9_intro"]
+[ext_resource type="Script" path="res://script/achievement_tracker.gd" id="10_track"]
+[ext_resource type="PackedScene" path="res://scene/achievement_toast.tscn" id="11_toast"]
 
 [node name="map" type="Node2D" unique_id=988854810]
 script = ExtResource("1_rgtto")
@@ -52,9 +54,15 @@ offset_top = 150.0
 offset_right = 1896.0
 offset_bottom = 850.0
 
+[node name="achievementToast" parent="hud" unique_id=990114278 instance=ExtResource("11_toast")]
+
 [node name="levelIntroPanel" parent="." unique_id=990114276 instance=ExtResource("9_intro")]
+visible = false
 
 [node name="customCamera" parent="." unique_id=76497160 instance=ExtResource("5_jp76l")]
+
+[node name="achievementTracker" type="Node" parent="." unique_id=990114277]
+script = ExtResource("10_track")
 
 [node name="Timer" type="Timer" parent="." unique_id=1553136818]
 wait_time = 2.0
