@@ -3,22 +3,24 @@
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_qs0ou"]
 [ext_resource type="Script" uid="uid://b6k1p768pwknc" path="res://script/about_panel.gd" id="2_5mklv"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aimcf"]
-
-[node name="aboutPanel" type="PopupPanel" unique_id=968686525]
-oversampling_override = 1.0
-size = Vector2i(640, 360)
-min_size = Vector2i(640, 360)
-max_size = Vector2i(1400, 900)
+[node name="aboutPanel" type="Control" unique_id=968686525]
+visible = false
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 0
 theme = ExtResource("1_qs0ou")
-theme_override_styles/panel = SubResource("StyleBoxEmpty_aimcf")
 script = ExtResource("2_5mklv")
 
 [node name="OuterMargin" type="MarginContainer" parent="." unique_id=2052520945]
+custom_minimum_size = Vector2(980, 560)
 custom_maximum_size = Vector2(980, 900)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 22

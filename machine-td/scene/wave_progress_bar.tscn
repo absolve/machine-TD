@@ -4,14 +4,14 @@
 [ext_resource type="Shader" uid="uid://db516slrm4x4d" path="res://shader/wave_progress_glow.gdshader" id="2_l4j0n"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]
-bg_color = Color(0.12, 0.14, 0.14, 0.85)
+bg_color = Color(0.22745098, 0.2509804, 0.30980393, 0.88)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2"]
-bg_color = Color(0.23, 0.9, 0.38, 1)
+bg_color = Color(1, 0.7764706, 0.101960786, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8

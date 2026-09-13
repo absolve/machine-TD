@@ -6,22 +6,25 @@
 [ext_resource type="PackedScene" uid="uid://dpt6basf7cnu6" path="res://scene/level_rating.tscn" id="3_x8uhl"]
 [ext_resource type="Texture2D" uid="uid://bclj50neqlyof" path="res://sprite/coin.png" id="4_coin"]
 
-[node name="resultScreen" type="Window" unique_id=915205388]
+[node name="resultScreen" type="Control" unique_id=915205388]
 process_mode = 3
-transparent_bg = true
-oversampling_override = 1.0
-size = Vector2i(1920, 1080)
-borderless = true
-transparent = true
+visible = false
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 0
 theme = ExtResource("1_wmp4s")
 script = ExtResource("2_h36hl")
 
 [node name="bg" type="ColorRect" parent="." unique_id=1668250760]
+layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
-color = Color(0, 0, 0, 0.55)
+mouse_filter = 2
+color = Color(0.12156863, 0.14901961, 0.17254902, 0.45)
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=155716288]
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -82,7 +85,7 @@ stretch_mode = 5
 
 [node name="gemRewardLabel" type="Label" parent="PanelContainer/VBoxContainer3/MarginContainer/vbox/gemRewardRow" unique_id=714254083]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.9, 1, 1)
+theme_override_colors/font_color = Color(0.43529412, 0.8392157, 0.91764706, 1)
 theme_override_font_sizes/font_size = 28
 text = "获得宝石：+0"
 horizontal_alignment = 1

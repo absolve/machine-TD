@@ -1,4 +1,5 @@
-extends Window
+extends Control
+## 通关 / 失败结算面板。已从 Window 改为普通 Control，否则嵌入式子窗口会盖在场景切换遮罩之上。
 
 @onready var levelRating = $PanelContainer/VBoxContainer3/MarginContainer/vbox/levelRating
 @onready var resultLabel = $PanelContainer/VBoxContainer3/MarginContainer/vbox/resultLabel

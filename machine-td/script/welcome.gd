@@ -24,7 +24,7 @@ func _ready() -> void:
 
 
 func _on_button_3_pressed():
-	aboutPanel.popup_centered()
+	aboutPanel.show()
 
 
 func _on_tutorial_pressed() -> void:
@@ -39,7 +39,7 @@ func _on_btn_s_start_pressed() -> void:
 	SceneTransition.change_scene("res://scene/level_select.tscn")
 
 func _on_setting_pressed() -> void:
-	settingPanel.popup_centered()
+	settingPanel.show()
 
 
 func _on_setting_close() -> void:

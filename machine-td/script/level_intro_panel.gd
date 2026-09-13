@@ -1,5 +1,10 @@
-extends PopupPanel
+extends Control
 ## 关卡开始前的情报弹窗。
+##
+## 已从 PopupPanel 改为普通 Control —— Godot 的嵌入式子窗口（Window / Popup / PopupPanel）
+## 永远画在所有 CanvasLayer 之上，会让场景切换的遮罩盖不住它。
+## 背景 StyleBox 因此从 PopupPanel 的 `panel` 主题项搬到了 `panelBg`（Panel 节点）上。
+##
 ## 地图加载完成后弹出，显示关卡名、波数、基地生命、初始金币、宝石奖励，
 ## 以及本关会出现的全部敌人类型（名称 / 定位 / 数量 / 血量 / 速度 / 是否空中）。
 ## 敌人数据统一取自 Game.enemyInfo 和 StageData.allStage，避免与战斗数值不同步。
@@ -19,8 +24,8 @@ const COL_WIDTH_HP := 110
 const COL_WIDTH_SPEED := 110
 const COL_WIDTH_AIR := 80
 
-const COLOR_HEADER := Color(0.62, 0.72, 0.85, 1.0)
-const COLOR_TEXT := Color(1.0, 1.0, 1.0, 1.0)
+const COLOR_HEADER := Color(0.65882355, 0.6862745, 0.65882355, 1.0)
+const COLOR_TEXT := Color(0.89411765, 0.92156863, 0.8745098, 1.0)
 
 
 func _ready() -> void:
@@ -37,7 +42,7 @@ func show_level(stage_data: Dictionary) -> void:
 	_fill_header(stage_data)
 	_build_info(stage_data)
 	_build_enemy_list(stage_data)
-	popup_centered()
+	show()
 
 
 func _fill_header(stage_data: Dictionary) -> void:

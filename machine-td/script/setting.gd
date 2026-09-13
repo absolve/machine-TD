@@ -1,4 +1,5 @@
-extends Window
+extends Control
+## 设置面板。已从 Window 改为普通 Control，否则嵌入式子窗口会盖在场景切换遮罩之上。
 
 var sound = preload("res://sound/Pickup.wav")
 

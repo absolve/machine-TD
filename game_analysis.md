@@ -30,8 +30,8 @@ autoload/   Game(数值表+信号) UserData(存档) StageData(关卡数据) Towe
 script/     map(关卡总控) base_level(波次/出怪/可建造) tower(塔基类) enemy(敌人基类)
             achievement_tracker(成就记录) + 各塔/各敌人/各 UI 脚本
 scene/      level/(12 张地图) ui/(复用组件) + 各类弹窗面板塔敌人子弹
-theme/      深色主题 theme.tres + 31 个 StyleBox
-shader/     7 个（升级发光 / 雷达 / 成就图标发光 / 成就图标置灰 / 波次进度 / 背景 / 转场）
+theme/      深银金属主题 theme.tres + 31 个 StyleBox
+shader/     7 个（升级发光 / 成就图标发光 / 成就图标置灰 / 波次进度×2 / 背景 / 场景擦除）
 ```
 
 ---
@@ -42,7 +42,8 @@ shader/     7 个（升级发光 / 雷达 / 成就图标发光 / 成就图标置
 
 - 主菜单 → 选关 → 战斗（波次 / 出怪 / 建塔 / 结算）→ 星级评定 → 宝石奖励 → 存档
 - 关卡解锁与星级记录、重复通关不重复发奖励
-- 场景切换黑屏淡入淡出、暂停菜单、失败 / 通关结果弹窗、返回主菜单
+- 场景切换：`SceneTransition.change_scene(path)` 由着色器做主→下柔边擦除，遮罩盖满后异步加载目标场景
+  （结构见 `scene/scene_transition.tscn`，参数都在场景的 ShaderMaterial 上），期间吞掉全部输入防点击穿透
 - 关卡开场情报面板（敌人种类 / 数量 / 属性预览）
 
 ### 3.2 防御塔
@@ -68,7 +69,12 @@ shader/     7 个（升级发光 / 雷达 / 成就图标发光 / 成就图标置
 
 ### 3.4 UI 与主题
 
-- 统一深色主题（浏览器深色风格）：弹窗、按钮、下拉、滑块、滚动条、分隔线、Tooltip 全覆盖
+- **深银金属主题**（2026-09-13 由亮色 v1.0 重建，v2.0）：调色板从参考资源包
+  `factory asset v.2 - chemical lab` 的像素聚类提取，中低明度蓝灰金属阶梯 + 安全黄强调 +
+  化学绿/锈红/青语义色。**世界中性灰、UI 沉**，三层明度（世界 0.28 / 地图内面板 0.05 / 模态面板 0.02）。
+  背景基色与 `rendering/environment/defaults/default_clear_color` 同为 `#8C9195`，全场景底色一致。
+  弹窗、按钮、下拉、滑块、滚动条、分隔线、Tooltip 全覆盖；地图内面板走更亮一档的"仪表盘"配色。
+  规范见 [art_style.md](art_style.md)，迁移对照与验证见其 §9 / §10。
 - 地图内的塔 / 敌人面板使用**独立的军事科技风**（深藏青 + 青色描边 + 外发光），与界面弹窗区分
 - 主菜单 4 个按钮图标各自配色 + 成就图标悬停发光着色器
 - 波次进度条（含关键波节点与悬停提示）、Toast 文本提示、生命条、星级评分
@@ -363,7 +369,7 @@ if titleNode.hp - point < 0:      # 只有打成负数才算失败，hp == 0 时
 | 类别 | 对象 |
 | --- | --- |
 | 孤儿场景 | `scene/level_grid.tscn`、`scene/placeable_area.tscn` + `script/placeable_area.gd`、`scene/tower_status_ui.tscn` + `script/tower_status_ui.gd` |
-| 孤儿着色器 | `shader/scene_transition.gdshader`（转场已改为纯 ColorRect 淡入淡出）、`shader/wave_progress_spark.gdshader`（进度条只用 glow 那支） |
+| 孤儿着色器 | `shader/wave_progress_spark.gdshader`（进度条只用 glow 那支） |
 | 孤儿资源 | `scene/level/fg_tile_set.tres`（关卡实际用 `new_tile_set.tres`）、`theme/style/item_border.tres`、`sound/button_on.mp3` |
 | 陈旧副本 | `script/userData.gd` —— 是 `autoload/userData.gd` 的旧版本，既未注册也无人引用 |
 | 空插件 | `addons/toast/` —— `autoLoad.gd` 只有 `extends Node`，`project.godot` 里也没有 `[editor_plugins]` 段，从未启用 |
@@ -385,8 +391,49 @@ if titleNode.hp - point < 0:      # 只有打成负数才算失败，hp == 0 时
    自爆车已加清理，其余塔和敌人尚未统一；特斯拉的绘制路径更是直接缺校验（见 §5.19）。
 3. **伤害类型没有完全贯通** —— 激光塔调用 `enemy.hurt()` 时未传 `"energy"`，护甲规则对激光不生效。
 4. **通关结算可能重复触发** —— 结果窗口按钮与场景切换缺少统一的防重入保护。
+   *（场景切换一侧已加 `is_transitioning` 闸门，重复调用会被忽略；结果窗口按钮自身仍未防抖。）*
 5. **塔与敌人的点击判定用了两套写法** —— 塔用 `Input.is_action_just_pressed("click")`，
    敌人用事件对象的 `_event.is_action_pressed("click")`。真实输入下都正常，但不利于统一测试。
+6. ~~**嵌入式子窗口一定画在所有 CanvasLayer 之上**~~ —— ✅ **2026-09-12 已修复**。
+   5 个弹窗（`about_panel` / `level_intro_panel` / `pause_menu` / `result_screen` / `setting`）
+   原本是 `Window` / `PopupPanel`（`PopupPanel` 在 Godot 4 里也是 `Window` 的子类），
+   Godot 会把它们渲染成**独立子窗口**，任何 `CanvasLayer` 都盖不住，转场时弹窗会浮在遮罩上面。
+   现已全部改为普通 `Control`：场景根节点铺满 1920×1080 并 `mouse_filter = STOP`（保留模态拦截），
+   内容居中，`visible = false` 起步。
+   另外 `map.tscn` 新增了 `popupLayer`(CanvasLayer, `layer = 10`) 承载三个战斗内弹窗 ——
+   因为 `hud` 也是 CanvasLayer，同级 Control 会被它压住。
+
+### 7.1 场景切换改造的验证记录（2026-09-12，真实运行）
+
+用临时工程副本跑 `res://scheck.tscn` + 常驻 checker，共 **45 项断言，0 失败**，无运行期脚本报错：
+
+| 检查项 | 方法 | 实测 |
+| --- | --- | --- |
+| autoload 结构 | 取 `/root/SceneTransition` 子节点 | `[canvasLayer]`，`layer = 100`，`canvasLayer/overlay` 存在 |
+| 着色器挂载 | 读 `overlay.material.shader` | `res://shader/transition.gdshader` |
+| `factor` 语义 | 逐档渲染后反解 alpha² | 0→0.00、0.35→0.42、0.5→0.62、0.65→0.82、1→1.00 |
+| 擦除方向 | 半程时对比上 / 下三分之一 | 上 1.00 > 下 0.00，自上而下 |
+| 柔边宽度 | 逐行反解 alpha，数过渡带行数 | `shape_feathering` 0.08→18px、0.20→45px、**0.35→80px（采用）**、0.50→114px |
+| 边缘洁净度 | 相邻行 alpha 最大跳变 / 单调性 | 0.013，严格单调，无噪点溶解 |
+| 切换流程 | 依次切 welcome → levelSelect → map → welcome | 4/4 落到正确场景，峰值 `factor` 均为 1.00 |
+| 状态复位 | 每次切换后读 `is_transitioning` / `visible` / `factor` | 全部复位，连续切换无残留 |
+| 总时长 | 从调用到 `is_transitioning` 落回 | 0.62 ~ 0.96 s（含目标场景加载耗时） |
+
+² 遮罩 `base_color=(0.08,0.09,0.12)` 叠在纯红测试背景上，由 `a = (1 - r) / 0.92` 反解。
+
+**弹窗层级改造的验证（同一轮，26 项断言 0 失败）**
+
+| 检查项 | 方法 | 实测 |
+| --- | --- | --- |
+| 场景根类型 | 读 5 个 `.tscn` 文本 | 均无 `Window`/`Popup` 节点，根节点为 `Control` |
+| 根节点铺满 | 运行时读 `get_rect()` | 5/5 均为 1920 × 1080 |
+| 内容在屏内 | 遍历各弹窗的可见 Control 子节点 | 全部落在屏幕内（如 `aboutPanel` 内容 980×746 @ (470,167)） |
+| **遮罩能否盖住** | 弹窗显示中把遮罩拉到 `factor = 1`，取帧后算最大色偏 | 5/5 色偏 **0.0000**（整屏纯色） |
+| 弹窗确实画出来了 | 对比"弹窗帧"与"全遮罩帧"的像素差异 | 0.66 ~ 0.94，证明覆盖前弹窗真实渲染 |
+| CanvasLayer 层号 | 遍历场景内所有 `CanvasLayer` | `hud = 1`、`popupLayer = 10`，均 < 遮罩的 100 |
+| 脚本绑定 | 实例化 `map.tscn` 后读 `@onready` 变量 | `resultScreen` / `pauseMenu` / `levelIntroPanel` 全部绑定成功 |
+| 暂停态可交互 | `pauseGame()` 后查 `can_process()` | 暂停菜单与结算面板在 `paused = true` 下仍可处理输入 |
+| 开关行为 | `pauseGame()` / `resumeGame()` / `setResult()` | 显示、隐藏、失败时隐藏"下一关"均正确 |
 
 ---
 

@@ -56,7 +56,10 @@ offset_bottom = 850.0
 
 [node name="achievementToast" parent="hud" unique_id=990114278 instance=ExtResource("11_toast")]
 
-[node name="levelIntroPanel" parent="." unique_id=990114276 instance=ExtResource("9_intro")]
+[node name="popupLayer" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="levelIntroPanel" parent="popupLayer" unique_id=990114276 instance=ExtResource("9_intro")]
 visible = false
 
 [node name="customCamera" parent="." unique_id=76497160 instance=ExtResource("5_jp76l")]
@@ -68,11 +71,10 @@ script = ExtResource("10_track")
 wait_time = 2.0
 one_shot = true
 
-[node name="resultScreen" parent="." unique_id=1746614916 instance=ExtResource("4_bq37x")]
-position = Vector2i(0, 36)
+[node name="resultScreen" parent="popupLayer" unique_id=1746614916 instance=ExtResource("4_bq37x")]
 visible = false
 
-[node name="pauseMenu" parent="." unique_id=1869636577 instance=ExtResource("6_pause")]
+[node name="pauseMenu" parent="popupLayer" unique_id=1869636577 instance=ExtResource("6_pause")]
 visible = false
 
 [connection signal="pressed" from="hud/Button" to="." method="_on_button_pressed"]

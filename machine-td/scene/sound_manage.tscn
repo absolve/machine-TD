@@ -1,11 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://dywckdh8gdsl2"]
+[gd_scene format=3 uid="uid://dywckdh8gdsl2"]
 
 [ext_resource type="Script" uid="uid://crt28af0lchit" path="res://script/sound_manage.gd" id="1_or83v"]
 [ext_resource type="AudioStream" uid="uid://b7kwgfp3xtwmu" path="res://sound/Ting Coins.ogg" id="2_button"]
 
-[node name="soundManage" type="Node2D"]
+[node name="soundManage" type="Node2D" unique_id=1932233337]
 script = ExtResource("1_or83v")
 
-[node name="ButtonSound" type="AudioStreamPlayer" parent="."]
+[node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=1388930595]
 stream = ExtResource("2_button")
 bus = &"Sfx"

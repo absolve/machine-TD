@@ -28,7 +28,7 @@ ExplosionManage="*res://scene/explosion_manage.tscn"
 SoundManage="*res://scene/sound_manage.tscn"
 StageData="*res://autoload/stageData.gd"
 TowerUpgradeManager="*uid://chlgw3pk7jvcl"
-SceneTransition="*uid://bv2bhtgypppue"
+SceneTransition="*res://scene/scene_transition.tscn"
 AchievementManager="*res://autoload/achievement_manager.gd"
 
 [display]
@@ -38,6 +38,10 @@ window/size/viewport_height=1080
 window/size/window_width_override=960
 window/size/window_height_override=540
 window/stretch/mode="viewport"
+
+[dotnet]
+
+project/assembly_name="machine-TD"
 
 [global_group]
 
@@ -88,3 +92,4 @@ common/physics_interpolation=true
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.54901963, 0.5686275, 0.58431375, 1)

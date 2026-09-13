@@ -4,22 +4,25 @@
 [ext_resource type="Script" uid="uid://c82d6iaytyl4p" path="res://script/pause_menu.gd" id="2_script"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_button"]
 
-[node name="pauseMenu" type="Window" unique_id=431099984]
+[node name="pauseMenu" type="Control" unique_id=431099984]
 process_mode = 3
-transparent_bg = true
-oversampling_override = 1.0
-size = Vector2i(1920, 1080)
-borderless = true
-transparent = true
+visible = false
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 0
 theme = ExtResource("1_theme")
 script = ExtResource("2_script")
 
 [node name="bg" type="ColorRect" parent="." unique_id=2142516651]
+layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
-color = Color(0, 0, 0, 0.55)
+mouse_filter = 2
+color = Color(0.12156863, 0.14901961, 0.17254902, 0.45)
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1134434306]
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

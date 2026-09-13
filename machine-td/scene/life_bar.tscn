@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://be06phi5fnjiy" path="res://script/life_bar.gd" id="1_lnig0"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1v4sw"]
-bg_color = Color(0.2, 0.08, 0.08, 1)
+bg_color = Color(0.05098039, 0.0627451, 0.08627451, 0.9)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -11,7 +11,7 @@ corner_radius_bottom_left = 4
 shadow_size = 1
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yd0gm"]
-bg_color = Color(0.21960784, 0.9882353, 0.011764706, 1)
+bg_color = Color(0.2901961, 0.63529414, 0.13333334, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4

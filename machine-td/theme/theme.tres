@@ -1,31 +1,31 @@
 [gd_resource type="Theme" load_steps=18 format=3 uid="uid://em0nibpopl3n"]
 
-[ext_resource type="FontFile" uid="uid://iyip2w6pe3es" path="res://font/AlibabaPuHuiTi-3-85-Bold.ttf" id="1_font"]
-[ext_resource type="StyleBox" uid="uid://bdcoonp8pa5ip" path="res://theme/style/panel_style.tres" id="1_panel"]
-[ext_resource type="StyleBox" uid="uid://djtnjx2ei87o2" path="res://theme/style/btn_normal.tres" id="1_btnn"]
+[ext_resource type="StyleBox" uid="uid://ma1ik4m3guh4" path="res://theme/style/btn_disabled.tres" id="1_btnd"]
+[ext_resource type="StyleBox" uid="uid://dtugmhceonw30" path="res://theme/style/btn_focus.tres" id="1_btnf"]
 [ext_resource type="StyleBox" uid="uid://bq67tcr73iy0n" path="res://theme/style/btn_hover.tres" id="1_btnh"]
+[ext_resource type="StyleBox" uid="uid://djtnjx2ei87o2" path="res://theme/style/btn_normal.tres" id="1_btnn"]
 [ext_resource type="StyleBox" uid="uid://bl41nmepxt75f" path="res://theme/style/btn_press.tres" id="1_btnp"]
-[ext_resource type="StyleBox" path="res://theme/style/btn_focus.tres" id="1_btnf"]
-[ext_resource type="StyleBox" path="res://theme/style/btn_disabled.tres" id="1_btnd"]
-[ext_resource type="StyleBox" path="res://theme/style/option_normal.tres" id="1_optn"]
-[ext_resource type="StyleBox" path="res://theme/style/option_hover.tres" id="1_opth"]
-[ext_resource type="StyleBox" path="res://theme/style/option_pressed.tres" id="1_optp"]
-[ext_resource type="StyleBox" path="res://theme/style/popup_menu_panel.tres" id="1_menup"]
-[ext_resource type="StyleBox" path="res://theme/style/popup_menu_hover.tres" id="1_menuh"]
-[ext_resource type="StyleBox" path="res://theme/style/separator.tres" id="1_sep"]
-[ext_resource type="StyleBox" path="res://theme/style/scroll_bg.tres" id="1_scrb"]
-[ext_resource type="StyleBox" path="res://theme/style/scroll_grabber.tres" id="1_scrg"]
-[ext_resource type="StyleBox" path="res://theme/style/scroll_grabber_hi.tres" id="1_scrh"]
-[ext_resource type="StyleBox" path="res://theme/style/tooltip_panel.tres" id="1_tip"]
+[ext_resource type="FontFile" uid="uid://iyip2w6pe3es" path="res://font/AlibabaPuHuiTi-3-85-Bold.ttf" id="1_font"]
+[ext_resource type="StyleBox" uid="uid://cibkoc2furhh8" path="res://theme/style/popup_menu_hover.tres" id="1_menuh"]
+[ext_resource type="StyleBox" uid="uid://dnkeurjw5dn08" path="res://theme/style/popup_menu_panel.tres" id="1_menup"]
+[ext_resource type="StyleBox" uid="uid://daddhfpgk8hqn" path="res://theme/style/option_hover.tres" id="1_opth"]
+[ext_resource type="StyleBox" uid="uid://casr1nk6fygf" path="res://theme/style/option_normal.tres" id="1_optn"]
+[ext_resource type="StyleBox" uid="uid://dyak7hw4wwx0b" path="res://theme/style/option_pressed.tres" id="1_optp"]
+[ext_resource type="StyleBox" uid="uid://bdcoonp8pa5ip" path="res://theme/style/panel_style.tres" id="1_panel"]
+[ext_resource type="StyleBox" uid="uid://blr7rtjjec3ki" path="res://theme/style/scroll_bg.tres" id="1_scrb"]
+[ext_resource type="StyleBox" uid="uid://ch3acgny06sce" path="res://theme/style/scroll_grabber.tres" id="1_scrg"]
+[ext_resource type="StyleBox" uid="uid://b48esdygoksmx" path="res://theme/style/scroll_grabber_hi.tres" id="1_scrh"]
+[ext_resource type="StyleBox" uid="uid://c2ey6ion3rgqn" path="res://theme/style/separator.tres" id="1_sep"]
+[ext_resource type="StyleBox" uid="uid://30pwapddey6b" path="res://theme/style/tooltip_panel.tres" id="1_tip"]
 
 [resource]
 default_font = ExtResource("1_font")
 default_font_size = 40
-Button/colors/font_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
-Button/colors/font_disabled_color = Color(0.47843137, 0.49411765, 0.5176471, 1)
-Button/colors/font_focus_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
-Button/colors/font_hover_color = Color(1, 1, 1, 1)
-Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/colors/font_color = Color(0.89411765, 0.92156863, 0.8745098, 1)
+Button/colors/font_disabled_color = Color(0.42745098, 0.45490196, 0.4862745, 1)
+Button/colors/font_focus_color = Color(0.9490196, 0.9647059, 0.9372549, 1)
+Button/colors/font_hover_color = Color(0.9490196, 0.9647059, 0.9372549, 1)
+Button/colors/font_pressed_color = Color(0.9490196, 0.9647059, 0.9372549, 1)
 Button/styles/disabled = ExtResource("1_btnd")
 Button/styles/focus = ExtResource("1_btnf")
 Button/styles/hover = ExtResource("1_btnh")
@@ -36,12 +36,12 @@ HScrollBar/styles/grabber_highlight = ExtResource("1_scrh")
 HScrollBar/styles/grabber_pressed = ExtResource("1_scrh")
 HScrollBar/styles/scroll = ExtResource("1_scrb")
 HSeparator/styles/separator = ExtResource("1_sep")
-Label/colors/font_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
-OptionButton/colors/font_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
-OptionButton/colors/font_disabled_color = Color(0.47843137, 0.49411765, 0.5176471, 1)
-OptionButton/colors/font_focus_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
-OptionButton/colors/font_hover_color = Color(1, 1, 1, 1)
-OptionButton/colors/font_pressed_color = Color(1, 1, 1, 1)
+Label/colors/font_color = Color(0.89411765, 0.92156863, 0.8745098, 1)
+OptionButton/colors/font_color = Color(0.89411765, 0.92156863, 0.8745098, 1)
+OptionButton/colors/font_disabled_color = Color(0.42745098, 0.45490196, 0.4862745, 1)
+OptionButton/colors/font_focus_color = Color(0.9490196, 0.9647059, 0.9372549, 1)
+OptionButton/colors/font_hover_color = Color(0.9490196, 0.9647059, 0.9372549, 1)
+OptionButton/colors/font_pressed_color = Color(0.9490196, 0.9647059, 0.9372549, 1)
 OptionButton/constants/arrow_margin = 8
 OptionButton/styles/disabled = ExtResource("1_btnd")
 OptionButton/styles/focus = ExtResource("1_btnf")
@@ -50,11 +50,11 @@ OptionButton/styles/normal = ExtResource("1_optn")
 OptionButton/styles/pressed = ExtResource("1_optp")
 Panel/styles/panel = ExtResource("1_panel")
 PanelContainer/styles/panel = ExtResource("1_panel")
-PopupMenu/colors/font_accelerator_color = Color(0.6039216, 0.627451, 0.6509804, 1)
-PopupMenu/colors/font_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
-PopupMenu/colors/font_disabled_color = Color(0.47843137, 0.49411765, 0.5176471, 1)
-PopupMenu/colors/font_hover_color = Color(1, 1, 1, 1)
-PopupMenu/colors/font_separator_color = Color(0.6039216, 0.627451, 0.6509804, 1)
+PopupMenu/colors/font_accelerator_color = Color(0.48235294, 0.5058824, 0.5372549, 1)
+PopupMenu/colors/font_color = Color(0.89411765, 0.92156863, 0.8745098, 1)
+PopupMenu/colors/font_disabled_color = Color(0.42745098, 0.45490196, 0.4862745, 1)
+PopupMenu/colors/font_hover_color = Color(0.9490196, 0.9647059, 0.9372549, 1)
+PopupMenu/colors/font_separator_color = Color(0.54901963, 0.5686275, 0.58431375, 1)
 PopupMenu/constants/item_end_padding = 10
 PopupMenu/constants/item_start_padding = 10
 PopupMenu/constants/v_separation = 6
@@ -62,8 +62,8 @@ PopupMenu/styles/hover = ExtResource("1_menuh")
 PopupMenu/styles/panel = ExtResource("1_menup")
 PopupMenu/styles/separator = ExtResource("1_sep")
 PopupPanel/styles/panel = ExtResource("1_panel")
-RichTextLabel/colors/default_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
-TooltipLabel/colors/font_color = Color(0.9098039, 0.91764706, 0.92941177, 1)
+RichTextLabel/colors/default_color = Color(0.89411765, 0.92156863, 0.8745098, 1)
+TooltipLabel/colors/font_color = Color(0.9490196, 0.9647059, 0.9372549, 1)
 TooltipLabel/font_sizes/font_size = 22
 TooltipPanel/styles/panel = ExtResource("1_tip")
 VScrollBar/styles/grabber = ExtResource("1_scrg")

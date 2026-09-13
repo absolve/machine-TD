@@ -16,8 +16,9 @@
 - [四、能力技能系统（Ability / Active Skill System）](#四能力技能系统ability--active-skill-system)
 - [五、波次进度条模块（Wave Progress Bar）](#五波次进度条模块wave-progress-bar)
 - [六、防御塔升级系统（Tower Upgrade System）](#六防御塔升级系统tower-upgrade-system)
-- [七、模块更新记录](#七模块更新记录)
-- [八、后续可扩展模块（规划中）](#八后续可扩展模块规划中)
+- [七、场景切换（Scene Transition）](#七场景切换scene-transition)
+- [八、模块更新记录](#八模块更新记录)
+- [九、后续可扩展模块（规划中）](#九后续可扩展模块规划中)
 
 ---
 
@@ -1187,7 +1188,121 @@ func _play_level_up_fx() -> void:
 
 ---
 
-## 七、模块更新记录
+## 七、场景切换（Scene Transition）
+
+### 7.1 模块定位
+
+每次"主菜单 ↔ 选关 ↔ 战斗"跳转时的整屏过渡。**不是**一个玩法模块，所以只做两件事：
+把旧画面盖住、在遮住的那段时间里异步加载新场景，加载完再擦掉遮罩。
+
+### 7.2 文件结构
+
+```
+scene/scene_transition.tscn     自动加载的载体（Node → CanvasLayer → ColorRect）
+script/scene_transition.gd      流程控制
+shader/transition.gdshader      擦除效果（用户提供的通用遮罩着色器）
+```
+
+场景结构（改造前只有一个纯脚本，没有节点）：
+
+```
+sceneTransition   Node          process_mode = ALWAYS（暂停时也要能转场）
+└─ canvasLayer    CanvasLayer   layer = 100，盖住所有常规 UI
+   └─ overlay     ColorRect     全屏锚点 + ShaderMaterial(transition.gdshader)
+```
+
+**为什么改成"场景 + 脚本"**：着色器参数（颜色、方向、软边强度）现在直接存在场景的
+`ShaderMaterial` 子资源里，能在编辑器里实时预览和调整，不用改代码；纯脚本方案没法挂材质。
+
+### 7.3 对外接口
+
+```gdscript
+SceneTransition.change_scene(path: String, duration: float = 0.6) -> void
+```
+
+与改造前**完全一致**，6 个调用点（`level_select.gd:29,33`、`map.gd:387,391`、`welcome.gd:32,39`）
+无需改动。`is_transitioning` 期间重复调用会被直接忽略（防重入）。
+
+### 7.4 `transition.gdshader` 参数含义
+
+着色器本身是通用的，本项目只用到其中一部分：
+
+| 参数 | 本项目取值 | 说明 |
+| --- | --- | --- |
+| `factor` | 由脚本补间 | **0 = 完全透明，1 = 完全盖满**。进场 0→1，出场 1→0 |
+| `base_color` | `(0.08, 0.09, 0.12)` | 幕布颜色，与深色 UI 主题一致 |
+| `width` | `0.35` | 梯度映射宽度，同时决定柔边的绝对像素数 |
+| `gradient_texture` | 黑→白竖直渐变 | 决定擦除方向与形状，改渐变方向即可换成左右擦除 |
+| `gradient_fixed` | `false` | 用屏幕 UV 采样，遮罩跟着屏幕走而不是跟着控件走 |
+| `shape_texture` | 纯白 8×8 | 纯白 = 不做噪点溶解，得到一条干净的扫描线 |
+| `shape_feathering` | `0.35` | 柔边强度，实测 1080p 下过渡带 ≈ 80 px |
+| `shape_treshold` | `1.0` | 撑满遮罩不透明度 |
+| `node_resolution` | 运行时同步视口尺寸 | 只服务 `gradient_fixed = true` 的宽高比校正 |
+| `shape_tiling` / `shape_rotation` / `shape_scroll` | 关闭态 | 留给"纹理溶解 + 滚动"的变体，当前不用 |
+
+有效覆盖率 = `clamp((UV.y - progress) / width, 0, 1)`，其中
+`progress = mix(-width, 1.0, factor)`，再经 `shape_feathering` 做一次 `smoothstep`。
+所以 `factor` 在 `[0, 0.09]` 与 `[0.83, 1]` 两段是"空转"的（幕布还没出现 / 已经盖满），
+实际扫屏发生在中间的约 74% 时间内——对 0.6 s 的过渡来说可以忽略。
+
+### 7.5 流程
+
+```
+change_scene(path)
+  ├─ overlay 显示，factor 0 → 1（duration * 0.5，最少 0.12 s）
+  ├─ ResourceLoader.load_threaded_request(path)   异步，不卡帧
+  ├─ 每帧轮询 load_threaded_get_status
+  │    └─ LOADED → change_scene_to_packed() → factor 1 → 0（duration * 0.5）
+  └─ 结束后 factor 复位 0、overlay 隐藏、is_transitioning = false
+```
+
+过渡期间 `_input()` 吞掉全部输入事件，避免点击穿透到正在消失的旧场景。
+
+### 7.6 弹窗层级：为什么弹窗必须改成 Control
+
+Godot 的 `Window` / `Popup` / `PopupPanel`（`PopupPanel` 也是 `Window` 的子类）默认以
+**嵌入式子窗口**渲染，绘制在所有 `CanvasLayer` 之上。也就是说只要弹窗还是 Window，
+layer 100 的转场遮罩就永远盖不住它 —— 转场时会看到弹窗浮在幕布上面。
+
+因此 5 个弹窗全部改成了普通 `Control`：
+
+| 弹窗 | 原类型 | 现类型 | 改动备注 |
+| --- | --- | --- | --- |
+| `about_panel` | PopupPanel | Control | 背景本来就在内层 PanelContainer 上，无视觉变化 |
+| `level_intro_panel` | PopupPanel | Control | 背景 StyleBox 从 `panel` 主题项搬到新增的 `panelBg`(Panel) 节点，否则会丢掉底板 |
+| `pause_menu` | Window | Control | 原本就是"全屏 bg + 居中面板"结构，几乎是纯类型替换 |
+| `result_screen` | Window | Control | 同上 |
+| `setting` | Window | Control | 关闭按钮由绝对坐标改为锚定到面板右上角 |
+
+统一约定：
+
+- 根节点 `Control`：`offset_right = 1920`、`offset_bottom = 1080`、`mouse_filter = STOP`
+  （铺满全屏，保留模态输入拦截），`visible = false` 起步
+- **不能用 `anchors_preset = 15`**：这些弹窗挂在 `Node2D` 下，而 Control 的锚点是相对
+  "最近的 Control 祖先"解析的。父级是 `Node2D` 时锚定矩形是空的，全屏锚点会算出 0×0。
+  必须写成显式 offset。
+- 内容用 `anchors_preset = 8`（居中）+ `grow_horizontal/vertical = 2`，随内容自适应尺寸
+- 需要在暂停状态下仍可交互的（`pause_menu` / `result_screen`）保留 `process_mode = ALWAYS`
+
+`map.tscn` 里三个战斗内弹窗还要从 `map` 挪进新的 `popupLayer`(CanvasLayer, `layer = 10`)：
+`hud` 本身就是 CanvasLayer，会盖住同级的普通 Control。
+`welcome.tscn` 里没有 CanvasLayer，弹窗声明在 `ui` 之后即可自然压在 UI 上方。
+
+### 7.7 验证方式
+
+临时工程副本 + 两套自动化脚本，**合计 71 项断言 0 失败**：
+
+1. **转场**（45 项，明细见 [game_analysis.md](game_analysis.md) §7.1）：结构、`factor` 语义、
+   擦除方向、柔边宽度（扫描 `shape_feathering` 4 个取值）、边缘单调性与洁净度、
+   以及 4 次连续切换的场景落点与状态复位。
+2. **弹窗层级**（26 项）：5 个弹窗的类型、根矩形、内容是否在屏内，`CanvasLayer` 层号，
+   `map.gd` 的 `@onready` 绑定与暂停态可交互性，以及**最关键的**：把遮罩拉到
+   `factor = 1` 后整屏最大色偏为 **0.0000**（弹窗被完全盖住），
+   同时与"弹窗可见"那一帧的像素差异达 0.66 ~ 0.94（证明弹窗原本确实画在屏幕上）。
+
+---
+
+## 八、模块更新记录
 
 > 每次模块设计变更或新增模块时，在此追加记录，保持版本可追溯。
 
@@ -1207,10 +1322,16 @@ func _play_level_up_fx() -> void:
 | 2026-09-12 | 项目文档         | v1.0 | README 重写为项目说明；`game_analysis.md` 更新为当前状态并新增「地图与关卡系统专项」章节 |
 | 2026-09-12 | 核心正确性修复   | v1.0 | 修复三个"看起来能用、实际没生效"的机制：① 敌方 `delay` 定时器未接线导致远程敌人整局只开火一次；② 子弹未传 `source_tower` 导致 4/7 座塔无法升级；③ 结算门禁缺失导致 0 星/基地被打爆仍发宝石并解锁下一关 |
 | 2026-09-12 | §6.3 击杀归属    | v1.0 | 该设计的实现补完：`gun_bullet` / `cannon_bullet` 已注入 `source_tower`；同时新增 `TowerUpgradeManager.canUpgrade()`，EMP 干扰塔按设计明确排除在升级体系外（详情面板显示 MAX） |
+| 2026-09-12 | 场景切换         | v1.1 | 重构：纯脚本自动加载 → **场景 + 脚本**（`scene/scene_transition.tscn`：Node → CanvasLayer(100) → ColorRect + `ShaderMaterial`），接入用户提供的 `shader/transition.gdshader` 做自上而下柔边擦除；柔边强度由 0.08 调到 0.35（1080p 实测过渡带 18px → 80px）。对外 `change_scene(path, duration)` 与 6 个调用点不变，已删除旧 `autoload/sceneTransition.gd` 与旧的 `shader/scene_transition.gdshader`（零引用）。新增设计章节见 §七 |
+| 2026-09-12 | 弹窗层级修复     | v1.1 | 修复"转场遮罩盖不住弹窗"：`about_panel` / `level_intro_panel` / `pause_menu` / `result_screen` / `setting` 由 `Window` / `PopupPanel` 改为普通 `Control`（嵌入式子窗口永远画在所有 `CanvasLayer` 之上）；`map.tscn` 新增 `popupLayer`(CanvasLayer, layer 10) 承载三个战斗内弹窗；根节点改用显式 offset 而非 `anchors_preset = 15`（父级是 Node2D 时锚定矩形为空）。详见 §7.6 |
+| 2026-09-13 | 美术风格规范     | v1.0 | 新增 [art_style.md](art_style.md)：工厂世界观（流水线=路径 / 出口=终点 / 基座=塔位 / 五层关卡模板）、色彩系统（钢灰十阶 + 安全黄 + 9 个语义色，含实测 WCAG 对比度）、UI 组件规范（按钮三档 / 面板 / 状态条 / 反白 tooltip）、世界元素规范、单位识别（黄=我方 / 红=敌方）、字体与图标建议 |
+| 2026-09-13 | UI 主题亮色迁移  | v2.0 | 全量迁移：`theme.tres` + 31 个 StyleBox 由深色改为亮色工厂主题；15 个场景的硬编码文字色、`achievement_panel.gd` / `level_intro_panel.gd` 的颜色常量、`background.gdshader`（暗贴图相乘 → 浅底图案叠加）、`project.godot` 清屏色一并调整。**未改动任何 `.tscn` 结构**，纯换皮可逆。详见 art_style.md §9/§10 |
+| 2026-09-13 | UI 主题重建       | v3.0 | 亮色版实测整体过亮，按用户提供的参考资源包 `factory asset v.2 - chemical lab` 重建为**深银金属**：对 13 张参考图做像素直方图 + k-means 提取真实调色板（整体平均明度 0.336），主题面色全部投影到该金属阶梯上（最大偏差 ≤0.009）；主强调保持安全黄，语义色改用参考包的化学绿 / 锈红 / 青。同样未改动 `.tscn` 结构 |
+| 2026-09-13 | 背景 / 清屏色    | v3.1 | `shader/background.gdshader` 基色、`scene/bg.tscn` 的 `base_color`、`project.godot` 的 `default_clear_color` 三者统一为参考包聚类色 `#8C9195`（明度 0.28）。世界 0.28 / 地图内面板 0.05 / 模态面板 0.02 形成三层明度，靠明度分层而非投影。有断言校验三者一致 |
 
 ---
 
-## 八、后续可扩展模块（规划中）
+## 九、后续可扩展模块（规划中）
 
 以下模块为后续规划，待需求明确后补充详细设计：
 

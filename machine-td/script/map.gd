@@ -4,15 +4,15 @@ extends Node2D
 #@onready var towerShadow = $towerShadow
 @onready var titleNode = $hud/title
 @onready var towerUINode = $hud/towerUI
-@onready var resultScreen = $resultScreen
-@onready var pauseMenu = $pauseMenu
+@onready var resultScreen = $popupLayer/resultScreen
+@onready var pauseMenu = $popupLayer/pauseMenu
 
 @onready var finishTimer = $Timer
 @onready var toastInfo = $hud/toastInfo
 @onready var waveProgressBar = $hud/waveProgressBar
 @onready var towerDetailPanel = $hud/towerDetailPanel
 @onready var enemyDetailPanel = $hud/enemyDetailPanel
-@onready var levelIntroPanel = $levelIntroPanel
+@onready var levelIntroPanel = $popupLayer/levelIntroPanel
 @onready var achievementTracker = $achievementTracker
 
 var level
@@ -218,7 +218,7 @@ func _on_defense_failed() -> void:
 	resultScreen.setResult(true)
 	resultScreen.levelRating.rating = 0
 	resultScreen.setGemReward(0)
-	resultScreen.popup_centered()
+	resultScreen.show()
 
 func startGame():
 	get_tree().paused = false
@@ -228,7 +228,7 @@ func startGame():
 func pauseGame():
 	get_tree().paused = true
 	if not pauseMenu.visible:
-		pauseMenu.popup_centered()
+		pauseMenu.show()
 
 func resumeGame():
 	pauseMenu.hide()
@@ -296,7 +296,7 @@ func finish():
 	resultScreen.setResult(false)
 	resultScreen.levelRating.rating = rating
 	resultScreen.setGemReward(gem_reward)
-	resultScreen.popup_centered()
+	resultScreen.show()
 
 # 根据基地剩余生命计算三档星级
 func calculateStars() -> int:
@@ -408,7 +408,7 @@ func _unhandled_input(_event):
 			selectedTower.hideSelect()
 
 func _on_button_pressed():
-	resultScreen.popup_centered()
+	resultScreen.show()
 	
 	pass # Replace with function body.
 
