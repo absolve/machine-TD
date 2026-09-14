@@ -191,6 +191,8 @@ signal refreshData # 游戏数据刷新
 @warning_ignore("unused_signal")
 signal sellTower # 出售塔
 @warning_ignore("unused_signal")
+signal repairTower # 修理塔（参数：花费, 塔节点）
+@warning_ignore("unused_signal")
 signal lastWave # 最后一波
 @warning_ignore("unused_signal")
 signal clickTower

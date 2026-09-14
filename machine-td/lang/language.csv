@@ -16,6 +16,7 @@ _About,About,关于
 _About_Title,About the Game,关于游戏
 _About_Text,"[b]Simple Tower Defense[/b]\n\nBuild towers, stop incoming waves, and survive as long as you can.\nEach level teaches a different battle rhythm and reward system.\nThe goal is to protect the base, manage resources, and improve your defense line.","[b]简易塔防[/b]\n\n建造防御塔，阻止敌人进攻，并尽可能保住基地。\n每一关都有不同的节奏和奖励节奏，考验你的资源管理和布局能力。\n目标是守住基地、合理建塔、不断提升防线。"
 _Close,Close,关闭
+_Mute,Mute,静音
 _Tutorial,Tutorial,教程
 _LevelFailed,Level Failed,失败
 _LevelCompleted,Level Completed,过关
@@ -43,6 +44,10 @@ _FireRate,Fire Rate,射速
 _Range,Range,范围
 _Cost,Cost,造价
 _SellPrice,Sell Price,出售价
+_Repair,Repair,修理
+_RepairFull,HP Full,血量已满
+_Sell,Sell,出售
+_NotEnoughMoney,Not enough money,金币不足
 _PanelHint,Click the tower again or empty ground to deselect.,再次点击该塔或点击空地取消选择。
 _Speed,Speed,移动速度
 _Armor,Armor,护甲

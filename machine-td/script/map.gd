@@ -43,6 +43,7 @@ func _ready():
 	Game.defeatEnemy.connect(defeatEnemy)
 	Game.enemyEscape.connect(enemyEscape)
 	Game.sellTower.connect(sellTower)
+	Game.repairTower.connect(repairTower)
 	Game.lastWave.connect(lastWave)
 	Game.clickTower.connect(clickTower)
 	Game.clickEnemy.connect(clickEnemy)
@@ -268,6 +269,18 @@ func sellTower(money, coverGrid: Array[Vector2i]):
 	print("sellTower ", money, coverGrid)
 	level.removeOccupiedArea(coverGrid)
 	titleNode.money += money
+
+# 修理防御塔：扣费成功后把血量回满
+func repairTower(cost: int, tower: Node) -> void:
+	if not is_instance_valid(tower):
+		return
+	if titleNode.money < cost:
+		addNotice(tr("_NotEnoughMoney"))
+		return
+	titleNode.money -= cost
+	tower.apply_repair()
+	if towerDetailPanel:
+		towerDetailPanel.refresh()
 
 func lastWave():
 	print('lastWave')

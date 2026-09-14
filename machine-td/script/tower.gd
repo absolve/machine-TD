@@ -20,6 +20,19 @@ var level: int = 1 # 等级
 var towerExp: int = 0 # 经验值
 var initTime = 1 #初始化时间 秒
 
+## 修满血的最高费用占造价的百分比（残血越多越贵，满血时为 0）
+const REPAIR_COST_RATIO := 0.5
+
+## 修理费用：按“缺失血量比例 × 造价 × REPAIR_COST_RATIO”计算，向上取整。
+## 满血返回 0（无需修理）。
+var repairCost: int:
+	get:
+		if maxHp <= 0 or hp >= maxHp:
+			return 0
+		var missing_ratio := float(maxHp - hp) / float(maxHp)
+		return maxi(1, int(ceil(float(money) * REPAIR_COST_RATIO * missing_ratio)))
+
+
 @onready var rader = $radar
 @onready var raderShape = $radar/CollisionShape2D
 @onready var base = $base
@@ -28,8 +41,6 @@ var initTime = 1 #初始化时间 秒
 @onready var marker = $turret/Marker2D
 @onready var player = $player
 @onready var initBar = $ProgressBar
-@onready var btnSell = $btnSell
-@onready var sellPriceLabel = $sellPriceLabel
 @onready var towerRank = $towerRank
 @onready var lifeBar=$lifeBar
 @onready var deploySound=$deploySound
@@ -41,8 +52,6 @@ var radarSweepAngle := 0.0
 const RADAR_SCAN_SPEED := 1.8
 
 func _ready() -> void:
-	if btnSell:
-		btnSell.texture_normal = preload("res://sprite/dollar-symbol.png")
 	if raderShape.shape:
 		raderShape.shape.radius = radarScope
 	if maxHp <= 0 and hp > 0:
@@ -97,9 +106,6 @@ func init():
 func hideSelect():
 	selected = !selected
 	queue_redraw()
-	btnSell.visible = selected
-	if sellPriceLabel:
-		sellPriceLabel.visible = selected
 	update_status_ui()
 	Game.clickTower.emit(self, selected)
 
@@ -126,9 +132,7 @@ func update_status_ui() -> void:
 		lifeBar.visible = true
 		lifeBar.maxHp = maxHp
 		lifeBar.value = hp
-	if sellPriceLabel:
-		sellPriceLabel.text = str(int(sellingPrice))
-		sellPriceLabel.visible = selected
+	# 修理按钮依赖血量状态刷新（右侧信息面板每帧调用 refresh）
 	
 #升级等级
 func levelUp() -> void:
@@ -171,8 +175,12 @@ func playUpgradeGlow() -> void:
 
 
 func stopGlow() -> void:
-	(base.material as ShaderMaterial).set_shader_parameter("enable_flash", false)
-	(turret.material as ShaderMaterial).set_shader_parameter("enable_flash", false)
+	var bm := base.material as ShaderMaterial
+	var tm := turret.material as ShaderMaterial
+	if bm:
+		bm.set_shader_parameter("enable_flash", false)
+	if tm:
+		tm.set_shader_parameter("enable_flash", false)
 
 
 func _on_delay_timeout():
@@ -258,8 +266,46 @@ func _on_input_event(_viewport, _event, _shape_idx):
 		hideSelect()
 
 
-func _on_btn_sell_pressed():
+# 出售前需要额外清理的塔（如无人机基地）覆写本方法
+func _on_before_sell() -> void:
+	pass
+
+
+# 出售防御塔（由右侧信息面板的出售按钮调用）
+func sell():
 	if selected:
 		hideSelect() # 出售前先取消选中，让右侧信息面板与地图状态同步清理
+	_on_before_sell()
 	Game.sellTower.emit(sellingPrice, coverGrid)
 	queue_free()
+
+
+# 请求修理：费用由 map 统一扣款，扣款成功后 map 会回调 apply_repair()
+func request_repair() -> bool:
+	var cost := repairCost
+	if cost <= 0:
+		return false
+	Game.repairTower.emit(cost, self)
+	return true
+
+
+# 实际把血量回满（由 map 在扣除费用后调用）
+func apply_repair() -> void:
+	if maxHp <= 0:
+		return
+	hp = maxHp
+	update_status_ui()
+	playRepairGlow()
+
+
+# 修理完成后的闪光反馈（复用升级闪光 shader）
+func playRepairGlow() -> void:
+	var bm := base.material as ShaderMaterial
+	var tm := turret.material as ShaderMaterial
+	if bm:
+		bm.set_shader_parameter("enable_flash", true)
+	if tm:
+		tm.set_shader_parameter("enable_flash", true)
+	var tw := create_tween()
+	tw.tween_interval(0.6)
+	tw.tween_callback(stopGlow)

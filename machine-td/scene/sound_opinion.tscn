@@ -4,6 +4,8 @@
 [ext_resource type="StyleBox" uid="uid://cle6jdorqb37c" path="res://theme/style/volume_slider.tres" id="2_slider"]
 [ext_resource type="StyleBox" uid="uid://kg32f8byq5ty" path="res://theme/style/volume_slider_area.tres" id="3_slider_area"]
 [ext_resource type="StyleBox" uid="uid://carg8hluk7mmh" path="res://theme/style/volume_slider_fill.tres" id="4_slider_fill"]
+[ext_resource type="Texture2D" uid="uid://ih1lsl8arw44" path="res://sprite/Sound-Two.png" id="5_muteon"]
+[ext_resource type="Texture2D" uid="uid://d1c1qb7h3dlk2" path="res://sprite/Sound-None.png" id="6_muteoff"]
 
 [node name="soundOpinion" type="VBoxContainer" unique_id=735161374]
 offset_right = 112.0
@@ -16,14 +18,33 @@ layout_mode = 2
 horizontal_alignment = 1
 uppercase = true
 
-[node name="HSlider" type="HSlider" parent="." unique_id=245821150]
+[node name="volumeRow" type="HBoxContainer" parent="." unique_id=1903112233]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="HSlider" type="HSlider" parent="volumeRow" unique_id=245821150]
 custom_minimum_size = Vector2(360, 28)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
 theme_override_constants/grabber_offset = 0
 theme_override_styles/slider = ExtResource("2_slider")
 theme_override_styles/grabber_area = ExtResource("3_slider_area")
 theme_override_styles/grabber_area_highlight = ExtResource("4_slider_fill")
 step = 10.0
 value = 100.0
+
+[node name="btnMute" type="TextureButton" parent="volumeRow" unique_id=558217461]
+visible = false
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "_Mute"
+toggle_mode = true
+ignore_texture_size = true
+stretch_mode = 5
+texture_normal = ExtResource("5_muteon")
+texture_pressed = ExtResource("6_muteoff")
 
 [node name="sound" type="AudioStreamPlayer" parent="." unique_id=269045260]

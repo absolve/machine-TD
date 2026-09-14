@@ -38,10 +38,9 @@ func _on_radar_area_exited(area):
 	target.erase(area)
 
 
-func _on_btn_sell_pressed():
+func _on_before_sell() -> void:
 	# 出售时清除所有无人机
 	for d in drones:
 		if is_instance_valid(d):
 			d.queue_free()
 	drones.clear()
-	super._on_btn_sell_pressed()

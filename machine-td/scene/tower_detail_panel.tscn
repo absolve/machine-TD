@@ -7,6 +7,10 @@
 [ext_resource type="StyleBox" path="res://theme/style/tower_hp_fill.tres" id="5_hpfill"]
 [ext_resource type="StyleBox" path="res://theme/style/tower_exp_fill.tres" id="6_expfill"]
 [ext_resource type="StyleBox" path="res://theme/style/tower_separator.tres" id="7_sep"]
+[ext_resource type="StyleBox" path="res://theme/style/action_repair.tres" id="8_repairn"]
+[ext_resource type="StyleBox" path="res://theme/style/action_repair_hover.tres" id="9_repairh"]
+[ext_resource type="StyleBox" path="res://theme/style/action_sell.tres" id="10_selln"]
+[ext_resource type="StyleBox" path="res://theme/style/action_sell_hover.tres" id="11_sellh"]
 
 [node name="towerDetailPanel" type="PanelContainer" unique_id=1938422127]
 visible = false
@@ -189,23 +193,36 @@ theme_override_font_sizes/font_size = 30
 text = "0"
 horizontal_alignment = 2
 
-[node name="sellRow" type="HBoxContainer" parent="Margin/VBox/Economy" unique_id=1889499659]
+[node name="ActionRow" type="HBoxContainer" parent="Margin/VBox" unique_id=1889499660]
 layout_mode = 2
+theme_override_constants/separation = 10
 
-[node name="Title" type="Label" parent="Margin/VBox/Economy/sellRow" unique_id=778869185]
+[node name="btnRepair" type="Button" parent="Margin/VBox/ActionRow" unique_id=1889499661]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.65882355, 0.6862745, 0.65882355, 1)
+theme_override_colors/font_color = Color(0.7294118, 0.9490196, 0.8039216, 1)
+theme_override_colors/font_pressed_color = Color(0.6431373, 0.8980392, 0.7411765, 1)
+theme_override_colors/font_hover_color = Color(0.8784314, 1, 0.92156863, 1)
+theme_override_colors/font_disabled_color = Color(0.48235294, 0.5058824, 0.5372549, 1)
 theme_override_font_sizes/font_size = 28
-text = "Sell Price"
+theme_override_styles/normal = ExtResource("8_repairn")
+theme_override_styles/pressed = ExtResource("9_repairh")
+theme_override_styles/hover = ExtResource("9_repairh")
+text = "Repair"
 
-[node name="Value" type="Label" parent="Margin/VBox/Economy/sellRow" unique_id=851309914]
-custom_minimum_size = Vector2(110, 0)
+[node name="btnSell" type="Button" parent="Margin/VBox/ActionRow" unique_id=1889499662]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.7764706, 0.101960786, 1)
-theme_override_font_sizes/font_size = 30
-text = "0"
-horizontal_alignment = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.85882354, 0.5647059, 1)
+theme_override_colors/font_pressed_color = Color(0.93333334, 0.7764706, 0.47058824, 1)
+theme_override_colors/font_hover_color = Color(1, 0.92941177, 0.7411765, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("10_selln")
+theme_override_styles/pressed = ExtResource("11_sellh")
+theme_override_styles/hover = ExtResource("11_sellh")
+text = "Sell"
 
 [node name="hintLabel" type="Label" parent="Margin/VBox" unique_id=346373248]
 layout_mode = 2

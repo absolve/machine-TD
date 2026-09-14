@@ -36,6 +36,11 @@ func _ready() -> void:
 	master.slider.value_changed.connect(_on_master_value_changed)
 	bg.slider.value_changed.connect(_on_bg_value_changed)
 	sfx.slider.value_changed.connect(_on_sfx_value_changed)
+	# 背景音/音效显示静音开关，并同步上次保存的静音状态
+	bg.muted = UserData.musicMuted
+	sfx.muted = UserData.sfxMuted
+	bg.muteToggled.connect(_on_bg_mute_toggled)
+	sfx.muteToggled.connect(_on_sfx_mute_toggled)
 	TranslationServer.set_locale(UserData.language)
 
 func getLanguageCode(language_value: String) -> String:
@@ -68,6 +73,16 @@ func _on_option_button_item_selected(index: int) -> void:
 	UserData.language = str(language.get_item_metadata(index))
 	UserData.saveSettings()
 	TranslationServer.set_locale(UserData.language)
+
+
+func _on_bg_mute_toggled(muted: bool) -> void:
+	UserData.musicMuted = muted
+	UserData.saveSettings()
+
+
+func _on_sfx_mute_toggled(muted: bool) -> void:
+	UserData.sfxMuted = muted
+	UserData.saveSettings()
 
 
 func _on_btn_close_pressed() -> void:

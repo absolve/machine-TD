@@ -17,11 +17,14 @@ extends PanelContainer
 @onready var scope_value_label: Label = $Margin/VBox/Stats/scopeRow/Value
 @onready var cost_title: Label = $Margin/VBox/Economy/costRow/Title
 @onready var cost_value_label: Label = $Margin/VBox/Economy/costRow/Value
-@onready var sell_title: Label = $Margin/VBox/Economy/sellRow/Title
-@onready var sell_value_label: Label = $Margin/VBox/Economy/sellRow/Value
+@onready var btn_repair: Button = $Margin/VBox/ActionRow/btnRepair
+@onready var btn_sell: Button = $Margin/VBox/ActionRow/btnSell
 @onready var hint_label: Label = $Margin/VBox/hintLabel
 
 var tower: Node = null # 当前选中的塔
+# 缓存按钮文案，避免每帧刷新时反复触发布局重算
+var _last_repair_text := ""
+var _last_sell_text := ""
 
 
 func _ready() -> void:
@@ -32,8 +35,42 @@ func _ready() -> void:
 	reload_title.text = _t("_FireRate", "Fire Rate")
 	scope_title.text = _t("_Range", "Range")
 	cost_title.text = _t("_Cost", "Cost")
-	sell_title.text = _t("_SellPrice", "Sell Price")
 	hint_label.text = _t("_PanelHint", "Click the tower again or empty ground to deselect.")
+	btn_repair.pressed.connect(_on_repair_pressed)
+	btn_sell.pressed.connect(_on_sell_pressed)
+	_refresh_action_text()
+
+
+# 修理按钮文案：满血时提示无需修理，否则显示“修理 + 费用”
+func _refresh_action_text() -> void:
+	var repair_text := _t("_RepairFull", "HP Full")
+	var sell_text := _t("_Sell", "Sell")
+	if is_instance_valid(tower):
+		var t := tower as Tower
+		if t != null:
+			if t.repairCost > 0:
+				repair_text = "%s %d" % [_t("_Repair", "Repair"), t.repairCost]
+			sell_text = "%s %d" % [_t("_Sell", "Sell"), int(t.sellingPrice)]
+	if repair_text != _last_repair_text:
+		_last_repair_text = repair_text
+		btn_repair.text = repair_text
+	if sell_text != _last_sell_text:
+		_last_sell_text = sell_text
+		btn_sell.text = sell_text
+
+
+func _on_repair_pressed() -> void:
+	var t := tower as Tower
+	if t == null or not is_instance_valid(t):
+		return
+	t.request_repair()
+
+
+func _on_sell_pressed() -> void:
+	var t := tower as Tower
+	if t == null or not is_instance_valid(t):
+		return
+	t.sell()
 
 
 # 选中塔 -> 显示该塔信息
@@ -94,7 +131,12 @@ func refresh() -> void:
 	reload_value_label.text = _fmt_fire_rate(t.delay)
 	scope_value_label.text = str(t.radarScope)
 	cost_value_label.text = str(t.money)
-	sell_value_label.text = str(t.sellingPrice)
+
+	# 操作按钮：满血时修理按钮不可点，其余状态实时显示修理费与出售价
+	var repair_cost := t.repairCost
+	btn_repair.disabled = repair_cost <= 0
+	btn_sell.disabled = false
+	_refresh_action_text()
 
 
 # reload 为开火间隔(秒)，换算成每秒攻击次数展示
