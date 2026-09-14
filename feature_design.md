@@ -1327,7 +1327,9 @@ layer 100 的转场遮罩就永远盖不住它 —— 转场时会看到弹窗�
 | 2026-09-13 | 美术风格规范     | v1.0 | 新增 [art_style.md](art_style.md)：工厂世界观（流水线=路径 / 出口=终点 / 基座=塔位 / 五层关卡模板）、色彩系统（钢灰十阶 + 安全黄 + 9 个语义色，含实测 WCAG 对比度）、UI 组件规范（按钮三档 / 面板 / 状态条 / 反白 tooltip）、世界元素规范、单位识别（黄=我方 / 红=敌方）、字体与图标建议 |
 | 2026-09-13 | UI 主题亮色迁移  | v2.0 | 全量迁移：`theme.tres` + 31 个 StyleBox 由深色改为亮色工厂主题；15 个场景的硬编码文字色、`achievement_panel.gd` / `level_intro_panel.gd` 的颜色常量、`background.gdshader`（暗贴图相乘 → 浅底图案叠加）、`project.godot` 清屏色一并调整。**未改动任何 `.tscn` 结构**，纯换皮可逆。详见 art_style.md §9/§10 |
 | 2026-09-13 | UI 主题重建       | v3.0 | 亮色版实测整体过亮，按用户提供的参考资源包 `factory asset v.2 - chemical lab` 重建为**深银金属**：对 13 张参考图做像素直方图 + k-means 提取真实调色板（整体平均明度 0.336），主题面色全部投影到该金属阶梯上（最大偏差 ≤0.009）；主强调保持安全黄，语义色改用参考包的化学绿 / 锈红 / 青。同样未改动 `.tscn` 结构 |
-| 2026-09-13 | 背景 / 清屏色    | v3.1 | `shader/background.gdshader` 基色、`scene/bg.tscn` 的 `base_color`、`project.godot` 的 `default_clear_color` 三者统一为参考包聚类色 `#8C9195`（明度 0.28）。世界 0.28 / 地图内面板 0.05 / 模态面板 0.02 形成三层明度，靠明度分层而非投影。有断言校验三者一致 |
+| 2026-09-13 | 地板 + UI 再平衡 | v3.2 | 地板、清屏色统一为 `Tech Dungeon Roguelite` tileset 最右区域的地砖色 `#333C57`。地板明度骤降导致原深色面板与地板撞车（差 0.005），故按同一 Sweetie 16 色板把 UI 面板提到 `#566C86` + `#94B0C2` 2px 亮边框，文字整体提亮一档。三层明度 0.046 / 0.144 / 0.412。详见 art_style.md §9/§10 |
+| 2026-09-13 | 背景场景还原     | v3.3 | `bg.tscn` 恢复为最初的「`background_tiled.png` 平铺 + UV 沿 Y 轴滚动 + 上暗下亮渐变」，只新增 `tint` 把中性灰（平均 `#2E2E2E`）映射到 `#333C57`。`tint` 为实测标定值（引擎采样纹理有自身色彩空间处理，不能按 PNG 平均值直接换算）：渲染实测 `#313953`，与目标偏差 0.018；滚动经 8 次不等间隔采样确认仍在 |
+| 2026-09-13 | 标题图 + 动态条纹 | v3.4 | 标题改为图片接入欢迎页（`sprite/title_logo.png` + `scene/ui/title_logo.tscn`，挂 `light.gdshader` 扫光）；标题去掉四周钢板与描边，改成 1600×450 透明底；危险条纹抽成独立组件 `scene/ui/hazard_strip.tscn` + `shader/hazard_scroll.gdshader`，贴图 272×22 横向严格无缝，UV 沿 X 轴滚动；艺术字改用系统安装的 Black Ops One（OFL），工程内不再放字体文件，生成器 `tools/title_logo.gd` 通过 `OS.get_system_font_path()` 查找并回退到阿里普惠体 |
 
 ---
 

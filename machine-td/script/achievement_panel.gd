@@ -118,7 +118,7 @@ func _make_tile(achievement_id: String, achievement: Dictionary) -> PanelContain
 	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	name_label.add_theme_font_size_override("font_size", 28)
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	name_label.modulate = Color(0.89411765, 0.92156863, 0.8745098) if unlocked else Color(0.48235294, 0.5058824, 0.5372549)
+	name_label.modulate = Color(0.97254902, 0.98431373, 0.99215686) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
 	content.add_child(name_label)
 
 	var progress := Label.new()
@@ -126,7 +126,7 @@ func _make_tile(achievement_id: String, achievement: Dictionary) -> PanelContain
 	progress.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	progress.add_theme_font_size_override("font_size", 24)
 	progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	progress.modulate = Color(1, 0.7764706, 0.101960786) if unlocked else Color(0.48235294, 0.5058824, 0.5372549)
+	progress.modulate = Color(1, 0.7764706, 0.101960786) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
 	content.add_child(progress)
 
 	return tile
@@ -148,13 +148,13 @@ func _make_tile_style(unlocked: bool) -> StyleBoxFlat:
 	style.corner_radius_bottom_left = 12
 	style.corner_radius_bottom_right = 12
 	if unlocked:
-		style.bg_color = Color(0.29803923, 0.32156864, 0.38039216, 0.98)
+		style.bg_color = Color(0.3372549, 0.42352942, 0.5254902, 0.98)
 		style.border_color = Color(1, 0.7764706, 0.101960786, 0.95)
 		style.shadow_color = Color(1, 0.7764706, 0.101960786, 0.28)
 		style.shadow_size = 8
 	else:
-		style.bg_color = Color(0.18431373, 0.20392157, 0.2509804, 0.92)
-		style.border_color = Color(0.3882353, 0.40784314, 0.44313726, 1)
+		style.bg_color = Color(0.26666668, 0.34509805, 0.43137255, 0.92)
+		style.border_color = Color(0.5803922, 0.6901961, 0.7607843, 1)
 	return style
 
 
@@ -174,7 +174,7 @@ func _show_detail(achievement_id: String) -> void:
 		detail_icon.texture = load(FALLBACK_ICON) as Texture2D
 		detail_icon.material = _mat_locked
 		detail_name.text = _t("_AchvHoverHint", "Hover an achievement to see its details")
-		detail_name.modulate = Color(0.48235294, 0.5058824, 0.5372549)
+		detail_name.modulate = Color(0.62352943, 0.7058824, 0.76862746)
 		detail_status.text = ""
 		detail_desc.text = ""
 		detail_progress.text = ""
@@ -187,16 +187,16 @@ func _show_detail(achievement_id: String) -> void:
 	detail_icon.material = _mat_unlocked if unlocked else _mat_locked
 
 	detail_name.text = _achievement_name(achievement_id, achievement)
-	detail_name.modulate = Color(0.89411765, 0.92156863, 0.8745098) if unlocked else Color(0.48235294, 0.5058824, 0.5372549)
+	detail_name.modulate = Color(0.97254902, 0.98431373, 0.99215686) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
 
 	detail_status.text = _t("_AchievementUnlocked", "Unlocked") if unlocked else _t("_AchievementLocked", "Locked")
-	detail_status.modulate = Color(0.2901961, 0.63529414, 0.13333334) if unlocked else Color(0.48235294, 0.5058824, 0.5372549)
+	detail_status.modulate = Color(0.654902, 0.9411765, 0.4392157) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
 
 	detail_desc.text = _achievement_desc(achievement_id, achievement)
-	detail_desc.modulate = Color(0.8352941, 0.8627451, 0.8235294)
+	detail_desc.modulate = Color(0.91764706, 0.9490196, 0.96862745)
 
 	detail_progress.text = _progress_text(achievement_id, achievement)
-	detail_progress.modulate = Color(1, 0.7764706, 0.101960786) if unlocked else Color(0.48235294, 0.5058824, 0.5372549)
+	detail_progress.modulate = Color(1, 0.7764706, 0.101960786) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
 
 
 # ---------- 工具 ----------

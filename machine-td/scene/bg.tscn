@@ -5,10 +5,9 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1kia2"]
 shader = ExtResource("1_j8iej")
-shader_parameter/speed = 0.2
-shader_parameter/base_color = Color(0.54901963, 0.5686275, 0.58431375, 1)
-shader_parameter/pattern_strength = 0.06
-shader_parameter/top_shade = 0.05
+shader_parameter/speed = 0.1
+shader_parameter/tint = Color(0.516, 0.607, 0.879, 1)
+shader_parameter/darkness = 0.8
 
 [node name="bg" type="TextureRect" unique_id=150621738]
 material = SubResource("ShaderMaterial_1kia2")

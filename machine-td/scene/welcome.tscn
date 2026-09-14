@@ -13,6 +13,8 @@
 [ext_resource type="PackedScene" uid="uid://cmoo2h1nvyyws" path="res://scene/setting.tscn" id="9_vvofi"]
 [ext_resource type="Shader" uid="uid://ch8wag47374oa" path="res://shader/achievement_glow.gdshader" id="10_glow"]
 [ext_resource type="PackedScene" uid="uid://cq5ajf7h5g7lc" path="res://scene/achievement_panel.tscn" id="11_achv"]
+[ext_resource type="PackedScene" path="res://scene/ui/title_logo.tscn" id="12_title"]
+[ext_resource type="PackedScene" path="res://scene/ui/hazard_strip.tscn" id="13_hazard"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_glow"]
 resource_local_to_scene = true
@@ -36,16 +38,26 @@ theme = ExtResource("2_hys0r")
 layout_mode = 0
 metadata/_edit_lock_ = true
 
-[node name="Label" type="Label" parent="ui" unique_id=389625941]
+[node name="titleLogo" parent="ui" instance=ExtResource("12_title")]
 layout_mode = 0
-offset_left = 477.0
-offset_top = 160.0
-offset_right = 1443.0
-offset_bottom = 287.0
-theme_override_font_sizes/font_size = 90
-text = "Simple Tower Defense"
-horizontal_alignment = 1
-vertical_alignment = 1
+offset_left = 160.0
+offset_top = 55.0
+offset_right = 1760.0
+offset_bottom = 505.0
+
+[node name="hazardTop" parent="ui" instance=ExtResource("13_hazard")]
+layout_mode = 0
+offset_left = 360.0
+offset_top = 71.0
+offset_right = 1560.0
+offset_bottom = 93.0
+
+[node name="hazardBottom" parent="ui" instance=ExtResource("13_hazard")]
+layout_mode = 0
+offset_left = 360.0
+offset_top = 467.0
+offset_right = 1560.0
+offset_bottom = 489.0
 
 [node name="HBoxContainer" type="VBoxContainer" parent="ui" unique_id=442101509]
 layout_mode = 0
@@ -60,10 +72,10 @@ metadata/_edit_lock_ = true
 
 [node name="UIButton" parent="ui/HBoxContainer" unique_id=226549016 instance=ExtResource("5_si833")]
 layout_mode = 2
-theme_override_colors/icon_normal_color = Color(0.28235295, 0.69803923, 0.65882355, 1)
-theme_override_colors/icon_focus_color = Color(0.28235295, 0.69803923, 0.65882355, 1)
-theme_override_colors/icon_pressed_color = Color(0.18431373, 0.49019608, 0.4627451, 1)
-theme_override_colors/icon_hover_color = Color(0.49803922, 0.8156863, 0.7764706, 1)
+theme_override_colors/icon_normal_color = Color(0.49803922, 0.8156863, 0.7764706, 1)
+theme_override_colors/icon_focus_color = Color(0.49803922, 0.8156863, 0.7764706, 1)
+theme_override_colors/icon_pressed_color = Color(0.37254903, 0.72156864, 0.68235296, 1)
+theme_override_colors/icon_hover_color = Color(0.65882355, 0.9019608, 0.87058824, 1)
 text = "_Tutorial"
 icon = ExtResource("6_xdjj8")
 
@@ -78,19 +90,19 @@ icon = ExtResource("7_vvofi")
 
 [node name="setting" parent="ui/HBoxContainer" unique_id=1284130239 instance=ExtResource("5_si833")]
 layout_mode = 2
-theme_override_colors/icon_normal_color = Color(0.65882355, 0.6862745, 0.65882355, 1)
-theme_override_colors/icon_focus_color = Color(0.65882355, 0.6862745, 0.65882355, 1)
-theme_override_colors/icon_pressed_color = Color(0.48235294, 0.5058824, 0.5372549, 1)
-theme_override_colors/icon_hover_color = Color(0.8352941, 0.8627451, 0.8235294, 1)
+theme_override_colors/icon_normal_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
+theme_override_colors/icon_focus_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
+theme_override_colors/icon_pressed_color = Color(0.62352943, 0.7058824, 0.76862746, 1)
+theme_override_colors/icon_hover_color = Color(0.972549, 0.9843137, 0.99215686, 1)
 text = "_Settings"
 icon = ExtResource("8_vn0ct")
 
 [node name="btnAbout" parent="ui/HBoxContainer" unique_id=1145162391 instance=ExtResource("5_si833")]
 layout_mode = 2
-theme_override_colors/icon_normal_color = Color(0.65882355, 0.6862745, 0.65882355, 1)
-theme_override_colors/icon_focus_color = Color(0.65882355, 0.6862745, 0.65882355, 1)
-theme_override_colors/icon_pressed_color = Color(0.48235294, 0.5058824, 0.5372549, 1)
-theme_override_colors/icon_hover_color = Color(0.8352941, 0.8627451, 0.8235294, 1)
+theme_override_colors/icon_normal_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
+theme_override_colors/icon_focus_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
+theme_override_colors/icon_pressed_color = Color(0.62352943, 0.7058824, 0.76862746, 1)
+theme_override_colors/icon_hover_color = Color(0.972549, 0.9843137, 0.99215686, 1)
 text = "_About"
 icon = ExtResource("9_vkhmq")
 
@@ -105,12 +117,17 @@ scale = Vector2(0.6, 0.6)
 texture_normal = ExtResource("9_vn0ct")
 
 [node name="aboutPanel" parent="." unique_id=968769467 instance=ExtResource("3_0h2lm")]
-visible = false
+layout_mode = 3
+anchors_preset = 0
 
 [node name="setting" parent="." unique_id=762839594 instance=ExtResource("9_vvofi")]
+layout_mode = 3
+anchors_preset = 0
 
 [node name="achievementPanel" parent="." unique_id=1661854894 instance=ExtResource("11_achv")]
 visible = false
+layout_mode = 3
+anchors_preset = 0
 
 [connection signal="pressed" from="ui/HBoxContainer/UIButton" to="." method="_on_tutorial_pressed"]
 [connection signal="pressed" from="ui/HBoxContainer/btnStart" to="." method="_on_btn_s_start_pressed"]

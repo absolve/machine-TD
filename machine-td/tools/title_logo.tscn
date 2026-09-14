@@ -1,0 +1,8 @@
+﻿[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tools/title_logo.gd" id="1_s"]
+
+[node name="TitleLogo" type="Control"]
+offset_right = 1920.0
+offset_bottom = 1080.0
+script = ExtResource("1_s")

@@ -28,7 +28,7 @@ alignment = 1
 
 [node name="nameLabel" type="Label" parent="VBoxContainer" unique_id=1973486438]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.8352941, 0.8627451, 0.8235294, 1)
+theme_override_colors/font_color = Color(0.97254902, 0.98431373, 0.99215686, 1)
 theme_override_colors/font_shadow_color = Color(0.05098039, 0.0627451, 0.08627451, 0.85)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
@@ -43,7 +43,7 @@ alignment = 1
 [node name="hpLabel" type="Label" parent="VBoxContainer/HpRow" unique_id=856278521]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.9490196, 0.4627451, 0.36078432, 1)
+theme_override_colors/font_color = Color(1, 0.7019608, 0.627451, 1)
 theme_override_font_sizes/font_size = 11
 text = "100/100"
 horizontal_alignment = 1
@@ -64,7 +64,7 @@ alignment = 1
 [node name="expLabel" type="Label" parent="VBoxContainer/ExpRow" unique_id=839934672]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.28235295, 0.69803923, 0.65882355, 1)
+theme_override_colors/font_color = Color(0.49803922, 0.8156863, 0.7764706, 1)
 theme_override_font_sizes/font_size = 11
 text = "0/10"
 horizontal_alignment = 1

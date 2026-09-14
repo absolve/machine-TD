@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Shader" path="res://shader/hazard_scroll.gdshader" id="1_scroll"]
+[ext_resource type="Texture2D" path="res://sprite/hazard_strip.png" id="2_tex"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hazard"]
+resource_local_to_scene = true
+shader = ExtResource("1_scroll")
+shader_parameter/speed = 0.12
+shader_parameter/alpha = 1.0
+
+[node name="hazardStrip" type="TextureRect"]
+offset_right = 1200.0
+offset_bottom = 22.0
+mouse_filter = 2
+texture = ExtResource("2_tex")
+material = SubResource("ShaderMaterial_hazard")
+stretch_mode = 1
