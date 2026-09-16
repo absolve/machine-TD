@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://ssb80ldeh64x"]
+
+[ext_resource type="Script" uid="uid://8wnam1gl3nqk" path="res://script/ability_slot.gd" id="1_script"]
+[ext_resource type="StyleBox" uid="uid://djtnjx2ei87o2" path="res://theme/style/btn_normal.tres" id="2_bg"]
+[ext_resource type="Shader" uid="uid://dp3q67f8qyg04" path="res://shader/ability_cooldown.gdshader" id="3_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cooldown"]
+resource_local_to_scene = true
+shader = ExtResource("3_shader")
+shader_parameter/progress = 0.0
+shader_parameter/cover_color = Color(0.05, 0.06, 0.09, 0.78)
+shader_parameter/softness = 0.03
+
+[node name="abilitySlot" type="Control" unique_id=20511086]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 72.0
+offset_bottom = 72.0
+script = ExtResource("1_script")
+
+[node name="bg" type="Panel" parent="." unique_id=1121121119]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("2_bg")
+
+[node name="icon" type="TextureRect" parent="." unique_id=152669171]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="cooldown" type="ColorRect" parent="." unique_id=1176270495]
+material = SubResource("ShaderMaterial_cooldown")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="cooldownLabel" type="Label" parent="." unique_id=1683555362]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Timer" parent="." unique_id=984540885]
+one_shot = true

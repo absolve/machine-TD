@@ -78,6 +78,17 @@ _EnemyRole_siege,Siege,远程打击型
 _EnemyRole_air,Air Unit,空中单位
 _LevelTitleFmt,Level %s,第 %s 关
 _LevelIntel,Level Briefing,关卡情报
+_ability_bombard_name,Airstrike,区域轰炸
+_ability_bombard_desc,Click the map to call an airstrike. Deals heavy damage to every enemy inside the target area.,点击地图呼叫区域轰炸，对范围内所有敌人造成大量伤害。
+_ability_invincible_name,Overdrive Shield,塔防御护盾
+_ability_invincible_desc,Click the map to make every tower in the target area invincible for a while. Invincible towers take no damage.,点击地图，使范围内所有防御塔在一段时间内无敌，无敌期间不会受到任何伤害。
+_ability_target_position,Click the map to choose an area.,点击地图选择目标区域。
+_ability_cooldown_fmt,Cooldown: %ss,冷却时间：%s 秒
+_ability_duration_fmt,Duration: %ss,持续时间：%s 秒
+_ability_bombard_hit,Airstrike hit %d enemies,区域轰炸命中 %d 个敌人
+_ability_bombard_miss,Airstrike hit nothing,区域轰炸没有命中敌人
+_ability_invincible_hit,%d towers are now invincible,%d 座防御塔进入无敌状态
+_ability_invincible_miss,No tower in range,范围内没有防御塔
 _BaseHealth,Base HP,基地生命
 _StartMoney,Start Money,初始金币
 _GemRewardShort,Gem Reward,宝石奖励

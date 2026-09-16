@@ -3,7 +3,33 @@ extends Node
 const TileSize = 64  #网格大小
 
 # 当前选中的关卡ID（由 level_select 点击时设置，map 读取后加载对应场景）
-var currentStageId: int = 1
+var currentStageId: int =0
+
+## 各关卡启用的能力技能（key = 关卡 id，值 = 技能 id 数组，顺序即技能条显示顺序）
+## 技能 id 定义见 autoload/ability_manager.gd 的 ABILITIES
+## 没有列在这里的关卡不会显示技能条
+const stageAbilities := {
+	0: ["bombard", "invincible"],                       # 教程：显示全部
+	2: ["bombard"],
+	3: ["invincible"],
+	4: ["bombard", "invincible"],
+	5: ["bombard"],
+	6: ["invincible"],
+	7: ["bombard", "invincible"],
+	8: ["bombard"],
+	9: ["invincible"],
+	10: ["bombard", "invincible"],
+	11: ["bombard"],
+	12: ["invincible"],
+	13: ["bombard", "invincible"],
+	14: ["bombard", "invincible"],
+	15: ["bombard", "invincible"],
+}
+
+
+# 取某关卡启用的能力技能；未配置的关卡返回空数组（不显示技能条）
+func getAbilities(stage_id: int) -> Array:
+	return stageAbilities.get(stage_id, [])
 
 #关卡的数据
 var allStage = [
