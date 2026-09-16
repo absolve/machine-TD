@@ -4,6 +4,11 @@
 [ext_resource type="Script" uid="uid://dnaqsi3rmg555" path="res://script/tesla_coil_tower.gd" id="2_5fmby"]
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_3idwy"]
 
+[ext_resource type="Texture2D" path="res://sprite/tower/base_large.png" id="99_base"]
+[ext_resource type="Texture2D" path="res://sprite/tower/tower_tesla.png" id="99_turret"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nobase"]
+animations = []
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4p7g2"]
 size = Vector2(100, 100)
 
@@ -15,7 +20,7 @@ region = Rect2(640, 128, 128, 128)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_427bq")
+"texture": ExtResource("99_base")
 }],
 "loop": 2,
 "name": &"default",
@@ -25,6 +30,17 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_3idwy"]
 radius = 500.0
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_autotur"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("99_turret")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="Tower" unique_id=1676258242 instance=ExtResource("1_x4oq0")]
 script = ExtResource("2_5fmby")
 type = 1005
@@ -33,7 +49,17 @@ type = 1005
 shape = SubResource("RectangleShape2D_4p7g2")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
-sprite_frames = SubResource("SpriteFrames_3c4u4")
+scale = Vector2(1, 1)
+sprite_frames = SubResource("SpriteFrames_nobase")
+
+[node name="turret" parent="." index="3"]
+modulate = Color(1, 1, 1, 0.39215687)
+sprite_frames = SubResource("SpriteFrames_autotur")
+offset = Vector2(0, 0)
+scale = Vector2(1, 1)
+
+[node name="Marker2D" type="Marker2D" parent="turret"]
+position = Vector2(30, 0)
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
 visible = false

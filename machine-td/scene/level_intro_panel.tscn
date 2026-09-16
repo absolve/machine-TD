@@ -7,104 +7,98 @@
 
 [node name="levelIntroPanel" type="Control" unique_id=235618938]
 visible = false
-layout_mode = 0
-offset_right = 1920.0
-offset_bottom = 1080.0
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 0
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
-[node name="panelBg" type="Panel" parent="."]
+[node name="Center" type="CenterContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -508.0
-offset_top = -368.0
-offset_right = 508.0
-offset_bottom = 368.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="panelBg" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(1180, 0)
+custom_maximum_size = Vector2(1180, 1010)
+layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = ExtResource("3_panel")
 
-[node name="Margin" type="MarginContainer" parent="." unique_id=1879031230]
-custom_maximum_size = Vector2(-1, 800)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -508.0
-offset_top = -368.0
-offset_right = 508.0
-offset_bottom = 368.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Margin" type="MarginContainer" parent="Center/panelBg"]
+layout_mode = 2
 theme_override_constants/margin_left = 28
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 28
 theme_override_constants/margin_bottom = 24
 
-[node name="VBox" type="VBoxContainer" parent="Margin" unique_id=1194444775]
+[node name="VBox" type="VBoxContainer" parent="Center/panelBg/Margin"]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="titleLabel" type="Label" parent="Margin/VBox" unique_id=1609726902]
+[node name="titleLabel" type="Label" parent="Center/panelBg/Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.7764706, 0.101960786, 1)
-theme_override_font_sizes/font_size = 46
+theme_override_font_sizes/font_size = 54
 text = "Level 1"
 horizontal_alignment = 1
 
-[node name="subtitleLabel" type="Label" parent="Margin/VBox" unique_id=597241234]
+[node name="subtitleLabel" type="Label" parent="Center/panelBg/Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="InfoBox" type="HBoxContainer" parent="Margin/VBox" unique_id=2111861966]
+[node name="InfoBox" type="HBoxContainer" parent="Center/panelBg/Margin/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Sep1" type="HSeparator" parent="Margin/VBox" unique_id=216744191]
+[node name="Sep1" type="HSeparator" parent="Center/panelBg/Margin/VBox"]
 layout_mode = 2
 theme_override_styles/separator = ExtResource("4_sep")
 
-[node name="intelTitle" type="Label" parent="Margin/VBox" unique_id=806693396]
+[node name="intelTitle" type="Label" parent="Center/panelBg/Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.49803922, 0.8156863, 0.7764706, 1)
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 36
 text = "Enemy Intel"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Margin/VBox" unique_id=562534420]
+[node name="ScrollContainer" type="ScrollContainer" parent="Center/panelBg/Margin/VBox"]
+custom_minimum_size = Vector2(0, 360)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
 
-[node name="enemyList" type="VBoxContainer" parent="Margin/VBox/ScrollContainer" unique_id=261896943]
+[node name="enemyList" type="VBoxContainer" parent="Center/panelBg/Margin/VBox/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="Footer" type="HBoxContainer" parent="Margin/VBox" unique_id=710652941]
+[node name="Footer" type="HBoxContainer" parent="Center/panelBg/Margin/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="hintLabel" type="Label" parent="Margin/VBox/Footer" unique_id=1546803785]
+[node name="hintLabel" type="Label" parent="Center/panelBg/Margin/VBox/Footer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 26
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="btnStart" type="Button" parent="Margin/VBox/Footer" unique_id=1697291592]
-custom_minimum_size = Vector2(220, 0)
+[node name="btnStart" type="Button" parent="Center/panelBg/Margin/VBox/Footer"]
+custom_minimum_size = Vector2(260, 64)
 layout_mode = 2
+theme_override_font_sizes/font_size = 30
 text = "Begin Battle"

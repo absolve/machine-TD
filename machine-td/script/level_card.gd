@@ -15,6 +15,8 @@ signal click
 
 func _ready() -> void:
 	num.text = str(level)
+	# 锁标文本原本是场景里硬编码的英文 "LOCKED"，这里走翻译
+	lockLabel.text = tr("_LevelLocked")
 	levelRating.rating = rating
 	levelRating.visible = true
 	levelRating.modulate.a = 1.0 if rating > 0 else 0.0

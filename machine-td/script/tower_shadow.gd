@@ -18,13 +18,17 @@ func _ready():
 func setActive():
 	active = true
 	visible = true
-	if towerType == Game.towerType.machineGunTower:
-		ani.play("gun")
-	elif towerType == Game.towerType.cannonTower:
-		ani.play("cannon")
-	elif towerType == Game.towerType.rocketTower:
-		ani.play("rocket")
-	print(gridSize)
+	# 动画名 = 塔类型名（tower_shadow.tscn 里每种塔一条动画）
+	var anim := "machineGunTower"
+	match towerType:
+		Game.towerType.cannonTower: anim = "cannonTower"
+		Game.towerType.rocketTower: anim = "rocketTower"
+		Game.towerType.EMPTower: anim = "EMPTower"
+		Game.towerType.teslaCoilTower: anim = "teslaCoilTower"
+		Game.towerType.laserTower: anim = "laserTower"
+		Game.towerType.droneBase: anim = "droneBase"
+		_: anim = "machineGunTower"
+	ani.play(anim)
 
 func setInactive():
 	active = false

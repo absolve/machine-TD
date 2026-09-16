@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://ba0syy3x76icx" path="res://script/rocket_tower.gd" id="2_kf01a"]
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_f662h"]
 [ext_resource type="Texture2D" uid="uid://cqfjqk8bkohut" path="res://sprite/towerDefense_tile295.png" id="4_spark"]
+[ext_resource type="Texture2D" path="res://sprite/tower/base_plate.png" id="99_base"]
+[ext_resource type="Texture2D" path="res://sprite/tower/turret_rocket.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f662h"]
 size = Vector2(64, 64)
@@ -16,7 +18,7 @@ region = Rect2(640, 256, 128, 128)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_0vk61")
+"texture": ExtResource("99_base")
 }],
 "loop": 0,
 "name": &"default",
@@ -34,7 +36,7 @@ region = Rect2(256, 384, 128, 128)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_f662h")
+"texture": ExtResource("99_turret")
 }],
 "loop": 0,
 "name": &"default",
@@ -158,7 +160,7 @@ type = 1002
 shape = SubResource("RectangleShape2D_f662h")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
-scale = Vector2(0.6, 0.6)
+scale = Vector2(1, 1)
 sprite_frames = SubResource("SpriteFrames_svgp0")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
@@ -170,11 +172,14 @@ visibility_layer = 2
 shape = SubResource("CircleShape2D_f662h")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
-scale = Vector2(0.6, 0.6)
+offset = Vector2(8, 0)
+scale = Vector2(1, 1)
 sprite_frames = SubResource("SpriteFrames_4ky5n")
 
+position = Vector2(41, 0)
 [node name="Marker2D" parent="turret" index="0" unique_id=1564610297]
 position = Vector2(45, 0)
+offset = Vector2(41, 0)
 
 [node name="spark" parent="." index="4" unique_id=2136824957]
 sprite_frames = SubResource("SpriteFrames_spark")

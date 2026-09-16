@@ -5,6 +5,9 @@
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_56bs0"]
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="4_wl8i8"]
 
+[ext_resource type="Texture2D" path="res://sprite/tower/base_large.png" id="99_base"]
+[ext_resource type="Texture2D" path="res://sprite/tower/tower_drone.png" id="99_turret"]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j5ypg"]
 size = Vector2(64, 64)
 
@@ -26,7 +29,7 @@ region = Rect2(640, 0, 128, 128)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_lyy2e")
+"texture": ExtResource("99_base")
 }],
 "loop": 1,
 "name": &"default",
@@ -43,6 +46,17 @@ shader_parameter/flash_amplitude = 1.0
 shader_parameter/outline_thickness = 2.0
 shader_parameter/outline_color = Color(1, 1, 1, 1)
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_autotur"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("99_turret")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="Tower" unique_id=1676258242 instance=ExtResource("1_qyteg")]
 script = ExtResource("2_ir8sv")
 type = 1004
@@ -51,6 +65,7 @@ type = 1004
 shape = SubResource("RectangleShape2D_j5ypg")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
+scale = Vector2(1, 1)
 material = SubResource("ShaderMaterial_wl8i8")
 sprite_frames = SubResource("SpriteFrames_j5ypg")
 
@@ -58,4 +73,10 @@ sprite_frames = SubResource("SpriteFrames_j5ypg")
 visible = false
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
+sprite_frames = SubResource("SpriteFrames_autotur")
+offset = Vector2(0, 0)
+scale = Vector2(1, 1)
 material = SubResource("ShaderMaterial_lyy2e")
+[node name="Marker2D" type="Marker2D" parent="turret"]
+position = Vector2(40, 0)
+

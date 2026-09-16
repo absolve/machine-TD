@@ -9,18 +9,18 @@ var isOpen = false
 var towerCard = preload("res://scene/tower_card.tscn")
 
 
-var tower1 = preload("res://sprite/tower1.png")
-var tower2 = preload("res://sprite/tower2.png")
-var tower3 = preload("res://sprite/tower3.png")
-var tower4 = preload("res://sprite/tower3.png")
-var tower5 = preload("res://sprite/tower3.png")
-var tower6=preload("res://sprite/tower3.png")
-var tower7=preload("res://sprite/tower3.png")
+var tower1 = preload("res://sprite/tower/turret_machinegun.png")
+var tower2 = preload("res://sprite/tower/turret_cannon.png")
+var tower3 = preload("res://sprite/tower/turret_rocket.png")
+var tower4 = preload("res://sprite/tower/turret_emp.png")
+var tower5 = preload("res://sprite/tower/tower_tesla.png")
+var tower6 = preload("res://sprite/tower/tower_laser.png")
+var tower7 = preload("res://sprite/tower/tower_drone.png")
 
 var towerIcon = preload("res://scene/tower_icon.tscn")
 
 var towersData = [ {'type': Game.towerType.machineGunTower, 'img': tower1},
-{'type': 1001, 'img': tower2}, {'type': 1002, 'img': tower3},
+{'type': Game.towerType.cannonTower, 'img': tower2}, {'type': Game.towerType.rocketTower, 'img': tower3},
 {'type': Game.towerType.EMPTower, 'img': tower4},
 {'type': Game.towerType.teslaCoilTower, 'img': tower5},
 {'type': Game.towerType.laserTower, 'img': tower6},

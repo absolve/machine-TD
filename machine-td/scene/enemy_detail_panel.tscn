@@ -33,14 +33,14 @@ theme_override_constants/separation = 10
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.49803922, 0.8156863, 0.7764706, 1)
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 46
 text = "Enemy"
 autowrap_mode = 3
 
 [node name="roleLabel" type="Label" parent="Margin/VBox/Header"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.7764706, 0.101960786, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 text = "Role"
 vertical_alignment = 1
 
@@ -52,14 +52,14 @@ theme_override_constants/separation = 8
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "HP"
 
 [node name="hpValueLabel" type="Label" parent="Margin/VBox/HpRow"]
 custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.7019608, 0.627451, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 36
 text = "0/0"
 horizontal_alignment = 2
 
@@ -87,14 +87,14 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "ATK"
 
 [node name="Value" type="Label" parent="Margin/VBox/Stats/atkRow"]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.97254902, 0.98431373, 0.99215686, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 36
 text = "0"
 horizontal_alignment = 2
 
@@ -105,14 +105,14 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "Fire Rate"
 
 [node name="Value" type="Label" parent="Margin/VBox/Stats/reloadRow"]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.97254902, 0.98431373, 0.99215686, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 36
 text = "0/s"
 horizontal_alignment = 2
 
@@ -123,14 +123,14 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "DPS"
 
 [node name="Value" type="Label" parent="Margin/VBox/Stats/dpsRow"]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.7764706, 0.101960786, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 36
 text = "0"
 horizontal_alignment = 2
 
@@ -149,14 +149,14 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "Speed"
 
 [node name="Value" type="Label" parent="Margin/VBox/Attr/speedRow"]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.97254902, 0.98431373, 0.99215686, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 36
 text = "0"
 horizontal_alignment = 2
 
@@ -167,14 +167,14 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "Armor"
 
 [node name="Value" type="Label" parent="Margin/VBox/Attr/armorRow"]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.91764706, 0.9490196, 0.96862745, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 36
 text = "0%"
 horizontal_alignment = 2
 
@@ -185,14 +185,14 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "Flying"
 
 [node name="Value" type="Label" parent="Margin/VBox/Attr/flyingRow"]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.91764706, 0.9490196, 0.96862745, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 36
 text = "No"
 horizontal_alignment = 2
 
@@ -211,14 +211,14 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "Kill Reward"
 
 [node name="Value" type="Label" parent="Margin/VBox/Reward/rewardRow"]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.7764706, 0.101960786, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 36
 text = "0"
 horizontal_alignment = 2
 
@@ -229,14 +229,14 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "Escape Loss"
 
 [node name="Value" type="Label" parent="Margin/VBox/Reward/escapeRow"]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.7019608, 0.627451, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 36
 text = "0"
 horizontal_alignment = 2
 
@@ -247,20 +247,20 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "Kill EXP"
 
 [node name="Value" type="Label" parent="Margin/VBox/Reward/expRow"]
 custom_minimum_size = Vector2(110, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.49803922, 0.8156863, 0.7764706, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 36
 text = "0"
 horizontal_alignment = 2
 
 [node name="hintLabel" type="Label" parent="Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.62352943, 0.7058824, 0.76862746, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 26
 text = "Click the enemy again or empty ground to deselect."
 autowrap_mode = 3

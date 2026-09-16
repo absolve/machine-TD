@@ -32,7 +32,7 @@ theme_override_colors/font_color = Color(0.97254902, 0.98431373, 0.99215686, 1)
 theme_override_colors/font_shadow_color = Color(0.05098039, 0.0627451, 0.08627451, 0.85)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 26
 text = "Tower"
 horizontal_alignment = 1
 
@@ -44,7 +44,7 @@ alignment = 1
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.7019608, 0.627451, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 22
 text = "100/100"
 horizontal_alignment = 1
 
@@ -65,7 +65,7 @@ alignment = 1
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.49803922, 0.8156863, 0.7764706, 1)
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 22
 text = "0/10"
 horizontal_alignment = 1
 

@@ -9,20 +9,20 @@ extends Control
 ## 以及本关会出现的全部敌人类型（名称 / 定位 / 数量 / 血量 / 速度 / 是否空中）。
 ## 敌人数据统一取自 Game.enemyInfo 和 StageData.allStage，避免与战斗数值不同步。
 
-@onready var title_label: Label = $Margin/VBox/titleLabel
-@onready var subtitle_label: Label = $Margin/VBox/subtitleLabel
-@onready var info_box: HBoxContainer = $Margin/VBox/InfoBox
-@onready var intel_title: Label = $Margin/VBox/intelTitle
-@onready var enemy_list: VBoxContainer = $Margin/VBox/ScrollContainer/enemyList
-@onready var hint_label: Label = $Margin/VBox/Footer/hintLabel
-@onready var start_button: Button = $Margin/VBox/Footer/btnStart
+@onready var title_label: Label = $Center/panelBg/Margin/VBox/titleLabel
+@onready var subtitle_label: Label = $Center/panelBg/Margin/VBox/subtitleLabel
+@onready var info_box: HBoxContainer = $Center/panelBg/Margin/VBox/InfoBox
+@onready var intel_title: Label = $Center/panelBg/Margin/VBox/intelTitle
+@onready var enemy_list: VBoxContainer = $Center/panelBg/Margin/VBox/ScrollContainer/enemyList
+@onready var hint_label: Label = $Center/panelBg/Margin/VBox/Footer/hintLabel
+@onready var start_button: Button = $Center/panelBg/Margin/VBox/Footer/btnStart
 
 # 敌人列表各列的固定宽度，表头与数据行共用，保证纵向对齐
-const COL_WIDTH_ROLE := 160
-const COL_WIDTH_COUNT := 90
-const COL_WIDTH_HP := 110
-const COL_WIDTH_SPEED := 110
-const COL_WIDTH_AIR := 80
+const COL_WIDTH_ROLE := 200
+const COL_WIDTH_COUNT := 110
+const COL_WIDTH_HP := 140
+const COL_WIDTH_SPEED := 140
+const COL_WIDTH_AIR := 100
 
 const COLOR_HEADER := Color(0.65882355, 0.6862745, 0.65882355, 1.0)
 const COLOR_TEXT := Color(0.89411765, 0.92156863, 0.8745098, 1.0)
@@ -104,7 +104,7 @@ func _build_enemy_list(stage_data: Dictionary) -> void:
 	if order.is_empty():
 		var empty := Label.new()
 		empty.text = _t("_NoEnemyData", "No enemy data for this level.")
-		empty.add_theme_font_size_override("font_size", 22)
+		empty.add_theme_font_size_override("font_size", 26)
 		empty.add_theme_color_override("font_color", COLOR_HEADER)
 		enemy_list.add_child(empty)
 		return
@@ -117,7 +117,7 @@ func _build_enemy_list(stage_data: Dictionary) -> void:
 		_t("_EnemyColHp", "HP"),
 		_t("_EnemyColSpeed", "Speed"),
 		_t("_EnemyColAir", "Air"),
-		COLOR_HEADER, 20, true)
+		COLOR_HEADER, 26, true)
 
 	# 每种敌人一行，属性取 Game.enemyInfo，名称/定位取多语言显示名
 	for enemy_type in order:
@@ -130,7 +130,7 @@ func _build_enemy_list(stage_data: Dictionary) -> void:
 			str(int(info.get("hp", 0))),
 			str(int(info.get("speed", 0))),
 			_t("_Yes", "Yes") if is_air else "-",
-			COLOR_TEXT, 24, false)
+			COLOR_TEXT, 30, false)
 
 
 # 一行敌人信息；is_header 为 true 时在行后追加分隔线
@@ -183,13 +183,13 @@ func _add_chip(title: String, value: String, color: Color) -> void:
 	var title_label := Label.new()
 	title_label.text = title
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title_label.add_theme_font_size_override("font_size", 20)
+	title_label.add_theme_font_size_override("font_size", 24)
 	title_label.add_theme_color_override("font_color", COLOR_HEADER)
 
 	var value_label := Label.new()
 	value_label.text = value
 	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	value_label.add_theme_font_size_override("font_size", 32)
+	value_label.add_theme_font_size_override("font_size", 40)
 	value_label.add_theme_color_override("font_color", color)
 
 	chip.add_child(title_label)

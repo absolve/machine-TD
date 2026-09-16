@@ -5,6 +5,9 @@
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_0llar"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_wfuso"]
 
+[ext_resource type="Texture2D" path="res://sprite/tower/base_large.png" id="99_base"]
+[ext_resource type="Texture2D" path="res://sprite/tower/tower_laser.png" id="99_turret"]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_axgl3"]
 size = Vector2(64, 64)
 
@@ -26,7 +29,7 @@ region = Rect2(640, 256, 128, 128)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_wfuso")
+"texture": ExtResource("99_base")
 }],
 "loop": 1,
 "name": &"default",
@@ -46,6 +49,17 @@ shader_parameter/flash_amplitude = 0.6
 shader_parameter/outline_thickness = 2.0
 shader_parameter/outline_color = Color(1, 1, 1, 1)
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_autotur"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("99_turret")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="Tower2" unique_id=1676258242 instance=ExtResource("1_bh8ft")]
 script = ExtResource("2_733d0")
 type = 1006
@@ -55,6 +69,7 @@ visible = false
 shape = SubResource("RectangleShape2D_axgl3")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
+scale = Vector2(1, 1)
 z_index = -1
 material = SubResource("ShaderMaterial_wfuso")
 sprite_frames = SubResource("SpriteFrames_027me")
@@ -66,7 +81,13 @@ visible = false
 shape = SubResource("CircleShape2D_0llar")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
+sprite_frames = SubResource("SpriteFrames_autotur")
+offset = Vector2(0, 0)
+scale = Vector2(1, 1)
 material = SubResource("ShaderMaterial_axgl3")
+
+[node name="Marker2D" type="Marker2D" parent="turret"]
+position = Vector2(60, 0)
 
 [connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
 [connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]

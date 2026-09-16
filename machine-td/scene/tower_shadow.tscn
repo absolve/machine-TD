@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://cfwue5nwpbqlj"]
 
 [ext_resource type="Script" uid="uid://c5eck2x0jj4kg" path="res://script/tower_shadow.gd" id="1_gmqdi"]
-[ext_resource type="Texture2D" uid="uid://4l2fst2rdd3t" path="res://sprite/tower1.png" id="2_cqdud"]
-[ext_resource type="Texture2D" uid="uid://iwd57ggunjdl" path="res://sprite/tower2.png" id="2_i13lh"]
-[ext_resource type="Texture2D" uid="uid://bl0olbrgthb3l" path="res://sprite/tower3.png" id="4_nvd0d"]
+[ext_resource type="Texture2D" path="res://sprite/tower/turret_machinegun.png" id="t_mg"]
+[ext_resource type="Texture2D" path="res://sprite/tower/turret_cannon.png" id="t_cannon"]
+[ext_resource type="Texture2D" path="res://sprite/tower/turret_rocket.png" id="t_rocket"]
+[ext_resource type="Texture2D" path="res://sprite/tower/turret_emp.png" id="t_emp"]
+[ext_resource type="Texture2D" path="res://sprite/tower/tower_tesla.png" id="t_tesla"]
+[ext_resource type="Texture2D" path="res://sprite/tower/tower_laser.png" id="t_laser"]
+[ext_resource type="Texture2D" path="res://sprite/tower/tower_drone.png" id="t_drone"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gmqdi"]
 
@@ -11,26 +15,58 @@
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_i13lh")
+"texture": ExtResource("t_mg")
 }],
 "loop": 0,
-"name": &"cannon",
+"name": &"machineGunTower",
 "speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_cqdud")
+"texture": ExtResource("t_cannon")
 }],
 "loop": 0,
-"name": &"gun",
+"name": &"cannonTower",
 "speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_nvd0d")
+"texture": ExtResource("t_rocket")
 }],
-"loop": 1,
-"name": &"rocket",
+"loop": 0,
+"name": &"rocketTower",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t_emp")
+}],
+"loop": 0,
+"name": &"EMPTower",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t_tesla")
+}],
+"loop": 0,
+"name": &"teslaCoilTower",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t_laser")
+}],
+"loop": 0,
+"name": &"laserTower",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t_drone")
+}],
+"loop": 0,
+"name": &"droneBase",
 "speed": 5.0
 }]
 
@@ -45,4 +81,4 @@ shape = SubResource("RectangleShape2D_gmqdi")
 [node name="ani" type="AnimatedSprite2D" parent="." unique_id=492756695]
 modulate = Color(1, 1, 1, 0.5)
 sprite_frames = SubResource("SpriteFrames_gmqdi")
-animation = &"rocket"
+animation = &"machineGunTower"

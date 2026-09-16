@@ -49,19 +49,19 @@ theme_override_constants/separation = 6
 [node name="nameLabel" type="Label" parent="tooltip/margin/vbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.776, 0.102, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 30
 text = "Ability"
 
 [node name="descLabel" type="Label" parent="tooltip/margin/vbox"]
 custom_minimum_size = Vector2(270, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.973, 0.984, 0.992, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 26
 autowrap_mode = 3
 
 [node name="infoLabel" type="Label" parent="tooltip/margin/vbox"]
 custom_minimum_size = Vector2(270, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.863, 0.918, 0.949, 1)
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 22
 autowrap_mode = 3

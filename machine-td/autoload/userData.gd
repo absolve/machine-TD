@@ -1,7 +1,10 @@
 extends Node
 
 
-var language: String = "en"
+# 语言。空字符串 = 跟随系统，首次启动时由 applyLanguage() 落定并写回。
+# 之前默认写死 "en"，而且只有进过设置面板才会 set_locale，
+# 结果没进过设置的玩家会看到「翻译键全部回退成英文、硬编码中文原样显示」的混排。
+var language: String = ""
 var masterVolume: int = 100
 var musicVolume: int = 100
 var sfxVolume: int = 100
@@ -18,15 +21,30 @@ var achievementProgress: Dictionary = {} # 成就进度
 #############
 
 const SETTINGS_FILE_NAME := "user_settings.cfg"
+const SETTINGS_SCHEMA := 2
 const PLAYER_DATA_FILE_NAME := "player_data.cfg"
 var settingsPath: String
 var playerDataPath: String
+# 旧 schema 的设置被迁移过，需要回写一次（否则每次启动都要重新判定语言）
+var _needsSettingsSave := false
 
 func _ready() -> void:
 	settingsPath = getSettingsPath()
 	playerDataPath = getPlayerDataPath()
 	loadSettings()
 	loadPlayerData()
+	applyLanguage()
+	if _needsSettingsSave:
+		saveSettings()
+		_needsSettingsSave = false
+
+# 把当前语言应用到全局。以前这段只在设置面板里执行，
+# 没进过设置页就不会调用 set_locale → tr() 拿不到中文。
+func applyLanguage() -> void:
+	if language.is_empty():
+		# OS.get_locale() 形如 "zh_CN" / "en_US"
+		language = "zh" if OS.get_locale().begins_with("zh") else "en"
+	TranslationServer.set_locale(language)
 
 func getSettingsPath() -> String:
 	return getFilePath(SETTINGS_FILE_NAME)
@@ -43,7 +61,14 @@ func loadSettings() -> void:
 	var config := ConfigFile.new()
 	if config.load(settingsPath) != OK:
 		return
+	# schema 1 及更早：language 默认写死 "en"，玩家就算从没选过语言也会被存成 en。
+	# 升级时这种"继承来的 en"要按系统语言重新判定，否则老玩家永远停在英文。
+	var schema := int(config.get_value("general", "schema", 1))
 	language = str(config.get_value("general", "language", language))
+	if schema < SETTINGS_SCHEMA and language == "en" and OS.get_locale().begins_with("zh"):
+		language = "zh"
+	if schema < SETTINGS_SCHEMA:
+		_needsSettingsSave = true
 	masterVolume = clampi(int(config.get_value("volume", "master", masterVolume)), 0, 100)
 	musicVolume = clampi(int(config.get_value("volume", "music", musicVolume)), 0, 100)
 	sfxVolume = clampi(int(config.get_value("volume", "sfx", sfxVolume)), 0, 100)
@@ -52,6 +77,7 @@ func loadSettings() -> void:
 
 func saveSettings() -> void:
 	var config := ConfigFile.new()
+	config.set_value("general", "schema", SETTINGS_SCHEMA)
 	config.set_value("general", "language", language)
 	config.set_value("volume", "master", masterVolume)
 	config.set_value("volume", "music", musicVolume)

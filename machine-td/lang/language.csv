@@ -127,3 +127,6 @@ _Achv_perfect_base_name,Perfect Base,零损防线
 _Achv_perfect_base_desc,Complete any level without losing base HP,不损失基地生命完成任意关卡
 _Achv_route_master_name,Route Master,路线掌控者
 _Achv_route_master_desc,Win a multi-route level with no enemies escaping,在多路线关卡中胜利且没有敌人逃脱
+_Score,Score:,得分:
+_Pause,Pause,暂停
+_LevelLocked,LOCKED,未解锁

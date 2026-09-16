@@ -72,7 +72,7 @@ func _on_sfx_value_changed(value: float):
 func _on_option_button_item_selected(index: int) -> void:
 	UserData.language = str(language.get_item_metadata(index))
 	UserData.saveSettings()
-	TranslationServer.set_locale(UserData.language)
+	UserData.applyLanguage()
 
 
 func _on_bg_mute_toggled(muted: bool) -> void:

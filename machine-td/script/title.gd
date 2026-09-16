@@ -5,6 +5,7 @@ extends Control
 @onready var hpLabel = $PanelContainer/hbox/hbox2/hpLabel
 @onready var moneyLabel = $PanelContainer/hbox/hbox3/moneyLabel
 @onready var scoreLabel = $PanelContainer/hbox/hbox4/scoreLabel
+@onready var scoreTitle = $PanelContainer/hbox/hbox4/Label
 @onready var speedLabel = $PanelContainer/hbox/HBoxContainer3/btnFast/Label
 @onready var btnSpeed = $PanelContainer/hbox/HBoxContainer3/btnFast
 @onready var btnStart = $PanelContainer/hbox/HBoxContainer3/btnStart/MarginContainer/btnStart
@@ -81,3 +82,8 @@ func _on_btn_music_toggled(toggled_on: bool) -> void:
 
 func _on_btn_home_pressed() -> void:
 	home.emit()
+
+
+func _ready() -> void:
+	# 顶栏「得分:」之前是场景里硬编码的英文，这里走翻译
+	scoreTitle.text = tr("_Score")

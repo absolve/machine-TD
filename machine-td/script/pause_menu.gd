@@ -11,6 +11,7 @@ signal menuPressed
 
 
 func _ready():
+	$PanelContainer/VBoxContainer/title.text = tr("_Pause")
 	resumeButton.pressed.connect(func(): resumePressed.emit())
 	restartButton.pressed.connect(func(): restartPressed.emit())
 	menuButton.pressed.connect(func(): menuPressed.emit())

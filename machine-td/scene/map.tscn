@@ -64,8 +64,6 @@ layout_mode = 3
 layer = 10
 
 [node name="levelIntroPanel" parent="popupLayer" unique_id=990114276 instance=ExtResource("9_intro")]
-layout_mode = 3
-anchors_preset = 0
 
 [node name="resultScreen" parent="popupLayer" unique_id=1746614916 instance=ExtResource("4_bq37x")]
 layout_mode = 3
