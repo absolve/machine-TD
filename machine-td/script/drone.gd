@@ -1,16 +1,16 @@
 extends "res://script/aircraft.gd"
 
 const BULLET = preload("res://scene/gunBullet.tscn")
-const FLIGHT_SPEED := 220.0
-const TARGET_ORBIT_RADIUS := 150.0 # 攻击时绕目标盘旋的半径
-const ORBIT_SPEED := 1.0
+const FLIGHT_SPEED = 220.0
+const TARGET_ORBIT_RADIUS = 150.0 # 攻击时绕目标盘旋的半径
+const ORBIT_SPEED = 1.0
 # 基地巡逻半径 = 防御塔雷达范围 × 该系数；1.0 表示贴着防御塔射程边缘飞行
-const BASE_ORBIT_RADIUS_SCALE := 1.0
+const BASE_ORBIT_RADIUS_SCALE = 1.0
 
 # 尾迹：最多保留的点数 / 追加一个新点所需的最小位移 / 判定为“瞬移”的距离
-const TRAIL_MAX_POINTS := 30
-const TRAIL_MIN_STEP := 4.0
-const TRAIL_BREAK_DISTANCE := 120.0
+const TRAIL_MAX_POINTS = 30
+const TRAIL_MIN_STEP = 4.0
+const TRAIL_BREAK_DISTANCE = 120.0
 
 enum FlightState { BASE_ORBIT, ATTACK_APPROACH, TARGET_ORBIT, RETURN_TO_BASE }
 

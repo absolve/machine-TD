@@ -1,7 +1,7 @@
 [gd_scene format=4 uid="uid://b5k0baj4u7eap"]
 
 [ext_resource type="PackedScene" uid="uid://3y2m15k6dbu" path="res://scene/level/base_level.tscn" id="1_4p0kh"]
-[ext_resource type="Script" uid="uid://6j8n3k4m9t5d" path="res://script/level_4.gd" id="2_4p0kh"]
+[ext_resource type="Script" uid="uid://ca5n7s7g47svl" path="res://script/level_4.gd" id="2_4p0kh"]
 
 [sub_resource type="Curve2D" id="Curve2D_4p0kh"]
 _data = {
