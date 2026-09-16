@@ -20,6 +20,10 @@ var level: int = 1 # 等级
 var towerExp: int = 0 # 经验值
 var initTime = 1 #初始化时间 秒
 
+## 无敌状态（由能力技能施加）：无敌期间免疫一切伤害
+var invincible := false
+var _invincible_left := 0.0
+
 ## 修满血的最高费用占造价的百分比（残血越多越贵，满血时为 0）
 const REPAIR_COST_RATIO := 0.5
 
@@ -61,6 +65,7 @@ func _ready() -> void:
 	delayTimer.wait_time = delay
 	monitorable = false
 	set_physics_process(false)
+	set_process(false) # 只有进入无敌状态才需要逐帧倒计时
 	deploySound.play()
 	var tween = create_tween()
 	tween.tween_property(initBar, "value", 100, initTime)
@@ -186,7 +191,41 @@ func stopGlow() -> void:
 func _on_delay_timeout():
 	canShot = true
 
+
+# 无敌倒计时：只在无敌期间运行
+func _process(delta: float) -> void:
+	if not invincible:
+		set_process(false)
+		return
+	_invincible_left -= delta
+	if _invincible_left <= 0.0:
+		_set_invincible_visual(false)
+
+
+# 施加无敌（由能力技能系统调用）
+func set_invincible(duration: float) -> void:
+	if duration <= 0.0:
+		return
+	invincible = true
+	# 重复施加时取更长的剩余时间，不做叠加
+	_invincible_left = maxf(_invincible_left, duration)
+	_set_invincible_visual(true)
+	set_process(true)
+
+
+# 无敌期间用安全黄色高亮，和"我方强化"的视觉约定一致
+func _set_invincible_visual(on: bool) -> void:
+	if on:
+		modulate = Color(1.0, 0.92, 0.55, 1.0)
+		return
+	invincible = false
+	_invincible_left = 0.0
+	modulate = Color(1.0, 1.0, 1.0, 1.0)
+	set_process(false)
+
 func hurt(_num: int, _source = null, _damage_type: String = "physical"):
+	if invincible:
+		return
 	if hp <= 0:
 		return
 	var actual_damage: float = float(_num)

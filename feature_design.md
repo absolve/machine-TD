@@ -531,9 +531,19 @@ func load() -> void:
 
 ## 四、能力技能系统（Ability / Active Skill System）
 
-> **实现状态：❌ 未实现** —— 本文档为设计稿，项目中尚无对应代码（`ability` / `skill` 相关文件数为 0）。
+> **实现状态：✅ 已实现**（2026-09-16）—— 实际落地结构与本文设计稿有出入，以代码为准：
 >
-> ⚠️ 该模块依赖地图侧的接口（区域选择、范围伤害、塔无敌），建议在 `game_analysis.md` §7 第一阶段的地图数据模型修好之后再落地。
+> | 设计稿 | 实际实现 |
+> | --- | --- |
+> | `ability_manager.gd` 单例 | `autoload/ability_manager.gd`（Autoload 名 `AbilityManager`） |
+> | 逐帧倒计时 `_cooldowns` 字典 | **每个技能槽内置 `Timer` 计时**，管理器不再维护冷却状态 |
+> | `ability_bar.tscn` 内含图标逻辑 | `ability_bar.tscn` 只做列表与说明；**单个图标抽成通用场景 `ability_slot.tscn`**，所有技能共用，新增技能零改动 |
+> | 冷却遮罩用 `ColorRect` 高度 | **`shader/ability_cooldown.gdshader` 顺时针扇形扫描**（`resource_local_to_scene`，每槽独立） |
+> | 技能开关写在关卡 stage 字典里 | 集中在 `StageData.stageAbilities` 常量表（一张表看清所有地图的技能） |
+> | 塔无敌 = 点选单座塔（`TargetType.TOWER`） | **改为范围生效**：点地图位置，范围内所有塔无敌（`TargetType.POSITION` + `radius`） |
+> | 技能图标 | 暂用占位素材（`explosion1.png` / `shield.png`），改 `ABILITIES` 里的 `icon` 路径即可替换 |
+>
+> 新增技能只需在 `AbilityManager.ABILITIES` 加一条定义，并在 `StageData.stageAbilities` 里给关卡挂上 id。
 
 ### 4.1 模块定位
 
@@ -1330,6 +1340,7 @@ layer 100 的转场遮罩就永远盖不住它 —— 转场时会看到弹窗�
 | 2026-09-13 | 地板 + UI 再平衡 | v3.2 | 地板、清屏色统一为 `Tech Dungeon Roguelite` tileset 最右区域的地砖色 `#333C57`。地板明度骤降导致原深色面板与地板撞车（差 0.005），故按同一 Sweetie 16 色板把 UI 面板提到 `#566C86` + `#94B0C2` 2px 亮边框，文字整体提亮一档。三层明度 0.046 / 0.144 / 0.412。详见 art_style.md §9/§10 |
 | 2026-09-13 | 背景场景还原     | v3.3 | `bg.tscn` 恢复为最初的「`background_tiled.png` 平铺 + UV 沿 Y 轴滚动 + 上暗下亮渐变」，只新增 `tint` 把中性灰（平均 `#2E2E2E`）映射到 `#333C57`。`tint` 为实测标定值（引擎采样纹理有自身色彩空间处理，不能按 PNG 平均值直接换算）：渲染实测 `#313953`，与目标偏差 0.018；滚动经 8 次不等间隔采样确认仍在 |
 | 2026-09-13 | 标题图 + 动态条纹 | v3.4 | 标题改为图片接入欢迎页（`sprite/title_logo.png` + `scene/ui/title_logo.tscn`，挂 `light.gdshader` 扫光）；标题去掉四周钢板与描边，改成 1600×450 透明底；危险条纹抽成独立组件 `scene/ui/hazard_strip.tscn` + `shader/hazard_scroll.gdshader`，贴图 272×22 横向严格无缝，UV 沿 X 轴滚动；艺术字改用系统安装的 Black Ops One（OFL），工程内不再放字体文件，生成器 `tools/title_logo.gd` 通过 `OS.get_system_font_path()` 查找并回退到阿里普惠体 |
+| 2026-09-16 | 能力技能系统     | v1.0 | 实现：`autoload/ability_manager.gd`（Autoload `AbilityManager`）+ `scene/ability_bar.tscn`（地图左侧技能条）。单个图标抽成通用场景 `scene/ability_slot.tscn`，内置 `Timer` 作为冷却唯一来源，冷却遮罩改用 `shader/ability_cooldown.gdshader` 顺时针扇形扫描（材质 `resource_local_to_scene`）。技能开关集中在 `StageData.stageAbilities` 配置表，未配置的关卡不显示技能条。首批两个技能：区域轰炸（点地图范围伤害 200 / 半径 140 / CD 30s）、塔防御护盾（点地图使范围内所有塔无敌 8s / 半径 220 / CD 45s，**按需求由点选单塔改为范围生效**）。图标暂用占位素材 |
 
 ---
 

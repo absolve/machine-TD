@@ -11,8 +11,9 @@
 [ext_resource type="PackedScene" uid="uid://v82shl8uewyp" path="res://scene/tower_detail_panel.tscn" id="7_panel"]
 [ext_resource type="PackedScene" path="res://scene/enemy_detail_panel.tscn" id="8_enemy"]
 [ext_resource type="PackedScene" uid="uid://lelhwtky6d1x" path="res://scene/level_intro_panel.tscn" id="9_intro"]
-[ext_resource type="Script" path="res://script/achievement_tracker.gd" id="10_track"]
+[ext_resource type="Script" uid="uid://bxw2thjo03p3l" path="res://script/achievement_tracker.gd" id="10_track"]
 [ext_resource type="PackedScene" path="res://scene/achievement_toast.tscn" id="11_toast"]
+[ext_resource type="PackedScene" path="res://scene/ability_bar.tscn" id="12_ability"]
 
 [node name="map" type="Node2D" unique_id=988854810]
 script = ExtResource("1_rgtto")
@@ -56,11 +57,23 @@ offset_bottom = 850.0
 
 [node name="achievementToast" parent="hud" unique_id=990114278 instance=ExtResource("11_toast")]
 
-[node name="popupLayer" type="CanvasLayer" parent="."]
+[node name="abilityBar" parent="hud" unique_id=990114279 instance=ExtResource("12_ability")]
+layout_mode = 3
+
+[node name="popupLayer" type="CanvasLayer" parent="." unique_id=2027661789]
 layer = 10
 
 [node name="levelIntroPanel" parent="popupLayer" unique_id=990114276 instance=ExtResource("9_intro")]
-visible = false
+layout_mode = 3
+anchors_preset = 0
+
+[node name="resultScreen" parent="popupLayer" unique_id=1746614916 instance=ExtResource("4_bq37x")]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="pauseMenu" parent="popupLayer" unique_id=1869636577 instance=ExtResource("6_pause")]
+layout_mode = 3
+anchors_preset = 0
 
 [node name="customCamera" parent="." unique_id=76497160 instance=ExtResource("5_jp76l")]
 
@@ -70,12 +83,6 @@ script = ExtResource("10_track")
 [node name="Timer" type="Timer" parent="." unique_id=1553136818]
 wait_time = 2.0
 one_shot = true
-
-[node name="resultScreen" parent="popupLayer" unique_id=1746614916 instance=ExtResource("4_bq37x")]
-visible = false
-
-[node name="pauseMenu" parent="popupLayer" unique_id=1869636577 instance=ExtResource("6_pause")]
-visible = false
 
 [connection signal="pressed" from="hud/Button" to="." method="_on_button_pressed"]
 [connection signal="timeout" from="Timer" to="." method="finish"]

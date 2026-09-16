@@ -14,6 +14,7 @@ extends Node2D
 @onready var enemyDetailPanel = $hud/enemyDetailPanel
 @onready var levelIntroPanel = $popupLayer/levelIntroPanel
 @onready var achievementTracker = $achievementTracker
+@onready var abilityBar = $hud/abilityBar
 
 var level
 var gunTower = preload("res://scene/machineGunTower.tscn")
@@ -80,6 +81,16 @@ func _ready():
 	font = ThemeDB.fallback_font
 	# 地图加载完成后弹出关卡情报，方便玩家查看本关敌人类型
 	show_level_intro()
+	# 按关卡配置启用能力技能
+	setup_abilities()
+
+#按关卡配置启用能力技能（未配置的关卡不显示技能条）
+func setup_abilities() -> void:
+	var stage_id := int(stageData.get("id", StageData.currentStageId))
+	var ability_ids: Array = StageData.getAbilities(stage_id)
+	AbilityManager.begin_battle(ability_ids)
+	if abilityBar:
+		abilityBar.setup(ability_ids)
 
 #显示关卡情报弹窗（关卡名 + 本关敌人类型等信息）
 func show_level_intro() -> void:
@@ -404,11 +415,20 @@ func returnHome():
 	SceneTransition.change_scene("res://scene/welcome.tscn")
 
 func _physics_process(_delta: float) -> void:
-	if debug:
+	# 选择技能目标时也要重绘，让范围预览跟着鼠标走
+	if debug or AbilityManager.is_selecting_position():
 		queue_redraw()
 	
 
 func _unhandled_input(_event):
+	# 正在等待技能目标时，这一击只用于确认/取消技能，不再走原来的取消逻辑
+	if AbilityManager.is_selecting():
+		if _event.is_action_pressed("click"):
+			_confirm_ability_target()
+			return
+		if _event.is_action_pressed("selectCancel"):
+			AbilityManager.cancel_selecting()
+			return
 	if _event.is_action_pressed("selectCancel"):
 		for i in get_tree().get_nodes_in_group("placeableArea"):
 			i.isShow = false
@@ -419,6 +439,65 @@ func _unhandled_input(_event):
 			clearEnemyDetail()
 		if selectedTower and is_instance_valid(selectedTower):
 			selectedTower.hideSelect()
+
+
+# 确认技能目标：范围类技能直接用鼠标位置
+func _confirm_ability_target() -> void:
+	AbilityManager.confirm_target(get_global_mouse_position())
+
+
+# 收集范围内自己的防御塔（塔直接挂在 map 下）
+func _get_towers_in_radius(center: Vector2, radius: float) -> Array[Tower]:
+	var result: Array[Tower] = []
+	for child in get_children():
+		if not (child is Tower) or not is_instance_valid(child):
+			continue
+		if (child as Tower).global_position.distance_to(center) <= radius:
+			result.append(child)
+	return result
+
+
+# 区域轰炸：对范围内所有敌人造成伤害，并用提示反馈命中数量
+func area_damage(center: Vector2, radius: float, damage: int) -> bool:
+	if radius <= 0.0 or damage <= 0:
+		return false
+	var hit_count := 0
+	for enemy in get_tree().get_nodes_in_group("enemy"):
+		if not is_instance_valid(enemy):
+			continue
+		if enemy.global_position.distance_to(center) > radius:
+			continue
+		if enemy.has_method("hurt"):
+			enemy.hurt(damage, null, "energy")
+			hit_count += 1
+	ExplosionManage.playExplosion(center)
+	if hit_count > 0:
+		addNotice(_t("_ability_bombard_hit", "Airstrike hit %d enemies") % hit_count, Color(1.0, 0.776, 0.102))
+	else:
+		addNotice(_t("_ability_bombard_miss", "Airstrike hit nothing"), Color(0.86, 0.92, 0.95))
+	return true
+
+
+# 塔无敌：让范围内所有防御塔在一段时间内免疫伤害
+func area_invincible(center: Vector2, radius: float, duration: float) -> bool:
+	if radius <= 0.0 or duration <= 0.0:
+		return false
+	var towers := _get_towers_in_radius(center, radius)
+	for tower in towers:
+		tower.set_invincible(duration)
+	if towers.is_empty():
+		addNotice(_t("_ability_invincible_miss", "No tower in range"), Color(0.86, 0.92, 0.95))
+	else:
+		addNotice(_t("_ability_invincible_hit", "%d towers are now invincible") % towers.size(), Color(1.0, 0.776, 0.102))
+	return true
+
+
+# 取翻译；语言文件未导入该 key 时回退到默认英文文本
+func _t(key: String, fallback: String) -> String:
+	if key.is_empty():
+		return fallback
+	var translated := tr(key)
+	return fallback if translated == key else translated
 
 func _on_button_pressed():
 	resultScreen.show()
@@ -444,3 +523,12 @@ func _draw() -> void:
 		draw_string(font, get_local_mouse_position() + Vector2(20, 20), "%s-%s" % [floori(x / cellSize),
 		 floori(y / cellSize)],
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 60, Color.WHEAT)
+
+	# 技能范围预览：等待玩家点位置时，跟着鼠标画一个安全黄圆圈
+	if AbilityManager.is_selecting_position():
+		var radius := AbilityManager.get_selecting_radius()
+		if radius > 0.0:
+			var mouse_pos := get_local_mouse_position()
+			var circle_color := Color(1.0, 0.776, 0.102, 1.0)
+			draw_circle(mouse_pos, radius, Color(circle_color.r, circle_color.g, circle_color.b, 0.16))
+			draw_arc(mouse_pos, radius, 0.0, TAU, 64, Color(circle_color.r, circle_color.g, circle_color.b, 0.9), 3.0)
