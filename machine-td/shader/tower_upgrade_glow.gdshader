@@ -16,9 +16,8 @@ void fragment() {
     if(enable_flash){
        	float flash = step(0.0, sin(TIME * flash_speed));
         final_bright += flash * flash_amplitude;
-    }
-
-    vec4 result = tex;
+    }else{
+		vec4 result = tex;
     result.rgb *= final_bright;
 
     // 8方向描边采样
@@ -39,4 +38,7 @@ void fragment() {
     outline.a *= outline_alpha;
 
     COLOR = mix(result, outline, outline.a);
+	}
+
+    
 }

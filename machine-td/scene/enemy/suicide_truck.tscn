@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bte4101axvluu"]
 
-[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_t0tkm"]
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_t0tkm"]
 [ext_resource type="Script" uid="uid://c4gbv6mjgogn3" path="res://script/suicideTruck.gd" id="2_t0tkm"]
 [ext_resource type="Texture2D" uid="uid://wwik17nyfvgg" path="res://sprite/tankBody_huge_outline.png" id="3_dvu8v"]
 [ext_resource type="Texture2D" uid="uid://dfpa7wrynluk" path="res://sprite/tankDark_barrel1_outline.png" id="4_h52wa"]

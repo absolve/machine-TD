@@ -1,31 +1,25 @@
 [gd_scene format=3 uid="uid://bw8vyx0savlpt"]
 
-[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_x4oq0"]
+[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_x4oq0"]
 [ext_resource type="Script" uid="uid://dnaqsi3rmg555" path="res://script/tesla_coil_tower.gd" id="2_5fmby"]
-[ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_3idwy"]
+[ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_427bq"]
+[ext_resource type="Texture2D" uid="uid://dryffod0ejwo8" path="res://sprite/tower/tower_tesla.png" id="99_turret"]
 
-[ext_resource type="Texture2D" path="res://sprite/tower/base_large.png" id="99_base"]
-[ext_resource type="Texture2D" path="res://sprite/tower/tower_tesla.png" id="99_turret"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_nobase"]
-animations = []
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4p7g2"]
 size = Vector2(100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_427bq"]
-atlas = ExtResource("3_3idwy")
-region = Rect2(640, 128, 128, 128)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d0tgk"]
+resource_local_to_scene = true
+shader = ExtResource("3_427bq")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 50.00000237174012
+shader_parameter/flash_amplitude = 1.0000000475
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_3c4u4"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("99_base")
-}],
-"loop": 2,
-"name": &"default",
-"speed": 5.0
-}]
+[sub_resource type="SpriteFrames" id="SpriteFrames_nobase"]
+animations = []
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3idwy"]
 radius = 500.0
@@ -49,23 +43,18 @@ type = 1005
 shape = SubResource("RectangleShape2D_4p7g2")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
-scale = Vector2(1, 1)
+material = SubResource("ShaderMaterial_d0tgk")
 sprite_frames = SubResource("SpriteFrames_nobase")
-
-[node name="turret" parent="." index="3"]
-modulate = Color(1, 1, 1, 0.39215687)
-sprite_frames = SubResource("SpriteFrames_autotur")
-offset = Vector2(0, 0)
-scale = Vector2(1, 1)
-
-[node name="Marker2D" type="Marker2D" parent="turret"]
-position = Vector2(30, 0)
+animation = &""
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
 visible = false
 
 [node name="CollisionShape2D" parent="radar" index="0" unique_id=803920863]
 shape = SubResource("CircleShape2D_3idwy")
+
+[node name="turret" parent="." index="3" unique_id=1212426607]
+sprite_frames = SubResource("SpriteFrames_autotur")
 
 [connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
 [connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]

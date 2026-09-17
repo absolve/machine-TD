@@ -4,7 +4,7 @@ extends "res://script/enemy.gd"
 # 与目标的引爆距离（必须小于该敌人在 Game.enemyInfo 里配置的 scope，否则雷达还没锁到目标就已擦身而过）
 const DETONATE_DISTANCE := 80.0
 
-var bombScene = preload("res://scene/bomb.tscn")
+var bombScene = preload("res://scene/explosion/bomb.tscn")
 
 func _ready():
 	parent = get_parent()

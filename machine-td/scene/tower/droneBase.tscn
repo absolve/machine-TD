@@ -1,17 +1,15 @@
 [gd_scene format=3 uid="uid://dp6nluo5unfet"]
 
-[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_qyteg"]
+[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_qyteg"]
 [ext_resource type="Script" uid="uid://cnmy5uf77qffw" path="res://script/drone_base.gd" id="2_ir8sv"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_56bs0"]
-[ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="4_wl8i8"]
-
-[ext_resource type="Texture2D" path="res://sprite/tower/base_large.png" id="99_base"]
-[ext_resource type="Texture2D" path="res://sprite/tower/tower_drone.png" id="99_turret"]
+[ext_resource type="Texture2D" uid="uid://b7xctx1wwm2t8" path="res://sprite/tower/base_large.png" id="99_base"]
+[ext_resource type="Texture2D" uid="uid://c5x73fo1dftri" path="res://sprite/tower/tower_drone.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j5ypg"]
 size = Vector2(64, 64)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wl8i8"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lyy2e"]
 resource_local_to_scene = true
 shader = ExtResource("3_56bs0")
 shader_parameter/enable_flash = false
@@ -20,10 +18,6 @@ shader_parameter/flash_speed = 50.00000237174012
 shader_parameter/flash_amplitude = 1.0000000475
 shader_parameter/outline_thickness = 2.0
 shader_parameter/outline_color = Color(1, 1, 1, 1)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lyy2e"]
-atlas = ExtResource("4_wl8i8")
-region = Rect2(640, 0, 128, 128)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_j5ypg"]
 animations = [{
@@ -35,16 +29,6 @@ animations = [{
 "name": &"default",
 "speed": 5.0
 }]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lyy2e"]
-resource_local_to_scene = true
-shader = ExtResource("3_56bs0")
-shader_parameter/enable_flash = false
-shader_parameter/base_brightness = 1.0
-shader_parameter/flash_speed = 50.0
-shader_parameter/flash_amplitude = 1.0
-shader_parameter/outline_thickness = 2.0
-shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_autotur"]
 animations = [{
@@ -65,8 +49,7 @@ type = 1004
 shape = SubResource("RectangleShape2D_j5ypg")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
-scale = Vector2(1, 1)
-material = SubResource("ShaderMaterial_wl8i8")
+material = SubResource("ShaderMaterial_lyy2e")
 sprite_frames = SubResource("SpriteFrames_j5ypg")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
@@ -74,9 +57,3 @@ visible = false
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
 sprite_frames = SubResource("SpriteFrames_autotur")
-offset = Vector2(0, 0)
-scale = Vector2(1, 1)
-material = SubResource("ShaderMaterial_lyy2e")
-[node name="Marker2D" type="Marker2D" parent="turret"]
-position = Vector2(40, 0)
-

@@ -1,6 +1,6 @@
 extends "res://script/aircraft.gd"
 
-const BULLET = preload("res://scene/gunBullet.tscn")
+const BULLET = preload("res://scene/bullet/gunBullet.tscn")
 const FLIGHT_SPEED = 220.0
 const TARGET_ORBIT_RADIUS = 150.0 # 攻击时绕目标盘旋的半径
 const ORBIT_SPEED = 1.0

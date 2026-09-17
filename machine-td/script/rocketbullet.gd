@@ -1,6 +1,6 @@
 extends "res://script/bullet.gd"
 
-var bomb_scene = preload("res://scene/bomb.tscn")
+var bomb_scene = preload("res://scene/explosion/bomb.tscn")
 
 func _ready():
 	lifetime = 5

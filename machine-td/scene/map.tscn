@@ -73,14 +73,14 @@ anchors_preset = 0
 layout_mode = 3
 anchors_preset = 0
 
-[node name="customCamera" parent="." unique_id=76497160 instance=ExtResource("5_jp76l")]
-
 [node name="achievementTracker" type="Node" parent="." unique_id=990114277]
 script = ExtResource("10_track")
 
 [node name="Timer" type="Timer" parent="." unique_id=1553136818]
 wait_time = 2.0
 one_shot = true
+
+[node name="customCamera" parent="." unique_id=1331816399 instance=ExtResource("5_jp76l")]
 
 [connection signal="pressed" from="hud/Button" to="." method="_on_button_pressed"]
 [connection signal="timeout" from="Timer" to="." method="finish"]

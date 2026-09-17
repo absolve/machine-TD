@@ -16,16 +16,6 @@ shader_parameter/flash_amplitude = 1.0000000475
 shader_parameter/outline_thickness = 2.0
 shader_parameter/outline_color = Color(1, 1, 1, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_vn0ct"]
-resource_local_to_scene = true
-shader = ExtResource("2_uhti2")
-shader_parameter/enable_flash = false
-shader_parameter/base_brightness = 1.0
-shader_parameter/flash_speed = 50.0
-shader_parameter/flash_amplitude = 1.0
-shader_parameter/outline_thickness = 2.0
-shader_parameter/outline_color = Color(1, 1, 1, 1)
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_hwngx"]
 
 [node name="Tower" type="Area2D" unique_id=1676258242]
@@ -48,7 +38,6 @@ input_pickable = false
 
 [node name="turret" type="AnimatedSprite2D" parent="." unique_id=1212426607]
 modulate = Color(1, 1, 1, 0.39215687)
-material = SubResource("ShaderMaterial_vn0ct")
 
 [node name="Marker2D" type="Marker2D" parent="turret" unique_id=1564610297]
 

@@ -1,17 +1,16 @@
 [gd_scene format=3 uid="uid://b8acvedo8gexp"]
 
-[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_xj8p8"]
+[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_xj8p8"]
 [ext_resource type="Script" uid="uid://bxm1puyb5lju" path="res://script/cannon_tower.gd" id="2_v83o1"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_lm0w6"]
-[ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_v83o1"]
-[ext_resource type="Texture2D" uid="uid://cqfjqk8bkohut" path="res://sprite/towerDefense_tile295.png" id="4_spark"]
-[ext_resource type="Texture2D" path="res://sprite/tower/base_octagon.png" id="99_base"]
-[ext_resource type="Texture2D" path="res://sprite/tower/turret_cannon.png" id="99_turret"]
+[ext_resource type="Texture2D" uid="uid://b5v8hwslm7wo3" path="res://sprite/towerDefense_tile295.png" id="4_spark"]
+[ext_resource type="Texture2D" uid="uid://bqswrgamjea3q" path="res://sprite/tower/base_octagon.png" id="99_base"]
+[ext_resource type="Texture2D" uid="uid://b3g5uxcm1t0hc" path="res://sprite/tower/turret_cannon.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v83o1"]
 size = Vector2(64, 64)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lm0w6"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u4c1a"]
 resource_local_to_scene = true
 shader = ExtResource("3_lm0w6")
 shader_parameter/enable_flash = false
@@ -20,10 +19,6 @@ shader_parameter/flash_speed = 50.00000237174012
 shader_parameter/flash_amplitude = 1.0000000475
 shader_parameter/outline_thickness = 2.0
 shader_parameter/outline_color = Color(1, 1, 1, 1)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lm0w6"]
-atlas = ExtResource("3_v83o1")
-region = Rect2(640, 128, 128, 128)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_sk265"]
 animations = [{
@@ -39,25 +34,22 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_v83o1"]
 radius = 300.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sk265"]
-resource_local_to_scene = true
-shader = ExtResource("3_lm0w6")
-shader_parameter/enable_flash = false
-shader_parameter/base_brightness = 1.0
-shader_parameter/flash_speed = 50.0
-shader_parameter/flash_amplitude = 1.0
-shader_parameter/outline_thickness = 2.0
-shader_parameter/outline_color = Color(1, 1, 1, 1)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_sk265"]
-atlas = ExtResource("3_v83o1")
-region = Rect2(256, 128, 128, 128)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_lm0w6"]
 animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("99_turret")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_spark"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_spark")
 }],
 "loop": 0,
 "name": &"default",
@@ -100,17 +92,6 @@ _data = {
 &"RESET": SubResource("Animation_lm0w6"),
 &"fire": SubResource("Animation_v83o1")
 }
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_spark"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("4_spark")
-}],
-"loop": 0,
-"name": &"default",
-"speed": 5.0
-}]
 
 [sub_resource type="Animation" id="Animation_spark_reset"]
 length = 0.001
@@ -181,8 +162,7 @@ type = 1001
 shape = SubResource("RectangleShape2D_v83o1")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
-material = SubResource("ShaderMaterial_lm0w6")
-scale = Vector2(1, 1)
+material = SubResource("ShaderMaterial_u4c1a")
 sprite_frames = SubResource("SpriteFrames_sk265")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
@@ -194,10 +174,8 @@ visibility_layer = 2
 shape = SubResource("CircleShape2D_v83o1")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
-material = SubResource("ShaderMaterial_sk265")
-scale = Vector2(1, 1)
 sprite_frames = SubResource("SpriteFrames_lm0w6")
-offset = Vector2(8, 0)
+offset = Vector2(10, 0)
 
 [node name="Marker2D" parent="turret" index="0" unique_id=1564610297]
 position = Vector2(47, 0)

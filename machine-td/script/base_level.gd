@@ -28,6 +28,18 @@ func _ready() -> void:
 			money = i.get("money")
 			enemyList = i.get("enemySpawner")
 			break
+	# 可建造区：关卡里摆的 placeableArea 实例（子节点 _ready 已先跑完，位置对齐过了）
+	_collect_allow_area()
+
+# 把关卡里所有 placeableArea 实例换算成格子坐标填进 allowArea。
+# 老关卡仍可在自己脚本里手写 allowArea，两者会合并。
+func _collect_allow_area() -> void:
+	for node in get_tree().get_nodes_in_group("placeableArea"):
+		if not node.has_method("get_grid"):
+			continue
+		var grid: Vector2i = node.get_grid()
+		if grid not in allowArea:
+			allowArea.append(grid)
 
 # 选择塔
 func selectTower(type):

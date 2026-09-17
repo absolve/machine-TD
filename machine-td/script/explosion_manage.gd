@@ -1,6 +1,6 @@
 extends Node2D
 
-var ex1 = preload("res://scene/explosion.tscn")
+var ex1 = preload("res://scene/explosion/explosion.tscn")
 
 
 func playExplosion(pos: Vector2):

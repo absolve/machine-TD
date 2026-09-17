@@ -3,7 +3,6 @@ extends PanelContainer
 
 @onready var img = $VBoxContainer/MarginContainer2/img
 @onready var costLabel = $VBoxContainer/MarginContainer/HBoxContainer/costLabel
-@onready var towerName = $VBoxContainer/MarginContainer3/name
 @onready var selected = $selected
 
 @export var type: Game.towerType = Game.towerType.machineGunTower
@@ -16,9 +15,6 @@ func setImg(obj):
 	
 func setCost(cost):
 	costLabel.text = str(cost)
-
-func setTowerName(n):
-	towerName.text = str(n)
 
 
 func _gui_input(_event: InputEvent) -> void:

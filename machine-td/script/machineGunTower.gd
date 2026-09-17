@@ -1,6 +1,6 @@
 extends "res://script/tower.gd"
 
-var bullet = preload("res://scene/gunBullet.tscn")
+var bullet = preload("res://scene/bullet/gunBullet.tscn")
 
 func _ready():
 	turret.rotation = randf() * TAU

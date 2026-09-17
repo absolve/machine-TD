@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dhjkeogxfg32y"]
 
-[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_wfafo"]
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_wfafo"]
 [ext_resource type="Script" uid="uid://hk0icww3xlg" path="res://script/missileTruck.gd" id="2_6ddhx"]
 [ext_resource type="Texture2D" uid="uid://wwik17nyfvgg" path="res://sprite/tankBody_huge_outline.png" id="3_ugug6"]
 [ext_resource type="Texture2D" uid="uid://bvx6kp1le8rqj" path="res://sprite/towerDefense_tile251.png" id="4_w5dcv"]

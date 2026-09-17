@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dir1trynkle6v"]
 
-[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_t3cxq"]
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_t3cxq"]
 [ext_resource type="Script" uid="uid://cob11qts6pxo8" path="res://script/attackHelicopter.gd" id="2_holci"]
 [ext_resource type="Texture2D" uid="uid://2ubt70bo4eq" path="res://sprite/Hel_12.png" id="3_holci"]
 

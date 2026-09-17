@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bapkogsulgmm4"]
 
-[ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet.tscn" id="1_4btjf"]
+[ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet/bullet.tscn" id="1_4btjf"]
 [ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="2_cn0lh"]
 [ext_resource type="Script" uid="uid://byc0uo8bvhwgo" path="res://script/cannon_bullet.gd" id="2_jhiub"]
 

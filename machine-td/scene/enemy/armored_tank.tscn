@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://byk4oxb8xh4mt"]
 
-[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_b0qyy"]
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_b0qyy"]
 [ext_resource type="Script" uid="uid://6bj63bxtt0se" path="res://script/armoredTank.gd" id="2_qt7lt"]
 [ext_resource type="Texture2D" uid="uid://cbfgf02a88ekm" path="res://sprite/tankBody_bigRed_outline.png" id="3_ve8vm"]
 [ext_resource type="Texture2D" uid="uid://cc00477rh3el5" path="res://sprite/tankRed_barrel1_outline.png" id="4_5i4fv"]

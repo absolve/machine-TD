@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bf8vkrw335d0"]
 
-[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy.tscn" id="1_6peud"]
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_6peud"]
 [ext_resource type="Script" uid="uid://de1xh8lbgnoye" path="res://script/mini_tank.gd" id="2_pd3il"]
 [ext_resource type="Texture2D" uid="uid://ck67srsef3ay2" path="res://sprite/enemy@2.png" id="3_pd3il"]
 

@@ -1,6 +1,6 @@
 extends "res://script/tower.gd"
 
-var bullet = preload("res://scene/cannon_bullet.tscn")
+var bullet = preload("res://scene/bullet/cannon_bullet.tscn")
 
 
 

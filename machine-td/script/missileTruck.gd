@@ -1,7 +1,7 @@
 extends "res://script/enemy.gd"
 #导弹车  每隔一段时间发射导弹攻击范围的防御塔
 
-var bulletScene = preload("res://scene/enemy_missile.tscn")
+var bulletScene = preload("res://scene/bullet/enemy_missile.tscn")
 
 
 func _ready():

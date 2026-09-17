@@ -1,17 +1,16 @@
 [gd_scene format=3 uid="uid://di6u5yfi44083"]
 
-[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/Tower.tscn" id="1_p16uh"]
+[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_p16uh"]
 [ext_resource type="Script" uid="uid://h5w308vyc8yt" path="res://script/machineGunTower.gd" id="2_nmv2o"]
-[ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_j3503"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_nmv2o"]
-[ext_resource type="Texture2D" uid="uid://cqfjqk8bkohut" path="res://sprite/towerDefense_tile295.png" id="5_j3503"]
-[ext_resource type="Texture2D" path="res://sprite/tower/base_round.png" id="99_base"]
-[ext_resource type="Texture2D" path="res://sprite/tower/turret_machinegun.png" id="99_turret"]
+[ext_resource type="Texture2D" uid="uid://b5v8hwslm7wo3" path="res://sprite/towerDefense_tile295.png" id="5_j3503"]
+[ext_resource type="Texture2D" uid="uid://dyluyv2imdos1" path="res://sprite/tower/base_round.png" id="99_base"]
+[ext_resource type="Texture2D" uid="uid://dlleor6e3o1ej" path="res://sprite/tower/turret_machinegun.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k8n1u"]
 size = Vector2(64, 64)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_j3503"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gnd33"]
 resource_local_to_scene = true
 shader = ExtResource("3_nmv2o")
 shader_parameter/enable_flash = false
@@ -20,10 +19,6 @@ shader_parameter/flash_speed = 50.00000237174012
 shader_parameter/flash_amplitude = 1.0000000475
 shader_parameter/outline_thickness = 2.0
 shader_parameter/outline_color = Color(1, 1, 1, 1)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_k8n1u"]
-atlas = ExtResource("3_j3503")
-region = Rect2(640, 0, 128, 128)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_i5mjb"]
 animations = [{
@@ -38,20 +33,6 @@ animations = [{
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5i26j"]
 radius = 128.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_gnd33"]
-resource_local_to_scene = true
-shader = ExtResource("3_nmv2o")
-shader_parameter/enable_flash = false
-shader_parameter/base_brightness = 1.0
-shader_parameter/flash_speed = 50.0
-shader_parameter/flash_amplitude = 1.0
-shader_parameter/outline_thickness = 2.0
-shader_parameter/outline_color = Color(1, 1, 1, 1)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_86lx6"]
-atlas = ExtResource("3_j3503")
-region = Rect2(256, 0, 128, 128)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_k8n1u"]
 animations = [{
@@ -180,8 +161,7 @@ script = ExtResource("2_nmv2o")
 shape = SubResource("RectangleShape2D_k8n1u")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
-material = SubResource("ShaderMaterial_j3503")
-scale = Vector2(1, 1)
+material = SubResource("ShaderMaterial_gnd33")
 sprite_frames = SubResource("SpriteFrames_i5mjb")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
@@ -191,10 +171,8 @@ visible = false
 shape = SubResource("CircleShape2D_5i26j")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
-material = SubResource("ShaderMaterial_gnd33")
-scale = Vector2(1, 1)
 sprite_frames = SubResource("SpriteFrames_k8n1u")
-offset = Vector2(0, 0)
+offset = Vector2(16, 0)
 
 [node name="Marker2D" parent="turret" index="0" unique_id=1564610297]
 position = Vector2(31, 0)

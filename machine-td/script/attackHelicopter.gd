@@ -2,7 +2,7 @@ extends "res://script/enemy.gd"
 
 #攻击直升机 敌人
 
-var bullet = preload("res://scene/enemy_bullet.tscn")
+var bullet = preload("res://scene/bullet/enemy_bullet.tscn")
 
 
 func _ready() -> void:

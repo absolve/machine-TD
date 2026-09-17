@@ -532,14 +532,14 @@ var allStage = [
 ]
 
 var enemyScenes = {
-	Game.enemyType.miniTank: preload("res://scene/miniTank.tscn"),
-	Game.enemyType.mediumTank: preload("res://scene/medium_tank.tscn"),
-	Game.enemyType.heavyTank: preload("res://scene/heavy_tank.tscn"),
-	Game.enemyType.armoredTank: preload("res://scene/armored_tank.tscn"),
-	Game.enemyType.assaultBuggy: preload("res://scene/assault_buggy.tscn"),
-	Game.enemyType.medic: preload("res://scene/medic.tscn"),
-	Game.enemyType.suicideTruck: preload("res://scene/suicide_truck.tscn"),
-	Game.enemyType.missileTruck: preload("res://scene/missile_truck.tscn"),
-	Game.enemyType.scoutDrone: preload("res://scene/scout_drone.tscn"),
-	Game.enemyType.attackHelicopter: preload("res://scene/attack_helicopter.tscn")
+	Game.enemyType.miniTank: preload("res://scene/enemy/miniTank.tscn"),
+	Game.enemyType.mediumTank: preload("res://scene/enemy/medium_tank.tscn"),
+	Game.enemyType.heavyTank: preload("res://scene/enemy/heavy_tank.tscn"),
+	Game.enemyType.armoredTank: preload("res://scene/enemy/armored_tank.tscn"),
+	Game.enemyType.assaultBuggy: preload("res://scene/enemy/assault_buggy.tscn"),
+	Game.enemyType.medic: preload("res://scene/enemy/medic.tscn"),
+	Game.enemyType.suicideTruck: preload("res://scene/enemy/suicide_truck.tscn"),
+	Game.enemyType.missileTruck: preload("res://scene/enemy/missile_truck.tscn"),
+	Game.enemyType.scoutDrone: preload("res://scene/enemy/scout_drone.tscn"),
+	Game.enemyType.attackHelicopter: preload("res://scene/enemy/attack_helicopter.tscn")
 }

@@ -17,13 +17,13 @@ extends Node2D
 @onready var abilityBar = $hud/abilityBar
 
 var level
-var gunTower = preload("res://scene/machineGunTower.tscn")
-var rocketTower = preload("res://scene/rocketTower.tscn")
-var cannonTower = preload("res://scene/cannonTower.tscn")
-var EMPTower = preload("res://scene/EMPTower.tscn")
-var teslaCoilTower = preload("res://scene/teslaCoilTower.tscn")
-var laserTower = preload("res://scene/laserTower.tscn")
-var droneBase = preload("res://scene/droneBase.tscn")
+var gunTower = preload("res://scene/tower/machineGunTower.tscn")
+var rocketTower = preload("res://scene/tower/rocketTower.tscn")
+var cannonTower = preload("res://scene/tower/cannonTower.tscn")
+var EMPTower = preload("res://scene/tower/EMPTower.tscn")
+var teslaCoilTower = preload("res://scene/tower/teslaCoilTower.tscn")
+var laserTower = preload("res://scene/tower/laserTower.tscn")
+var droneBase = preload("res://scene/tower/droneBase.tscn")
 
 var isLastWave = false # 最后一波
 var cellSize = 64

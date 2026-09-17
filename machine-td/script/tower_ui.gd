@@ -44,7 +44,6 @@ func _ready() -> void:
 		towerCard1.type = i.type
 		var temp = Game.towerInfo.get(i.type)
 		towerCard1.setCost(temp.cost)
-		towerCard1.setTowerName(Game.get_tower_display_name(i.type))
 		towerCard1.connect("click", towerClick)
 		towerCard1.showInfo.connect(showTowerInfo)
 		towerCard1.connect("mouse_exited", hideTowerInfo)

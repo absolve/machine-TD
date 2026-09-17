@@ -1,6 +1,6 @@
 extends Area2D
 
-const HIT_EFFECT_SCENE := preload("res://scene/bullet_hit_effect.tscn")
+const HIT_EFFECT_SCENE := preload("res://scene/explosion/bullet_hit_effect.tscn")
 
 var vec = Vector2.ZERO # 速度
 var target = null # 目标
