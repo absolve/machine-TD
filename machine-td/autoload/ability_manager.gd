@@ -9,7 +9,7 @@ extends Node
 ## 本管理器只负责"能不能放、往哪放、放完通知谁"。
 ##
 ## 技能定义集中在下面的 ABILITIES 表里，新增技能只需要加一条。
-## icon 目前是占位素材，之后设计好图标直接改路径即可。
+## 图标在 sprite/icon/ 下，128x128 简笔画风格。
 
 signal ability_activated(ability_id: String, target)
 signal selection_started(ability_id: String)
@@ -23,12 +23,12 @@ enum TargetType {
 }
 
 ## 技能定义表（新增技能只改这里）
-## icon 为占位素材，替换图标时只改这个路径
+## icon 路径指向 sprite/icon/ 下的图标
 const ABILITIES: Dictionary = {
 	"bombard": {
 		"name_key": "_ability_bombard_name",
 		"desc_key": "_ability_bombard_desc",
-		"icon": "res://sprite/explosion1.png",
+		"icon": "res://sprite/icon/ability_bombard.png",
 		"target_type": TargetType.POSITION,
 		"cooldown": 30.0,
 		"effect": {"type": "area_damage", "radius": 140.0, "damage": 200},
@@ -36,7 +36,7 @@ const ABILITIES: Dictionary = {
 	"invincible": {
 		"name_key": "_ability_invincible_name",
 		"desc_key": "_ability_invincible_desc",
-		"icon": "res://sprite/shield.png",
+		"icon": "res://sprite/icon/ability_invincible.png",
 		"target_type": TargetType.POSITION,
 		"cooldown": 45.0,
 		"effect": {"type": "tower_invincible", "radius": 220.0, "duration": 8.0},

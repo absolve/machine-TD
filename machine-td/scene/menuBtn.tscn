@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://dtin1ky1qmkok"]
 
 [ext_resource type="StyleBox" uid="uid://yep3mcvh1bc7" path="res://theme/style/card_style.tres" id="1_kaivy"]
+[ext_resource type="Script" path="res://script/menu_btn.gd" id="2_mbscript"]
 
 [node name="PanelContainer" type="PanelContainer" unique_id=1767565793]
 theme_override_styles/panel = ExtResource("1_kaivy")
+script = ExtResource("2_mbscript")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1490485672]
 layout_mode = 2

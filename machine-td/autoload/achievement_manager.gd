@@ -7,7 +7,7 @@ const ACHIEVEMENTS: Dictionary = {
 		"name": "_Achv_first_defense_name",
 		"category": "stage",
 		"description": "_Achv_first_defense_desc",
-		"icon": "res://sprite/red-flag.png",
+		"icon": "res://sprite/icon/achv_first_defense.png",
 		"target": 1,
 		"reward_gem": 10,
 		"reward_title": ""
@@ -16,7 +16,7 @@ const ACHIEVEMENTS: Dictionary = {
 		"name": "_Achv_ground_breaker_name",
 		"category": "combat",
 		"description": "_Achv_ground_breaker_desc",
-		"icon": "res://sprite/tankBody_blue_outline.png",
+		"icon": "res://sprite/icon/achv_ground_breaker.png",
 		"target": 100,
 		"reward_gem": 15,
 		"reward_title": ""
@@ -25,7 +25,7 @@ const ACHIEVEMENTS: Dictionary = {
 		"name": "_Achv_iron_hunter_name",
 		"category": "combat",
 		"description": "_Achv_iron_hunter_desc",
-		"icon": "res://sprite/tankBody_bigRed_outline.png",
+		"icon": "res://sprite/icon/achv_iron_hunter.png",
 		"target": 20,
 		"reward_gem": 20,
 		"reward_title": ""
@@ -34,7 +34,7 @@ const ACHIEVEMENTS: Dictionary = {
 		"name": "_Achv_sky_guardian_name",
 		"category": "combat",
 		"description": "_Achv_sky_guardian_desc",
-		"icon": "res://sprite/Hel_12.png",
+		"icon": "res://sprite/icon/achv_sky_guardian.png",
 		"target": 30,
 		"reward_gem": 20,
 		"reward_title": "天空守卫"
@@ -43,7 +43,7 @@ const ACHIEVEMENTS: Dictionary = {
 		"name": "_Achv_full_armory_name",
 		"category": "build",
 		"description": "_Achv_full_armory_desc",
-		"icon": "res://sprite/tower2.png",
+		"icon": "res://sprite/icon/achv_full_armory.png",
 		"target": 7,
 		"reward_gem": 25,
 		"reward_title": ""
@@ -52,7 +52,7 @@ const ACHIEVEMENTS: Dictionary = {
 		"name": "_Achv_chain_reaction_name",
 		"category": "build",
 		"description": "_Achv_chain_reaction_desc",
-		"icon": "res://sprite/bolt.png",
+		"icon": "res://sprite/icon/achv_chain_reaction.png",
 		"target": 5,
 		"reward_gem": 15,
 		"reward_title": ""
@@ -61,7 +61,7 @@ const ACHIEVEMENTS: Dictionary = {
 		"name": "_Achv_veteran_tower_name",
 		"category": "growth",
 		"description": "_Achv_veteran_tower_desc",
-		"icon": "res://sprite/star-4.png",
+		"icon": "res://sprite/icon/achv_veteran_tower.png",
 		"target": 3,
 		"reward_gem": 20,
 		"reward_title": ""
@@ -70,7 +70,7 @@ const ACHIEVEMENTS: Dictionary = {
 		"name": "_Achv_perfect_base_name",
 		"category": "stage",
 		"description": "_Achv_perfect_base_desc",
-		"icon": "res://sprite/shield.png",
+		"icon": "res://sprite/icon/achv_perfect_base.png",
 		"target": 1,
 		"reward_gem": 30,
 		"reward_title": ""
@@ -79,7 +79,7 @@ const ACHIEVEMENTS: Dictionary = {
 		"name": "_Achv_route_master_name",
 		"category": "stage",
 		"description": "_Achv_route_master_desc",
-		"icon": "res://sprite/SolidArrow-Right.png",
+		"icon": "res://sprite/icon/achv_route_master.png",
 		"target": 1,
 		"reward_gem": 30,
 		"reward_title": "路线掌控者"

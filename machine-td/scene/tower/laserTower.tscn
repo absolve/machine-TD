@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bqteowipjn517" path="res://script/laser_tower.gd" id="2_733d0"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_wfuso"]
 [ext_resource type="Texture2D" uid="uid://b7xctx1wwm2t8" path="res://sprite/tower/base_large.png" id="99_base"]
-[ext_resource type="Texture2D" uid="uid://pi6mwh8u38ri" path="res://sprite/tower/tower_laser.png" id="99_turret"]
+[ext_resource type="Texture2D" uid="uid://namm2gbd0cfh" path="res://sprite/tower/tower_laser.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_axgl3"]
 size = Vector2(64, 64)

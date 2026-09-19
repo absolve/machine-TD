@@ -9,7 +9,6 @@ script = ExtResource("1_dxhww")
 [node name="bg" type="TileMapLayer" parent="." unique_id=858766704]
 z_index = -1
 
-[node name="fg" type="TileMapLayer" parent="." unique_id=750931851]
 
 [node name="waveTimer" type="Timer" parent="." unique_id=1926411625]
 

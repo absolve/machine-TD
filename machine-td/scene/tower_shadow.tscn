@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://cfwue5nwpbqlj"]
 
 [ext_resource type="Script" uid="uid://c5eck2x0jj4kg" path="res://script/tower_shadow.gd" id="1_gmqdi"]
-[ext_resource type="Texture2D" path="res://sprite/tower/turret_machinegun.png" id="t_mg"]
-[ext_resource type="Texture2D" path="res://sprite/tower/turret_cannon.png" id="t_cannon"]
-[ext_resource type="Texture2D" path="res://sprite/tower/turret_rocket.png" id="t_rocket"]
-[ext_resource type="Texture2D" path="res://sprite/tower/turret_emp.png" id="t_emp"]
-[ext_resource type="Texture2D" path="res://sprite/tower/tower_tesla.png" id="t_tesla"]
-[ext_resource type="Texture2D" path="res://sprite/tower/tower_laser.png" id="t_laser"]
-[ext_resource type="Texture2D" path="res://sprite/tower/tower_drone.png" id="t_drone"]
+[ext_resource type="Texture2D" uid="uid://dlleor6e3o1ej" path="res://sprite/tower/turret_machinegun.png" id="t_mg"]
+[ext_resource type="Texture2D" uid="uid://7yecnnnlb1op" path="res://sprite/tower/turret_cannon.png" id="t_cannon"]
+[ext_resource type="Texture2D" uid="uid://d2ka1pfomt8id" path="res://sprite/tower/turret_rocket.png" id="t_rocket"]
+[ext_resource type="Texture2D" uid="uid://ba2hpyb2nmj0s" path="res://sprite/tower/turret_emp.png" id="t_emp"]
+[ext_resource type="Texture2D" uid="uid://dr3404ovqlqpl" path="res://sprite/tower/tower_tesla.png" id="t_tesla"]
+[ext_resource type="Texture2D" uid="uid://namm2gbd0cfh" path="res://sprite/tower/tower_laser.png" id="t_laser"]
+[ext_resource type="Texture2D" uid="uid://c5x73fo1dftri" path="res://sprite/tower/tower_drone.png" id="t_drone"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gmqdi"]
 

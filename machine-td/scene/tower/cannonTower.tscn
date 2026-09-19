@@ -3,9 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_xj8p8"]
 [ext_resource type="Script" uid="uid://bxm1puyb5lju" path="res://script/cannon_tower.gd" id="2_v83o1"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_lm0w6"]
-[ext_resource type="Texture2D" uid="uid://b5v8hwslm7wo3" path="res://sprite/towerDefense_tile295.png" id="4_spark"]
+[ext_resource type="Texture2D" uid="uid://cqfjqk8bkohut" path="res://sprite/towerDefense_tile295.png" id="4_spark"]
 [ext_resource type="Texture2D" uid="uid://bqswrgamjea3q" path="res://sprite/tower/base_octagon.png" id="99_base"]
-[ext_resource type="Texture2D" uid="uid://b3g5uxcm1t0hc" path="res://sprite/tower/turret_cannon.png" id="99_turret"]
+[ext_resource type="Texture2D" uid="uid://7yecnnnlb1op" path="res://sprite/tower/turret_cannon.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v83o1"]
 size = Vector2(64, 64)

@@ -130,3 +130,4 @@ _Achv_route_master_desc,Win a multi-route level with no enemies escaping,在多�
 _Score,Score:,得分:
 _Pause,Pause,暂停
 _LevelLocked,LOCKED,未解锁
+_TowerLockedInStage,This tower is not available in this stage,本关不可建造该防御塔

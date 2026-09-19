@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_x4oq0"]
 [ext_resource type="Script" uid="uid://dnaqsi3rmg555" path="res://script/tesla_coil_tower.gd" id="2_5fmby"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_427bq"]
-[ext_resource type="Texture2D" uid="uid://dryffod0ejwo8" path="res://sprite/tower/tower_tesla.png" id="99_turret"]
+[ext_resource type="Texture2D" uid="uid://dr3404ovqlqpl" path="res://sprite/tower/tower_tesla.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4p7g2"]
 size = Vector2(100, 100)

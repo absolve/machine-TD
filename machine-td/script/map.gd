@@ -15,6 +15,7 @@ extends Node2D
 @onready var levelIntroPanel = $popupLayer/levelIntroPanel
 @onready var achievementTracker = $achievementTracker
 @onready var abilityBar = $hud/abilityBar
+@onready var customCamera = $customCamera
 
 var level
 var gunTower = preload("res://scene/tower/machineGunTower.tscn")
@@ -27,7 +28,7 @@ var droneBase = preload("res://scene/tower/droneBase.tscn")
 
 var isLastWave = false # 最后一波
 var cellSize = 64
-var debug = true
+var debug = false
 var font
 var selectedTower = null # 选中的塔
 var stageData: Dictionary = {} # 当前关卡配置（用于关卡情报弹窗）
@@ -48,6 +49,10 @@ func _ready():
 	Game.lastWave.connect(lastWave)
 	Game.clickTower.connect(clickTower)
 	Game.clickEnemy.connect(clickEnemy)
+	Game.towerLocked.connect(onTowerLocked)
+	# 技能选中的范围预览圈由 map 的 _draw 画；取消时也必须重绘，否则圈会残留
+	AbilityManager.selection_started.connect(_on_ability_selection_changed)
+	AbilityManager.selection_ended.connect(_on_ability_selection_changed)
 	
 	resultScreen.btnRestart.pressed.connect(restart)
 	resultScreen.btnNextLevel.pressed.connect(nextLevel)
@@ -121,6 +126,8 @@ func loadLevel():
 	add_child(level_instance)
 	level = level_instance
 	syncWaveProgressBar()
+	# 复位相机：回到「整关刚好铺满」，避免上一关放大/拖动后带过来
+	customCamera.reset_view()
 
 func syncWaveProgressBar() -> void:
 	if level == null or waveProgressBar == null:
@@ -145,9 +152,13 @@ func syncWaveProgressBar() -> void:
 #放着塔
 func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(1, 1)):
 	print('placeTower', type, grid, towerCoverGrid, gridSize)
+	# 兜底：本关不放行的塔一律拒绝（tower_ui 已经把卡片置灰，这里防止绕过）
+	if not StageData.isTowerAllowed(StageData.currentStageId, type):
+		addNotice(tr("_TowerLockedInStage"))
+		return
 	if titleNode.money < cost:
 		print('Insufficient funds')
-		addNotice('Insufficient funds')
+		addNotice(tr("_NotEnoughMoney"))
 		return
 	var temp = null
 	titleNode.money -= cost
@@ -234,17 +245,21 @@ func _on_defense_failed() -> void:
 
 func startGame():
 	get_tree().paused = false
+	# 顶栏 ▶/⏸ 同步成「正在运行」（= 显示暂停图，点一下才暂停）
+	titleNode.set_playing(true)
 	level.start()
 	syncWaveProgressBar()
 
 func pauseGame():
 	get_tree().paused = true
+	titleNode.set_playing(false)
 	if not pauseMenu.visible:
 		pauseMenu.show()
 
 func resumeGame():
 	pauseMenu.hide()
 	get_tree().paused = false
+	titleNode.set_playing(true)
 
 func soundOn():
 	AudioServer.set_bus_mute(AudioServer.get_bus_index("Sfx"), false)
@@ -358,6 +373,10 @@ func _is_multi_route_level() -> bool:
 func addNotice(s, color: Color = Color.CORAL):
 	toastInfo.display(s, color)
 
+# 玩家点了本关禁用的塔卡片
+func onTowerLocked() -> void:
+	addNotice(tr("_TowerLockedInStage"))
+
 #选中塔
 func clickTower(item, selected):
 	if selected:
@@ -418,6 +437,13 @@ func _physics_process(_delta: float) -> void:
 	# 选择技能目标时也要重绘，让范围预览跟着鼠标走
 	if debug or AbilityManager.is_selecting_position():
 		queue_redraw()
+
+
+# 技能选中 / 取消都要重绘一次。
+# ⚠️ 取消时如果不重绘，_physics_process 里的条件变假 → 再也不调 _draw，
+#    最后一帧画的范围预览圈就会一直留在画布上（黄色的圈不消失）。
+func _on_ability_selection_changed(_ability_id: String) -> void:
+	queue_redraw()
 	
 
 func _unhandled_input(_event):
@@ -500,6 +526,8 @@ func _t(key: String, fallback: String) -> String:
 	return fallback if translated == key else translated
 
 func _on_button_pressed():
+	# 地图内按钮用 ui_confirm（区别于菜单里的 coin）
+	SoundManage.playConfirm()
 	resultScreen.show()
 	
 	pass # Replace with function body.

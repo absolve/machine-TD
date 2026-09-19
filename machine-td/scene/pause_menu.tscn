@@ -7,10 +7,10 @@
 [node name="pauseMenu" type="Control" unique_id=431099984]
 process_mode = 3
 visible = false
-layout_mode = 0
+layout_mode = 3
+anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
-mouse_filter = 0
 theme = ExtResource("1_theme")
 script = ExtResource("2_script")
 
@@ -57,13 +57,16 @@ alignment = 1
 custom_minimum_size = Vector2(220, 54)
 layout_mode = 2
 text = "_Resume"
+click_sound = 1
 
 [node name="btnRestart" parent="PanelContainer/VBoxContainer/buttons" unique_id=242551112 instance=ExtResource("3_button")]
 custom_minimum_size = Vector2(220, 54)
 layout_mode = 2
 text = "_Restart"
+click_sound = 1
 
 [node name="btnMenu" parent="PanelContainer/VBoxContainer/buttons" unique_id=1242211185 instance=ExtResource("3_button")]
 custom_minimum_size = Vector2(220, 54)
 layout_mode = 2
 text = "_Main_Menu"
+click_sound = 1

@@ -1,18 +1,7 @@
 extends "res://script/base_level.gd"
+## 可建造区和传送带都是关卡里摆的场景实例，不是 TileMap 瓦片：
+##   - 可建造格 -> scene/placeable_area.tscn（base_level.gd::_collect_allow_area 自动收集）
+##   - 传送带   -> scene/belt.tscn（贴在路线上，方向由贴图文件名决定）
 
-func _ready():
+func _ready() -> void:
 	super._ready()
-	# 复合蛇形 5 通道（左进→右出），通道间含 2x2 放置块
-	allowArea.append_array([
-		# 通道间第一段
-		Vector2i(4, 4), Vector2i(5, 4), Vector2i(6, 4), Vector2i(7, 4), Vector2i(8, 4),
-		Vector2i(4, 5), Vector2i(5, 5), Vector2i(6, 5), Vector2i(7, 5), Vector2i(8, 5),
-		# 通道间第二段
-		Vector2i(16, 4), Vector2i(17, 4), Vector2i(18, 4), Vector2i(19, 4), Vector2i(20, 4),
-		Vector2i(16, 5), Vector2i(17, 5), Vector2i(18, 5), Vector2i(19, 5), Vector2i(20, 5),
-		# 通道间第三段
-		Vector2i(10, 8), Vector2i(11, 8), Vector2i(12, 8), Vector2i(13, 8), Vector2i(14, 8),
-		Vector2i(10, 9), Vector2i(11, 9), Vector2i(12, 9), Vector2i(13, 9), Vector2i(14, 9),
-		# 通道间第四段
-		Vector2i(22, 10), Vector2i(23, 10), Vector2i(24, 10)
-	])

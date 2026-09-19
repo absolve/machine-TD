@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://flhkswexg6fx" path="res://script/emp_tower.gd" id="2_tc0i1"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_4p7g2"]
 [ext_resource type="Texture2D" uid="uid://da46jt53dsfgu" path="res://sprite/tower/base_plate.png" id="99_base"]
-[ext_resource type="Texture2D" uid="uid://bjgkxfhxpseu0" path="res://sprite/tower/turret_emp.png" id="99_turret"]
+[ext_resource type="Texture2D" uid="uid://ba2hpyb2nmj0s" path="res://sprite/tower/turret_emp.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3c4u4"]
 size = Vector2(64, 64)

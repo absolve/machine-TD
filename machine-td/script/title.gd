@@ -24,6 +24,10 @@ signal speedOn
 signal speedOff
 signal home
 
+## 点击音由按钮自己播（见 menuBtn.tscn 的 menu_btn.gd / ui_button.tscn 的 ui_button.gd）。
+## ⚠️ 这里**不要**再调 SoundManage.playXxx()，否则一次点击会响两声。
+
+
 var hp = 0:
 	set(value):
 		hp = max(value, 0)
@@ -51,10 +55,24 @@ var score = 0:
 		scoreLabel.text = str(value)
 
 
+## ▶/⏸ 是 toggle_mode 按钮，两种状态的语义：
+##   button_pressed = true  → 显示 ⏸（暂停图）→ 意思是「正在运行，点我暂停」
+##   button_pressed = false → 显示 ▶（播放图）→ 意思是「已暂停，点我继续」
+## 所以状态同步是 set_playing(正在运行)。
+##
+## ⚠️ 必须用 set_pressed_no_signal —— 直接写 button_pressed 会触发 toggled，
+##    反过来又发一次 start / pause，声音和状态都会错乱。
+func set_playing(playing: bool) -> void:
+	if btnStart and btnStart.button_pressed != playing:
+		btnStart.set_pressed_no_signal(playing)
+
+
 func _on_texture_button_toggled(toggled_on: bool) -> void:
 	if toggled_on:
+		# 刚按下 → 现在显示 ⏸ → 意思是开始 / 继续
 		start.emit()
 	else:
+		# 刚弹起 → 现在显示 ▶ → 意思是暂停
 		pause.emit()
 
 

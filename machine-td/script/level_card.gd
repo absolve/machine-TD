@@ -25,7 +25,7 @@ func _ready() -> void:
 		lockLabel.visible = true
 	else:
 		lockLabel.visible = false
-	
+
 
 func _on_mouse_entered() -> void:
 	selected.visible = not isLock

@@ -29,14 +29,8 @@ var towersData = [ {'type': Game.towerType.machineGunTower, 'img': tower1},
 
 
 func _ready() -> void:
-	# for i in towersData:
-	# 	var towerIcon1 = towerIcon.instantiate()
-	# 	towerIcon1.type = i.type
-	# 	towerIcon1.texture = i.img
-	# 	towerIcon1.showInfo.connect(showInfo)
-	# 	towerIcon1.hideInfo.connect(hideInfo)
-	# 	towerIcon1.select.connect(itemSelect)
-	# 	towerList.add_child(towerIcon1)
+	# 本关放行的塔；空数组 = 不限制（全部可建）
+	var allowed: Array = StageData.getTowers(StageData.currentStageId)
 	for i in towersData:
 		var towerCard1 = towerCard.instantiate()
 		towerCardList.add_child(towerCard1)
@@ -44,10 +38,19 @@ func _ready() -> void:
 		towerCard1.type = i.type
 		var temp = Game.towerInfo.get(i.type)
 		towerCard1.setCost(temp.cost)
+		# 卡片只显示图标 + 价格；塔名由详情面板展示
+		# 本关不放行的塔：卡片变灰、点了只弹提示
+		towerCard1.setLocked(not allowed.is_empty() and not (i.type in allowed))
 		towerCard1.connect("click", towerClick)
+		towerCard1.connect("lockedClick", towerLockedClick)
 		towerCard1.showInfo.connect(showTowerInfo)
 		towerCard1.connect("mouse_exited", hideTowerInfo)
-		
+
+
+# 点了本关禁用的塔 → 交给 map 弹一句提示
+func towerLockedClick(_type) -> void:
+	Game.towerLocked.emit()
+	
 #func showInfo(_type):
 	#var temp = Game.towerInfo.get(_type)
 	#info.showDetail(temp)
@@ -96,6 +99,7 @@ func towerClick(type):
 func _on_icon_gui_input(_event):
 	if Input.is_action_just_pressed("click"):
 		isOpen = !isOpen
+		SoundManage.playConfirm()
 		if isOpen:
 			player.play("show")
 		else:

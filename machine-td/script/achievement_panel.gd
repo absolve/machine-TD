@@ -31,7 +31,7 @@ var _mat_locked: ShaderMaterial
 func _ready() -> void:
 	visible = false
 	_make_icon_materials()
-	close_button.pressed.connect(close)
+	#close_button.pressed.connect(close)
 	if AchievementManager:
 		AchievementManager.achievement_unlocked.connect(_on_achievement_unlocked)
 	refresh()

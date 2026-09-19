@@ -174,7 +174,7 @@ func _make_cell(text: String, width: int, align: int, color: Color, font_size: i
 	return cell
 
 
-# 关卡信息上方的单个数据块：标题在上，数值在下
+# 两条路线：路线1 走上方，路线2 走下方（折点见同名 .tscn 里的两个 Path2D）
 func _add_chip(title: String, value: String, color: Color) -> void:
 	var chip := VBoxContainer.new()
 	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL

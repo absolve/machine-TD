@@ -24,7 +24,7 @@ enum towerType {
 # 塔信息
 const towerInfo = {
 	towerType.machineGunTower: {
-	"name": "machineGunTower",
+	"name": "_TowerName_machineGun",
 	"atk": 20,
 	"cost": 20,
 	"reload": 0.2,
@@ -36,7 +36,7 @@ const towerInfo = {
 	"gridSize": Vector2i(1, 1)
 	},
 	towerType.cannonTower: {
-	"name": "cannonTower",
+	"name": "_TowerName_cannon",
 	"atk": 30,
 	"cost": 35,
 	"reload": 0.8,
@@ -48,7 +48,7 @@ const towerInfo = {
 	"gridSize": Vector2i(1, 1)
 	},
 	towerType.rocketTower: {
-	"name": "rocketTower",
+	"name": "_TowerName_rocket",
 	"atk": 40,
 	"cost": 50,
 	"reload": 1.5,
@@ -60,7 +60,7 @@ const towerInfo = {
 	"gridSize": Vector2i(1, 1)
 	},
 	towerType.EMPTower: {
-	"name": "EMPTower",
+	"name": "_TowerName_emp",
 	"atk": 50,
 	"cost": 45,
 	"reload": 4.0,
@@ -72,7 +72,7 @@ const towerInfo = {
 	"gridSize": Vector2i(1, 1)
 	},
 	towerType.droneBase: {
-	"name": "droneBase",
+	"name": "_TowerName_drone",
 	"atk": 8,
 	"cost": 65,
 	"reload": 0.6,
@@ -84,7 +84,7 @@ const towerInfo = {
 	"gridSize": Vector2i(2, 2)
 	},
 	towerType.teslaCoilTower: {
-	"name": "teslaCoilTower",
+	"name": "_TowerName_tesla",
 	"atk": 25,
 	"cost": 65,
 	"reload": 1.5,
@@ -96,7 +96,7 @@ const towerInfo = {
 	"gridSize": Vector2i(2, 2)
 	},
 	towerType.laserTower: {
-	"name": "laserTower",
+	"name": "_TowerName_laser",
 	"atk": 30,
 	"cost": 90,
 	"reload": 1,
@@ -121,54 +121,54 @@ const towerInfo = {
 # 攻击节奏参考：己方塔射程 280~450(像素)，cellSize=64，即塔约 4.4~7 格
 const enemyInfo = {
 	enemyType.miniTank: {
-		"name": "miniTank",
+		"name": "_EnemyName_miniTank",
 		"hp": 100, "speed": 100, "reward": 5, "lossPoints": 1, "rewardExp": 2,
-		"armor": 0.05, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "pusher"
+		"armor": 0.05, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_pusher"
 	},
 	enemyType.mediumTank: {
-		"name": "mediumTank",
+		"name": "_EnemyName_mediumTank",
 		"hp": 200, "speed": 100, "reward": 8, "lossPoints": 2, "rewardExp": 4,
-		"armor": 0.15, "flying": false, "atk": 15, "shootDelay": 1.5, "scope": 240, "role": "attacker"
+		"armor": 0.15, "flying": false, "atk": 15, "shootDelay": 1.5, "scope": 240, "role": "_EnemyRole_attacker"
 	},
 	enemyType.heavyTank: {
-		"name": "heavyTank",
+		"name": "_EnemyName_heavyTank",
 		"hp": 600, "speed": 50, "reward": 20, "lossPoints": 3, "rewardExp": 10,
-		"armor": 0.4, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "pusher"
+		"armor": 0.4, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_pusher"
 	},
 	enemyType.armoredTank: {
-		"name": "armoredTank",
+		"name": "_EnemyName_armoredTank",
 		"hp": 400, "speed": 50, "reward": 15, "lossPoints": 2, "rewardExp": 8,
-		"armor": 0.6, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "pusher"
+		"armor": 0.6, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_pusher"
 	},
 	enemyType.assaultBuggy: {
-		"name": "assaultBuggy",
+		"name": "_EnemyName_assaultBuggy",
 		"hp": 80, "speed": 220, "reward": 4, "lossPoints": 1, "rewardExp": 2,
-		"armor": 0.1, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "pusher"
+		"armor": 0.1, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_pusher"
 	},
 	enemyType.medic: {
-		"name": "medic",
+		"name": "_EnemyName_medic",
 		"hp": 120, "speed": 100, "reward": 10, "lossPoints": 1, "rewardExp": 5,
-		"armor": 0.1, "flying": false, "atk": 20, "shootDelay": 8.0, "scope": 180, "role": "support"
+		"armor": 0.1, "flying": false, "atk": 20, "shootDelay": 8.0, "scope": 180, "role": "_EnemyRole_support"
 	},
 	enemyType.suicideTruck: {
-		"name": "suicideTruck",
+		"name": "_EnemyName_suicideTruck",
 		"hp": 60, "speed": 160, "reward": 3, "lossPoints": 1, "rewardExp": 2,
-		"armor": 0.0, "flying": false, "atk": 150, "shootDelay": 0.0, "scope": 150, "role": "bomber"
+		"armor": 0.0, "flying": false, "atk": 150, "shootDelay": 0.0, "scope": 150, "role": "_EnemyRole_bomber"
 	},
 	enemyType.missileTruck: {
-		"name": "missileTruck",
+		"name": "_EnemyName_missileTruck",
 		"hp": 180, "speed": 50, "reward": 12, "lossPoints": 2, "rewardExp": 6,
-		"armor": 0.25, "flying": false, "atk": 35, "shootDelay": 3.0, "scope": 700, "role": "siege"
+		"armor": 0.25, "flying": false, "atk": 35, "shootDelay": 3.0, "scope": 700, "role": "_EnemyRole_siege"
 	},
 	enemyType.scoutDrone: {
-		"name": "scoutDrone",
+		"name": "_EnemyName_scoutDrone",
 		"hp": 30, "speed": 160, "reward": 3, "lossPoints": 1, "rewardExp": 2,
-		"armor": 0.0, "flying": true, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "air"
+		"armor": 0.0, "flying": true, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_air"
 	},
 	enemyType.attackHelicopter: {
-		"name": "attackHelicopter",
+		"name": "_EnemyName_attackHelicopter",
 		"hp": 280, "speed": 100, "reward": 15, "lossPoints": 2, "rewardExp": 8,
-		"armor": 0.2, "flying": true, "atk": 5, "shootDelay": 0.5, "scope": 300, "role": "air"
+		"armor": 0.2, "flying": true, "atk": 5, "shootDelay": 0.5, "scope": 300, "role": "_EnemyRole_air"
 	},
 }
 
@@ -197,6 +197,8 @@ signal lastWave # 最后一波
 @warning_ignore("unused_signal")
 signal clickTower
 @warning_ignore("unused_signal")
+signal towerLocked # 玩家点了本关禁用的防御塔（tower_ui 发出，map 弹提示）
+@warning_ignore("unused_signal")
 signal clickEnemy # 点击敌人（在地图上选中敌人，由 enemy.gd 的 input_event 发出）
 @warning_ignore("unused_signal")
 signal enemyDefeated(enemy, source) # 敌人被击杀（成就统计用；在节点释放前发出）
@@ -208,69 +210,19 @@ func addObj(obj):
 	if map:
 		map.add_child(obj)
 
-# 塔的本地化显示名 key（对应 lang/language.csv 中 _TowerName_*）
-const towerDisplayNameKeys = {
-	towerType.machineGunTower: "_TowerName_machineGun",
-	towerType.cannonTower: "_TowerName_cannon",
-	towerType.rocketTower: "_TowerName_rocket",
-	towerType.EMPTower: "_TowerName_emp",
-	towerType.droneBase: "_TowerName_drone",
-	towerType.teslaCoilTower: "_TowerName_tesla",
-	towerType.laserTower: "_TowerName_laser",
-}
+# ===== 显示名 =====
+# towerInfo / enemyInfo 的 "name"（以及 enemyInfo 的 "role"）里存的**直接就是翻译键**，
+# 例如 "_TowerName_machineGun" / "_EnemyRole_pusher"。
+# 所以取显示名只要一次 tr()，不再需要额外维护三张映射表。
 
-# 取塔的显示名（多语言；语言文件未导入时回退英文原名）
 func get_tower_display_name(tower_type) -> String:
-	var info: Dictionary = towerInfo.get(tower_type, {})
-	var fallback := str(info.get("name", "Tower"))
-	var key := str(towerDisplayNameKeys.get(tower_type, ""))
-	if key.is_empty():
-		return fallback
-	var translated := tr(key)
-	return fallback if translated == key else translated
+	return tr(str(towerInfo.get(tower_type, {}).get("name", "")))
 
-# 敌人的本地化显示名 key（对应 lang/language.csv 中 _EnemyName_*）
-const enemyDisplayNameKeys = {
-	enemyType.miniTank: "_EnemyName_miniTank",
-	enemyType.mediumTank: "_EnemyName_mediumTank",
-	enemyType.heavyTank: "_EnemyName_heavyTank",
-	enemyType.armoredTank: "_EnemyName_armoredTank",
-	enemyType.assaultBuggy: "_EnemyName_assaultBuggy",
-	enemyType.medic: "_EnemyName_medic",
-	enemyType.suicideTruck: "_EnemyName_suicideTruck",
-	enemyType.missileTruck: "_EnemyName_missileTruck",
-	enemyType.scoutDrone: "_EnemyName_scoutDrone",
-	enemyType.attackHelicopter: "_EnemyName_attackHelicopter",
-}
 
-# 敌人行为定位的本地化 key（对应 lang/language.csv 中 _EnemyRole_*）
-const enemyRoleKeys = {
-	"pusher": "_EnemyRole_pusher",
-	"attacker": "_EnemyRole_attacker",
-	"support": "_EnemyRole_support",
-	"bomber": "_EnemyRole_bomber",
-	"siege": "_EnemyRole_siege",
-	"air": "_EnemyRole_air",
-}
-
-# 取敌人的显示名（多语言；语言文件未导入时回退英文原名）
 func get_enemy_display_name(enemy_type) -> String:
-	var info: Dictionary = enemyInfo.get(enemy_type, {})
-	var fallback := str(info.get("name", "Enemy"))
-	var key := str(enemyDisplayNameKeys.get(enemy_type, ""))
-	if key.is_empty():
-		return fallback
-	var translated := tr(key)
-	return fallback if translated == key else translated
+	return tr(str(enemyInfo.get(enemy_type, {}).get("name", "")))
 
-# 取敌人行为定位标签（多语言；未配置时回退为原始 role 值）
+
+# 敌人行为定位标签（role 字段同样是翻译键）
 func get_enemy_role_name(enemy_type) -> String:
-	var info: Dictionary = enemyInfo.get(enemy_type, {})
-	var role := str(info.get("role", ""))
-	if role.is_empty():
-		return ""
-	var key := str(enemyRoleKeys.get(role, ""))
-	if key.is_empty():
-		return role
-	var translated := tr(key)
-	return role if translated == key else translated
+	return tr(str(enemyInfo.get(enemy_type, {}).get("role", "")))

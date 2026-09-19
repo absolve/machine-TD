@@ -18,6 +18,8 @@
 [node name="map" type="Node2D" unique_id=988854810]
 script = ExtResource("1_rgtto")
 
+[node name="customCamera" parent="." unique_id=1331816399 instance=ExtResource("5_jp76l")]
+
 [node name="hud" type="CanvasLayer" parent="." unique_id=487852858]
 
 [node name="title" parent="hud" unique_id=845388962 instance=ExtResource("2_4xw1d")]
@@ -66,12 +68,8 @@ layer = 10
 [node name="levelIntroPanel" parent="popupLayer" unique_id=990114276 instance=ExtResource("9_intro")]
 
 [node name="resultScreen" parent="popupLayer" unique_id=1746614916 instance=ExtResource("4_bq37x")]
-layout_mode = 3
-anchors_preset = 0
 
 [node name="pauseMenu" parent="popupLayer" unique_id=1869636577 instance=ExtResource("6_pause")]
-layout_mode = 3
-anchors_preset = 0
 
 [node name="achievementTracker" type="Node" parent="." unique_id=990114277]
 script = ExtResource("10_track")
@@ -79,8 +77,6 @@ script = ExtResource("10_track")
 [node name="Timer" type="Timer" parent="." unique_id=1553136818]
 wait_time = 2.0
 one_shot = true
-
-[node name="customCamera" parent="." unique_id=1331816399 instance=ExtResource("5_jp76l")]
 
 [connection signal="pressed" from="hud/Button" to="." method="_on_button_pressed"]
 [connection signal="timeout" from="Timer" to="." method="finish"]

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://script/belt.gd" id="1_belt"]
 [ext_resource type="Shader" path="res://shader/belt_flow.gdshader" id="2_flow"]
-[ext_resource type="Texture2D" path="res://sprite/tile/belt_we.png" id="3_we"]
+[ext_resource type="Texture2D" uid="uid://b88b5nqehl6ul" path="res://sprite/tile/belt_we.png" id="3_we"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_belt"]
 resource_local_to_scene = true

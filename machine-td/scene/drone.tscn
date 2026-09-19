@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cgasdc4xix81v" path="res://scene/aircraft.tscn" id="1_8wg5q"]
 [ext_resource type="Script" uid="uid://bq486lhicbx3x" path="res://script/drone.gd" id="2_jxxn5"]
 [ext_resource type="Texture2D" uid="uid://ck67srsef3ay2" path="res://sprite/enemy@2.png" id="3_il87p"]
+[ext_resource type="Texture2D" uid="uid://dhq0fmmry1o8c" path="res://sprite/drone_friendly.png" id="4_dronetex"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bneum"]
 atlas = ExtResource("3_il87p")
@@ -12,7 +13,7 @@ region = Rect2(256, 128, 128, 128)
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_bneum")
+"texture": ExtResource("4_dronetex")
 }],
 "loop": 1,
 "name": &"default",

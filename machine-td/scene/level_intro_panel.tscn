@@ -4,6 +4,7 @@
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
 [ext_resource type="StyleBox" path="res://theme/style/tower_panel_style.tres" id="3_panel"]
 [ext_resource type="StyleBox" path="res://theme/style/tower_separator.tres" id="4_sep"]
+[ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="5_khtis"]
 
 [node name="levelIntroPanel" type="Control" unique_id=235618938]
 visible = false
@@ -13,11 +14,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
 theme = ExtResource("2_theme")
 script = ExtResource("1_script")
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="." unique_id=1925735995]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,70 +26,72 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="panelBg" type="PanelContainer" parent="Center"]
+[node name="panelBg" type="PanelContainer" parent="Center" unique_id=1198628119]
 custom_minimum_size = Vector2(1180, 0)
 custom_maximum_size = Vector2(1180, 1010)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("3_panel")
 
-[node name="Margin" type="MarginContainer" parent="Center/panelBg"]
+[node name="Margin" type="MarginContainer" parent="Center/panelBg" unique_id=147077262]
 layout_mode = 2
 theme_override_constants/margin_left = 28
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 28
 theme_override_constants/margin_bottom = 24
 
-[node name="VBox" type="VBoxContainer" parent="Center/panelBg/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Center/panelBg/Margin" unique_id=1478932366]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="titleLabel" type="Label" parent="Center/panelBg/Margin/VBox"]
+[node name="titleLabel" type="Label" parent="Center/panelBg/Margin/VBox" unique_id=807294779]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.7764706, 0.101960786, 1)
 theme_override_font_sizes/font_size = 54
 text = "Level 1"
 horizontal_alignment = 1
 
-[node name="subtitleLabel" type="Label" parent="Center/panelBg/Margin/VBox"]
+[node name="subtitleLabel" type="Label" parent="Center/panelBg/Margin/VBox" unique_id=1198789399]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="InfoBox" type="HBoxContainer" parent="Center/panelBg/Margin/VBox"]
+[node name="InfoBox" type="HBoxContainer" parent="Center/panelBg/Margin/VBox" unique_id=125067088]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Sep1" type="HSeparator" parent="Center/panelBg/Margin/VBox"]
+[node name="Sep1" type="HSeparator" parent="Center/panelBg/Margin/VBox" unique_id=1529139149]
 layout_mode = 2
 theme_override_styles/separator = ExtResource("4_sep")
 
-[node name="intelTitle" type="Label" parent="Center/panelBg/Margin/VBox"]
+[node name="intelTitle" type="Label" parent="Center/panelBg/Margin/VBox" unique_id=1187380720]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.49803922, 0.8156863, 0.7764706, 1)
 theme_override_font_sizes/font_size = 36
 text = "Enemy Intel"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Center/panelBg/Margin/VBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Center/panelBg/Margin/VBox" unique_id=543455368]
 custom_minimum_size = Vector2(0, 360)
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 
-[node name="enemyList" type="VBoxContainer" parent="Center/panelBg/Margin/VBox/ScrollContainer"]
+[node name="enemyList" type="VBoxContainer" parent="Center/panelBg/Margin/VBox/ScrollContainer" unique_id=377729095]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="Footer" type="HBoxContainer" parent="Center/panelBg/Margin/VBox"]
+[node name="Footer" type="HBoxContainer" parent="Center/panelBg/Margin/VBox" unique_id=1979309681]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="hintLabel" type="Label" parent="Center/panelBg/Margin/VBox/Footer"]
+[node name="hintLabel" type="Label" parent="Center/panelBg/Margin/VBox/Footer" unique_id=1621803747]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.8627451, 0.91764706, 0.9490196, 1)
@@ -97,8 +99,6 @@ theme_override_font_sizes/font_size = 26
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="btnStart" type="Button" parent="Center/panelBg/Margin/VBox/Footer"]
-custom_minimum_size = Vector2(260, 64)
+[node name="btnStart" parent="Center/panelBg/Margin/VBox/Footer" unique_id=1077812873 instance=ExtResource("5_khtis")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "Begin Battle"
+click_sound = 1

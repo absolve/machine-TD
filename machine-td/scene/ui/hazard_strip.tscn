@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3]
 
 [ext_resource type="Shader" path="res://shader/hazard_scroll.gdshader" id="1_scroll"]
-[ext_resource type="Texture2D" path="res://sprite/hazard_strip.png" id="2_tex"]
+[ext_resource type="Texture2D" uid="uid://c0xfl0ar61nfs" path="res://sprite/hazard_strip.png" id="2_tex"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hazard"]
 resource_local_to_scene = true

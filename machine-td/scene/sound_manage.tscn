@@ -1,11 +1,16 @@
 [gd_scene format=3 uid="uid://dywckdh8gdsl2"]
 
 [ext_resource type="Script" uid="uid://crt28af0lchit" path="res://script/sound_manage.gd" id="1_or83v"]
-[ext_resource type="AudioStream" uid="uid://b7kwgfp3xtwmu" path="res://sound/Ting Coins.ogg" id="2_button"]
+[ext_resource type="AudioStream" uid="uid://bi0pwakm40o0i" path="res://sound/sfx/coin.ogg" id="2_button"]
+[ext_resource type="AudioStream" uid="uid://2dmusrdxusgg" path="res://sound/sfx/ui_confirm.ogg" id="3_confirm"]
 
 [node name="soundManage" type="Node2D" unique_id=1932233337]
 script = ExtResource("1_or83v")
 
 [node name="ButtonSound" type="AudioStreamPlayer" parent="." unique_id=1388930595]
 stream = ExtResource("2_button")
+bus = &"Sfx"
+
+[node name="ConfirmSound" type="AudioStreamPlayer" parent="." unique_id=1388930596]
+stream = ExtResource("3_confirm")
 bus = &"Sfx"

@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://4vv5x7rd5335" path="res://scene/life_bar.tscn" id="2_5eujo"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="2_uhti2"]
 [ext_resource type="PackedScene" uid="uid://bwdh7erg7xr7y" path="res://scene/tower_rank.tscn" id="2_y3288"]
-[ext_resource type="AudioStream" uid="uid://ehnox1s2m5hl" path="res://sound/Tower Deploy.ogg" id="7_m2v4c"]
+[ext_resource type="AudioStream" uid="uid://72olu5uadwv5" path="res://sound/sfx/tower_deploy.ogg" id="7_m2v4c"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vvofi"]
 resource_local_to_scene = true

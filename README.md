@@ -83,7 +83,8 @@ machine-td/                  Godot 工程根目录
 | 碰撞层 | 1=tower / 2=enemy / 3=bullet / 4=placeableArea / 5=EMPArea |
 | 存档路径 | `user://player_settings.cfg`、`user://player_data.cfg` |
 | 多语言 | 只改 `lang/language.csv`，不要手改 `*.translation`（它是导入产物，已被 gitignore） |
-| 数据驱动 | 塔的数值在 `Game.towerInfo`，敌人在 `Game.enemyInfo`，关卡在 `StageData.allStage` |
+| 数据驱动 | 塔的数值在 `Game.towerInfo`，敌人在 `Game.enemyInfo`，关卡在 `StageData.allStage`。**`name` / `role` 字段里存的就是翻译键**（如 `_TowerName_machineGun`），取显示名只要一次 `tr()` |
+| 关卡限制 | 可建防御塔按关卡配置在 `StageData.stageTowers`（未配置 = 全开）；可用的能力技能在 `StageData.stageAbilities` |
 | 文案 | 界面用 `_t(key, fallback)` 取翻译，未命中时回退英文而不是显示 key |
 
 ## 当前完成度
@@ -120,6 +121,8 @@ machine-td/                  Godot 工程根目录
 | 7 座塔美术接线 | ✅ **2026-09-13 全部接上**（炮塔 + 底座 + 炮口 + 卡片图标 + 放置阴影） |
 | 地图内字号 | ✅ **2026-09-13 统一为 46 / 36 / 30 / 26**（v5.1 再放大一档） |
 | 多语言 | ✅ **2026-09-13 修复**：`set_locale` 原先只在设置面板里调用 → 没进过设置页就是中英混排；现由 `UserData.applyLanguage()` 在启动时执行，默认跟随系统语言 |
+| 关卡限制可建防御塔 | ✅ **2026-09-13 已接**：`StageData.stageTowers` 按关卡配置放行列表（未配置 = 全开），塔选择栏里被限制的塔**置灰且不可点**，`map.placeTower` 另有兜底拦截 |
+| 音频素材 | ⚠️ **2026-09-13 已入库未接线**：`sound/bgm/` 4 首环境循环（已设 `loop`）+ `sound/sfx/` 26 个音效，共 6.8 MB OGG，来源与授权见 [`sound/CREDITS.md`](machine-td/sound/CREDITS.md)。**`Bg` 总线至今没有东西在播** |
 | 波次进度条、开场情报面板 | ✅ 已接 |
 | 地图与关卡内容 | ⚠️ **问题集中区**，见 `game_analysis.md` §4 |
 | 1X / 2X 倍速 | ❌ 后端 / 接线 / 界面三层都缺 |

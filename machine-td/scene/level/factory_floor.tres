@@ -1,7 +1,7 @@
 [gd_resource type="TileSet" format=3 uid="uid://dt5a3lb1rlxgu"]
 
 [ext_resource type="Texture2D" uid="uid://4qs2xu0gaptj" path="res://sprite/tile/floor_base.png" id="1_floor_base"]
-[ext_resource type="Texture2D" uid="uid://bwjxipbn0k5bx" path="res://sprite/tile/floor_vent.png" id="2_floor_vent"]
+[ext_resource type="Texture2D" uid="uid://pm0p2gq0jjc6" path="res://sprite/tile/floor_vent.png" id="2_floor_vent"]
 [ext_resource type="Texture2D" uid="uid://gbc4ciypk51b" path="res://sprite/tile/floor_drain.png" id="3_floor_drain"]
 [ext_resource type="Texture2D" uid="uid://dubymobw4ku6h" path="res://sprite/tile/floor_bolt.png" id="4_floor_bolt"]
 [ext_resource type="Texture2D" uid="uid://c7n5of77b34fn" path="res://sprite/tile/floor_tread.png" id="5_floor_tread"]

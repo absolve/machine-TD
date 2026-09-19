@@ -33,4 +33,3 @@ func updateRating():
 		star1.texture = starFull
 		star2.texture = starFull
 		star3.texture = starFull
-		

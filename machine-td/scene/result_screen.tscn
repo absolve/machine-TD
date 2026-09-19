@@ -9,10 +9,10 @@
 [node name="resultScreen" type="Control" unique_id=915205388]
 process_mode = 3
 visible = false
-layout_mode = 0
+layout_mode = 3
+anchors_preset = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
-mouse_filter = 0
 theme = ExtResource("1_wmp4s")
 script = ExtResource("2_h36hl")
 
@@ -104,11 +104,14 @@ metadata/_edit_group_ = true
 [node name="btnRestart" parent="PanelContainer/VBoxContainer3/MarginContainer2/hbox" unique_id=1077812873 instance=ExtResource("3_biqnl")]
 layout_mode = 2
 text = "_Restart"
+click_sound = 1
 
 [node name="btnNextLevel" parent="PanelContainer/VBoxContainer3/MarginContainer2/hbox" unique_id=1241686801 instance=ExtResource("3_biqnl")]
 layout_mode = 2
 text = "_NextLevel"
+click_sound = 1
 
 [node name="btnMenu" parent="PanelContainer/VBoxContainer3/MarginContainer2/hbox" unique_id=1829654265 instance=ExtResource("3_biqnl")]
 layout_mode = 2
 text = "_Main_Menu"
+click_sound = 1

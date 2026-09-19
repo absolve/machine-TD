@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_p16uh"]
 [ext_resource type="Script" uid="uid://h5w308vyc8yt" path="res://script/machineGunTower.gd" id="2_nmv2o"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_nmv2o"]
-[ext_resource type="Texture2D" uid="uid://b5v8hwslm7wo3" path="res://sprite/towerDefense_tile295.png" id="5_j3503"]
+[ext_resource type="Texture2D" uid="uid://cqfjqk8bkohut" path="res://sprite/towerDefense_tile295.png" id="5_j3503"]
 [ext_resource type="Texture2D" uid="uid://dyluyv2imdos1" path="res://sprite/tower/base_round.png" id="99_base"]
 [ext_resource type="Texture2D" uid="uid://dlleor6e3o1ej" path="res://sprite/tower/turret_machinegun.png" id="99_turret"]
 

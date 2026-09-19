@@ -25,7 +25,8 @@ func showDetail(obj, tower_type = 0):
 	if tower_type:
 		name_label.text = Game.get_tower_display_name(tower_type)
 	else:
-		name_label.text = str(obj.name)
+		# name 字段存的是翻译键，这里统一走 tr()
+		name_label.text = tr(str(obj.get("name", "")))
 	desc_label.text = tr(obj.desc)
 	atk_value.text = str(obj.atk)
 	reload_value.text = _fmt_fire_rate(float(obj.reload))

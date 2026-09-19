@@ -2,14 +2,13 @@
 
 [ext_resource type="StyleBox" uid="uid://dgsf4fryb5sbt" path="res://theme/style/tower_card_style.tres" id="1_pxcfv"]
 [ext_resource type="Script" uid="uid://bvvstbroiqj0v" path="res://script/tower_card.gd" id="1_trrxv"]
-[ext_resource type="Texture2D" uid="uid://4l2fst2rdd3t" path="res://sprite/tower1.png" id="2_e4uem"]
 [ext_resource type="Texture2D" uid="uid://bxjrfo1he5k0p" path="res://sprite/dollar-symbol.png" id="4_0iufg"]
 [ext_resource type="Texture2D" uid="uid://con6lnwug4pxd" path="res://sprite/Selector.png" id="5_0iufg"]
 
 [node name="towerCard" type="PanelContainer" unique_id=1898334176]
 custom_minimum_size = Vector2(140, 140)
-offset_right = 136.0
-offset_bottom = 136.0
+offset_right = 140.0
+offset_bottom = 140.0
 theme_override_styles/panel = ExtResource("1_pxcfv")
 script = ExtResource("1_trrxv")
 
@@ -20,18 +19,18 @@ alignment = 1
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer" unique_id=807083845]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/margin_top = 10
 
 [node name="img" type="TextureRect" parent="VBoxContainer/MarginContainer2" unique_id=382064191]
+custom_maximum_size = Vector2(-1, 84)
 layout_mode = 2
 size_flags_vertical = 3
-texture = ExtResource("2_e4uem")
-expand_mode = 2
-stretch_mode = 3
+stretch_mode = 5
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=2078042271]
 layout_mode = 2
 theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 20
+theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer" unique_id=1833125815]
