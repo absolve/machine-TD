@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://llvmr0r2odio"]
 
 [ext_resource type="Script" uid="uid://imi3uq7a740y" path="res://script/placeable_area.gd" id="1_iexqj"]
-[ext_resource type="Texture2D" uid="uid://utaru6ia0wse" path="res://sprite/tile/floor_slot.png" id="2_slot"]
+[ext_resource type="SpriteFrames" path="res://sprite/tile/floor_slot_frames.tres" id="2_frames"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_slot"]
 size = Vector2(64, 64)
@@ -11,8 +11,8 @@ collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_iexqj")
 
-[node name="slot" type="Sprite2D" parent="."]
-texture = ExtResource("2_slot")
+[node name="slot" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2_frames")
 
 [node name="shape" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_slot")

@@ -1,11 +1,17 @@
 extends Area2D
 ## 可放置区域（一格 = 64×64）。原来铺在 TileMapLayer 里当 floor_slot 瓦片，
-## 现改成独立场景：子节点 slot 是塔位基座贴图，材质挂在它身上，方便加着色器动画。
+## 现改成独立场景：子节点 slot 是塔位基座，材质挂在它身上，方便加着色器动画。
+##
+## slot 是 AnimatedSprite2D，贴图动画见 sprite/tile/floor_slot_frames.tres：
+## · 想换基座外观 / 加动画：改那份 SpriteFrames（或在检查器里把 sprite_frames 换成另一份）。
+## · 想给单个实例换基座：在该实例的检查器里展开 slot 再换 sprite_frames 即可。
 ##
 ## 玩法上：关卡里摆几个实例就代表哪几格能建塔 —— base_level.gd 会把
 ## "placeableArea" 组里的每个实例换算成网格坐标填进 allowArea。
 ## 放置方式：把 scene/placeable_area.tscn 拖进关卡，对齐到格子中心即可
 ## （运行时还会再对齐一次，见 snap_to_grid）。
+
+@onready var slot: AnimatedSprite2D = get_node_or_null("slot")
 
 @export var snap_to_grid := true ## 进场景时把节点对齐到所在格子的中心
 @export var color := Color("d299b36b")
@@ -18,6 +24,16 @@ extends Area2D
 func _ready() -> void:
 	if snap_to_grid:
 		_snap_to_cell()
+	_play_slot()
+
+
+## 帧动画不会自己跑（AnimatedSprite2D 的 autoplay 留空），这里替它起跑；
+## 动画名对不上时静默跳过，避免 play() 报错刷屏
+func _play_slot() -> void:
+	if slot == null or slot.sprite_frames == null:
+		return
+	if slot.sprite_frames.has_animation(slot.animation):
+		slot.play()
 
 
 ## 本实例覆盖的格子（中心坐标 → 格子索引）

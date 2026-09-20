@@ -143,6 +143,20 @@ func _spawn_enemy(spawn_info: Dictionary):
 		return
 	var enemy_instance = scene.instantiate()
 	route.add_child(enemy_instance)
+	# 'offset' 不写就是 0：敌人贴着路线中线走（老关卡行为不变）。
+	# 路线两边各有一条传送带时，中线落在两条带子中间，看着像敌人没走对位置；
+	# 给个 ±32（半个格子）就能整条路贴住其中一条。用 PathFollow2D 的 v_offset
+	# 来加这个偏移，所以它是**固定值**、且跟着曲线拐弯，不是随机抖动。
+	# 必须在 add_child 之后设 —— PathFollow2D 要拿到父级 Path2D 才会重算位置。
+	# 注意方向约定：正 = 行进方向的右侧，这是靠敌人根节点 rotates = true（默认）
+	# 得来的；以后若把某个敌人的 PathFollow2D 改成 rotates = false，h/v_offset
+	# 会退化成世界坐标偏移，那时得改用别的做法。
+	var offset := float(spawn_info.get("offset", 0.0))
+	var follower := enemy_instance as PathFollow2D
+	if follower != null:
+		follower.v_offset = offset
+	elif not is_zero_approx(offset):
+		push_warning("敌人场景根节点不是 PathFollow2D，'offset' 无法生效: " + str(scene.resource_path))
 	var enemy_node = enemy_instance.get_node_or_null("enemy")
 	if enemy_node == null:
 		push_error("敌人场景缺少 enemy 节点: " + str(scene.resource_path))

@@ -1,20 +1,10 @@
-[gd_scene load_steps=18 format=4]
+[gd_scene load_steps=8 format=4]
 
 [ext_resource type="PackedScene" uid="uid://3y2m15k6dbu" path="res://scene/level/base_level.tscn" id="1_lv"]
 [ext_resource type="Script" path="res://script/level_13.gd" id="2_lv"]
 [ext_resource type="TileSet" uid="uid://dt5a3lb1rlxgu" path="res://scene/level/factory_floor.tres" id="3_floor"]
 [ext_resource type="PackedScene" path="res://scene/belt.tscn" id="4_belt"]
 [ext_resource type="PackedScene" uid="uid://llvmr0r2odio" path="res://scene/placeable_area.tscn" id="5_slot"]
-[ext_resource type="Texture2D" uid="uid://b88b5nqehl6ul" path="res://sprite/tile/belt_we.png" id="6_belt_we"]
-[ext_resource type="Texture2D" uid="uid://t7gsibgb1jye" path="res://sprite/tile/belt_ew.png" id="6_belt_ew"]
-[ext_resource type="Texture2D" uid="uid://b132qjqie0kty" path="res://sprite/tile/belt_ns.png" id="6_belt_ns"]
-[ext_resource type="Texture2D" uid="uid://h0q6kjoweefa" path="res://sprite/tile/belt_sn.png" id="6_belt_sn"]
-[ext_resource type="Texture2D" uid="uid://2g282126cg58" path="res://sprite/tile/belt_ws.png" id="6_belt_ws"]
-[ext_resource type="Texture2D" uid="uid://d100ovhmwle7c" path="res://sprite/tile/belt_wn.png" id="6_belt_wn"]
-[ext_resource type="Texture2D" uid="uid://qij4d3v76pxx" path="res://sprite/tile/belt_es.png" id="6_belt_es"]
-[ext_resource type="Texture2D" uid="uid://begsjya723ods" path="res://sprite/tile/belt_se.png" id="6_belt_se"]
-[ext_resource type="Texture2D" uid="uid://ck2qyaytbjxa8" path="res://sprite/tile/belt_nw.png" id="6_belt_nw"]
-[ext_resource type="Texture2D" uid="uid://bf2hii7mt1g0r" path="res://sprite/tile/belt_ne.png" id="6_belt_ne"]
 
 [sub_resource type="Curve2D" id="Curve2D_r1_13"]
 _data = {
@@ -47,907 +37,907 @@ z_index = -1
 
 [node name="belt_15_0" parent="beltLayer" index="0" instance=ExtResource("4_belt")]
 position = Vector2(992, 32)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
 route_phase = 1.75
 
 [node name="belt_15_1" parent="beltLayer" index="1" instance=ExtResource("4_belt")]
 position = Vector2(992, 96)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
 route_phase = 2.75
 
 [node name="belt_15_2" parent="beltLayer" index="2" instance=ExtResource("4_belt")]
 position = Vector2(992, 160)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
 route_phase = 3.75
 
 [node name="belt_2_3" parent="beltLayer" index="3" instance=ExtResource("4_belt")]
 position = Vector2(160, 224)
-texture = ExtResource("6_belt_es")
+animation = &"es"
 route_phase = 17.75
 
 [node name="belt_3_3" parent="beltLayer" index="4" instance=ExtResource("4_belt")]
 position = Vector2(224, 224)
-texture = ExtResource("6_belt_es")
+animation = &"es"
 route_phase = 17.25
 
 [node name="belt_4_3" parent="beltLayer" index="5" instance=ExtResource("4_belt")]
 position = Vector2(288, 224)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 16.25
 
 [node name="belt_5_3" parent="beltLayer" index="6" instance=ExtResource("4_belt")]
 position = Vector2(352, 224)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 15.25
 
 [node name="belt_6_3" parent="beltLayer" index="7" instance=ExtResource("4_belt")]
 position = Vector2(416, 224)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 14.25
 
 [node name="belt_7_3" parent="beltLayer" index="8" instance=ExtResource("4_belt")]
 position = Vector2(480, 224)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 13.25
 
 [node name="belt_8_3" parent="beltLayer" index="9" instance=ExtResource("4_belt")]
 position = Vector2(544, 224)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 12.25
 
 [node name="belt_9_3" parent="beltLayer" index="10" instance=ExtResource("4_belt")]
 position = Vector2(608, 224)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 11.25
 
 [node name="belt_10_3" parent="beltLayer" index="11" instance=ExtResource("4_belt")]
 position = Vector2(672, 224)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 10.25
 
 [node name="belt_11_3" parent="beltLayer" index="12" instance=ExtResource("4_belt")]
 position = Vector2(736, 224)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 9.25
 
 [node name="belt_12_3" parent="beltLayer" index="13" instance=ExtResource("4_belt")]
 position = Vector2(800, 224)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 8.25
 
 [node name="belt_13_3" parent="beltLayer" index="14" instance=ExtResource("4_belt")]
 position = Vector2(864, 224)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 7.25
 
 [node name="belt_14_3" parent="beltLayer" index="15" instance=ExtResource("4_belt")]
 position = Vector2(928, 224)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 6.25
 
 [node name="belt_15_3" parent="beltLayer" index="16" instance=ExtResource("4_belt")]
 position = Vector2(992, 224)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
 route_phase = 4.75
 
 [node name="belt_26_3" parent="beltLayer" index="17" instance=ExtResource("4_belt")]
 position = Vector2(1696, 224)
-texture = ExtResource("6_belt_se")
+animation = &"se"
 route_phase = 49.75
 
 [node name="belt_27_3" parent="beltLayer" index="18" instance=ExtResource("4_belt")]
 position = Vector2(1760, 224)
-texture = ExtResource("6_belt_se")
+animation = &"se"
 route_phase = 50.25
 
 [node name="belt_28_3" parent="beltLayer" index="19" instance=ExtResource("4_belt")]
 position = Vector2(1824, 224)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 51.25
 
 [node name="belt_29_3" parent="beltLayer" index="20" instance=ExtResource("4_belt")]
 position = Vector2(1888, 224)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 52.25
 
 [node name="belt_2_4" parent="beltLayer" index="21" instance=ExtResource("4_belt")]
 position = Vector2(160, 288)
-texture = ExtResource("6_belt_es")
+animation = &"es"
 route_phase = 18.25
 
 [node name="belt_3_4" parent="beltLayer" index="22" instance=ExtResource("4_belt")]
 position = Vector2(224, 288)
-texture = ExtResource("6_belt_es")
+animation = &"es"
 route_phase = 17.25
 
 [node name="belt_4_4" parent="beltLayer" index="23" instance=ExtResource("4_belt")]
 position = Vector2(288, 288)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 16.25
 
 [node name="belt_5_4" parent="beltLayer" index="24" instance=ExtResource("4_belt")]
 position = Vector2(352, 288)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 15.25
 
 [node name="belt_6_4" parent="beltLayer" index="25" instance=ExtResource("4_belt")]
 position = Vector2(416, 288)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 14.25
 
 [node name="belt_7_4" parent="beltLayer" index="26" instance=ExtResource("4_belt")]
 position = Vector2(480, 288)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 13.25
 
 [node name="belt_8_4" parent="beltLayer" index="27" instance=ExtResource("4_belt")]
 position = Vector2(544, 288)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 12.25
 
 [node name="belt_9_4" parent="beltLayer" index="28" instance=ExtResource("4_belt")]
 position = Vector2(608, 288)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 11.25
 
 [node name="belt_10_4" parent="beltLayer" index="29" instance=ExtResource("4_belt")]
 position = Vector2(672, 288)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 10.25
 
 [node name="belt_11_4" parent="beltLayer" index="30" instance=ExtResource("4_belt")]
 position = Vector2(736, 288)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 9.25
 
 [node name="belt_12_4" parent="beltLayer" index="31" instance=ExtResource("4_belt")]
 position = Vector2(800, 288)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 8.25
 
 [node name="belt_13_4" parent="beltLayer" index="32" instance=ExtResource("4_belt")]
 position = Vector2(864, 288)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 7.25
 
 [node name="belt_14_4" parent="beltLayer" index="33" instance=ExtResource("4_belt")]
 position = Vector2(928, 288)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 6.25
 
 [node name="belt_15_4" parent="beltLayer" index="34" instance=ExtResource("4_belt")]
 position = Vector2(992, 288)
-texture = ExtResource("6_belt_nw")
+animation = &"nw"
 route_phase = 5.25
 
 [node name="belt_26_4" parent="beltLayer" index="35" instance=ExtResource("4_belt")]
 position = Vector2(1696, 288)
-texture = ExtResource("6_belt_se")
+animation = &"se"
 route_phase = 49.25
 
 [node name="belt_27_4" parent="beltLayer" index="36" instance=ExtResource("4_belt")]
 position = Vector2(1760, 288)
-texture = ExtResource("6_belt_se")
+animation = &"se"
 route_phase = 49.25
 
 [node name="belt_28_4" parent="beltLayer" index="37" instance=ExtResource("4_belt")]
 position = Vector2(1824, 288)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 51.25
 
 [node name="belt_29_4" parent="beltLayer" index="38" instance=ExtResource("4_belt")]
 position = Vector2(1888, 288)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 52.25
 
 [node name="belt_2_5" parent="beltLayer" index="39" instance=ExtResource("4_belt")]
 position = Vector2(160, 352)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
 route_phase = 19.25
 
 [node name="belt_3_5" parent="beltLayer" index="40" instance=ExtResource("4_belt")]
 position = Vector2(224, 352)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
 route_phase = 19.25
 
 [node name="belt_26_5" parent="beltLayer" index="41" instance=ExtResource("4_belt")]
 position = Vector2(1696, 352)
-texture = ExtResource("6_belt_sn")
+animation = &"sn"
 route_phase = 48.25
 
 [node name="belt_27_5" parent="beltLayer" index="42" instance=ExtResource("4_belt")]
 position = Vector2(1760, 352)
-texture = ExtResource("6_belt_sn")
+animation = &"sn"
 route_phase = 48.25
 
 [node name="belt_2_6" parent="beltLayer" index="43" instance=ExtResource("4_belt")]
 position = Vector2(160, 416)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
 route_phase = 20.25
 
 [node name="belt_3_6" parent="beltLayer" index="44" instance=ExtResource("4_belt")]
 position = Vector2(224, 416)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
 route_phase = 20.25
 
 [node name="belt_26_6" parent="beltLayer" index="45" instance=ExtResource("4_belt")]
 position = Vector2(1696, 416)
-texture = ExtResource("6_belt_sn")
+animation = &"sn"
 route_phase = 47.25
 
 [node name="belt_27_6" parent="beltLayer" index="46" instance=ExtResource("4_belt")]
 position = Vector2(1760, 416)
-texture = ExtResource("6_belt_sn")
+animation = &"sn"
 route_phase = 47.25
 
 [node name="belt_2_7" parent="beltLayer" index="47" instance=ExtResource("4_belt")]
 position = Vector2(160, 480)
-texture = ExtResource("6_belt_ne")
+animation = &"ne"
 route_phase = 21.25
 
 [node name="belt_3_7" parent="beltLayer" index="48" instance=ExtResource("4_belt")]
 position = Vector2(224, 480)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
 route_phase = 21.25
 
 [node name="belt_4_7" parent="beltLayer" index="49" instance=ExtResource("4_belt")]
 position = Vector2(288, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 23.25
 
 [node name="belt_5_7" parent="beltLayer" index="50" instance=ExtResource("4_belt")]
 position = Vector2(352, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 24.25
 
 [node name="belt_6_7" parent="beltLayer" index="51" instance=ExtResource("4_belt")]
 position = Vector2(416, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 25.25
 
 [node name="belt_7_7" parent="beltLayer" index="52" instance=ExtResource("4_belt")]
 position = Vector2(480, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 26.25
 
 [node name="belt_8_7" parent="beltLayer" index="53" instance=ExtResource("4_belt")]
 position = Vector2(544, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 27.25
 
 [node name="belt_9_7" parent="beltLayer" index="54" instance=ExtResource("4_belt")]
 position = Vector2(608, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 28.25
 
 [node name="belt_10_7" parent="beltLayer" index="55" instance=ExtResource("4_belt")]
 position = Vector2(672, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 29.25
 
 [node name="belt_11_7" parent="beltLayer" index="56" instance=ExtResource("4_belt")]
 position = Vector2(736, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 30.25
 
 [node name="belt_12_7" parent="beltLayer" index="57" instance=ExtResource("4_belt")]
 position = Vector2(800, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 31.25
 
 [node name="belt_13_7" parent="beltLayer" index="58" instance=ExtResource("4_belt")]
 position = Vector2(864, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 32.25
 
 [node name="belt_14_7" parent="beltLayer" index="59" instance=ExtResource("4_belt")]
 position = Vector2(928, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 33.25
 
 [node name="belt_15_7" parent="beltLayer" index="60" instance=ExtResource("4_belt")]
 position = Vector2(992, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 34.25
 
 [node name="belt_16_7" parent="beltLayer" index="61" instance=ExtResource("4_belt")]
 position = Vector2(1056, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 35.25
 
 [node name="belt_17_7" parent="beltLayer" index="62" instance=ExtResource("4_belt")]
 position = Vector2(1120, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 36.25
 
 [node name="belt_18_7" parent="beltLayer" index="63" instance=ExtResource("4_belt")]
 position = Vector2(1184, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 37.25
 
 [node name="belt_19_7" parent="beltLayer" index="64" instance=ExtResource("4_belt")]
 position = Vector2(1248, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 38.25
 
 [node name="belt_20_7" parent="beltLayer" index="65" instance=ExtResource("4_belt")]
 position = Vector2(1312, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 39.25
 
 [node name="belt_21_7" parent="beltLayer" index="66" instance=ExtResource("4_belt")]
 position = Vector2(1376, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 40.25
 
 [node name="belt_22_7" parent="beltLayer" index="67" instance=ExtResource("4_belt")]
 position = Vector2(1440, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 41.25
 
 [node name="belt_23_7" parent="beltLayer" index="68" instance=ExtResource("4_belt")]
 position = Vector2(1504, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 42.25
 
 [node name="belt_24_7" parent="beltLayer" index="69" instance=ExtResource("4_belt")]
 position = Vector2(1568, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 43.25
 
 [node name="belt_25_7" parent="beltLayer" index="70" instance=ExtResource("4_belt")]
 position = Vector2(1632, 480)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 44.25
 
 [node name="belt_26_7" parent="beltLayer" index="71" instance=ExtResource("4_belt")]
 position = Vector2(1696, 480)
-texture = ExtResource("6_belt_wn")
+animation = &"wn"
 route_phase = 45.25
 
 [node name="belt_27_7" parent="beltLayer" index="72" instance=ExtResource("4_belt")]
 position = Vector2(1760, 480)
-texture = ExtResource("6_belt_sn")
+animation = &"sn"
 route_phase = 46.25
 
 [node name="belt_2_8" parent="beltLayer" index="73" instance=ExtResource("4_belt")]
 position = Vector2(160, 544)
-texture = ExtResource("6_belt_ne")
+animation = &"ne"
 route_phase = 21.75
 
 [node name="belt_3_8" parent="beltLayer" index="74" instance=ExtResource("4_belt")]
 position = Vector2(224, 544)
-texture = ExtResource("6_belt_ne")
+animation = &"ne"
 route_phase = 22.25
 
 [node name="belt_4_8" parent="beltLayer" index="75" instance=ExtResource("4_belt")]
 position = Vector2(288, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 23.25
 
 [node name="belt_5_8" parent="beltLayer" index="76" instance=ExtResource("4_belt")]
 position = Vector2(352, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 24.25
 
 [node name="belt_6_8" parent="beltLayer" index="77" instance=ExtResource("4_belt")]
 position = Vector2(416, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 25.25
 
 [node name="belt_7_8" parent="beltLayer" index="78" instance=ExtResource("4_belt")]
 position = Vector2(480, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 26.25
 
 [node name="belt_8_8" parent="beltLayer" index="79" instance=ExtResource("4_belt")]
 position = Vector2(544, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 27.25
 
 [node name="belt_9_8" parent="beltLayer" index="80" instance=ExtResource("4_belt")]
 position = Vector2(608, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 28.25
 
 [node name="belt_10_8" parent="beltLayer" index="81" instance=ExtResource("4_belt")]
 position = Vector2(672, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 29.25
 
 [node name="belt_11_8" parent="beltLayer" index="82" instance=ExtResource("4_belt")]
 position = Vector2(736, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 30.25
 
 [node name="belt_12_8" parent="beltLayer" index="83" instance=ExtResource("4_belt")]
 position = Vector2(800, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 31.25
 
 [node name="belt_13_8" parent="beltLayer" index="84" instance=ExtResource("4_belt")]
 position = Vector2(864, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 32.25
 
 [node name="belt_14_8" parent="beltLayer" index="85" instance=ExtResource("4_belt")]
 position = Vector2(928, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 33.25
 
 [node name="belt_15_8" parent="beltLayer" index="86" instance=ExtResource("4_belt")]
 position = Vector2(992, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 34.25
 
 [node name="belt_16_8" parent="beltLayer" index="87" instance=ExtResource("4_belt")]
 position = Vector2(1056, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 35.25
 
 [node name="belt_17_8" parent="beltLayer" index="88" instance=ExtResource("4_belt")]
 position = Vector2(1120, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 36.25
 
 [node name="belt_18_8" parent="beltLayer" index="89" instance=ExtResource("4_belt")]
 position = Vector2(1184, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 37.25
 
 [node name="belt_19_8" parent="beltLayer" index="90" instance=ExtResource("4_belt")]
 position = Vector2(1248, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 38.25
 
 [node name="belt_20_8" parent="beltLayer" index="91" instance=ExtResource("4_belt")]
 position = Vector2(1312, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 39.25
 
 [node name="belt_21_8" parent="beltLayer" index="92" instance=ExtResource("4_belt")]
 position = Vector2(1376, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 40.25
 
 [node name="belt_22_8" parent="beltLayer" index="93" instance=ExtResource("4_belt")]
 position = Vector2(1440, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 41.25
 
 [node name="belt_23_8" parent="beltLayer" index="94" instance=ExtResource("4_belt")]
 position = Vector2(1504, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 42.25
 
 [node name="belt_24_8" parent="beltLayer" index="95" instance=ExtResource("4_belt")]
 position = Vector2(1568, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 43.25
 
 [node name="belt_25_8" parent="beltLayer" index="96" instance=ExtResource("4_belt")]
 position = Vector2(1632, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 44.25
 
 [node name="belt_26_8" parent="beltLayer" index="97" instance=ExtResource("4_belt")]
 position = Vector2(1696, 544)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 45.25
 
 [node name="belt_27_8" parent="beltLayer" index="98" instance=ExtResource("4_belt")]
 position = Vector2(1760, 544)
-texture = ExtResource("6_belt_wn")
+animation = &"wn"
 route_phase = 45.75
 
 [node name="belt_10_11" parent="beltLayer" index="99" instance=ExtResource("4_belt")]
 position = Vector2(672, 736)
-texture = ExtResource("6_belt_se")
+animation = &"se"
 route_phase = 6.13
 
 [node name="belt_11_11" parent="beltLayer" index="100" instance=ExtResource("4_belt")]
 position = Vector2(736, 736)
-texture = ExtResource("6_belt_se")
+animation = &"se"
 route_phase = 6.63
 
 [node name="belt_12_11" parent="beltLayer" index="101" instance=ExtResource("4_belt")]
 position = Vector2(800, 736)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 7.63
 
 [node name="belt_13_11" parent="beltLayer" index="102" instance=ExtResource("4_belt")]
 position = Vector2(864, 736)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 8.63
 
 [node name="belt_14_11" parent="beltLayer" index="103" instance=ExtResource("4_belt")]
 position = Vector2(928, 736)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 9.63
 
 [node name="belt_15_11" parent="beltLayer" index="104" instance=ExtResource("4_belt")]
 position = Vector2(992, 736)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 10.63
 
 [node name="belt_16_11" parent="beltLayer" index="105" instance=ExtResource("4_belt")]
 position = Vector2(1056, 736)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 11.63
 
 [node name="belt_17_11" parent="beltLayer" index="106" instance=ExtResource("4_belt")]
 position = Vector2(1120, 736)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 12.63
 
 [node name="belt_18_11" parent="beltLayer" index="107" instance=ExtResource("4_belt")]
 position = Vector2(1184, 736)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 13.63
 
 [node name="belt_19_11" parent="beltLayer" index="108" instance=ExtResource("4_belt")]
 position = Vector2(1248, 736)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 14.63
 
 [node name="belt_20_11" parent="beltLayer" index="109" instance=ExtResource("4_belt")]
 position = Vector2(1312, 736)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 15.63
 
 [node name="belt_21_11" parent="beltLayer" index="110" instance=ExtResource("4_belt")]
 position = Vector2(1376, 736)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 16.63
 
 [node name="belt_22_11" parent="beltLayer" index="111" instance=ExtResource("4_belt")]
 position = Vector2(1440, 736)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 17.63
 
 [node name="belt_23_11" parent="beltLayer" index="112" instance=ExtResource("4_belt")]
 position = Vector2(1504, 736)
-texture = ExtResource("6_belt_ws")
+animation = &"ws"
 route_phase = 18.63
 
 [node name="belt_10_12" parent="beltLayer" index="113" instance=ExtResource("4_belt")]
 position = Vector2(672, 800)
-texture = ExtResource("6_belt_se")
+animation = &"se"
 route_phase = 5.63
 
 [node name="belt_11_12" parent="beltLayer" index="114" instance=ExtResource("4_belt")]
 position = Vector2(736, 800)
-texture = ExtResource("6_belt_se")
+animation = &"se"
 route_phase = 5.63
 
 [node name="belt_12_12" parent="beltLayer" index="115" instance=ExtResource("4_belt")]
 position = Vector2(800, 800)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 7.63
 
 [node name="belt_13_12" parent="beltLayer" index="116" instance=ExtResource("4_belt")]
 position = Vector2(864, 800)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 8.63
 
 [node name="belt_14_12" parent="beltLayer" index="117" instance=ExtResource("4_belt")]
 position = Vector2(928, 800)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 9.63
 
 [node name="belt_15_12" parent="beltLayer" index="118" instance=ExtResource("4_belt")]
 position = Vector2(992, 800)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 10.63
 
 [node name="belt_16_12" parent="beltLayer" index="119" instance=ExtResource("4_belt")]
 position = Vector2(1056, 800)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 11.63
 
 [node name="belt_17_12" parent="beltLayer" index="120" instance=ExtResource("4_belt")]
 position = Vector2(1120, 800)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 12.63
 
 [node name="belt_18_12" parent="beltLayer" index="121" instance=ExtResource("4_belt")]
 position = Vector2(1184, 800)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 13.63
 
 [node name="belt_19_12" parent="beltLayer" index="122" instance=ExtResource("4_belt")]
 position = Vector2(1248, 800)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 14.63
 
 [node name="belt_20_12" parent="beltLayer" index="123" instance=ExtResource("4_belt")]
 position = Vector2(1312, 800)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 15.63
 
 [node name="belt_21_12" parent="beltLayer" index="124" instance=ExtResource("4_belt")]
 position = Vector2(1376, 800)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 16.63
 
 [node name="belt_22_12" parent="beltLayer" index="125" instance=ExtResource("4_belt")]
 position = Vector2(1440, 800)
-texture = ExtResource("6_belt_we")
+animation = &"we"
 route_phase = 17.63
 
 [node name="belt_23_12" parent="beltLayer" index="126" instance=ExtResource("4_belt")]
 position = Vector2(1504, 800)
-texture = ExtResource("6_belt_ws")
+animation = &"ws"
 route_phase = 19.13
 
 [node name="belt_10_13" parent="beltLayer" index="127" instance=ExtResource("4_belt")]
 position = Vector2(672, 864)
-texture = ExtResource("6_belt_sn")
+animation = &"sn"
 route_phase = 4.63
 
 [node name="belt_11_13" parent="beltLayer" index="128" instance=ExtResource("4_belt")]
 position = Vector2(736, 864)
-texture = ExtResource("6_belt_sn")
+animation = &"sn"
 route_phase = 4.63
 
 [node name="belt_23_13" parent="beltLayer" index="129" instance=ExtResource("4_belt")]
 position = Vector2(1504, 864)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
 route_phase = 20.13
 
 [node name="belt_10_14" parent="beltLayer" index="130" instance=ExtResource("4_belt")]
 position = Vector2(672, 928)
-texture = ExtResource("6_belt_sn")
+animation = &"sn"
 route_phase = 3.63
 
 [node name="belt_11_14" parent="beltLayer" index="131" instance=ExtResource("4_belt")]
 position = Vector2(736, 928)
-texture = ExtResource("6_belt_sn")
+animation = &"sn"
 route_phase = 3.63
 
 [node name="belt_23_14" parent="beltLayer" index="132" instance=ExtResource("4_belt")]
 position = Vector2(1504, 928)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
 route_phase = 21.13
 
 [node name="belt_0_15" parent="beltLayer" index="133" instance=ExtResource("4_belt")]
 position = Vector2(32, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 45.63
 
 [node name="belt_1_15" parent="beltLayer" index="134" instance=ExtResource("4_belt")]
 position = Vector2(96, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 44.63
 
 [node name="belt_2_15" parent="beltLayer" index="135" instance=ExtResource("4_belt")]
 position = Vector2(160, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 43.63
 
 [node name="belt_3_15" parent="beltLayer" index="136" instance=ExtResource("4_belt")]
 position = Vector2(224, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 42.63
 
 [node name="belt_4_15" parent="beltLayer" index="137" instance=ExtResource("4_belt")]
 position = Vector2(288, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 41.63
 
 [node name="belt_5_15" parent="beltLayer" index="138" instance=ExtResource("4_belt")]
 position = Vector2(352, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 40.63
 
 [node name="belt_6_15" parent="beltLayer" index="139" instance=ExtResource("4_belt")]
 position = Vector2(416, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 39.63
 
 [node name="belt_7_15" parent="beltLayer" index="140" instance=ExtResource("4_belt")]
 position = Vector2(480, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 38.63
 
 [node name="belt_8_15" parent="beltLayer" index="141" instance=ExtResource("4_belt")]
 position = Vector2(544, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 37.63
 
 [node name="belt_9_15" parent="beltLayer" index="142" instance=ExtResource("4_belt")]
 position = Vector2(608, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 36.63
 
 [node name="belt_10_15" parent="beltLayer" index="143" instance=ExtResource("4_belt")]
 position = Vector2(672, 992)
-texture = ExtResource("6_belt_sn")
+animation = &"sn"
 route_phase = 2.63
 
 [node name="belt_11_15" parent="beltLayer" index="144" instance=ExtResource("4_belt")]
 position = Vector2(736, 992)
-texture = ExtResource("6_belt_sn")
+animation = &"sn"
 route_phase = 2.63
 
 [node name="belt_12_15" parent="beltLayer" index="145" instance=ExtResource("4_belt")]
 position = Vector2(800, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 33.63
 
 [node name="belt_13_15" parent="beltLayer" index="146" instance=ExtResource("4_belt")]
 position = Vector2(864, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 32.63
 
 [node name="belt_14_15" parent="beltLayer" index="147" instance=ExtResource("4_belt")]
 position = Vector2(928, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 31.63
 
 [node name="belt_15_15" parent="beltLayer" index="148" instance=ExtResource("4_belt")]
 position = Vector2(992, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 30.63
 
 [node name="belt_16_15" parent="beltLayer" index="149" instance=ExtResource("4_belt")]
 position = Vector2(1056, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 29.63
 
 [node name="belt_17_15" parent="beltLayer" index="150" instance=ExtResource("4_belt")]
 position = Vector2(1120, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 28.63
 
 [node name="belt_18_15" parent="beltLayer" index="151" instance=ExtResource("4_belt")]
 position = Vector2(1184, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 27.63
 
 [node name="belt_19_15" parent="beltLayer" index="152" instance=ExtResource("4_belt")]
 position = Vector2(1248, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 26.63
 
 [node name="belt_20_15" parent="beltLayer" index="153" instance=ExtResource("4_belt")]
 position = Vector2(1312, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 25.63
 
 [node name="belt_21_15" parent="beltLayer" index="154" instance=ExtResource("4_belt")]
 position = Vector2(1376, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 24.63
 
 [node name="belt_22_15" parent="beltLayer" index="155" instance=ExtResource("4_belt")]
 position = Vector2(1440, 992)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 23.63
 
 [node name="belt_23_15" parent="beltLayer" index="156" instance=ExtResource("4_belt")]
 position = Vector2(1504, 992)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
 route_phase = 22.13
 
 [node name="belt_0_16" parent="beltLayer" index="157" instance=ExtResource("4_belt")]
 position = Vector2(32, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 45.63
 
 [node name="belt_1_16" parent="beltLayer" index="158" instance=ExtResource("4_belt")]
 position = Vector2(96, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 44.63
 
 [node name="belt_2_16" parent="beltLayer" index="159" instance=ExtResource("4_belt")]
 position = Vector2(160, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 43.63
 
 [node name="belt_3_16" parent="beltLayer" index="160" instance=ExtResource("4_belt")]
 position = Vector2(224, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 42.63
 
 [node name="belt_4_16" parent="beltLayer" index="161" instance=ExtResource("4_belt")]
 position = Vector2(288, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 41.63
 
 [node name="belt_5_16" parent="beltLayer" index="162" instance=ExtResource("4_belt")]
 position = Vector2(352, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 40.63
 
 [node name="belt_6_16" parent="beltLayer" index="163" instance=ExtResource("4_belt")]
 position = Vector2(416, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 39.63
 
 [node name="belt_7_16" parent="beltLayer" index="164" instance=ExtResource("4_belt")]
 position = Vector2(480, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 38.63
 
 [node name="belt_8_16" parent="beltLayer" index="165" instance=ExtResource("4_belt")]
 position = Vector2(544, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 37.63
 
 [node name="belt_9_16" parent="beltLayer" index="166" instance=ExtResource("4_belt")]
 position = Vector2(608, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 36.63
 
 [node name="belt_10_16" parent="beltLayer" index="167" instance=ExtResource("4_belt")]
 position = Vector2(672, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 1.63
 
 [node name="belt_11_16" parent="beltLayer" index="168" instance=ExtResource("4_belt")]
 position = Vector2(736, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 1.63
 
 [node name="belt_12_16" parent="beltLayer" index="169" instance=ExtResource("4_belt")]
 position = Vector2(800, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 33.63
 
 [node name="belt_13_16" parent="beltLayer" index="170" instance=ExtResource("4_belt")]
 position = Vector2(864, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 32.63
 
 [node name="belt_14_16" parent="beltLayer" index="171" instance=ExtResource("4_belt")]
 position = Vector2(928, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 31.63
 
 [node name="belt_15_16" parent="beltLayer" index="172" instance=ExtResource("4_belt")]
 position = Vector2(992, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 30.63
 
 [node name="belt_16_16" parent="beltLayer" index="173" instance=ExtResource("4_belt")]
 position = Vector2(1056, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 29.63
 
 [node name="belt_17_16" parent="beltLayer" index="174" instance=ExtResource("4_belt")]
 position = Vector2(1120, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 28.63
 
 [node name="belt_18_16" parent="beltLayer" index="175" instance=ExtResource("4_belt")]
 position = Vector2(1184, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 27.63
 
 [node name="belt_19_16" parent="beltLayer" index="176" instance=ExtResource("4_belt")]
 position = Vector2(1248, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 26.63
 
 [node name="belt_20_16" parent="beltLayer" index="177" instance=ExtResource("4_belt")]
 position = Vector2(1312, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 25.63
 
 [node name="belt_21_16" parent="beltLayer" index="178" instance=ExtResource("4_belt")]
 position = Vector2(1376, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 24.63
 
 [node name="belt_22_16" parent="beltLayer" index="179" instance=ExtResource("4_belt")]
 position = Vector2(1440, 1056)
-texture = ExtResource("6_belt_ew")
+animation = &"ew"
 route_phase = 23.63
 
 [node name="belt_23_16" parent="beltLayer" index="180" instance=ExtResource("4_belt")]
 position = Vector2(1504, 1056)
-texture = ExtResource("6_belt_nw")
+animation = &"nw"
 route_phase = 22.63
 
 [node name="placeableLayer" type="Node2D" parent="."]

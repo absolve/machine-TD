@@ -207,12 +207,17 @@
 ```
 地面层   → 地砖 + 砖缝                    ✅ sprite/tile/floor_*（12 种）
 装饰层   → 管道、集装箱、控制室隔断、警示牌（不占格）   ⬜ 未做
-路径层   → 流水线段（可拐弯、可分支、可合并）           ✅ sprite/tile/belt_*（12 个方向）
-基座层   → 可建造板                        ✅ sprite/tile/floor_slot.png
+路径层   → 流水线段（可拐弯、可分支、可合并）           ✅ scene/belt.tscn（AnimatedSprite2D，12 个方向动画）
+基座层   → 可建造板                        ✅ scene/placeable_area.tscn（子节点 slot，AnimatedSprite2D）
 出口层   → 出口门 + 危险区                  ⬜ 未做
 ```
 
 以后要做"港口 / 矿区 / 实验室"变体，**只换地面材质、道具外形和装饰色相，UI 完全不动**。
+
+> **路径层 / 基座层自 2026-09-20 起是「独立场景 + `SpriteFrames`」**（`sprite/tile/belt_frames.tres`
+> / `floor_slot_frames.tres`）：**方向 = 动画名**（`we` = 西进东出，共 12 个），贴图文件名不再参与
+> 逻辑；往某个方向动画里加帧 = 该方向的传送带动画；要出**另一种外观的皮带**，复制一份 SpriteFrames
+> （动画名沿用同一套方向名，或 `<类型>_<方向>`）挂到实例上即可，`belt.gd` 不用改。
 
 ### 车间地面瓦片集（`sprite/tile/`，64px）
 
