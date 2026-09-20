@@ -1,10 +1,24 @@
-[gd_scene load_steps=8 format=4]
+[gd_scene load_steps=22 format=4]
 
 [ext_resource type="PackedScene" uid="uid://3y2m15k6dbu" path="res://scene/level/base_level.tscn" id="1_lv"]
 [ext_resource type="Script" path="res://script/level_5.gd" id="2_lv"]
 [ext_resource type="TileSet" uid="uid://dt5a3lb1rlxgu" path="res://scene/level/factory_floor.tres" id="3_floor"]
 [ext_resource type="PackedScene" path="res://scene/belt.tscn" id="4_belt"]
 [ext_resource type="PackedScene" uid="uid://llvmr0r2odio" path="res://scene/placeable_area.tscn" id="5_slot"]
+[ext_resource type="Texture2D" uid="uid://b88b5nqehl6ul" path="res://sprite/tile/belt_we.png" id="6_belt_we"]
+[ext_resource type="Texture2D" uid="uid://t7gsibgb1jye" path="res://sprite/tile/belt_ew.png" id="6_belt_ew"]
+[ext_resource type="Texture2D" uid="uid://h0q6kjoweefa" path="res://sprite/tile/belt_sn.png" id="6_belt_sn"]
+[ext_resource type="Texture2D" uid="uid://d100ovhmwle7c" path="res://sprite/tile/belt_wn.png" id="6_belt_wn"]
+[ext_resource type="Texture2D" uid="uid://b61xplb0lwbof" path="res://sprite/tile/belt_sw.png" id="6_belt_sw"]
+[ext_resource type="Texture2D" uid="uid://begsjya723ods" path="res://sprite/tile/belt_se.png" id="6_belt_se"]
+[ext_resource type="PackedScene" path="res://scene/prop/vent_fan.tscn" id="7_prop_vent_fan"]
+[ext_resource type="PackedScene" path="res://scene/prop/welding_spark.tscn" id="7_prop_welding_spark"]
+[ext_resource type="PackedScene" path="res://scene/prop/monitor.tscn" id="7_prop_monitor"]
+[ext_resource type="PackedScene" path="res://scene/prop/alarm.tscn" id="7_prop_alarm"]
+[ext_resource type="PackedScene" path="res://scene/prop/ac_unit.tscn" id="8_big_ac_unit"]
+[ext_resource type="PackedScene" path="res://scene/prop/cooling_tower.tscn" id="8_big_cooling_tower"]
+[ext_resource type="PackedScene" path="res://scene/prop/storage_tank.tscn" id="8_big_storage_tank"]
+[ext_resource type="PackedScene" path="res://scene/prop/generator.tscn" id="8_big_generator"]
 
 [sub_resource type="Curve2D" id="Curve2D_r1_5"]
 _data = {
@@ -37,562 +51,562 @@ z_index = -1
 
 [node name="belt_10_1" parent="beltLayer" index="0" instance=ExtResource("4_belt")]
 position = Vector2(672, 96)
-animation = &"se"
+texture = ExtResource("6_belt_se")
 route_phase = 16.13
 
 [node name="belt_11_1" parent="beltLayer" index="1" instance=ExtResource("4_belt")]
 position = Vector2(736, 96)
-animation = &"se"
+texture = ExtResource("6_belt_se")
 route_phase = 16.63
 
 [node name="belt_12_1" parent="beltLayer" index="2" instance=ExtResource("4_belt")]
 position = Vector2(800, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 17.63
 
 [node name="belt_13_1" parent="beltLayer" index="3" instance=ExtResource("4_belt")]
 position = Vector2(864, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 18.63
 
 [node name="belt_14_1" parent="beltLayer" index="4" instance=ExtResource("4_belt")]
 position = Vector2(928, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 19.63
 
 [node name="belt_15_1" parent="beltLayer" index="5" instance=ExtResource("4_belt")]
 position = Vector2(992, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 20.63
 
 [node name="belt_16_1" parent="beltLayer" index="6" instance=ExtResource("4_belt")]
 position = Vector2(1056, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 21.63
 
 [node name="belt_17_1" parent="beltLayer" index="7" instance=ExtResource("4_belt")]
 position = Vector2(1120, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 22.63
 
 [node name="belt_18_1" parent="beltLayer" index="8" instance=ExtResource("4_belt")]
 position = Vector2(1184, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 23.63
 
 [node name="belt_19_1" parent="beltLayer" index="9" instance=ExtResource("4_belt")]
 position = Vector2(1248, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 24.63
 
 [node name="belt_20_1" parent="beltLayer" index="10" instance=ExtResource("4_belt")]
 position = Vector2(1312, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 25.63
 
 [node name="belt_21_1" parent="beltLayer" index="11" instance=ExtResource("4_belt")]
 position = Vector2(1376, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 26.63
 
 [node name="belt_22_1" parent="beltLayer" index="12" instance=ExtResource("4_belt")]
 position = Vector2(1440, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 27.63
 
 [node name="belt_23_1" parent="beltLayer" index="13" instance=ExtResource("4_belt")]
 position = Vector2(1504, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 28.63
 
 [node name="belt_24_1" parent="beltLayer" index="14" instance=ExtResource("4_belt")]
 position = Vector2(1568, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 29.63
 
 [node name="belt_25_1" parent="beltLayer" index="15" instance=ExtResource("4_belt")]
 position = Vector2(1632, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 30.63
 
 [node name="belt_26_1" parent="beltLayer" index="16" instance=ExtResource("4_belt")]
 position = Vector2(1696, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 31.63
 
 [node name="belt_27_1" parent="beltLayer" index="17" instance=ExtResource("4_belt")]
 position = Vector2(1760, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 32.63
 
 [node name="belt_28_1" parent="beltLayer" index="18" instance=ExtResource("4_belt")]
 position = Vector2(1824, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 33.63
 
 [node name="belt_29_1" parent="beltLayer" index="19" instance=ExtResource("4_belt")]
 position = Vector2(1888, 96)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 34.63
 
 [node name="belt_10_2" parent="beltLayer" index="20" instance=ExtResource("4_belt")]
 position = Vector2(672, 160)
-animation = &"se"
+texture = ExtResource("6_belt_se")
 route_phase = 15.63
 
 [node name="belt_11_2" parent="beltLayer" index="21" instance=ExtResource("4_belt")]
 position = Vector2(736, 160)
-animation = &"se"
+texture = ExtResource("6_belt_se")
 route_phase = 15.63
 
 [node name="belt_12_2" parent="beltLayer" index="22" instance=ExtResource("4_belt")]
 position = Vector2(800, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 17.63
 
 [node name="belt_13_2" parent="beltLayer" index="23" instance=ExtResource("4_belt")]
 position = Vector2(864, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 18.63
 
 [node name="belt_14_2" parent="beltLayer" index="24" instance=ExtResource("4_belt")]
 position = Vector2(928, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 19.63
 
 [node name="belt_15_2" parent="beltLayer" index="25" instance=ExtResource("4_belt")]
 position = Vector2(992, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 20.63
 
 [node name="belt_16_2" parent="beltLayer" index="26" instance=ExtResource("4_belt")]
 position = Vector2(1056, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 21.63
 
 [node name="belt_17_2" parent="beltLayer" index="27" instance=ExtResource("4_belt")]
 position = Vector2(1120, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 22.63
 
 [node name="belt_18_2" parent="beltLayer" index="28" instance=ExtResource("4_belt")]
 position = Vector2(1184, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 23.63
 
 [node name="belt_19_2" parent="beltLayer" index="29" instance=ExtResource("4_belt")]
 position = Vector2(1248, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 24.63
 
 [node name="belt_20_2" parent="beltLayer" index="30" instance=ExtResource("4_belt")]
 position = Vector2(1312, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 25.63
 
 [node name="belt_21_2" parent="beltLayer" index="31" instance=ExtResource("4_belt")]
 position = Vector2(1376, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 26.63
 
 [node name="belt_22_2" parent="beltLayer" index="32" instance=ExtResource("4_belt")]
 position = Vector2(1440, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 27.63
 
 [node name="belt_23_2" parent="beltLayer" index="33" instance=ExtResource("4_belt")]
 position = Vector2(1504, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 28.63
 
 [node name="belt_24_2" parent="beltLayer" index="34" instance=ExtResource("4_belt")]
 position = Vector2(1568, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 29.63
 
 [node name="belt_25_2" parent="beltLayer" index="35" instance=ExtResource("4_belt")]
 position = Vector2(1632, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 30.63
 
 [node name="belt_26_2" parent="beltLayer" index="36" instance=ExtResource("4_belt")]
 position = Vector2(1696, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 31.63
 
 [node name="belt_27_2" parent="beltLayer" index="37" instance=ExtResource("4_belt")]
 position = Vector2(1760, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 32.63
 
 [node name="belt_28_2" parent="beltLayer" index="38" instance=ExtResource("4_belt")]
 position = Vector2(1824, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 33.63
 
 [node name="belt_29_2" parent="beltLayer" index="39" instance=ExtResource("4_belt")]
 position = Vector2(1888, 160)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 34.63
 
 [node name="belt_10_3" parent="beltLayer" index="40" instance=ExtResource("4_belt")]
 position = Vector2(672, 224)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 14.63
 
 [node name="belt_11_3" parent="beltLayer" index="41" instance=ExtResource("4_belt")]
 position = Vector2(736, 224)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 14.63
 
 [node name="belt_10_4" parent="beltLayer" index="42" instance=ExtResource("4_belt")]
 position = Vector2(672, 288)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 13.63
 
 [node name="belt_11_4" parent="beltLayer" index="43" instance=ExtResource("4_belt")]
 position = Vector2(736, 288)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 13.63
 
 [node name="belt_0_5" parent="beltLayer" index="44" instance=ExtResource("4_belt")]
 position = Vector2(32, 352)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 22.63
 
 [node name="belt_1_5" parent="beltLayer" index="45" instance=ExtResource("4_belt")]
 position = Vector2(96, 352)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 21.63
 
 [node name="belt_2_5" parent="beltLayer" index="46" instance=ExtResource("4_belt")]
 position = Vector2(160, 352)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 20.63
 
 [node name="belt_3_5" parent="beltLayer" index="47" instance=ExtResource("4_belt")]
 position = Vector2(224, 352)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 19.63
 
 [node name="belt_4_5" parent="beltLayer" index="48" instance=ExtResource("4_belt")]
 position = Vector2(288, 352)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 18.63
 
 [node name="belt_5_5" parent="beltLayer" index="49" instance=ExtResource("4_belt")]
 position = Vector2(352, 352)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 17.63
 
 [node name="belt_6_5" parent="beltLayer" index="50" instance=ExtResource("4_belt")]
 position = Vector2(416, 352)
-animation = &"sw"
+texture = ExtResource("6_belt_sw")
 route_phase = 16.63
 
 [node name="belt_7_5" parent="beltLayer" index="51" instance=ExtResource("4_belt")]
 position = Vector2(480, 352)
-animation = &"sw"
+texture = ExtResource("6_belt_sw")
 route_phase = 16.13
 
 [node name="belt_10_5" parent="beltLayer" index="52" instance=ExtResource("4_belt")]
 position = Vector2(672, 352)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 12.63
 
 [node name="belt_11_5" parent="beltLayer" index="53" instance=ExtResource("4_belt")]
 position = Vector2(736, 352)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 12.63
 
 [node name="belt_0_6" parent="beltLayer" index="54" instance=ExtResource("4_belt")]
 position = Vector2(32, 416)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 22.63
 
 [node name="belt_1_6" parent="beltLayer" index="55" instance=ExtResource("4_belt")]
 position = Vector2(96, 416)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 21.63
 
 [node name="belt_2_6" parent="beltLayer" index="56" instance=ExtResource("4_belt")]
 position = Vector2(160, 416)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 20.63
 
 [node name="belt_3_6" parent="beltLayer" index="57" instance=ExtResource("4_belt")]
 position = Vector2(224, 416)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 19.63
 
 [node name="belt_4_6" parent="beltLayer" index="58" instance=ExtResource("4_belt")]
 position = Vector2(288, 416)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 18.63
 
 [node name="belt_5_6" parent="beltLayer" index="59" instance=ExtResource("4_belt")]
 position = Vector2(352, 416)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 17.63
 
 [node name="belt_6_6" parent="beltLayer" index="60" instance=ExtResource("4_belt")]
 position = Vector2(416, 416)
-animation = &"ew"
+texture = ExtResource("6_belt_ew")
 route_phase = 15.63
 
 [node name="belt_7_6" parent="beltLayer" index="61" instance=ExtResource("4_belt")]
 position = Vector2(480, 416)
-animation = &"sw"
+texture = ExtResource("6_belt_sw")
 route_phase = 15.63
 
 [node name="belt_10_6" parent="beltLayer" index="62" instance=ExtResource("4_belt")]
 position = Vector2(672, 416)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 11.63
 
 [node name="belt_11_6" parent="beltLayer" index="63" instance=ExtResource("4_belt")]
 position = Vector2(736, 416)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 11.63
 
 [node name="belt_6_7" parent="beltLayer" index="64" instance=ExtResource("4_belt")]
 position = Vector2(416, 480)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 14.63
 
 [node name="belt_7_7" parent="beltLayer" index="65" instance=ExtResource("4_belt")]
 position = Vector2(480, 480)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 14.63
 
 [node name="belt_10_7" parent="beltLayer" index="66" instance=ExtResource("4_belt")]
 position = Vector2(672, 480)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 10.63
 
 [node name="belt_11_7" parent="beltLayer" index="67" instance=ExtResource("4_belt")]
 position = Vector2(736, 480)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 10.63
 
 [node name="belt_6_8" parent="beltLayer" index="68" instance=ExtResource("4_belt")]
 position = Vector2(416, 544)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 13.63
 
 [node name="belt_7_8" parent="beltLayer" index="69" instance=ExtResource("4_belt")]
 position = Vector2(480, 544)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 13.63
 
 [node name="belt_10_8" parent="beltLayer" index="70" instance=ExtResource("4_belt")]
 position = Vector2(672, 544)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 9.63
 
 [node name="belt_11_8" parent="beltLayer" index="71" instance=ExtResource("4_belt")]
 position = Vector2(736, 544)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 9.63
 
 [node name="belt_2_9" parent="beltLayer" index="72" instance=ExtResource("4_belt")]
 position = Vector2(160, 608)
-animation = &"se"
+texture = ExtResource("6_belt_se")
 route_phase = 8.13
 
 [node name="belt_3_9" parent="beltLayer" index="73" instance=ExtResource("4_belt")]
 position = Vector2(224, 608)
-animation = &"se"
+texture = ExtResource("6_belt_se")
 route_phase = 8.63
 
 [node name="belt_4_9" parent="beltLayer" index="74" instance=ExtResource("4_belt")]
 position = Vector2(288, 608)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 9.63
 
 [node name="belt_5_9" parent="beltLayer" index="75" instance=ExtResource("4_belt")]
 position = Vector2(352, 608)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 10.63
 
 [node name="belt_6_9" parent="beltLayer" index="76" instance=ExtResource("4_belt")]
 position = Vector2(416, 608)
-animation = &"wn"
+texture = ExtResource("6_belt_wn")
 route_phase = 11.63
 
 [node name="belt_7_9" parent="beltLayer" index="77" instance=ExtResource("4_belt")]
 position = Vector2(480, 608)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 12.63
 
 [node name="belt_10_9" parent="beltLayer" index="78" instance=ExtResource("4_belt")]
 position = Vector2(672, 608)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 8.63
 
 [node name="belt_11_9" parent="beltLayer" index="79" instance=ExtResource("4_belt")]
 position = Vector2(736, 608)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 8.63
 
 [node name="belt_2_10" parent="beltLayer" index="80" instance=ExtResource("4_belt")]
 position = Vector2(160, 672)
-animation = &"se"
+texture = ExtResource("6_belt_se")
 route_phase = 7.63
 
 [node name="belt_3_10" parent="beltLayer" index="81" instance=ExtResource("4_belt")]
 position = Vector2(224, 672)
-animation = &"se"
+texture = ExtResource("6_belt_se")
 route_phase = 7.63
 
 [node name="belt_4_10" parent="beltLayer" index="82" instance=ExtResource("4_belt")]
 position = Vector2(288, 672)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 9.63
 
 [node name="belt_5_10" parent="beltLayer" index="83" instance=ExtResource("4_belt")]
 position = Vector2(352, 672)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 10.63
 
 [node name="belt_6_10" parent="beltLayer" index="84" instance=ExtResource("4_belt")]
 position = Vector2(416, 672)
-animation = &"we"
+texture = ExtResource("6_belt_we")
 route_phase = 11.63
 
 [node name="belt_7_10" parent="beltLayer" index="85" instance=ExtResource("4_belt")]
 position = Vector2(480, 672)
-animation = &"wn"
+texture = ExtResource("6_belt_wn")
 route_phase = 12.13
 
 [node name="belt_10_10" parent="beltLayer" index="86" instance=ExtResource("4_belt")]
 position = Vector2(672, 672)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 7.63
 
 [node name="belt_11_10" parent="beltLayer" index="87" instance=ExtResource("4_belt")]
 position = Vector2(736, 672)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 7.63
 
 [node name="belt_2_11" parent="beltLayer" index="88" instance=ExtResource("4_belt")]
 position = Vector2(160, 736)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 6.63
 
 [node name="belt_3_11" parent="beltLayer" index="89" instance=ExtResource("4_belt")]
 position = Vector2(224, 736)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 6.63
 
 [node name="belt_10_11" parent="beltLayer" index="90" instance=ExtResource("4_belt")]
 position = Vector2(672, 736)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 6.63
 
 [node name="belt_11_11" parent="beltLayer" index="91" instance=ExtResource("4_belt")]
 position = Vector2(736, 736)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 6.63
 
 [node name="belt_2_12" parent="beltLayer" index="92" instance=ExtResource("4_belt")]
 position = Vector2(160, 800)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 5.63
 
 [node name="belt_3_12" parent="beltLayer" index="93" instance=ExtResource("4_belt")]
 position = Vector2(224, 800)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 5.63
 
 [node name="belt_10_12" parent="beltLayer" index="94" instance=ExtResource("4_belt")]
 position = Vector2(672, 800)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 5.63
 
 [node name="belt_11_12" parent="beltLayer" index="95" instance=ExtResource("4_belt")]
 position = Vector2(736, 800)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 5.63
 
 [node name="belt_2_13" parent="beltLayer" index="96" instance=ExtResource("4_belt")]
 position = Vector2(160, 864)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 4.63
 
 [node name="belt_3_13" parent="beltLayer" index="97" instance=ExtResource("4_belt")]
 position = Vector2(224, 864)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 4.63
 
 [node name="belt_10_13" parent="beltLayer" index="98" instance=ExtResource("4_belt")]
 position = Vector2(672, 864)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 4.63
 
 [node name="belt_11_13" parent="beltLayer" index="99" instance=ExtResource("4_belt")]
 position = Vector2(736, 864)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 4.63
 
 [node name="belt_2_14" parent="beltLayer" index="100" instance=ExtResource("4_belt")]
 position = Vector2(160, 928)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 3.63
 
 [node name="belt_3_14" parent="beltLayer" index="101" instance=ExtResource("4_belt")]
 position = Vector2(224, 928)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 3.63
 
 [node name="belt_10_14" parent="beltLayer" index="102" instance=ExtResource("4_belt")]
 position = Vector2(672, 928)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 3.63
 
 [node name="belt_11_14" parent="beltLayer" index="103" instance=ExtResource("4_belt")]
 position = Vector2(736, 928)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 3.63
 
 [node name="belt_2_15" parent="beltLayer" index="104" instance=ExtResource("4_belt")]
 position = Vector2(160, 992)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 2.63
 
 [node name="belt_3_15" parent="beltLayer" index="105" instance=ExtResource("4_belt")]
 position = Vector2(224, 992)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 2.63
 
 [node name="belt_10_15" parent="beltLayer" index="106" instance=ExtResource("4_belt")]
 position = Vector2(672, 992)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 2.63
 
 [node name="belt_11_15" parent="beltLayer" index="107" instance=ExtResource("4_belt")]
 position = Vector2(736, 992)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 2.63
 
 [node name="belt_2_16" parent="beltLayer" index="108" instance=ExtResource("4_belt")]
 position = Vector2(160, 1056)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 1.63
 
 [node name="belt_3_16" parent="beltLayer" index="109" instance=ExtResource("4_belt")]
 position = Vector2(224, 1056)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 1.63
 
 [node name="belt_10_16" parent="beltLayer" index="110" instance=ExtResource("4_belt")]
 position = Vector2(672, 1056)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 1.63
 
 [node name="belt_11_16" parent="beltLayer" index="111" instance=ExtResource("4_belt")]
 position = Vector2(736, 1056)
-animation = &"sn"
+texture = ExtResource("6_belt_sn")
 route_phase = 1.63
 
 [node name="placeableLayer" type="Node2D" parent="."]
@@ -631,494 +645,454 @@ position = Vector2(1120, 32)
 [node name="slot_18_0" parent="placeableLayer" index="10" instance=ExtResource("5_slot")]
 position = Vector2(1184, 32)
 
-[node name="slot_19_0" parent="placeableLayer" index="11" instance=ExtResource("5_slot")]
-position = Vector2(1248, 32)
-
-[node name="slot_20_0" parent="placeableLayer" index="12" instance=ExtResource("5_slot")]
-position = Vector2(1312, 32)
-
-[node name="slot_21_0" parent="placeableLayer" index="13" instance=ExtResource("5_slot")]
-position = Vector2(1376, 32)
-
-[node name="slot_22_0" parent="placeableLayer" index="14" instance=ExtResource("5_slot")]
-position = Vector2(1440, 32)
-
-[node name="slot_23_0" parent="placeableLayer" index="15" instance=ExtResource("5_slot")]
-position = Vector2(1504, 32)
-
-[node name="slot_24_0" parent="placeableLayer" index="16" instance=ExtResource("5_slot")]
-position = Vector2(1568, 32)
-
-[node name="slot_25_0" parent="placeableLayer" index="17" instance=ExtResource("5_slot")]
-position = Vector2(1632, 32)
-
-[node name="slot_26_0" parent="placeableLayer" index="18" instance=ExtResource("5_slot")]
-position = Vector2(1696, 32)
-
-[node name="slot_27_0" parent="placeableLayer" index="19" instance=ExtResource("5_slot")]
+[node name="slot_27_0" parent="placeableLayer" index="11" instance=ExtResource("5_slot")]
 position = Vector2(1760, 32)
 
-[node name="slot_28_0" parent="placeableLayer" index="20" instance=ExtResource("5_slot")]
+[node name="slot_28_0" parent="placeableLayer" index="12" instance=ExtResource("5_slot")]
 position = Vector2(1824, 32)
 
-[node name="slot_29_0" parent="placeableLayer" index="21" instance=ExtResource("5_slot")]
+[node name="slot_29_0" parent="placeableLayer" index="13" instance=ExtResource("5_slot")]
 position = Vector2(1888, 32)
 
-[node name="slot_8_1" parent="placeableLayer" index="22" instance=ExtResource("5_slot")]
+[node name="slot_8_1" parent="placeableLayer" index="14" instance=ExtResource("5_slot")]
 position = Vector2(544, 96)
 
-[node name="slot_9_1" parent="placeableLayer" index="23" instance=ExtResource("5_slot")]
+[node name="slot_9_1" parent="placeableLayer" index="15" instance=ExtResource("5_slot")]
 position = Vector2(608, 96)
 
-[node name="slot_8_2" parent="placeableLayer" index="24" instance=ExtResource("5_slot")]
-position = Vector2(544, 160)
-
-[node name="slot_9_2" parent="placeableLayer" index="25" instance=ExtResource("5_slot")]
-position = Vector2(608, 160)
-
-[node name="slot_0_3" parent="placeableLayer" index="26" instance=ExtResource("5_slot")]
+[node name="slot_0_3" parent="placeableLayer" index="16" instance=ExtResource("5_slot")]
 position = Vector2(32, 224)
 
-[node name="slot_1_3" parent="placeableLayer" index="27" instance=ExtResource("5_slot")]
+[node name="slot_1_3" parent="placeableLayer" index="17" instance=ExtResource("5_slot")]
 position = Vector2(96, 224)
 
-[node name="slot_2_3" parent="placeableLayer" index="28" instance=ExtResource("5_slot")]
+[node name="slot_2_3" parent="placeableLayer" index="18" instance=ExtResource("5_slot")]
 position = Vector2(160, 224)
 
-[node name="slot_3_3" parent="placeableLayer" index="29" instance=ExtResource("5_slot")]
+[node name="slot_3_3" parent="placeableLayer" index="19" instance=ExtResource("5_slot")]
 position = Vector2(224, 224)
 
-[node name="slot_4_3" parent="placeableLayer" index="30" instance=ExtResource("5_slot")]
+[node name="slot_4_3" parent="placeableLayer" index="20" instance=ExtResource("5_slot")]
 position = Vector2(288, 224)
 
-[node name="slot_5_3" parent="placeableLayer" index="31" instance=ExtResource("5_slot")]
+[node name="slot_5_3" parent="placeableLayer" index="21" instance=ExtResource("5_slot")]
 position = Vector2(352, 224)
 
-[node name="slot_6_3" parent="placeableLayer" index="32" instance=ExtResource("5_slot")]
+[node name="slot_6_3" parent="placeableLayer" index="22" instance=ExtResource("5_slot")]
 position = Vector2(416, 224)
 
-[node name="slot_7_3" parent="placeableLayer" index="33" instance=ExtResource("5_slot")]
+[node name="slot_7_3" parent="placeableLayer" index="23" instance=ExtResource("5_slot")]
 position = Vector2(480, 224)
 
-[node name="slot_8_3" parent="placeableLayer" index="34" instance=ExtResource("5_slot")]
-position = Vector2(544, 224)
-
-[node name="slot_9_3" parent="placeableLayer" index="35" instance=ExtResource("5_slot")]
-position = Vector2(608, 224)
-
-[node name="slot_12_3" parent="placeableLayer" index="36" instance=ExtResource("5_slot")]
-position = Vector2(800, 224)
-
-[node name="slot_13_3" parent="placeableLayer" index="37" instance=ExtResource("5_slot")]
+[node name="slot_13_3" parent="placeableLayer" index="24" instance=ExtResource("5_slot")]
 position = Vector2(864, 224)
 
-[node name="slot_14_3" parent="placeableLayer" index="38" instance=ExtResource("5_slot")]
+[node name="slot_14_3" parent="placeableLayer" index="25" instance=ExtResource("5_slot")]
 position = Vector2(928, 224)
 
-[node name="slot_15_3" parent="placeableLayer" index="39" instance=ExtResource("5_slot")]
+[node name="slot_15_3" parent="placeableLayer" index="26" instance=ExtResource("5_slot")]
 position = Vector2(992, 224)
 
-[node name="slot_16_3" parent="placeableLayer" index="40" instance=ExtResource("5_slot")]
+[node name="slot_16_3" parent="placeableLayer" index="27" instance=ExtResource("5_slot")]
 position = Vector2(1056, 224)
 
-[node name="slot_17_3" parent="placeableLayer" index="41" instance=ExtResource("5_slot")]
+[node name="slot_17_3" parent="placeableLayer" index="28" instance=ExtResource("5_slot")]
 position = Vector2(1120, 224)
 
-[node name="slot_18_3" parent="placeableLayer" index="42" instance=ExtResource("5_slot")]
+[node name="slot_18_3" parent="placeableLayer" index="29" instance=ExtResource("5_slot")]
 position = Vector2(1184, 224)
 
-[node name="slot_19_3" parent="placeableLayer" index="43" instance=ExtResource("5_slot")]
-position = Vector2(1248, 224)
-
-[node name="slot_20_3" parent="placeableLayer" index="44" instance=ExtResource("5_slot")]
-position = Vector2(1312, 224)
-
-[node name="slot_21_3" parent="placeableLayer" index="45" instance=ExtResource("5_slot")]
-position = Vector2(1376, 224)
-
-[node name="slot_22_3" parent="placeableLayer" index="46" instance=ExtResource("5_slot")]
-position = Vector2(1440, 224)
-
-[node name="slot_23_3" parent="placeableLayer" index="47" instance=ExtResource("5_slot")]
-position = Vector2(1504, 224)
-
-[node name="slot_24_3" parent="placeableLayer" index="48" instance=ExtResource("5_slot")]
-position = Vector2(1568, 224)
-
-[node name="slot_25_3" parent="placeableLayer" index="49" instance=ExtResource("5_slot")]
-position = Vector2(1632, 224)
-
-[node name="slot_26_3" parent="placeableLayer" index="50" instance=ExtResource("5_slot")]
-position = Vector2(1696, 224)
-
-[node name="slot_27_3" parent="placeableLayer" index="51" instance=ExtResource("5_slot")]
+[node name="slot_27_3" parent="placeableLayer" index="30" instance=ExtResource("5_slot")]
 position = Vector2(1760, 224)
 
-[node name="slot_28_3" parent="placeableLayer" index="52" instance=ExtResource("5_slot")]
+[node name="slot_28_3" parent="placeableLayer" index="31" instance=ExtResource("5_slot")]
 position = Vector2(1824, 224)
 
-[node name="slot_29_3" parent="placeableLayer" index="53" instance=ExtResource("5_slot")]
+[node name="slot_29_3" parent="placeableLayer" index="32" instance=ExtResource("5_slot")]
 position = Vector2(1888, 224)
 
-[node name="slot_0_4" parent="placeableLayer" index="54" instance=ExtResource("5_slot")]
+[node name="slot_0_4" parent="placeableLayer" index="33" instance=ExtResource("5_slot")]
 position = Vector2(32, 288)
 
-[node name="slot_1_4" parent="placeableLayer" index="55" instance=ExtResource("5_slot")]
+[node name="slot_1_4" parent="placeableLayer" index="34" instance=ExtResource("5_slot")]
 position = Vector2(96, 288)
 
-[node name="slot_2_4" parent="placeableLayer" index="56" instance=ExtResource("5_slot")]
+[node name="slot_2_4" parent="placeableLayer" index="35" instance=ExtResource("5_slot")]
 position = Vector2(160, 288)
 
-[node name="slot_3_4" parent="placeableLayer" index="57" instance=ExtResource("5_slot")]
+[node name="slot_3_4" parent="placeableLayer" index="36" instance=ExtResource("5_slot")]
 position = Vector2(224, 288)
 
-[node name="slot_4_4" parent="placeableLayer" index="58" instance=ExtResource("5_slot")]
+[node name="slot_4_4" parent="placeableLayer" index="37" instance=ExtResource("5_slot")]
 position = Vector2(288, 288)
 
-[node name="slot_5_4" parent="placeableLayer" index="59" instance=ExtResource("5_slot")]
+[node name="slot_5_4" parent="placeableLayer" index="38" instance=ExtResource("5_slot")]
 position = Vector2(352, 288)
 
-[node name="slot_6_4" parent="placeableLayer" index="60" instance=ExtResource("5_slot")]
+[node name="slot_6_4" parent="placeableLayer" index="39" instance=ExtResource("5_slot")]
 position = Vector2(416, 288)
 
-[node name="slot_7_4" parent="placeableLayer" index="61" instance=ExtResource("5_slot")]
+[node name="slot_7_4" parent="placeableLayer" index="40" instance=ExtResource("5_slot")]
 position = Vector2(480, 288)
 
-[node name="slot_8_4" parent="placeableLayer" index="62" instance=ExtResource("5_slot")]
+[node name="slot_8_4" parent="placeableLayer" index="41" instance=ExtResource("5_slot")]
 position = Vector2(544, 288)
 
-[node name="slot_9_4" parent="placeableLayer" index="63" instance=ExtResource("5_slot")]
-position = Vector2(608, 288)
-
-[node name="slot_12_4" parent="placeableLayer" index="64" instance=ExtResource("5_slot")]
-position = Vector2(800, 288)
-
-[node name="slot_13_4" parent="placeableLayer" index="65" instance=ExtResource("5_slot")]
-position = Vector2(864, 288)
-
-[node name="slot_14_4" parent="placeableLayer" index="66" instance=ExtResource("5_slot")]
+[node name="slot_14_4" parent="placeableLayer" index="42" instance=ExtResource("5_slot")]
 position = Vector2(928, 288)
 
-[node name="slot_15_4" parent="placeableLayer" index="67" instance=ExtResource("5_slot")]
+[node name="slot_15_4" parent="placeableLayer" index="43" instance=ExtResource("5_slot")]
 position = Vector2(992, 288)
 
-[node name="slot_16_4" parent="placeableLayer" index="68" instance=ExtResource("5_slot")]
+[node name="slot_16_4" parent="placeableLayer" index="44" instance=ExtResource("5_slot")]
 position = Vector2(1056, 288)
 
-[node name="slot_17_4" parent="placeableLayer" index="69" instance=ExtResource("5_slot")]
+[node name="slot_17_4" parent="placeableLayer" index="45" instance=ExtResource("5_slot")]
 position = Vector2(1120, 288)
 
-[node name="slot_18_4" parent="placeableLayer" index="70" instance=ExtResource("5_slot")]
+[node name="slot_18_4" parent="placeableLayer" index="46" instance=ExtResource("5_slot")]
 position = Vector2(1184, 288)
 
-[node name="slot_19_4" parent="placeableLayer" index="71" instance=ExtResource("5_slot")]
-position = Vector2(1248, 288)
-
-[node name="slot_20_4" parent="placeableLayer" index="72" instance=ExtResource("5_slot")]
-position = Vector2(1312, 288)
-
-[node name="slot_21_4" parent="placeableLayer" index="73" instance=ExtResource("5_slot")]
-position = Vector2(1376, 288)
-
-[node name="slot_22_4" parent="placeableLayer" index="74" instance=ExtResource("5_slot")]
-position = Vector2(1440, 288)
-
-[node name="slot_23_4" parent="placeableLayer" index="75" instance=ExtResource("5_slot")]
-position = Vector2(1504, 288)
-
-[node name="slot_24_4" parent="placeableLayer" index="76" instance=ExtResource("5_slot")]
-position = Vector2(1568, 288)
-
-[node name="slot_25_4" parent="placeableLayer" index="77" instance=ExtResource("5_slot")]
-position = Vector2(1632, 288)
-
-[node name="slot_26_4" parent="placeableLayer" index="78" instance=ExtResource("5_slot")]
-position = Vector2(1696, 288)
-
-[node name="slot_27_4" parent="placeableLayer" index="79" instance=ExtResource("5_slot")]
+[node name="slot_27_4" parent="placeableLayer" index="47" instance=ExtResource("5_slot")]
 position = Vector2(1760, 288)
 
-[node name="slot_28_4" parent="placeableLayer" index="80" instance=ExtResource("5_slot")]
+[node name="slot_28_4" parent="placeableLayer" index="48" instance=ExtResource("5_slot")]
 position = Vector2(1824, 288)
 
-[node name="slot_29_4" parent="placeableLayer" index="81" instance=ExtResource("5_slot")]
+[node name="slot_29_4" parent="placeableLayer" index="49" instance=ExtResource("5_slot")]
 position = Vector2(1888, 288)
 
-[node name="slot_8_5" parent="placeableLayer" index="82" instance=ExtResource("5_slot")]
+[node name="slot_8_5" parent="placeableLayer" index="50" instance=ExtResource("5_slot")]
 position = Vector2(544, 352)
 
-[node name="slot_9_5" parent="placeableLayer" index="83" instance=ExtResource("5_slot")]
-position = Vector2(608, 352)
-
-[node name="slot_12_5" parent="placeableLayer" index="84" instance=ExtResource("5_slot")]
-position = Vector2(800, 352)
-
-[node name="slot_13_5" parent="placeableLayer" index="85" instance=ExtResource("5_slot")]
-position = Vector2(864, 352)
-
-[node name="slot_8_6" parent="placeableLayer" index="86" instance=ExtResource("5_slot")]
-position = Vector2(544, 416)
-
-[node name="slot_9_6" parent="placeableLayer" index="87" instance=ExtResource("5_slot")]
-position = Vector2(608, 416)
-
-[node name="slot_12_6" parent="placeableLayer" index="88" instance=ExtResource("5_slot")]
-position = Vector2(800, 416)
-
-[node name="slot_13_6" parent="placeableLayer" index="89" instance=ExtResource("5_slot")]
-position = Vector2(864, 416)
-
-[node name="slot_0_7" parent="placeableLayer" index="90" instance=ExtResource("5_slot")]
+[node name="slot_0_7" parent="placeableLayer" index="51" instance=ExtResource("5_slot")]
 position = Vector2(32, 480)
 
-[node name="slot_1_7" parent="placeableLayer" index="91" instance=ExtResource("5_slot")]
+[node name="slot_1_7" parent="placeableLayer" index="52" instance=ExtResource("5_slot")]
 position = Vector2(96, 480)
 
-[node name="slot_2_7" parent="placeableLayer" index="92" instance=ExtResource("5_slot")]
+[node name="slot_2_7" parent="placeableLayer" index="53" instance=ExtResource("5_slot")]
 position = Vector2(160, 480)
 
-[node name="slot_3_7" parent="placeableLayer" index="93" instance=ExtResource("5_slot")]
+[node name="slot_3_7" parent="placeableLayer" index="54" instance=ExtResource("5_slot")]
 position = Vector2(224, 480)
 
-[node name="slot_4_7" parent="placeableLayer" index="94" instance=ExtResource("5_slot")]
+[node name="slot_4_7" parent="placeableLayer" index="55" instance=ExtResource("5_slot")]
 position = Vector2(288, 480)
 
-[node name="slot_5_7" parent="placeableLayer" index="95" instance=ExtResource("5_slot")]
-position = Vector2(352, 480)
-
-[node name="slot_8_7" parent="placeableLayer" index="96" instance=ExtResource("5_slot")]
-position = Vector2(544, 480)
-
-[node name="slot_9_7" parent="placeableLayer" index="97" instance=ExtResource("5_slot")]
-position = Vector2(608, 480)
-
-[node name="slot_12_7" parent="placeableLayer" index="98" instance=ExtResource("5_slot")]
-position = Vector2(800, 480)
-
-[node name="slot_13_7" parent="placeableLayer" index="99" instance=ExtResource("5_slot")]
-position = Vector2(864, 480)
-
-[node name="slot_0_8" parent="placeableLayer" index="100" instance=ExtResource("5_slot")]
+[node name="slot_0_8" parent="placeableLayer" index="56" instance=ExtResource("5_slot")]
 position = Vector2(32, 544)
 
-[node name="slot_1_8" parent="placeableLayer" index="101" instance=ExtResource("5_slot")]
-position = Vector2(96, 544)
-
-[node name="slot_2_8" parent="placeableLayer" index="102" instance=ExtResource("5_slot")]
-position = Vector2(160, 544)
-
-[node name="slot_3_8" parent="placeableLayer" index="103" instance=ExtResource("5_slot")]
-position = Vector2(224, 544)
-
-[node name="slot_4_8" parent="placeableLayer" index="104" instance=ExtResource("5_slot")]
-position = Vector2(288, 544)
-
-[node name="slot_5_8" parent="placeableLayer" index="105" instance=ExtResource("5_slot")]
-position = Vector2(352, 544)
-
-[node name="slot_8_8" parent="placeableLayer" index="106" instance=ExtResource("5_slot")]
-position = Vector2(544, 544)
-
-[node name="slot_9_8" parent="placeableLayer" index="107" instance=ExtResource("5_slot")]
-position = Vector2(608, 544)
-
-[node name="slot_12_8" parent="placeableLayer" index="108" instance=ExtResource("5_slot")]
-position = Vector2(800, 544)
-
-[node name="slot_13_8" parent="placeableLayer" index="109" instance=ExtResource("5_slot")]
-position = Vector2(864, 544)
-
-[node name="slot_0_9" parent="placeableLayer" index="110" instance=ExtResource("5_slot")]
-position = Vector2(32, 608)
-
-[node name="slot_1_9" parent="placeableLayer" index="111" instance=ExtResource("5_slot")]
-position = Vector2(96, 608)
-
-[node name="slot_8_9" parent="placeableLayer" index="112" instance=ExtResource("5_slot")]
-position = Vector2(544, 608)
-
-[node name="slot_9_9" parent="placeableLayer" index="113" instance=ExtResource("5_slot")]
-position = Vector2(608, 608)
-
-[node name="slot_12_9" parent="placeableLayer" index="114" instance=ExtResource("5_slot")]
-position = Vector2(800, 608)
-
-[node name="slot_13_9" parent="placeableLayer" index="115" instance=ExtResource("5_slot")]
-position = Vector2(864, 608)
-
-[node name="slot_0_10" parent="placeableLayer" index="116" instance=ExtResource("5_slot")]
+[node name="slot_0_10" parent="placeableLayer" index="57" instance=ExtResource("5_slot")]
 position = Vector2(32, 672)
 
-[node name="slot_1_10" parent="placeableLayer" index="117" instance=ExtResource("5_slot")]
+[node name="slot_1_10" parent="placeableLayer" index="58" instance=ExtResource("5_slot")]
 position = Vector2(96, 672)
 
-[node name="slot_8_10" parent="placeableLayer" index="118" instance=ExtResource("5_slot")]
-position = Vector2(544, 672)
-
-[node name="slot_9_10" parent="placeableLayer" index="119" instance=ExtResource("5_slot")]
+[node name="slot_9_10" parent="placeableLayer" index="59" instance=ExtResource("5_slot")]
 position = Vector2(608, 672)
 
-[node name="slot_12_10" parent="placeableLayer" index="120" instance=ExtResource("5_slot")]
+[node name="slot_12_10" parent="placeableLayer" index="60" instance=ExtResource("5_slot")]
 position = Vector2(800, 672)
 
-[node name="slot_13_10" parent="placeableLayer" index="121" instance=ExtResource("5_slot")]
+[node name="slot_13_10" parent="placeableLayer" index="61" instance=ExtResource("5_slot")]
 position = Vector2(864, 672)
 
-[node name="slot_0_11" parent="placeableLayer" index="122" instance=ExtResource("5_slot")]
+[node name="slot_0_11" parent="placeableLayer" index="62" instance=ExtResource("5_slot")]
 position = Vector2(32, 736)
 
-[node name="slot_1_11" parent="placeableLayer" index="123" instance=ExtResource("5_slot")]
+[node name="slot_1_11" parent="placeableLayer" index="63" instance=ExtResource("5_slot")]
 position = Vector2(96, 736)
 
-[node name="slot_4_11" parent="placeableLayer" index="124" instance=ExtResource("5_slot")]
+[node name="slot_4_11" parent="placeableLayer" index="64" instance=ExtResource("5_slot")]
 position = Vector2(288, 736)
 
-[node name="slot_5_11" parent="placeableLayer" index="125" instance=ExtResource("5_slot")]
-position = Vector2(352, 736)
-
-[node name="slot_6_11" parent="placeableLayer" index="126" instance=ExtResource("5_slot")]
-position = Vector2(416, 736)
-
-[node name="slot_7_11" parent="placeableLayer" index="127" instance=ExtResource("5_slot")]
-position = Vector2(480, 736)
-
-[node name="slot_8_11" parent="placeableLayer" index="128" instance=ExtResource("5_slot")]
-position = Vector2(544, 736)
-
-[node name="slot_9_11" parent="placeableLayer" index="129" instance=ExtResource("5_slot")]
+[node name="slot_9_11" parent="placeableLayer" index="65" instance=ExtResource("5_slot")]
 position = Vector2(608, 736)
 
-[node name="slot_12_11" parent="placeableLayer" index="130" instance=ExtResource("5_slot")]
+[node name="slot_12_11" parent="placeableLayer" index="66" instance=ExtResource("5_slot")]
 position = Vector2(800, 736)
 
-[node name="slot_13_11" parent="placeableLayer" index="131" instance=ExtResource("5_slot")]
+[node name="slot_13_11" parent="placeableLayer" index="67" instance=ExtResource("5_slot")]
 position = Vector2(864, 736)
 
-[node name="slot_0_12" parent="placeableLayer" index="132" instance=ExtResource("5_slot")]
+[node name="slot_0_12" parent="placeableLayer" index="68" instance=ExtResource("5_slot")]
 position = Vector2(32, 800)
 
-[node name="slot_1_12" parent="placeableLayer" index="133" instance=ExtResource("5_slot")]
+[node name="slot_1_12" parent="placeableLayer" index="69" instance=ExtResource("5_slot")]
 position = Vector2(96, 800)
 
-[node name="slot_4_12" parent="placeableLayer" index="134" instance=ExtResource("5_slot")]
+[node name="slot_4_12" parent="placeableLayer" index="70" instance=ExtResource("5_slot")]
 position = Vector2(288, 800)
 
-[node name="slot_5_12" parent="placeableLayer" index="135" instance=ExtResource("5_slot")]
+[node name="slot_5_12" parent="placeableLayer" index="71" instance=ExtResource("5_slot")]
 position = Vector2(352, 800)
 
-[node name="slot_6_12" parent="placeableLayer" index="136" instance=ExtResource("5_slot")]
-position = Vector2(416, 800)
-
-[node name="slot_7_12" parent="placeableLayer" index="137" instance=ExtResource("5_slot")]
-position = Vector2(480, 800)
-
-[node name="slot_8_12" parent="placeableLayer" index="138" instance=ExtResource("5_slot")]
+[node name="slot_8_12" parent="placeableLayer" index="72" instance=ExtResource("5_slot")]
 position = Vector2(544, 800)
 
-[node name="slot_9_12" parent="placeableLayer" index="139" instance=ExtResource("5_slot")]
+[node name="slot_9_12" parent="placeableLayer" index="73" instance=ExtResource("5_slot")]
 position = Vector2(608, 800)
 
-[node name="slot_12_12" parent="placeableLayer" index="140" instance=ExtResource("5_slot")]
+[node name="slot_12_12" parent="placeableLayer" index="74" instance=ExtResource("5_slot")]
 position = Vector2(800, 800)
 
-[node name="slot_13_12" parent="placeableLayer" index="141" instance=ExtResource("5_slot")]
+[node name="slot_13_12" parent="placeableLayer" index="75" instance=ExtResource("5_slot")]
 position = Vector2(864, 800)
 
-[node name="slot_0_13" parent="placeableLayer" index="142" instance=ExtResource("5_slot")]
+[node name="slot_0_13" parent="placeableLayer" index="76" instance=ExtResource("5_slot")]
 position = Vector2(32, 864)
 
-[node name="slot_1_13" parent="placeableLayer" index="143" instance=ExtResource("5_slot")]
+[node name="slot_1_13" parent="placeableLayer" index="77" instance=ExtResource("5_slot")]
 position = Vector2(96, 864)
 
-[node name="slot_4_13" parent="placeableLayer" index="144" instance=ExtResource("5_slot")]
+[node name="slot_4_13" parent="placeableLayer" index="78" instance=ExtResource("5_slot")]
 position = Vector2(288, 864)
 
-[node name="slot_5_13" parent="placeableLayer" index="145" instance=ExtResource("5_slot")]
+[node name="slot_5_13" parent="placeableLayer" index="79" instance=ExtResource("5_slot")]
 position = Vector2(352, 864)
 
-[node name="slot_8_13" parent="placeableLayer" index="146" instance=ExtResource("5_slot")]
+[node name="slot_8_13" parent="placeableLayer" index="80" instance=ExtResource("5_slot")]
 position = Vector2(544, 864)
 
-[node name="slot_9_13" parent="placeableLayer" index="147" instance=ExtResource("5_slot")]
+[node name="slot_9_13" parent="placeableLayer" index="81" instance=ExtResource("5_slot")]
 position = Vector2(608, 864)
 
-[node name="slot_12_13" parent="placeableLayer" index="148" instance=ExtResource("5_slot")]
+[node name="slot_12_13" parent="placeableLayer" index="82" instance=ExtResource("5_slot")]
 position = Vector2(800, 864)
 
-[node name="slot_13_13" parent="placeableLayer" index="149" instance=ExtResource("5_slot")]
+[node name="slot_13_13" parent="placeableLayer" index="83" instance=ExtResource("5_slot")]
 position = Vector2(864, 864)
 
-[node name="slot_0_14" parent="placeableLayer" index="150" instance=ExtResource("5_slot")]
+[node name="slot_0_14" parent="placeableLayer" index="84" instance=ExtResource("5_slot")]
 position = Vector2(32, 928)
 
-[node name="slot_1_14" parent="placeableLayer" index="151" instance=ExtResource("5_slot")]
+[node name="slot_1_14" parent="placeableLayer" index="85" instance=ExtResource("5_slot")]
 position = Vector2(96, 928)
 
-[node name="slot_4_14" parent="placeableLayer" index="152" instance=ExtResource("5_slot")]
+[node name="slot_4_14" parent="placeableLayer" index="86" instance=ExtResource("5_slot")]
 position = Vector2(288, 928)
 
-[node name="slot_5_14" parent="placeableLayer" index="153" instance=ExtResource("5_slot")]
+[node name="slot_5_14" parent="placeableLayer" index="87" instance=ExtResource("5_slot")]
 position = Vector2(352, 928)
 
-[node name="slot_8_14" parent="placeableLayer" index="154" instance=ExtResource("5_slot")]
+[node name="slot_8_14" parent="placeableLayer" index="88" instance=ExtResource("5_slot")]
 position = Vector2(544, 928)
 
-[node name="slot_9_14" parent="placeableLayer" index="155" instance=ExtResource("5_slot")]
+[node name="slot_9_14" parent="placeableLayer" index="89" instance=ExtResource("5_slot")]
 position = Vector2(608, 928)
 
-[node name="slot_12_14" parent="placeableLayer" index="156" instance=ExtResource("5_slot")]
+[node name="slot_12_14" parent="placeableLayer" index="90" instance=ExtResource("5_slot")]
 position = Vector2(800, 928)
 
-[node name="slot_13_14" parent="placeableLayer" index="157" instance=ExtResource("5_slot")]
+[node name="slot_13_14" parent="placeableLayer" index="91" instance=ExtResource("5_slot")]
 position = Vector2(864, 928)
 
-[node name="slot_0_15" parent="placeableLayer" index="158" instance=ExtResource("5_slot")]
+[node name="slot_0_15" parent="placeableLayer" index="92" instance=ExtResource("5_slot")]
 position = Vector2(32, 992)
 
-[node name="slot_1_15" parent="placeableLayer" index="159" instance=ExtResource("5_slot")]
+[node name="slot_1_15" parent="placeableLayer" index="93" instance=ExtResource("5_slot")]
 position = Vector2(96, 992)
 
-[node name="slot_4_15" parent="placeableLayer" index="160" instance=ExtResource("5_slot")]
+[node name="slot_4_15" parent="placeableLayer" index="94" instance=ExtResource("5_slot")]
 position = Vector2(288, 992)
 
-[node name="slot_5_15" parent="placeableLayer" index="161" instance=ExtResource("5_slot")]
+[node name="slot_5_15" parent="placeableLayer" index="95" instance=ExtResource("5_slot")]
 position = Vector2(352, 992)
 
-[node name="slot_8_15" parent="placeableLayer" index="162" instance=ExtResource("5_slot")]
+[node name="slot_8_15" parent="placeableLayer" index="96" instance=ExtResource("5_slot")]
 position = Vector2(544, 992)
 
-[node name="slot_9_15" parent="placeableLayer" index="163" instance=ExtResource("5_slot")]
+[node name="slot_9_15" parent="placeableLayer" index="97" instance=ExtResource("5_slot")]
 position = Vector2(608, 992)
 
-[node name="slot_12_15" parent="placeableLayer" index="164" instance=ExtResource("5_slot")]
+[node name="slot_12_15" parent="placeableLayer" index="98" instance=ExtResource("5_slot")]
 position = Vector2(800, 992)
 
-[node name="slot_13_15" parent="placeableLayer" index="165" instance=ExtResource("5_slot")]
+[node name="slot_13_15" parent="placeableLayer" index="99" instance=ExtResource("5_slot")]
 position = Vector2(864, 992)
 
-[node name="slot_0_16" parent="placeableLayer" index="166" instance=ExtResource("5_slot")]
+[node name="slot_0_16" parent="placeableLayer" index="100" instance=ExtResource("5_slot")]
 position = Vector2(32, 1056)
 
-[node name="slot_1_16" parent="placeableLayer" index="167" instance=ExtResource("5_slot")]
+[node name="slot_1_16" parent="placeableLayer" index="101" instance=ExtResource("5_slot")]
 position = Vector2(96, 1056)
 
-[node name="slot_4_16" parent="placeableLayer" index="168" instance=ExtResource("5_slot")]
+[node name="slot_4_16" parent="placeableLayer" index="102" instance=ExtResource("5_slot")]
 position = Vector2(288, 1056)
 
-[node name="slot_5_16" parent="placeableLayer" index="169" instance=ExtResource("5_slot")]
+[node name="slot_5_16" parent="placeableLayer" index="103" instance=ExtResource("5_slot")]
 position = Vector2(352, 1056)
 
-[node name="slot_8_16" parent="placeableLayer" index="170" instance=ExtResource("5_slot")]
+[node name="slot_8_16" parent="placeableLayer" index="104" instance=ExtResource("5_slot")]
 position = Vector2(544, 1056)
 
-[node name="slot_9_16" parent="placeableLayer" index="171" instance=ExtResource("5_slot")]
+[node name="slot_9_16" parent="placeableLayer" index="105" instance=ExtResource("5_slot")]
 position = Vector2(608, 1056)
 
-[node name="slot_12_16" parent="placeableLayer" index="172" instance=ExtResource("5_slot")]
+[node name="slot_12_16" parent="placeableLayer" index="106" instance=ExtResource("5_slot")]
 position = Vector2(800, 1056)
 
-[node name="slot_13_16" parent="placeableLayer" index="173" instance=ExtResource("5_slot")]
+[node name="slot_13_16" parent="placeableLayer" index="107" instance=ExtResource("5_slot")]
 position = Vector2(864, 1056)
+
+[node name="propLayer" type="Node2D" parent="."]
+
+[node name="generator_2_1" parent="propLayer" index="0" instance=ExtResource("8_big_generator")]
+position = Vector2(192, 96)
+
+[node name="ac_unit_6_11" parent="propLayer" index="1" instance=ExtResource("8_big_ac_unit")]
+position = Vector2(448, 768)
+
+[node name="cooling_tower_6_13" parent="propLayer" index="2" instance=ExtResource("8_big_cooling_tower")]
+position = Vector2(448, 896)
+
+[node name="storage_tank_14_9" parent="propLayer" index="3" instance=ExtResource("8_big_storage_tank")]
+position = Vector2(960, 640)
+
+[node name="monitor_6_1" parent="propLayer" index="4" instance=ExtResource("7_prop_monitor")]
+position = Vector2(416, 96)
+
+[node name="welding_spark_5_2" parent="propLayer" index="5" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(352, 160)
+
+[node name="welding_spark_6_2" parent="propLayer" index="6" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(416, 160)
+
+[node name="welding_spark_9_3" parent="propLayer" index="7" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(608, 224)
+
+[node name="vent_fan_21_3" parent="propLayer" index="8" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(1376, 224)
+
+[node name="monitor_26_3" parent="propLayer" index="9" instance=ExtResource("7_prop_monitor")]
+position = Vector2(1696, 224)
+
+[node name="monitor_12_4" parent="propLayer" index="10" instance=ExtResource("7_prop_monitor")]
+position = Vector2(800, 288)
+
+[node name="vent_fan_20_4" parent="propLayer" index="11" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(1312, 288)
+
+[node name="vent_fan_26_4" parent="propLayer" index="12" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(1696, 288)
+
+[node name="monitor_19_5" parent="propLayer" index="13" instance=ExtResource("7_prop_monitor")]
+position = Vector2(1248, 352)
+
+[node name="monitor_25_5" parent="propLayer" index="14" instance=ExtResource("7_prop_monitor")]
+position = Vector2(1632, 352)
+
+[node name="monitor_9_6" parent="propLayer" index="15" instance=ExtResource("7_prop_monitor")]
+position = Vector2(608, 416)
+
+[node name="monitor_14_6" parent="propLayer" index="16" instance=ExtResource("7_prop_monitor")]
+position = Vector2(928, 416)
+
+[node name="monitor_18_6" parent="propLayer" index="17" instance=ExtResource("7_prop_monitor")]
+position = Vector2(1184, 416)
+
+[node name="vent_fan_19_6" parent="propLayer" index="18" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(1248, 416)
+
+[node name="monitor_20_6" parent="propLayer" index="19" instance=ExtResource("7_prop_monitor")]
+position = Vector2(1312, 416)
+
+[node name="monitor_23_6" parent="propLayer" index="20" instance=ExtResource("7_prop_monitor")]
+position = Vector2(1504, 416)
+
+[node name="monitor_8_7" parent="propLayer" index="21" instance=ExtResource("7_prop_monitor")]
+position = Vector2(544, 480)
+
+[node name="vent_fan_15_7" parent="propLayer" index="22" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(992, 480)
+
+[node name="welding_spark_16_7" parent="propLayer" index="23" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(1056, 480)
+
+[node name="vent_fan_22_7" parent="propLayer" index="24" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(1440, 480)
+
+[node name="vent_fan_12_8" parent="propLayer" index="25" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(800, 544)
+
+[node name="welding_spark_16_8" parent="propLayer" index="26" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(1056, 544)
+
+[node name="welding_spark_20_8" parent="propLayer" index="27" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(1312, 544)
+
+[node name="welding_spark_23_8" parent="propLayer" index="28" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(1504, 544)
+
+[node name="welding_spark_25_8" parent="propLayer" index="29" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(1632, 544)
+
+[node name="welding_spark_29_8" parent="propLayer" index="30" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(1888, 544)
+
+[node name="monitor_8_9" parent="propLayer" index="31" instance=ExtResource("7_prop_monitor")]
+position = Vector2(544, 608)
+
+[node name="welding_spark_17_9" parent="propLayer" index="32" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(1120, 608)
+
+[node name="monitor_18_10" parent="propLayer" index="33" instance=ExtResource("7_prop_monitor")]
+position = Vector2(1184, 672)
+
+[node name="welding_spark_5_11" parent="propLayer" index="34" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(352, 736)
+
+[node name="vent_fan_18_11" parent="propLayer" index="35" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(1184, 736)
+
+[node name="vent_fan_23_11" parent="propLayer" index="36" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(1504, 736)
+
+[node name="welding_spark_25_11" parent="propLayer" index="37" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(1632, 736)
+
+[node name="monitor_15_12" parent="propLayer" index="38" instance=ExtResource("7_prop_monitor")]
+position = Vector2(992, 800)
+
+[node name="monitor_22_12" parent="propLayer" index="39" instance=ExtResource("7_prop_monitor")]
+position = Vector2(1440, 800)
+
+[node name="monitor_14_13" parent="propLayer" index="40" instance=ExtResource("7_prop_monitor")]
+position = Vector2(928, 864)
+
+[node name="vent_fan_19_13" parent="propLayer" index="41" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(1248, 864)
+
+[node name="vent_fan_20_13" parent="propLayer" index="42" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(1312, 864)
+
+[node name="vent_fan_22_13" parent="propLayer" index="43" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(1440, 864)
+
+[node name="vent_fan_26_13" parent="propLayer" index="44" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(1696, 864)
+
+[node name="welding_spark_17_14" parent="propLayer" index="45" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(1120, 928)
+
+[node name="welding_spark_21_14" parent="propLayer" index="46" instance=ExtResource("7_prop_welding_spark")]
+position = Vector2(1376, 928)
+
+[node name="monitor_27_14" parent="propLayer" index="47" instance=ExtResource("7_prop_monitor")]
+position = Vector2(1760, 928)
+
+[node name="vent_fan_29_14" parent="propLayer" index="48" instance=ExtResource("7_prop_vent_fan")]
+position = Vector2(1888, 928)
+
+[node name="monitor_27_15" parent="propLayer" index="49" instance=ExtResource("7_prop_monitor")]
+position = Vector2(1760, 992)
+
+[node name="alarm_25_3" parent="propLayer" index="50" instance=ExtResource("7_prop_alarm")]
+position = Vector2(1632, 224)
+
+[node name="alarm_1_8" parent="propLayer" index="51" instance=ExtResource("7_prop_alarm")]
+position = Vector2(96, 544)
 
 [connection signal="timeout" from="waveTimer" to="." method="_on_wave_timer_timeout"]
 [connection signal="timeout" from="spawnerTimer" to="." method="_on_spawner_timer_timeout"]
