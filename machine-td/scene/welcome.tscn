@@ -4,19 +4,52 @@
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_hys0r"]
 [ext_resource type="PackedScene" uid="uid://v3vtbt8yry5c" path="res://scene/about_panel.tscn" id="3_0h2lm"]
 [ext_resource type="PackedScene" uid="uid://dxgyptjosrq7w" path="res://scene/bg.tscn" id="3_xnoho"]
+[ext_resource type="Shader" uid="uid://k3i7cfgk8dy1" path="res://shader/light.gdshader" id="5_lswc2"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="5_si833"]
 [ext_resource type="Texture2D" uid="uid://dd7kyvd46ux57" path="res://sprite/book-open-cover.png" id="6_xdjj8"]
+[ext_resource type="Shader" uid="uid://uedb3knxh6uv" path="res://shader/hazard_scroll.gdshader" id="7_k3eee"]
 [ext_resource type="Texture2D" uid="uid://bsksv4xqp8slm" path="res://sprite/play-circle.png" id="7_vvofi"]
 [ext_resource type="Texture2D" uid="uid://dpriqv5u7rxvo" path="res://sprite/settings.png" id="8_vn0ct"]
 [ext_resource type="Texture2D" uid="uid://jssxjig1588u" path="res://sprite/interrogation.png" id="9_vkhmq"]
-[ext_resource type="Texture2D" uid="uid://bysycbvjc5e8o" path="res://sprite/achievement.png" id="9_vn0ct"]
+[ext_resource type="Texture2D" uid="uid://c5cb022ih5jj3" path="res://sprite/achievement_3d.png" id="9_vn0ct"]
 [ext_resource type="PackedScene" uid="uid://cmoo2h1nvyyws" path="res://scene/setting.tscn" id="9_vvofi"]
 [ext_resource type="Shader" uid="uid://ch8wag47374oa" path="res://shader/achievement_glow.gdshader" id="10_glow"]
 [ext_resource type="PackedScene" uid="uid://cq5ajf7h5g7lc" path="res://scene/achievement_panel.tscn" id="11_achv"]
 [ext_resource type="PackedScene" path="res://scene/ui/title_logo.tscn" id="12_title"]
+[ext_resource type="Texture2D" uid="uid://cyiyyjhafyov3" path="res://sprite/image.png" id="12_vvs3e"]
 [ext_resource type="PackedScene" path="res://scene/ui/hazard_strip.tscn" id="13_hazard"]
-[ext_resource type="Texture2D" uid="uid://bl0olbrgthb3l" path="res://sprite/tower3.png" id="14_codexicon"]
-[ext_resource type="PackedScene" path="res://scene/codex_panel.tscn" id="15_codexpanel"]
+[ext_resource type="PackedScene" uid="uid://c2nj0kfkpwu4c" path="res://scene/codex_panel.tscn" id="15_codexpanel"]
+
+[sub_resource type="StyleBoxFlat" id="TitleFrame_box"]
+bg_color = Color(0.05882353, 0.07450981, 0.101960786, 0.78)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.7764706, 0.101960786, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lswc2"]
+resource_local_to_scene = true
+shader = ExtResource("5_lswc2")
+shader_parameter/shine_color = Color(1, 1, 1, 0.45)
+shader_parameter/shine_speed = 1.0
+shader_parameter/shine_size = 0.02
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k3eee"]
+resource_local_to_scene = true
+shader = ExtResource("7_k3eee")
+shader_parameter/speed = 0.12
+shader_parameter/alpha = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vvs3e"]
+resource_local_to_scene = true
+shader = ExtResource("7_k3eee")
+shader_parameter/speed = 0.12
+shader_parameter/alpha = 1.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_glow"]
 resource_local_to_scene = true
@@ -40,26 +73,38 @@ theme = ExtResource("2_hys0r")
 layout_mode = 0
 metadata/_edit_lock_ = true
 
-[node name="titleLogo" parent="ui" instance=ExtResource("12_title")]
+[node name="titleFrame" type="Panel" parent="ui" unique_id=600953032]
+layout_mode = 0
+offset_left = 280.0
+offset_top = 88.0
+offset_right = 1640.0
+offset_bottom = 468.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("TitleFrame_box")
+
+[node name="titleLogo" parent="ui" unique_id=888230550 instance=ExtResource("12_title")]
+material = SubResource("ShaderMaterial_lswc2")
 layout_mode = 0
 offset_left = 160.0
 offset_top = 55.0
 offset_right = 1760.0
 offset_bottom = 505.0
 
-[node name="hazardTop" parent="ui" instance=ExtResource("13_hazard")]
+[node name="hazardTop" parent="ui" unique_id=944989092 instance=ExtResource("13_hazard")]
+material = SubResource("ShaderMaterial_k3eee")
 layout_mode = 0
-offset_left = 360.0
-offset_top = 71.0
-offset_right = 1560.0
-offset_bottom = 93.0
+offset_left = 280.0
+offset_top = 88.0
+offset_right = 1640.0
+offset_bottom = 110.0
 
-[node name="hazardBottom" parent="ui" instance=ExtResource("13_hazard")]
+[node name="hazardBottom" parent="ui" unique_id=1211075920 instance=ExtResource("13_hazard")]
+material = SubResource("ShaderMaterial_vvs3e")
 layout_mode = 0
-offset_left = 360.0
-offset_top = 467.0
-offset_right = 1560.0
-offset_bottom = 489.0
+offset_left = 280.0
+offset_top = 446.0
+offset_right = 1640.0
+offset_bottom = 468.0
 
 [node name="HBoxContainer" type="VBoxContainer" parent="ui" unique_id=442101509]
 layout_mode = 0
@@ -69,7 +114,6 @@ offset_right = 1128.0
 offset_bottom = 956.0
 theme_override_constants/separation = 20
 alignment = 1
-metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
 [node name="UIButton" parent="ui/HBoxContainer" unique_id=226549016 instance=ExtResource("5_si833")]
@@ -99,14 +143,14 @@ theme_override_colors/icon_hover_color = Color(0.972549, 0.9843137, 0.99215686, 
 text = "_Settings"
 icon = ExtResource("8_vn0ct")
 
-[node name="btnCodex" parent="ui/HBoxContainer" instance=ExtResource("5_si833")]
+[node name="btnCodex" parent="ui/HBoxContainer" unique_id=1098112346 instance=ExtResource("5_si833")]
 layout_mode = 2
 theme_override_colors/icon_normal_color = Color(1, 0.5529412, 0.5019608, 1)
 theme_override_colors/icon_focus_color = Color(1, 0.5529412, 0.5019608, 1)
 theme_override_colors/icon_pressed_color = Color(0.7882353, 0.40392157, 0.37254903, 1)
 theme_override_colors/icon_hover_color = Color(1, 0.73333335, 0.69411767, 1)
 text = "_Codex"
-icon = ExtResource("14_codexicon")
+icon = ExtResource("12_vvs3e")
 
 [node name="btnAbout" parent="ui/HBoxContainer" unique_id=1145162391 instance=ExtResource("5_si833")]
 layout_mode = 2
@@ -137,13 +181,8 @@ anchors_preset = 0
 
 [node name="achievementPanel" parent="." unique_id=1661854894 instance=ExtResource("11_achv")]
 visible = false
-layout_mode = 3
-anchors_preset = 0
 
-[node name="codexPanel" parent="." instance=ExtResource("15_codexpanel")]
-visible = false
-layout_mode = 3
-anchors_preset = 0
+[node name="codexPanel" parent="." unique_id=205813787 instance=ExtResource("15_codexpanel")]
 
 [connection signal="pressed" from="ui/HBoxContainer/UIButton" to="." method="_on_tutorial_pressed"]
 [connection signal="pressed" from="ui/HBoxContainer/btnStart" to="." method="_on_btn_s_start_pressed"]

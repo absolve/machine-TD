@@ -40,10 +40,10 @@ alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ui" unique_id=1887196183]
 layout_mode = 0
-offset_left = 720.0
-offset_top = 931.0
-offset_right = 1128.0
-offset_bottom = 1008.0
+offset_left = 800.0
+offset_top = 947.0
+offset_right = 1208.0
+offset_bottom = 1024.0
 alignment = 1
 metadata/_edit_group_ = true
 

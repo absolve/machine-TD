@@ -13,6 +13,8 @@ extends Node2D
 @onready var towerDetailPanel = $hud/towerDetailPanel
 @onready var enemyDetailPanel = $hud/enemyDetailPanel
 @onready var levelIntroPanel = $popupLayer/levelIntroPanel
+## 战斗开始横幅（独立场景）。关卡**第一次**开打时闪一下提示玩家
+@onready var battleStartBanner = $popupLayer/battleStartBanner
 @onready var achievementTracker = $achievementTracker
 @onready var abilityBar = $hud/abilityBar
 @onready var customCamera = $customCamera
@@ -84,10 +86,17 @@ func _ready():
 	#queue_redraw()
 	# print(int(1920.0 / cellSize))
 	font = ThemeDB.fallback_font
+	# 情报弹窗一关，就提示玩家去点顶栏的开始按钮
+	if levelIntroPanel != null:
+		levelIntroPanel.closed.connect(_on_intro_closed)
 	# 地图加载完成后弹出关卡情报，方便玩家查看本关敌人类型
 	show_level_intro()
 	# 按关卡配置启用能力技能
 	setup_abilities()
+
+## 本关是否已经开打过。只有第一次点开始才闪横幅，暂停后继续不闪
+var _battle_started := false
+
 
 #按关卡配置启用能力技能（未配置的关卡不显示技能条）
 func setup_abilities() -> void:
@@ -100,8 +109,15 @@ func setup_abilities() -> void:
 #显示关卡情报弹窗（关卡名 + 本关敌人类型等信息）
 func show_level_intro() -> void:
 	if levelIntroPanel == null:
+		# 没有弹窗的关卡（比如教程）直接就开始提示玩家点开始
+		titleNode.prompt_start()
 		return
 	levelIntroPanel.show_level(stageData)
+
+
+#情报弹窗关掉之后：让顶栏的 ▶ 一闪一闪，提示玩家点它开打
+func _on_intro_closed() -> void:
+	titleNode.prompt_start()
 	
 #载入关卡
 func loadLevel():
@@ -247,6 +263,13 @@ func startGame():
 	get_tree().paused = false
 	# 顶栏 ▶/⏸ 同步成「正在运行」（= 显示暂停图，点一下才暂停）
 	titleNode.set_playing(true)
+	# 玩家已经开打了，闪烁提示可以收了
+	titleNode.stop_prompt()
+	# 只有「本关第一次开打」才闪横幅；暂停后继续不再闪
+	if not _battle_started:
+		_battle_started = true
+		if battleStartBanner != null:
+			battleStartBanner.play()
 	level.start()
 	syncWaveProgressBar()
 

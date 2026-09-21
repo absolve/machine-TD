@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://dev1wi4vmspkd"]
+
+[ext_resource type="Script" uid="uid://bhicoyhuywngs" path="res://script/battle_start_banner.gd" id="1_banner"]
+[ext_resource type="PackedScene" path="res://scene/ui/hazard_strip.tscn" id="2_hazard"]
+[ext_resource type="Shader" uid="uid://uedb3knxh6uv" path="res://shader/hazard_scroll.gdshader" id="3_xtggc"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iwtix"]
+resource_local_to_scene = true
+shader = ExtResource("3_xtggc")
+shader_parameter/speed = 0.12
+shader_parameter/alpha = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eiy48"]
+resource_local_to_scene = true
+shader = ExtResource("3_xtggc")
+shader_parameter/speed = 0.12
+shader_parameter/alpha = 1.0
+
+[node name="battleStartBanner" type="Control" unique_id=2038580278]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_banner")
+
+[node name="center" type="CenterContainer" parent="." unique_id=513900205]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="band" type="Control" parent="center" unique_id=873075837]
+custom_minimum_size = Vector2(1920, 208)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="bg" type="ColorRect" parent="center/band" unique_id=1317842057]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.05882353, 0.07450981, 0.101960786, 0.86)
+
+[node name="hazardTop" parent="center/band" unique_id=2145099868 instance=ExtResource("2_hazard")]
+material = SubResource("ShaderMaterial_iwtix")
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_right = 0.0
+offset_bottom = 20.0
+grow_horizontal = 2
+
+[node name="hazardBottom" parent="center/band" unique_id=831463168 instance=ExtResource("2_hazard")]
+material = SubResource("ShaderMaterial_eiy48")
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -20.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="content" type="CenterContainer" parent="center/band" unique_id=992823676]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBox" type="VBoxContainer" parent="center/band/content" unique_id=652313651]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="titleLabel" type="Label" parent="center/band/content/VBox" unique_id=1389130089]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.7764706, 0.101960786, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.65)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 76
+text = "Battle Start"
+horizontal_alignment = 1
+
+[node name="subLabel" type="Label" parent="center/band/content/VBox" unique_id=1899201421]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8980392, 0.92941177, 0.9607843, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 36
+text = "Enemies incoming"
+horizontal_alignment = 1

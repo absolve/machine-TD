@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://crt28af0lchit" path="res://script/sound_manage.gd" id="1_or83v"]
 [ext_resource type="AudioStream" uid="uid://bi0pwakm40o0i" path="res://sound/sfx/coin.ogg" id="2_button"]
 [ext_resource type="AudioStream" uid="uid://2dmusrdxusgg" path="res://sound/sfx/ui_confirm.ogg" id="3_confirm"]
+[ext_resource type="AudioStream" uid="uid://yyx32memydcu" path="res://sound/sfx/ui_hover.ogg" id="4_hover"]
 
 [node name="soundManage" type="Node2D" unique_id=1932233337]
 script = ExtResource("1_or83v")
@@ -13,4 +14,8 @@ bus = &"Sfx"
 
 [node name="ConfirmSound" type="AudioStreamPlayer" parent="." unique_id=1388930596]
 stream = ExtResource("3_confirm")
+bus = &"Sfx"
+
+[node name="HoverSound" type="AudioStreamPlayer" parent="." unique_id=1388930597]
+stream = ExtResource("4_hover")
 bus = &"Sfx"

@@ -9,6 +9,9 @@ extends Control
 ## 以及本关会出现的全部敌人类型（名称 / 定位 / 数量 / 血量 / 速度 / 是否空中）。
 ## 敌人数据统一取自 Game.enemyInfo 和 StageData.allStage，避免与战斗数值不同步。
 
+## 面板关闭时发出（点了「开始战斗」）。map 接这个信号去提示玩家点顶栏的开始按钮。
+signal closed
+
 @onready var title_label: Label = $Center/panelBg/Margin/VBox/titleLabel
 @onready var subtitle_label: Label = $Center/panelBg/Margin/VBox/subtitleLabel
 @onready var info_box: HBoxContainer = $Center/panelBg/Margin/VBox/InfoBox
@@ -29,10 +32,19 @@ const COLOR_TEXT := Color(0.89411765, 0.92156863, 0.8745098, 1.0)
 
 
 func _ready() -> void:
-	start_button.pressed.connect(hide)
+	start_button.pressed.connect(close)
 	intel_title.text = _t("_EnemyIntel", "Enemy Intel")
 	hint_label.text = _t("_IntelHint", "Close this window and press Start to begin the battle.")
 	start_button.text = _t("_BeginBattle", "Begin Battle")
+
+
+# 关闭面板。**统一走这里**，closed 信号才会一定发出去
+# （直接调 hide() 的话 map 收不到通知，就不知道要提示玩家点开始了）
+func close() -> void:
+	if not visible:
+		return
+	hide()
+	closed.emit()
 
 
 # 地图加载完成后调用：填充关卡信息并弹出

@@ -62,9 +62,39 @@ var score = 0:
 ##
 ## ⚠️ 必须用 set_pressed_no_signal —— 直接写 button_pressed 会触发 toggled，
 ##    反过来又发一次 start / pause，声音和状态都会错乱。
+## 开始按钮的呼吸提示循环（见 prompt_start）
+var _prompt_tween: Tween
+
+
 func set_playing(playing: bool) -> void:
 	if btnStart and btnStart.button_pressed != playing:
 		btnStart.set_pressed_no_signal(playing)
+
+
+## 开始按钮的呼吸提示：还在等玩家开打时，让 ▶ 一闪一闪。
+## 关卡情报弹窗一关就调它；玩家点了开始再 stop_prompt()。
+func prompt_start() -> void:
+	stop_prompt()
+	if btnStart == null:
+		return
+	btnStart.pivot_offset = btnStart.size * 0.5
+	# ⚠️ 用 parallel() 只让「紧跟的那一条」并行。
+	#    别用 set_parallel(true) —— 那会让后面**所有** tweener 都并行，
+	#    "变亮"和"变暗"、"放大"和"缩小"同时跑，互相抵消，scale 会永远停在 1.0（这里踩过）。
+	_prompt_tween = create_tween().set_loops()
+	_prompt_tween.tween_property(btnStart, "modulate", Color(1.9, 1.8, 1.25), 0.45).set_trans(Tween.TRANS_SINE)
+	_prompt_tween.parallel().tween_property(btnStart, "scale", Vector2(1.14, 1.14), 0.45).set_trans(Tween.TRANS_SINE)
+	_prompt_tween.tween_property(btnStart, "modulate", Color.WHITE, 0.45).set_trans(Tween.TRANS_SINE)
+	_prompt_tween.parallel().tween_property(btnStart, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_SINE)
+
+
+func stop_prompt() -> void:
+	if _prompt_tween != null and _prompt_tween.is_valid():
+		_prompt_tween.kill()
+	_prompt_tween = null
+	if btnStart != null:
+		btnStart.modulate = Color.WHITE
+		btnStart.scale = Vector2.ONE
 
 
 func _on_texture_button_toggled(toggled_on: bool) -> void:

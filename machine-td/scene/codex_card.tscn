@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://script/codex_card.gd" id="1_card"]
+[ext_resource type="Theme" path="res://theme/theme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="Card_default"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.101960786, 0.12156863, 0.15686275, 0.85)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.20392157, 0.23529412, 0.3019608, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="codexCard" type="PanelContainer"]
+custom_minimum_size = Vector2(178, 194)
+theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("Card_default")
+script = ExtResource("1_card")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Center" type="CenterContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="icon" type="TextureRect" parent="VBox/Center"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="nameLabel" type="Label" parent="VBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 20
+text = "-"
+horizontal_alignment = 1
+clip_text = true

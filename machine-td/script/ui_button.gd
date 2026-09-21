@@ -7,6 +7,9 @@ extends Button
 ##    而不是在场景脚本里另外补一句。
 ##
 ## 地图内想要更"重"的一声，把 `click_sound` 切成 CONFIRM 即可。
+##
+## 另外鼠标**移上来**会播一声轻的悬停音（`sfx/ui_hover.ogg`），
+## 同样由这个脚本自己负责，场景脚本不要再补。
 
 enum ClickSound {
 	COIN,     ## 菜单 / 通用 UI（sfx/coin.ogg）
@@ -32,3 +35,11 @@ func _on_pressed() -> void:
 			SoundManage.playConfirm()
 		_:
 			SoundManage.playEffect()
+
+
+## 鼠标移上来播一声轻的（sfx/ui_hover.ogg）。
+## 节流在 SoundManage 里（HOVER_GUARD_MSEC），这里只负责触发。
+func _on_mouse_entered() -> void:
+	if disabled:
+		return
+	SoundManage.playHover()

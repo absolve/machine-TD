@@ -143,3 +143,5 @@ _EnemyDesc_support,Support - repairs nearby damaged enemies,支援型 - 为附�
 _EnemyDesc_bomber,Suicide Bomber - charges a tower and blows itself up,自爆型 - 冲撞防御塔并自爆
 _EnemyDesc_siege,Siege - bombards your towers from long range,远程打击型 - 从超远距离轰炸防御塔
 _EnemyDesc_air,Air Unit - towers without anti-air cannot hit it,空中单位 - 不具备防空能力的塔无法命中
+_BattleStart,Battle Start,游戏开始
+_EnemiesIncoming,Enemies incoming,敌人即将到来

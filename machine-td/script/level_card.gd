@@ -29,10 +29,16 @@ func _ready() -> void:
 
 func _on_mouse_entered() -> void:
 	selected.visible = not isLock
+	# 悬停时把卡片自己的边框提亮。
+	# 用 self_modulate（只影响本节点自己的绘制）而不是 modulate ——
+	# modulate 在和"未解锁灰化"抢同一个属性，会打架。
+	if not isLock:
+		self_modulate = Color(1.35, 1.35, 1.35)
 
 
 func _on_mouse_exited() -> void:
 	selected.visible = false
+	self_modulate = Color.WHITE
 
 
 func _on_gui_input(_event):
