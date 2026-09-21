@@ -131,3 +131,15 @@ _Score,Score:,得分:
 _Pause,Pause,暂停
 _LevelLocked,LOCKED,未解锁
 _TowerLockedInStage,This tower is not available in this stage,本关不可建造该防御塔
+_Codex,Unit Codex,单位图鉴
+_CodexEnemies,Enemies,敌人
+_CodexTowers,Defense Towers,防御塔
+_CodexHoverHint,Hover a unit to see its details,把鼠标移到单位上查看详细数据
+_InitTime,Build Time,建造时间
+_GridSize,Grid,占地
+_EnemyDesc_pusher,Pusher - heads straight for the base and ignores your towers,推进型 - 直冲基地，不理会沿途防御塔
+_EnemyDesc_attacker,Attacker - fires at your towers along the way,对抗型 - 行进途中会向防御塔开火
+_EnemyDesc_support,Support - repairs nearby damaged enemies,支援型 - 为附近受伤的敌人提供维修
+_EnemyDesc_bomber,Suicide Bomber - charges a tower and blows itself up,自爆型 - 冲撞防御塔并自爆
+_EnemyDesc_siege,Siege - bombards your towers from long range,远程打击型 - 从超远距离轰炸防御塔
+_EnemyDesc_air,Air Unit - towers without anti-air cannot hit it,空中单位 - 不具备防空能力的塔无法命中

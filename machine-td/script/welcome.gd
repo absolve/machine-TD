@@ -4,6 +4,7 @@ extends Node2D
 @onready var settingPanel = $setting
 @onready var achievementIcon: TextureButton = $ui/achievement
 @onready var achievementPanel = $achievementPanel
+@onready var codexPanel = $codexPanel
 
 var _glow_tween: Tween
 
@@ -25,6 +26,12 @@ func _ready() -> void:
 
 func _on_button_3_pressed():
 	aboutPanel.show()
+
+
+# 单位图鉴（敌人 / 防御塔资料）—— 按钮在"关于"上方
+# 面板自己管显示（场景里就是 visible = false，close() 里自己隐藏），这里只管打开
+func _on_codex_pressed() -> void:
+	codexPanel.open()
 
 
 func _on_tutorial_pressed() -> void:

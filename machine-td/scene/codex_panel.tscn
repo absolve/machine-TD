@@ -1,0 +1,146 @@
+[gd_scene format=3 uid="uid://c2nj0kfkpwu4c"]
+
+[ext_resource type="Script" uid="uid://ditrqsosl5fvs" path="res://script/codex_panel.gd" id="1_codex"]
+[ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_btn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail"]
+content_margin_left = 20.0
+content_margin_top = 14.0
+content_margin_right = 20.0
+content_margin_bottom = 14.0
+bg_color = Color(0.14117648, 0.16470589, 0.21176471, 0.97)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3882353, 0.40784314, 0.44313726, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="codexPanel" type="Control" unique_id=1618071338]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+theme = ExtResource("2_theme")
+script = ExtResource("1_codex")
+
+[node name="bg" type="ColorRect" parent="." unique_id=482648752]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.05098039, 0.0627451, 0.08627451, 0.6)
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=865691522]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = 40.0
+offset_right = -60.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1343756845]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Header" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=1054373325]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/Header" unique_id=358048159]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 56
+text = "_Codex"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="btnClose" parent="PanelContainer/VBoxContainer/Header" unique_id=2100515597 instance=ExtResource("3_btn")]
+layout_mode = 2
+text = "_Close"
+
+[node name="Tabs" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=939104643]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="btnEnemies" parent="PanelContainer/VBoxContainer/Tabs" unique_id=1705369851 instance=ExtResource("3_btn")]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+text = "_CodexEnemies"
+
+[node name="btnTowers" parent="PanelContainer/VBoxContainer/Tabs" unique_id=535091129 instance=ExtResource("3_btn")]
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+text = "_CodexTowers"
+
+[node name="icons" type="VBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=1591570930]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="DetailBox" type="PanelContainer" parent="PanelContainer/VBoxContainer" unique_id=1305628806]
+custom_minimum_size = Vector2(0, 230)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_detail")
+
+[node name="DetailVBox" type="VBoxContainer" parent="PanelContainer/VBoxContainer/DetailBox" unique_id=924320445]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="DetailTop" type="HBoxContainer" parent="PanelContainer/VBoxContainer/DetailBox/DetailVBox" unique_id=1564031305]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="IconCenter" type="CenterContainer" parent="PanelContainer/VBoxContainer/DetailBox/DetailVBox/DetailTop" unique_id=100482830]
+layout_mode = 2
+
+[node name="detailIcon" type="TextureRect" parent="PanelContainer/VBoxContainer/DetailBox/DetailVBox/DetailTop/IconCenter" unique_id=1764436132]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DetailInfo" type="VBoxContainer" parent="PanelContainer/VBoxContainer/DetailBox/DetailVBox/DetailTop" unique_id=1963648370]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 6
+
+[node name="DetailHeader" type="HBoxContainer" parent="PanelContainer/VBoxContainer/DetailBox/DetailVBox/DetailTop/DetailInfo" unique_id=1654599840]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="detailName" type="Label" parent="PanelContainer/VBoxContainer/DetailBox/DetailVBox/DetailTop/DetailInfo/DetailHeader" unique_id=2046699573]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 36
+vertical_alignment = 1
+
+[node name="detailTag" type="Label" parent="PanelContainer/VBoxContainer/DetailBox/DetailVBox/DetailTop/DetailInfo/DetailHeader" unique_id=649617425]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+vertical_alignment = 1
+
+[node name="detailDesc" type="Label" parent="PanelContainer/VBoxContainer/DetailBox/DetailVBox/DetailTop/DetailInfo" unique_id=1932992096]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.91764706, 0.9490196, 0.96862745, 1)
+theme_override_font_sizes/font_size = 26
+autowrap_mode = 3
+
+[node name="detailStats" type="GridContainer" parent="PanelContainer/VBoxContainer/DetailBox/DetailVBox" unique_id=1648380317]
+layout_mode = 2
+theme_override_constants/h_separation = 26
+theme_override_constants/v_separation = 6
+columns = 6
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/Header/btnClose" to="." method="close"]

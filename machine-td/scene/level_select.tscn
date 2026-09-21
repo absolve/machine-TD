@@ -29,16 +29,14 @@ theme_override_font_sizes/font_size = 90
 text = "_SelectLevel"
 horizontal_alignment = 1
 
-[node name="levels" type="GridContainer" parent="ui" unique_id=835426219]
-clip_contents = true
+[node name="levels" type="VBoxContainer" parent="ui" unique_id=835426219]
 layout_mode = 0
 offset_left = 135.0
-offset_top = 237.0
+offset_top = 215.0
 offset_right = 1785.0
-offset_bottom = 805.0
-theme_override_constants/h_separation = 40
-theme_override_constants/v_separation = 40
-columns = 6
+offset_bottom = 905.0
+theme_override_constants/separation = 40
+alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ui" unique_id=1887196183]
 layout_mode = 0
