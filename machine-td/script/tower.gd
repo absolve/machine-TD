@@ -160,12 +160,16 @@ func levelUp() -> void:
 
 # 升级闪光: 启用 shader -> 亮度淡入 -> 闪烁 -> 淡出 -> 关闭
 func playUpgradeGlow() -> void:
+	# ⚠️ 必须判空：不是每种塔都同时有 base 和 turret 两个精灵
+	#   （droneBase 就没有 turret），而且材质万一不是 ShaderMaterial
+	#   时 as 的结果是 null，直接 set_shader_parameter 会报错。
+	#   stopGlow() 里本来就有判空，这里之前漏了。
 	var bm := base.material as ShaderMaterial
 	var tm := turret.material as ShaderMaterial
-	# 打开发光, intensity 从 0 开始淡入
-	
-	bm.set_shader_parameter("enable_flash", true)
-	tm.set_shader_parameter("enable_flash", true)
+	if bm:
+		bm.set_shader_parameter("enable_flash", true)
+	if tm:
+		tm.set_shader_parameter("enable_flash", true)
 
 	var tw := create_tween()
 	tw.tween_interval(1.0)

@@ -14,9 +14,9 @@ resource_local_to_scene = true
 shader = ExtResource("3_wfuso")
 shader_parameter/enable_flash = false
 shader_parameter/base_brightness = 1.0
-shader_parameter/flash_speed = 50.0
-shader_parameter/flash_amplitude = 1.0
-shader_parameter/outline_thickness = 2.0
+shader_parameter/flash_speed = 14.0
+shader_parameter/flash_amplitude = 0.8
+shader_parameter/outline_thickness = 0.0
 shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_027me"]

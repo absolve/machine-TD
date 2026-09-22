@@ -1,35 +1,29 @@
-[gd_scene format=3 uid="uid://c8adh3ikjulbd"]
+[gd_scene load_steps=9 format=3 uid="uid://c8adh3ikjulbd"]
 
-[ext_resource type="Texture2D" uid="uid://cq88no2lsjnbm" path="res://sprite/explosion1.png" id="1_uox2b"]
-[ext_resource type="Texture2D" uid="uid://dqld0ujfm85we" path="res://sprite/explosion2.png" id="2_ge384"]
-[ext_resource type="Script" uid="uid://cxxjryhi1jd0i" path="res://script/explosion.gd" id="2_qekrk"]
-[ext_resource type="Texture2D" uid="uid://tumyiutagb1k" path="res://sprite/explosion3.png" id="3_li0os"]
-[ext_resource type="Texture2D" uid="uid://bjy74wugn858j" path="res://sprite/explosion4.png" id="4_os8wp"]
-[ext_resource type="Texture2D" uid="uid://duqn4mjs1d4lo" path="res://sprite/explosion5.png" id="5_g50kq"]
+[ext_resource type="Script" uid="uid://cxxjryhi1jd0i" path="res://script/explosion.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://b25uhc5pssoam" path="res://sprite/fx/boom_1.png" id="f1"]
+[ext_resource type="Texture2D" uid="uid://7l0qknfdtpey" path="res://sprite/fx/boom_2.png" id="f2"]
+[ext_resource type="Texture2D" uid="uid://bcwfol26yogey" path="res://sprite/fx/boom_3.png" id="f3"]
+[ext_resource type="Texture2D" uid="uid://d13hstitgesbb" path="res://sprite/fx/boom_4.png" id="f4"]
+[ext_resource type="Texture2D" uid="uid://25lmwca6o8gh" path="res://sprite/fx/boom_5.png" id="f5"]
+[ext_resource type="Texture2D" uid="uid://da7qsp7ikemq5" path="res://sprite/fx/boom_6.png" id="f6"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_ge384"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_boom"]
 animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("1_uox2b")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_ge384")
-}, {
-"duration": 1.0,
-"texture": ExtResource("3_li0os")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_os8wp")
-}, {
-"duration": 1.0,
-"texture": ExtResource("5_g50kq")
-}],
+"frames": [
+{"duration": 1.0,"texture": ExtResource("f1")},
+{"duration": 1.0,"texture": ExtResource("f2")},
+{"duration": 1.0,"texture": ExtResource("f3")},
+{"duration": 1.0,"texture": ExtResource("f4")},
+{"duration": 1.0,"texture": ExtResource("f5")},
+{"duration": 1.0,"texture": ExtResource("f6")}
+],
 "loop": 0,
 "name": &"default",
-"speed": 10.0
+"speed": 12.0
 }]
 
 [node name="explosion" type="AnimatedSprite2D" unique_id=1817926851]
-sprite_frames = SubResource("SpriteFrames_ge384")
-script = ExtResource("2_qekrk")
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_boom")
+script = ExtResource("1_script")

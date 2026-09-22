@@ -69,7 +69,7 @@ func play(title: String = "", sub: String = "", hold_override: float = -1.0) -> 
 	_tween.tween_property(self, "modulate:a", 0.0, fade_out_sec)
 	_tween.tween_property(band, "position:y", out_offset_y, fade_out_sec).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	_tween.chain().tween_callback(_on_done)
-
+	await  _tween.finished
 
 func _on_done() -> void:
 	visible = false

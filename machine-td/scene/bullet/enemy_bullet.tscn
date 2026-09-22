@@ -1,34 +1,30 @@
-[gd_scene format=3 uid="uid://dq5gd1pyprior"]
+[gd_scene load_steps=5 format=3 uid="uid://dq5gd1pyprior"]
 
 [ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet/bullet.tscn" id="1_bullet"]
 [ext_resource type="Script" uid="uid://bf33ehyfmprph" path="res://script/enemy_bullet.gd" id="2_script"]
-[ext_resource type="Texture2D" uid="uid://llwd851dwi2o" path="res://sprite/tower@2.png" id="3_jiqoc"]
+[ext_resource type="Texture2D" uid="uid://dlmnsye01ble7" path="res://sprite/bullet/enemy_bullet.png" id="3_tex"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_enemy_bullet"]
+[sub_resource type="CircleShape2D" id="Shape"]
 radius = 15.0
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jm33t"]
-atlas = ExtResource("3_jiqoc")
-region = Rect2(128, 256, 128, 128)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_6ca0x"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_b"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_jm33t")
+"texture": ExtResource("3_tex")
 }],
-"loop": 0,
+"loop": false,
 "name": &"default",
 "speed": 5.0
 }]
 
-[node name="enemyBullet" unique_id=145051555 instance=ExtResource("1_bullet")]
+[node name="enemyBullet" instance=ExtResource("1_bullet")]
 collision_layer = 0
 script = ExtResource("2_script")
 bullet_speed = 400.0
 
 [node name="shape" parent="." index="0"]
-shape = SubResource("CircleShape2D_enemy_bullet")
+shape = SubResource("Shape")
 
 [node name="ani" parent="." index="1"]
-sprite_frames = SubResource("SpriteFrames_6ca0x")
+sprite_frames = SubResource("SpriteFrames_b")

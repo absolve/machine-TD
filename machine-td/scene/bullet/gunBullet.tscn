@@ -1,34 +1,31 @@
-[gd_scene load_steps=7 format=3 uid="uid://bj4ug85qul1wa"]
+[gd_scene load_steps=5 format=3 uid="uid://bj4ug85qul1wa"]
 
-[ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet/bullet.tscn" id="1_1ru8m"]
-[ext_resource type="Script" uid="uid://b4n0gn6e1wxel" path="res://script/gun_bullet.gd" id="2_edk6p"]
-[ext_resource type="Texture2D" uid="uid://b85d7hnm7nf8j" path="res://sprite/towerDefense_tilesheet.png" id="3_ayjrs"]
+[ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet/bullet.tscn" id="1_bullet"]
+[ext_resource type="Script" uid="uid://b4n0gn6e1wxel" path="res://script/gun_bullet.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://biiepu28yykdk" path="res://sprite/bullet/gun_bullet.png" id="3_tex"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_g7r77"]
+[sub_resource type="CircleShape2D" id="Shape"]
+radius = 5.0
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_g7r77"]
-atlas = ExtResource("3_ayjrs")
-region = Rect2(1216, 704, 64, 64)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_cfo3h"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_b"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_g7r77")
+"texture": ExtResource("3_tex")
 }],
 "loop": true,
 "name": &"default",
 "speed": 5.0
 }]
 
-[node name="bullet" instance=ExtResource("1_1ru8m")]
+[node name="bullet" instance=ExtResource("1_bullet")]
 collision_layer = 4
 collision_mask = 2
-script = ExtResource("2_edk6p")
+script = ExtResource("2_script")
 
 [node name="shape" parent="." index="0"]
 visible = false
-shape = SubResource("CircleShape2D_g7r77")
+shape = SubResource("Shape")
 
 [node name="ani" parent="." index="1"]
-sprite_frames = SubResource("SpriteFrames_cfo3h")
+sprite_frames = SubResource("SpriteFrames_b")

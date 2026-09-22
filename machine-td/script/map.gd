@@ -269,7 +269,7 @@ func startGame():
 	if not _battle_started:
 		_battle_started = true
 		if battleStartBanner != null:
-			battleStartBanner.play()
+			await battleStartBanner.play()
 	level.start()
 	syncWaveProgressBar()
 

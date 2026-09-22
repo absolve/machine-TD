@@ -1,14 +1,15 @@
-[gd_scene format=3 uid="uid://dir1trynkle6v"]
+[gd_scene load_steps=7 format=3 uid="uid://dir1trynkle6v"]
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_t3cxq"]
 [ext_resource type="Script" uid="uid://cob11qts6pxo8" path="res://script/attackHelicopter.gd" id="2_holci"]
-[ext_resource type="Texture2D" uid="uid://2ubt70bo4eq" path="res://sprite/Hel_12.png" id="3_holci"]
+
+[ext_resource type="Texture2D" uid="uid://bcsajn3yep6i3" path="res://sprite/enemy/attack_helicopter_body.png" id="3_body"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_x8uhl"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_holci")
+"texture": ExtResource("3_body")
 }],
 "loop": 0,
 "name": &"default",
