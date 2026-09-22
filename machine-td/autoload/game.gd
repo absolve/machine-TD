@@ -226,3 +226,11 @@ func get_enemy_display_name(enemy_type) -> String:
 # 敌人行为定位标签（role 字段同样是翻译键）
 func get_enemy_role_name(enemy_type) -> String:
 	return tr(str(enemyInfo.get(enemy_type, {}).get("role", "")))
+
+
+# 取翻译；未找到对应 key（语言文件未导入）时回退到默认文本
+func _t(key: String, fallback: String) -> String:
+	if key.is_empty():
+		return fallback
+	var translated := tr(key)
+	return fallback if translated == key else translated

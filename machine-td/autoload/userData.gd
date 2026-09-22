@@ -21,7 +21,7 @@ var achievementProgress: Dictionary = {} # 成就进度
 #############
 
 const SETTINGS_FILE_NAME := "user_settings.cfg"
-const SETTINGS_SCHEMA := 2
+const SETTINGS_SCHEMA := 2 # 设置架构版本
 const PLAYER_DATA_FILE_NAME := "player_data.cfg"
 var settingsPath: String
 var playerDataPath: String
