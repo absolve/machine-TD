@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cw5p1ankmsixl" path="res://script/tower_ui.gd" id="1_yx7l2"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_tg0id"]
 [ext_resource type="PackedScene" uid="uid://b6gjxxdlchyde" path="res://scene/tower_info.tscn" id="3_gwmlu"]
-[ext_resource type="Texture2D" uid="uid://bxm3c5gvyk0gs" path="res://sprite/shield.png" id="4_k2xma"]
+[ext_resource type="Texture2D" uid="uid://dutq32m3cnfpe" path="res://sprite/toolbox (1).png" id="4_m5j1v"]
 [ext_resource type="StyleBox" uid="uid://cr4arrgli0dam" path="res://theme/style/tower_box_style.tres" id="5_m5j1v"]
 
 [sub_resource type="Animation" id="Animation_fbohf"]
@@ -114,7 +114,7 @@ offset_left = 8.0
 offset_top = 48.0
 offset_right = 136.0
 offset_bottom = 176.0
-texture = ExtResource("4_k2xma")
+texture = ExtResource("4_m5j1v")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1330017689]
 visible = false
