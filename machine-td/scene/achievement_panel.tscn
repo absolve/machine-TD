@@ -1,26 +1,11 @@
 [gd_scene format=3 uid="uid://cq5ajf7h5g7lc"]
 
-[ext_resource type="Script" uid="uid://bawykixets33u" path="res://script/achievement_panel.gd" id="1_3u4rb"]
+[ext_resource type="Script" uid="uid://bawykixets33u" path="res://script/panel/achievement_panel.gd" id="1_3u4rb"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_lunp2"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail"]
-content_margin_left = 20.0
-content_margin_top = 14.0
-content_margin_right = 20.0
-content_margin_bottom = 14.0
-bg_color = Color(0.14117648, 0.16470589, 0.21176471, 0.97)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.3882353, 0.40784314, 0.44313726, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
 [node name="achievementPanel" type="Control" unique_id=1920206854]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -57,14 +42,10 @@ theme_override_constants/separation = 16
 [node name="Label" type="Label" parent="PanelContainer/VBoxContainer/Header" unique_id=543356194]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 56
+theme_override_font_sizes/font_size = 80
 text = "_Achievements"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="btnClose" parent="PanelContainer/VBoxContainer/Header" unique_id=1077812873 instance=ExtResource("3_lunp2")]
-layout_mode = 2
-text = "_Close"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/VBoxContainer" unique_id=393917016]
 layout_mode = 2
@@ -82,7 +63,6 @@ columns = 5
 [node name="DetailBox" type="PanelContainer" parent="PanelContainer/VBoxContainer" unique_id=1920206858]
 custom_minimum_size = Vector2(0, 152)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_detail")
 
 [node name="DetailHBox" type="HBoxContainer" parent="PanelContainer/VBoxContainer/DetailBox" unique_id=1920206859]
 layout_mode = 2
@@ -128,4 +108,12 @@ autowrap_mode = 3
 layout_mode = 2
 theme_override_font_sizes/font_size = 26
 
-[connection signal="pressed" from="PanelContainer/VBoxContainer/Header/btnClose" to="." method="close"]
+[node name="Footer" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=508799193]
+layout_mode = 2
+alignment = 1
+
+[node name="btnClose" parent="PanelContainer/VBoxContainer/Footer" unique_id=1077812873 instance=ExtResource("3_lunp2")]
+layout_mode = 2
+text = "_Close"
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/Footer/btnClose" to="." method="close"]

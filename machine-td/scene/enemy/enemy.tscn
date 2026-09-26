@@ -1,7 +1,14 @@
 [gd_scene format=3 uid="uid://bpt2onorpqp5q"]
 
-[ext_resource type="Script" uid="uid://c6naokb8mjbq5" path="res://script/enemy.gd" id="1_h08p8"]
+[ext_resource type="Script" uid="uid://c6naokb8mjbq5" path="res://script/enemy/enemy.gd" id="1_h08p8"]
 [ext_resource type="PackedScene" uid="uid://4vv5x7rd5335" path="res://scene/life_bar.tscn" id="2_f87vc"]
+[ext_resource type="Shader" path="res://shader/enemy_hit_flash.gdshader" id="90_hitflash"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hitflash"]
+resource_local_to_scene = true
+shader = ExtResource("90_hitflash")
+shader_parameter/flash = 0.0
+shader_parameter/brighten = 0.85
 
 [node name="enemy" type="Area2D" unique_id=822671381 groups=["enemy"]]
 z_index = 2
@@ -10,6 +17,7 @@ collision_mask = 4
 script = ExtResource("1_h08p8")
 
 [node name="base" type="AnimatedSprite2D" parent="." unique_id=1108324432]
+material = SubResource("ShaderMaterial_hitflash")
 z_index = -1
 
 [node name="radar" type="Area2D" parent="." unique_id=1066952876]
@@ -18,6 +26,7 @@ collision_layer = 0
 [node name="shape" type="CollisionShape2D" parent="radar" unique_id=1238677921]
 
 [node name="turret" type="AnimatedSprite2D" parent="." unique_id=108539921]
+material = SubResource("ShaderMaterial_hitflash")
 z_index = -1
 
 [node name="shape" type="CollisionShape2D" parent="." unique_id=359688443]

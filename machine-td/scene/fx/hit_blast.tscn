@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scene/fx/hit.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://sprite/fx/p_flame.png" id="2_flame"]
+
+[node name="hit_blast" instance=ExtResource("1_base")]
+particle_texture = ExtResource("2_flame")
+hit_color = Color(1, 0.95, 0.8, 1)
+hit_amount = 14
+hit_scale = 0.95
+hit_duration = 0.6

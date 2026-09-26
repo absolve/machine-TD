@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://scene/fx/hit.tscn" id="1_base"]
+
+[node name="hit_flesh" instance=ExtResource("1_base")]
+hit_color = Color(1, 0.95, 0.85, 1)
+hit_amount = 10
+hit_scale = 0.66
+hit_duration = 0.46

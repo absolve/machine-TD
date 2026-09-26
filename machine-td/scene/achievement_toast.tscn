@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://script/achievement_toast.gd" id="1_toast"]
+[ext_resource type="Script" path="res://script/panel/achievement_toast.gd" id="1_toast"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_toast"]

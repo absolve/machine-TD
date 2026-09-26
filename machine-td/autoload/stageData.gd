@@ -36,7 +36,7 @@ func getAbilities(stage_id: int) -> Array:
 ## 没有列在这里的关卡 = 不限制（tower_ui 会显示全部 7 座）
 ## 想放开某关就从这张表里删掉它，或补上缺的塔类型
 var stageTowers := {
-	0: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower],
+	#0: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower],
 	1: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower],
 	2: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower,
 		Game.towerType.EMPTower],

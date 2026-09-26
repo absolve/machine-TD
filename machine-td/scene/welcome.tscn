@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cdegvxp10onm4"]
 
-[ext_resource type="Script" uid="uid://dvh3dchh6mk70" path="res://script/welcome.gd" id="1_njjjx"]
+[ext_resource type="Script" uid="uid://dvh3dchh6mk70" path="res://script/menu/welcome.gd" id="1_njjjx"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_hys0r"]
 [ext_resource type="PackedScene" uid="uid://v3vtbt8yry5c" path="res://scene/about_panel.tscn" id="3_0h2lm"]
 [ext_resource type="PackedScene" uid="uid://dxgyptjosrq7w" path="res://scene/bg.tscn" id="3_xnoho"]
@@ -180,9 +180,9 @@ layout_mode = 3
 anchors_preset = 0
 
 [node name="achievementPanel" parent="." unique_id=1661854894 instance=ExtResource("11_achv")]
-visible = false
 
 [node name="codexPanel" parent="." unique_id=205813787 instance=ExtResource("15_codexpanel")]
+visible = false
 
 [connection signal="pressed" from="ui/HBoxContainer/UIButton" to="." method="_on_tutorial_pressed"]
 [connection signal="pressed" from="ui/HBoxContainer/btnStart" to="." method="_on_btn_s_start_pressed"]

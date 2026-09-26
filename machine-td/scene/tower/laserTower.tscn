@@ -1,15 +1,17 @@
 [gd_scene format=3 uid="uid://bt5mt8r1qvfep"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_bh8ft"]
-[ext_resource type="Script" uid="uid://bqteowipjn517" path="res://script/laser_tower.gd" id="2_733d0"]
+[ext_resource type="Script" uid="uid://bqteowipjn517" path="res://script/tower/laser_tower.gd" id="2_733d0"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_wfuso"]
-[ext_resource type="Texture2D" uid="uid://b7xctx1wwm2t8" path="res://sprite/tower/base_large.png" id="99_base"]
+[ext_resource type="Texture2D" uid="uid://dl20d3cxbv5dp" path="res://sprite/fx/fx_spark.png" id="90_spark"]
+[ext_resource type="Texture2D" uid="uid://cpy1fdfwdx3em" path="res://sprite/fx/p_star.png" id="91_star"]
+[ext_resource type="Texture2D" uid="uid://dhnkampji1cw2" path="res://sprite/tower/base_laser_round.png" id="99_base"]
 [ext_resource type="Texture2D" uid="uid://namm2gbd0cfh" path="res://sprite/tower/tower_laser.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_axgl3"]
 size = Vector2(64, 64)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_axgl3"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lu6os"]
 resource_local_to_scene = true
 shader = ExtResource("3_wfuso")
 shader_parameter/enable_flash = false
@@ -44,6 +46,14 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Curve" id="Curve_laserhit"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.35, 0.78), 0.0, 0.0, 0, 0, Vector2(0.7, 0.38), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Gradient" id="Grad_laserhit"]
+offsets = PackedFloat32Array(0, 0.15, 0.45, 0.75, 0.9, 1)
+colors = PackedColorArray(1, 1, 0.92, 1, 1, 0.95, 0.6, 1, 1, 0.72, 0.28, 1, 0.95, 0.4, 0.12, 0.85, 0.5, 0.15, 0.06, 0.4, 0.15, 0.04, 0.02, 0)
+
 [node name="Tower2" unique_id=1676258242 instance=ExtResource("1_bh8ft")]
 script = ExtResource("2_733d0")
 type = 1006
@@ -54,7 +64,7 @@ shape = SubResource("RectangleShape2D_axgl3")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
 z_index = -1
-material = SubResource("ShaderMaterial_axgl3")
+material = SubResource("ShaderMaterial_lu6os")
 sprite_frames = SubResource("SpriteFrames_027me")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
@@ -64,7 +74,94 @@ visible = false
 shape = SubResource("CircleShape2D_0llar")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
+z_index = -1
 sprite_frames = SubResource("SpriteFrames_autotur")
+
+[node name="muzzleFx" type="CPUParticles2D" parent="." index="11" unique_id=1166174513]
+emitting = false
+amount = 14
+texture = ExtResource("90_spark")
+lifetime = 0.35
+one_shot = true
+explosiveness = 1.0
+local_coords = true
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 90.0
+initial_velocity_max = 260.0
+angular_velocity_min = -220.0
+angular_velocity_max = 220.0
+damping_min = 60.0
+damping_max = 160.0
+scale_amount_min = 0.5
+scale_amount_max = 1.1
+color = Color(1, 0.45, 0.35, 1)
+
+[node name="hitFx0" type="CPUParticles2D" parent="." index="12" unique_id=457547953]
+z_index = 1
+emitting = false
+amount = 18
+texture = ExtResource("91_star")
+lifetime = 0.36
+randomness = 0.4
+lifetime_randomness = 0.45
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 150.0
+initial_velocity_max = 420.0
+angular_velocity_min = -300.0
+angular_velocity_max = 300.0
+damping_min = 200.0
+damping_max = 400.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.45
+scale_amount_curve = SubResource("Curve_laserhit")
+color_ramp = SubResource("Grad_laserhit")
+
+[node name="hitFx1" type="CPUParticles2D" parent="." index="13" unique_id=1199771974]
+z_index = 1
+emitting = false
+amount = 18
+texture = ExtResource("91_star")
+lifetime = 0.36
+randomness = 0.4
+lifetime_randomness = 0.45
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 150.0
+initial_velocity_max = 420.0
+angular_velocity_min = -300.0
+angular_velocity_max = 300.0
+damping_min = 200.0
+damping_max = 400.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.45
+scale_amount_curve = SubResource("Curve_laserhit")
+color_ramp = SubResource("Grad_laserhit")
+
+[node name="hitFx2" type="CPUParticles2D" parent="." index="14" unique_id=1431539058]
+z_index = 1
+emitting = false
+amount = 18
+texture = ExtResource("91_star")
+lifetime = 0.36
+randomness = 0.4
+lifetime_randomness = 0.45
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 150.0
+initial_velocity_max = 420.0
+angular_velocity_min = -300.0
+angular_velocity_max = 300.0
+damping_min = 200.0
+damping_max = 400.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.45
+scale_amount_curve = SubResource("Curve_laserhit")
+color_ramp = SubResource("Grad_laserhit")
 
 [connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
 [connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ssb80ldeh64x"]
 
-[ext_resource type="Script" uid="uid://8wnam1gl3nqk" path="res://script/ability_slot.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://8wnam1gl3nqk" path="res://script/ui/ability_slot.gd" id="1_script"]
 [ext_resource type="StyleBox" uid="uid://djtnjx2ei87o2" path="res://theme/style/btn_normal.tres" id="2_bg"]
 [ext_resource type="Shader" uid="uid://dp3q67f8qyg04" path="res://shader/ability_cooldown.gdshader" id="3_shader"]
 

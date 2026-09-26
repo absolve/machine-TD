@@ -1,18 +1,45 @@
-[gd_scene load_steps=4 format=3 uid="uid://llvmr0r2odio"]
+[gd_scene format=3 uid="uid://llvmr0r2odio"]
 
-[ext_resource type="Script" uid="uid://imi3uq7a740y" path="res://script/placeable_area.gd" id="1_iexqj"]
+[ext_resource type="Script" uid="uid://imi3uq7a740y" path="res://script/level/placeable_area.gd" id="1_iexqj"]
 [ext_resource type="SpriteFrames" path="res://sprite/tile/floor_slot_frames.tres" id="2_frames"]
+[ext_resource type="Shader" uid="uid://dbibe5m46xdlf" path="res://shader/palette_swap.gdshader" id="3_dotswap"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dot"]
+resource_local_to_scene = true
+shader = ExtResource("3_dotswap")
+shader_parameter/tolerance = 0.08
+shader_parameter/softness = 0.0
+shader_parameter/alpha_scale = 1.0
+shader_parameter/enabled_1 = true
+shader_parameter/source_1 = Color(1, 1, 1, 1)
+shader_parameter/target_1 = Color(1, 0.7764706, 0.101960786, 1)
+shader_parameter/blend_1 = 0.0
+shader_parameter/enabled_2 = false
+shader_parameter/source_2 = Color(0, 0, 0, 1)
+shader_parameter/target_2 = Color(1, 1, 1, 1)
+shader_parameter/blend_2 = 1.0
+shader_parameter/enabled_3 = false
+shader_parameter/source_3 = Color(0, 0, 0, 1)
+shader_parameter/target_3 = Color(1, 1, 1, 1)
+shader_parameter/blend_3 = 1.0
+shader_parameter/enabled_4 = false
+shader_parameter/source_4 = Color(0, 0, 0, 1)
+shader_parameter/target_4 = Color(1, 1, 1, 1)
+shader_parameter/blend_4 = 1.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_slot"]
 size = Vector2(64, 64)
 
-[node name="placeableArea" type="Area2D" groups=["placeableArea"]]
+[node name="placeableArea" type="Area2D" unique_id=2042620669 groups=["placeableArea"]]
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_iexqj")
+dot_cycle_sec = 3.0
 
-[node name="slot" type="AnimatedSprite2D" parent="."]
+[node name="slot" type="AnimatedSprite2D" parent="." unique_id=680806382]
+material = SubResource("ShaderMaterial_dot")
 sprite_frames = ExtResource("2_frames")
 
-[node name="shape" type="CollisionShape2D" parent="."]
+[node name="shape" type="CollisionShape2D" parent="." unique_id=1881362925]
+visible = false
 shape = SubResource("RectangleShape2D_slot")

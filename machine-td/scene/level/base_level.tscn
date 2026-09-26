@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://3y2m15k6dbu"]
 
-[ext_resource type="Script" uid="uid://b2feq1aklupua" path="res://script/base_level.gd" id="1_dxhww"]
+[ext_resource type="Script" uid="uid://b2feq1aklupua" path="res://script/level/base_level.gd" id="1_dxhww"]
 [ext_resource type="PackedScene" uid="uid://cfwue5nwpbqlj" path="res://scene/tower_shadow.tscn" id="2_ivasy"]
 
 [node name="baseLevel" type="Node2D" unique_id=947242125]

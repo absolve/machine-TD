@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://script/ability_bar.gd" id="1_script"]
+[ext_resource type="Script" path="res://script/ui/ability_bar.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
 [ext_resource type="StyleBox" path="res://theme/style/tooltip_panel.tres" id="3_tooltip"]
 

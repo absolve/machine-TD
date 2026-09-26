@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cmoo2h1nvyyws"]
 
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_ahr6q"]
-[ext_resource type="Script" uid="uid://djw6tqlh5ypxo" path="res://script/setting.gd" id="1_xthoy"]
+[ext_resource type="Script" uid="uid://djw6tqlh5ypxo" path="res://script/panel/setting.gd" id="1_xthoy"]
 [ext_resource type="PackedScene" uid="uid://uv64kol65sr5" path="res://scene/sound_opinion.tscn" id="3_g2to7"]
 [ext_resource type="AudioStream" uid="uid://bi0pwakm40o0i" path="res://sound/sfx/coin.ogg" id="4_123qk"]
 [ext_resource type="Texture2D" uid="uid://b5ns2yj1xdd15" path="res://sprite/Music-On.png" id="5_musicon"]

@@ -1,16 +1,24 @@
 [gd_scene format=3 uid="uid://v3vtbt8yry5c"]
 
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_qs0ou"]
-[ext_resource type="Script" uid="uid://b6k1p768pwknc" path="res://script/about_panel.gd" id="2_5mklv"]
+[ext_resource type="Script" uid="uid://b6k1p768pwknc" path="res://script/panel/about_panel.gd" id="2_5mklv"]
+[ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_fdyvv"]
 
 [node name="aboutPanel" type="Control" unique_id=968686525]
 visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+theme = ExtResource("1_qs0ou")
+script = ExtResource("2_5mklv")
+
+[node name="bg" type="ColorRect" parent="." unique_id=968686524]
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
-mouse_filter = 0
-theme = ExtResource("1_qs0ou")
-script = ExtResource("2_5mklv")
+mouse_filter = 2
+color = Color(0, 0, 0, 0.55)
 
 [node name="OuterMargin" type="MarginContainer" parent="." unique_id=2052520945]
 custom_minimum_size = Vector2(980, 560)
@@ -46,7 +54,7 @@ theme_override_constants/separation = 18
 
 [node name="titleLabel" type="Label" parent="OuterMargin/PanelContainer/InnerMargin/VBoxContainer" unique_id=1720018912]
 layout_mode = 2
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 80
 text = "_About_Title"
 horizontal_alignment = 1
 
@@ -61,7 +69,6 @@ fit_content = true
 layout_mode = 2
 alignment = 1
 
-[node name="btnClose" type="Button" parent="OuterMargin/PanelContainer/InnerMargin/VBoxContainer/HBoxContainer" unique_id=852330420]
-custom_minimum_size = Vector2(180, 0)
+[node name="btnClose" parent="OuterMargin/PanelContainer/InnerMargin/VBoxContainer/HBoxContainer" unique_id=1077812873 instance=ExtResource("3_fdyvv")]
 layout_mode = 2
 text = "_Close"

@@ -1,13 +1,9 @@
 [gd_scene format=3 uid="uid://beibia6n0s2lp"]
 
 [ext_resource type="PackedScene" uid="uid://cgasdc4xix81v" path="res://scene/aircraft.tscn" id="1_8wg5q"]
-[ext_resource type="Script" uid="uid://bq486lhicbx3x" path="res://script/drone.gd" id="2_jxxn5"]
-[ext_resource type="Texture2D" uid="uid://ck67srsef3ay2" path="res://sprite/enemy@2.png" id="3_il87p"]
+[ext_resource type="Script" uid="uid://bq486lhicbx3x" path="res://script/tower/drone.gd" id="2_jxxn5"]
 [ext_resource type="Texture2D" uid="uid://dhq0fmmry1o8c" path="res://sprite/drone_friendly.png" id="4_dronetex"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bneum"]
-atlas = ExtResource("3_il87p")
-region = Rect2(256, 128, 128, 128)
+[ext_resource type="AudioStream" uid="uid://dxiwoju5l6gos" path="res://sound/sfx/drone_fire.ogg" id="5_shot"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_il87p"]
 animations = [{
@@ -20,27 +16,36 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="Gradient" id="Gradient_trail"]
-offsets = PackedFloat32Array(0, 0.45, 1)
-colors = PackedColorArray(0.55, 0.9, 1, 0, 0.55, 0.9, 1, 0.35, 0.62, 0.95, 1, 1)
-
 [sub_resource type="Curve" id="Curve_trail"]
 _data = [Vector2(0, 0.15), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
+[sub_resource type="Gradient" id="Gradient_trail"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(0.55, 0.9, 1, 0, 0.55, 0.9, 1, 0.35, 0.62, 0.95, 1, 1)
+
 [node name="aircraft" unique_id=77046293 instance=ExtResource("1_8wg5q")]
 script = ExtResource("2_jxxn5")
+max_shots_per_cycle = 10
+long_cooldown = 4.0
+return_to_base_on_reload = false
 
 [node name="ani" parent="." index="0" unique_id=748097984]
 sprite_frames = SubResource("SpriteFrames_il87p")
 
-[node name="trail" type="Line2D" parent="." index="1"]
+[node name="trail" type="Line2D" parent="." index="1" unique_id=1901231757]
 top_level = true
 z_index = -1
 width = 7.0
+width_curve = SubResource("Curve_trail")
 default_color = Color(0.55, 0.9, 1, 1)
 gradient = SubResource("Gradient_trail")
-width_curve = SubResource("Curve_trail")
 joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
+
+[node name="shotSound" type="AudioStreamPlayer2D" parent="." index="2" unique_id=1067975729]
+stream = ExtResource("5_shot")
+volume_db = -11.0
+max_distance = 900.0
+bus = &"Sfx"

@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3]
 
-[ext_resource type="Script" path="res://script/scene_transition.gd" id="1_script"]
+[ext_resource type="Script" path="res://script/ui/scene_transition.gd" id="1_script"]
 [ext_resource type="Shader" uid="uid://bbbjyo30d7ln6" path="res://shader/transition.gdshader" id="2_shader"]
 
 [sub_resource type="Gradient" id="Gradient_wipe"]

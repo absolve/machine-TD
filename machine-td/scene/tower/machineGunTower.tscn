@@ -1,16 +1,17 @@
 [gd_scene format=3 uid="uid://di6u5yfi44083"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_p16uh"]
-[ext_resource type="Script" uid="uid://h5w308vyc8yt" path="res://script/machineGunTower.gd" id="2_nmv2o"]
+[ext_resource type="Script" uid="uid://h5w308vyc8yt" path="res://script/tower/machineGunTower.gd" id="2_nmv2o"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_nmv2o"]
-[ext_resource type="Texture2D" uid="uid://cqfjqk8bkohut" path="res://sprite/towerDefense_tile295.png" id="5_j3503"]
+[ext_resource type="AudioStream" uid="uid://csufj0vnp2c1v" path="res://sound/sfx/mg_fire.ogg" id="5_shot"]
+[ext_resource type="Texture2D" uid="uid://tt16bwdxq1kt" path="res://sprite/fx/circle_05_a.png" id="6_i2h4l"]
 [ext_resource type="Texture2D" uid="uid://dyluyv2imdos1" path="res://sprite/tower/base_round.png" id="99_base"]
 [ext_resource type="Texture2D" uid="uid://dlleor6e3o1ej" path="res://sprite/tower/turret_machinegun.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k8n1u"]
 size = Vector2(64, 64)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_gnd33"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i2h4l"]
 resource_local_to_scene = true
 shader = ExtResource("3_nmv2o")
 shader_parameter/enable_flash = false
@@ -34,6 +35,16 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_5i26j"]
 radius = 128.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_st1ei"]
+resource_local_to_scene = true
+shader = ExtResource("3_nmv2o")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 14.0
+shader_parameter/flash_amplitude = 0.8
+shader_parameter/outline_thickness = 0.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_k8n1u"]
 animations = [{
 "frames": [{
@@ -49,7 +60,7 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("5_j3503")
+"texture": ExtResource("6_i2h4l")
 }],
 "loop": 0,
 "name": &"default",
@@ -68,7 +79,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(16, 0)]
+"values": [Vector2(0, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_k8n1u"]
@@ -84,7 +95,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.1, 0.2),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector2(16, 0), Vector2(0, 0), Vector2(16, 0)]
+"values": [Vector2(0, 0), Vector2(-5, 0), Vector2(0, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_k4bnm"]
@@ -156,12 +167,13 @@ _data = {
 
 [node name="Tower" unique_id=1473885297 instance=ExtResource("1_p16uh")]
 script = ExtResource("2_nmv2o")
+muzzleOffset = 31.0
 
 [node name="shape" parent="." index="0" unique_id=1958475246]
 shape = SubResource("RectangleShape2D_k8n1u")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
-material = SubResource("ShaderMaterial_gnd33")
+material = SubResource("ShaderMaterial_i2h4l")
 sprite_frames = SubResource("SpriteFrames_i5mjb")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
@@ -171,21 +183,20 @@ visible = false
 shape = SubResource("CircleShape2D_5i26j")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
+material = SubResource("ShaderMaterial_st1ei")
 sprite_frames = SubResource("SpriteFrames_k8n1u")
-offset = Vector2(16, 0)
-
-[node name="Marker2D" parent="turret" index="0" unique_id=1564610297]
-position = Vector2(31, 0)
 
 [node name="spark" parent="." index="4" unique_id=2136824957]
+modulate = Color(1, 0.91, 0.1, 1)
 sprite_frames = SubResource("SpriteFrames_1byrl")
-offset = Vector2(31, 0)
+offset = Vector2(35, 0)
 
 [node name="lifeBar" parent="." index="7" unique_id=1589605555]
 position = Vector2(0, -51)
 
 [node name="player" parent="." index="8" unique_id=1035425773]
 libraries/ = SubResource("AnimationLibrary_k4bnm")
+speed_scale = 2.0
 
 [node name="sparkPlayer" type="AnimationPlayer" parent="." index="9" unique_id=1569530588]
 libraries/ = SubResource("AnimationLibrary_72crk")
@@ -196,6 +207,12 @@ offset_left = -32.0
 offset_top = -13.0
 offset_right = 32.0
 offset_bottom = 14.0
+
+[node name="shotSound" type="AudioStreamPlayer2D" parent="." index="11" unique_id=861086436]
+stream = ExtResource("5_shot")
+volume_db = -12.0
+max_distance = 1400.0
+bus = &"Sfx"
 
 [connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
 [connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]

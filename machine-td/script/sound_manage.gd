@@ -1,10 +1,11 @@
 extends Node2D
 ## 全局音频（Autoload 场景，见 project.godot 的 SoundManage）。
 ##
-## 三块功能：
+## 四块功能：
 ##   ① UI 点击音  —— playEffect() / playConfirm()。**只由按钮预制体自己调**（见下面的约定）。
 ##   ② 通用音效    —— play("hit_metal") 按名字播 sound/sfx/ 下的文件。
 ##   ③ 循环音      —— start_loop("tesla", "tower_tesla_hum") / stop_loop("tesla")。
+##   ④ 背景音乐    —— play_bgm("bgm_07_heaven_pad") / stop_bgm()，走 Bg 总线。
 ##
 ## 用法：
 ##   SoundManage.play("hit_metal")                          # 最简
@@ -12,6 +13,7 @@ extends Node2D
 ##   SoundManage.play("tower_mg_fire", 0.0, randf_range(0.96, 1.04))   # 第三个是音高
 ##   SoundManage.play_varied(["hit_hard", "hit_armor"])     # 从几个里随机挑，带轻微音高抖动
 ##   SoundManage.play_at("explode_large", global_position)  # 按世界坐标摆左右声像
+##   SoundManage.play_bgm("bgm_07_heaven_pad")              # 背景音乐（同名重复调用不会重头开始）
 ##
 ## 名字就是 sound/sfx/ 下的文件名（不带 .ogg）。加新音效直接把 ogg 丢进去就能用，
 ## 这里一行都不用改。
@@ -44,7 +46,11 @@ const SFX_DIR := "res://sound/sfx/"
 
 ## 悬停音的节流（毫秒）。鼠标扫过一排按钮时会连续触发 mouse_entered，
 ## 取 60ms 让它是"清脆的一下"，而不是哒哒哒响成一片。
-const HOVER_GUARD_MSEC := 60
+## 悬停音的节流窗口。
+## ★ 必须**大于等于** ui_hover 音效本身的长度（现在 0.09 秒），
+##   否则快速扫过一排按钮时，前一声还没播完就叠上下一声，
+##   听起来是"哒哒哒"而不是干净的一声"滴"。
+const HOVER_GUARD_MSEC := 95
 
 @onready var button_sound: AudioStreamPlayer = $ButtonSound
 @onready var confirm_sound: AudioStreamPlayer = $ConfirmSound
@@ -63,6 +69,21 @@ var _pos_pool: Array[AudioStreamPlayer2D] = []
 var _sfx_cache: Dictionary = {}
 ## 循环音：key -> 播放器
 var _loops: Dictionary = {}
+
+## 背景音乐所在目录（和 sfx/ 分开：bgm 是整首长音，走 Bg 总线，不受音效静音影响）
+const BGM_DIR := "res://sound/bgm/"
+
+## 背景音乐专用播放器。**常驻一个**，切曲就是换 stream，
+## 不走 _sfx_pool —— 音效池会被 stop_all() 清掉，音乐会跟着断。
+@onready var bgm_player: AudioStreamPlayer = $Bgm
+
+## 当前在播的曲名（文件名去扩展名）。空 = 没在播。
+## 用它做去重：同一首重复调用不必重头开始。
+var _bgm_current: String = ""
+## BGM 音量（dB）。素材本身已归一到 -16 LUFS，所以默认不再衰减。
+var _bgm_volume_db: float = 0.0
+## 歌名 -> AudioStream 缓存（查不到也缓存 null，避免反复打文件系统）
+var _bgm_cache: Dictionary = {}
 
 
 # ============================================================
@@ -172,6 +193,11 @@ func play_at(
 
 
 ## 这个名字有没有对应文件（想在代码里先判断时用）
+## 按名字取音频流（不播放）。给"自己持有播放器"的场景用，比如爆炸三件套里的 sound 节点。
+func get_stream_for(sound: String) -> AudioStream:
+	return _get_sfx(sound)
+
+
 func has_sfx(sound: String) -> bool:
 	return _get_sfx(sound) != null
 
@@ -215,6 +241,73 @@ func stop_all_loops() -> void:
 
 
 # ============================================================
+# ④ 背景音乐（走 Bg 总线，整首无缝循环）
+# ============================================================
+#
+# 和 sfx 的三点区别：
+#   · 走 **Bg** 总线 —— 顶栏的 ♪ 开关和设置里的"背景音"滑条控的都是它
+#   · 用常驻的 bgm_player，换曲只换 stream，不会被 stop_all() 掐掉
+#   · 同名重复调用直接返回，不会把正在放的曲子重头开始
+#
+# 用法：
+#   SoundManage.play_bgm("bgm_07_heaven_pad")   # 名字 = sound/bgm/ 下的文件名
+#   SoundManage.stop_bgm()
+#   if SoundManage.current_bgm() == "bgm_08_lunar_amb": ...
+
+## 放一首 BGM。参数是 sound/bgm/ 下的文件名（不带 .ogg）。
+## 同一首且正在播 → 什么都不做（所以在"每次点开始"里无脑调也安全）。
+func play_bgm(sound: String, volume_db: float = 0.0) -> void:
+	if sound.is_empty():
+		return
+	# ★ 已经在放同一首就别重头开始 —— 暂停后继续、重开关卡都会走到这里
+	if _bgm_current == sound and bgm_player.playing:
+		return
+	var stream := _get_bgm(sound)
+	if stream == null:
+		push_warning("SoundManage.play_bgm: 找不到 sound/bgm/%s.ogg" % sound)
+		stop_bgm()
+		return
+	_bgm_current = sound
+	if stream is AudioStreamOggVorbis:
+		# 兜底：.import 里的 loop 已设 true，但顺手再置一次，
+		# 这样以后直接丢一首新 ogg 进 sound/bgm/ 也能循环，不用管导入参数。
+		(stream as AudioStreamOggVorbis).loop = true
+	bgm_player.stream = stream
+	bgm_player.volume_db = volume_db
+	# 暂停游戏时（get_tree().paused = true）音乐要继续放，所以不受 pause 影响
+	bgm_player.process_mode = Node.PROCESS_MODE_ALWAYS
+	bgm_player.play()
+
+
+## 停掉 BGM。stop_bgm(false) 会保留 _bgm_current，下次 play_bgm 同一首仍会重放。
+func stop_bgm(clear_current: bool = true) -> void:
+	bgm_player.stop()
+	bgm_player.stream = null
+	if clear_current:
+		_bgm_current = ""
+
+
+## 当前在播的曲名（空 = 没在播）
+func current_bgm() -> String:
+	return _bgm_current
+
+
+## BGM 是否正在响
+func is_bgm_playing() -> bool:
+	return bgm_player != null and bgm_player.playing
+
+
+## 临时压低/恢复 BGM（比如想给剧情语音让路）
+func duck_bgm(volume_db: float) -> void:
+	bgm_player.volume_db = volume_db
+
+
+## 当前 BGM 的播放进度（秒），没在播返回 0
+func bgm_playback_position() -> float:
+	return bgm_player.get_playback_position() if is_bgm_playing() else 0.0
+
+
+# ============================================================
 # 通用控制
 # ============================================================
 
@@ -251,6 +344,22 @@ func _get_sfx(sound: String) -> AudioStream:
 	elif OS.is_debug_build():
 		push_warning("[SoundManage] 找不到音效 %s（%s）" % [sound, path])
 	_sfx_cache[sound] = stream
+	return stream
+
+
+## 名字 -> BGM AudioStream。查不到也缓存（存 null）。
+func _get_bgm(sound: String) -> AudioStream:
+	if sound.is_empty():
+		return null
+	if _bgm_cache.has(sound):
+		return _bgm_cache[sound]
+	var path := BGM_DIR + sound + ".ogg"
+	var stream: AudioStream = null
+	if ResourceLoader.exists(path):
+		stream = load(path) as AudioStream
+	else:
+		push_warning("[SoundManage] 找不到背景音乐 %s（%s）" % [sound, path])
+	_bgm_cache[sound] = stream
 	return stream
 
 

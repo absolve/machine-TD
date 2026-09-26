@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ci2x7q5rdcqf5"]
 
-[ext_resource type="Script" uid="uid://d13hhx8rptim1" path="res://script/wave_progress_bar.gd" id="1_fetnh"]
+[ext_resource type="Script" uid="uid://d13hhx8rptim1" path="res://script/ui/wave_progress_bar.gd" id="1_fetnh"]
 [ext_resource type="Shader" uid="uid://db516slrm4x4d" path="res://shader/wave_progress_glow.gdshader" id="2_l4j0n"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1"]

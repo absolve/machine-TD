@@ -1,10 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://5gs5yimexruo"]
+[gd_scene format=3 uid="uid://5gs5yimexruo"]
 
-[ext_resource type="Script" uid="uid://d2uty4uy1sr2" path="res://script/bullet.gd" id="1_qwydi"]
+[ext_resource type="Script" uid="uid://d2uty4uy1sr2" path="res://script/bullet/bullet.gd" id="1_qwydi"]
 
-[node name="bullet" type="Area2D"]
+[node name="bullet" type="Area2D" unique_id=802852217]
+z_index = 1
 script = ExtResource("1_qwydi")
 
-[node name="shape" type="CollisionShape2D" parent="."]
+[node name="shape" type="CollisionShape2D" parent="." unique_id=1677876286]
 
-[node name="ani" type="AnimatedSprite2D" parent="."]
+[node name="ani" type="AnimatedSprite2D" parent="." unique_id=1167812739]

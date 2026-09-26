@@ -1,14 +1,18 @@
 [gd_scene format=3 uid="uid://bw8vyx0savlpt"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_x4oq0"]
-[ext_resource type="Script" uid="uid://dnaqsi3rmg555" path="res://script/tesla_coil_tower.gd" id="2_5fmby"]
+[ext_resource type="Script" uid="uid://dnaqsi3rmg555" path="res://script/tower/tesla_coil_tower.gd" id="2_5fmby"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_427bq"]
 [ext_resource type="Texture2D" uid="uid://dr3404ovqlqpl" path="res://sprite/tower/tower_tesla.png" id="99_turret"]
+[ext_resource type="Texture2D" uid="uid://d007qyjl2hj8g" path="res://sprite/tower/tower_tesla_f1.png" id="f1"]
+[ext_resource type="Texture2D" uid="uid://d0usqajra2hj7" path="res://sprite/tower/tower_tesla_f2.png" id="f2"]
+[ext_resource type="Texture2D" uid="uid://ohg1jbbdutmx" path="res://sprite/tower/tower_tesla_f3.png" id="f3"]
+[ext_resource type="Texture2D" uid="uid://8stjb6xaet26" path="res://sprite/tower/tower_tesla_f4.png" id="f4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4p7g2"]
 size = Vector2(100, 100)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_d0tgk"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nw5hk"]
 resource_local_to_scene = true
 shader = ExtResource("3_427bq")
 shader_parameter/enable_flash = false
@@ -29,10 +33,42 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("99_turret")
+}, {
+"duration": 1.0,
+"texture": ExtResource("f1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("f2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("f3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("f4")
 }],
-"loop": 0,
-"name": &"default",
-"speed": 5.0
+"loop": 1,
+"name": &"attack",
+"speed": 34.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("99_turret")
+}, {
+"duration": 1.0,
+"texture": ExtResource("f1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("f2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("f3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("f4")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 12.0
 }]
 
 [node name="Tower" unique_id=1676258242 instance=ExtResource("1_x4oq0")]
@@ -40,10 +76,11 @@ script = ExtResource("2_5fmby")
 type = 1005
 
 [node name="shape" parent="." index="0" unique_id=1958475246]
+visible = false
 shape = SubResource("RectangleShape2D_4p7g2")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
-material = SubResource("ShaderMaterial_d0tgk")
+material = SubResource("ShaderMaterial_nw5hk")
 sprite_frames = SubResource("SpriteFrames_nobase")
 animation = &""
 
@@ -54,7 +91,9 @@ visible = false
 shape = SubResource("CircleShape2D_3idwy")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
+z_index = -1
 sprite_frames = SubResource("SpriteFrames_autotur")
+animation = &"idle"
 
 [connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
 [connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]

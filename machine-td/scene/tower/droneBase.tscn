@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dp6nluo5unfet"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_qyteg"]
-[ext_resource type="Script" uid="uid://cnmy5uf77qffw" path="res://script/drone_base.gd" id="2_ir8sv"]
+[ext_resource type="Script" uid="uid://cnmy5uf77qffw" path="res://script/tower/drone_base.gd" id="2_ir8sv"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_56bs0"]
 [ext_resource type="Texture2D" uid="uid://b7xctx1wwm2t8" path="res://sprite/tower/base_large.png" id="99_base"]
 [ext_resource type="Texture2D" uid="uid://c5x73fo1dftri" path="res://sprite/tower/tower_drone.png" id="99_turret"]
@@ -9,7 +9,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j5ypg"]
 size = Vector2(64, 64)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lyy2e"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_och7i"]
 resource_local_to_scene = true
 shader = ExtResource("3_56bs0")
 shader_parameter/enable_flash = false
@@ -49,7 +49,7 @@ type = 1004
 shape = SubResource("RectangleShape2D_j5ypg")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
-material = SubResource("ShaderMaterial_lyy2e")
+material = SubResource("ShaderMaterial_och7i")
 sprite_frames = SubResource("SpriteFrames_j5ypg")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]

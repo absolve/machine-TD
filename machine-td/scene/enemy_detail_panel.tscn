@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://script/enemy_detail_panel.gd" id="1_script"]
+[ext_resource type="Script" path="res://script/panel/enemy_detail_panel.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
 [ext_resource type="StyleBox" path="res://theme/style/tower_panel_style.tres" id="3_panel"]
 [ext_resource type="StyleBox" path="res://theme/style/tower_bar_bg.tres" id="4_barbg"]

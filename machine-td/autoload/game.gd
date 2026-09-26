@@ -1,5 +1,7 @@
 extends Node
 
+const app_vec="1.0.0"  #程序版本
+
 enum bulletType {
 	player, enemy
 }
@@ -61,7 +63,7 @@ const towerInfo = {
 	},
 	towerType.EMPTower: {
 	"name": "_TowerName_emp",
-	"atk": 50,
+	"atk": 30,
 	"cost": 45,
 	"reload": 4.0,
 	"scope": 280,
@@ -75,7 +77,7 @@ const towerInfo = {
 	"name": "_TowerName_drone",
 	"atk": 8,
 	"cost": 65,
-	"reload": 0.6,
+	"reload": 0.1,
 	"scope": 400,
 	"hp": 200,
 	"maxHp": 200,

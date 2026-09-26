@@ -243,6 +243,12 @@ func defeatEnemy(point):
 
 #敌人逃脱
 func enemyEscape(point):
+	# 逃脱敲钟：一声低沉的锣，提示玩家漏怪了。
+	# 放在这里而不是各个敌人脚本里 —— 所有敌人（敌坦/直升机/维修车/导弹车…）
+	# 都是发 Game.enemyEscape 信号，map 是唯一接收方，改一处就全覆盖。
+	# 用 play 不用 play_at：敌人逃脱的位置就在基地（屏幕固定处），没必要做 2D 定位。
+	# 加音高抖动是因为一波漏好几个时会连着响，同一声会糊成一片。
+	SoundManage.play("enemy_escape_b", -4.0, randf_range(0.94, 1.06))
 	# 先扣血再判定：hp 归零（而不是变成负数）就算基地被打爆
 	titleNode.hp = maxi(0, titleNode.hp - point)
 	if titleNode.hp <= 0:
@@ -268,6 +274,12 @@ func startGame():
 	# 只有「本关第一次开打」才闪横幅；暂停后继续不再闪
 	if not _battle_started:
 		_battle_started = true
+		# 玩家第一次点「开始」时起背景音乐。之后暂停再继续不会重头开始
+		# （play_bgm 内部按曲名去重，同一首已在播就直接返回）。
+		# ★ 08（bgm_08_lunar_amb）先不播，留着备用。
+		SoundManage.play_bgm("bgm_07_heaven_pad", -5.0)
+		# 敌人来袭警报：整局只响这一次（暂停后继续不会再响）
+		SoundManage.play("enemy_incoming", -2.0)
 		if battleStartBanner != null:
 			await battleStartBanner.play()
 	level.start()
@@ -402,7 +414,11 @@ func onTowerLocked() -> void:
 
 #选中塔
 func clickTower(item, selected):
+	# 点地图上已放置的塔：给一声"选中"反馈。
+	# 和工具箱里点塔卡片用的是同一个音，但音高略低一点，
+	# 耳朵能分出是"在地图上选的"还是"在工具箱里选的"。
 	if selected:
+		SoundManage.play("tower_select", 0.0, 0.94)
 		# 右侧信息面板同一时间只服务一个目标：选中塔时收起敌人面板
 		clearEnemyDetail()
 		# 保持同一时间只选中一座塔，先取消之前选中的

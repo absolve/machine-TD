@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://v82shl8uewyp" path="res://scene/tower_detail_panel.tscn" id="7_panel"]
 [ext_resource type="PackedScene" path="res://scene/enemy_detail_panel.tscn" id="8_enemy"]
 [ext_resource type="PackedScene" uid="uid://lelhwtky6d1x" path="res://scene/level_intro_panel.tscn" id="9_intro"]
-[ext_resource type="Script" uid="uid://bxw2thjo03p3l" path="res://script/achievement_tracker.gd" id="10_track"]
+[ext_resource type="Script" uid="uid://bxw2thjo03p3l" path="res://script/panel/achievement_tracker.gd" id="10_track"]
 [ext_resource type="PackedScene" path="res://scene/achievement_toast.tscn" id="11_toast"]
 [ext_resource type="PackedScene" path="res://scene/ability_bar.tscn" id="12_ability"]
 [ext_resource type="PackedScene" uid="uid://dev1wi4vmspkd" path="res://scene/battle_start_banner.tscn" id="13_banner"]
@@ -20,6 +20,7 @@
 script = ExtResource("1_rgtto")
 
 [node name="customCamera" parent="." unique_id=1331816399 instance=ExtResource("5_jp76l")]
+zoom_max = 4.0
 
 [node name="hud" type="CanvasLayer" parent="." unique_id=487852858]
 

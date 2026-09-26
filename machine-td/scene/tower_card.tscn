@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://besopm2fin3dm"]
 
 [ext_resource type="StyleBox" uid="uid://dgsf4fryb5sbt" path="res://theme/style/tower_card_style.tres" id="1_pxcfv"]
-[ext_resource type="Script" uid="uid://bvvstbroiqj0v" path="res://script/tower_card.gd" id="1_trrxv"]
+[ext_resource type="Script" uid="uid://bvvstbroiqj0v" path="res://script/tower/tower_card.gd" id="1_trrxv"]
 [ext_resource type="Texture2D" uid="uid://bxjrfo1he5k0p" path="res://sprite/dollar-symbol.png" id="4_0iufg"]
 [ext_resource type="Texture2D" uid="uid://con6lnwug4pxd" path="res://sprite/Selector.png" id="5_0iufg"]
 

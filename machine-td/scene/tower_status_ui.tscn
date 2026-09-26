@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ba0gq4f8o0nq5"]
 
-[ext_resource type="Script" uid="uid://exeh0xvwqw41" path="res://script/tower_status_ui.gd" id="1_5otdr"]
+[ext_resource type="Script" uid="uid://exeh0xvwqw41" path="res://script/tower/tower_status_ui.gd" id="1_5otdr"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_ui2vm"]
 [ext_resource type="StyleBox" path="res://theme/style/tower_chip_style.tres" id="3_chip"]
 [ext_resource type="StyleBox" path="res://theme/style/tower_bar_bg.tres" id="4_barbg"]

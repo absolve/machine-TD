@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cv37m245ebfbr"]
 
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_theme"]
-[ext_resource type="Script" uid="uid://c82d6iaytyl4p" path="res://script/pause_menu.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://c82d6iaytyl4p" path="res://script/ui/pause_menu.gd" id="2_script"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_button"]
 
 [node name="pauseMenu" type="Control" unique_id=431099984]

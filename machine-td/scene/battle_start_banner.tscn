@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dev1wi4vmspkd"]
 
-[ext_resource type="Script" uid="uid://bhicoyhuywngs" path="res://script/battle_start_banner.gd" id="1_banner"]
+[ext_resource type="Script" uid="uid://bhicoyhuywngs" path="res://script/ui/battle_start_banner.gd" id="1_banner"]
 [ext_resource type="PackedScene" path="res://scene/ui/hazard_strip.tscn" id="2_hazard"]
 [ext_resource type="Shader" uid="uid://uedb3knxh6uv" path="res://shader/hazard_scroll.gdshader" id="3_xtggc"]
 

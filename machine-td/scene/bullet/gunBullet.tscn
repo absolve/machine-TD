@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://bj4ug85qul1wa"]
+[gd_scene format=3 uid="uid://bj4ug85qul1wa"]
 
 [ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet/bullet.tscn" id="1_bullet"]
-[ext_resource type="Script" uid="uid://b4n0gn6e1wxel" path="res://script/gun_bullet.gd" id="2_script"]
+[ext_resource type="Script" uid="uid://b4n0gn6e1wxel" path="res://script/bullet/gun_bullet.gd" id="2_script"]
 [ext_resource type="Texture2D" uid="uid://biiepu28yykdk" path="res://sprite/bullet/gun_bullet.png" id="3_tex"]
 
 [sub_resource type="CircleShape2D" id="Shape"]
@@ -13,19 +13,20 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("3_tex")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 5.0
 }]
 
-[node name="bullet" instance=ExtResource("1_bullet")]
+[node name="bullet" unique_id=1047713109 instance=ExtResource("1_bullet")]
+z_index = 2
 collision_layer = 4
 collision_mask = 2
 script = ExtResource("2_script")
 
-[node name="shape" parent="." index="0"]
+[node name="shape" parent="." index="0" unique_id=1677876286]
 visible = false
 shape = SubResource("Shape")
 
-[node name="ani" parent="." index="1"]
+[node name="ani" parent="." index="1" unique_id=1167812739]
 sprite_frames = SubResource("SpriteFrames_b")

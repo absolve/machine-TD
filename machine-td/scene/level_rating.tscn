@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dpt6basf7cnu6"]
 
-[ext_resource type="Script" uid="uid://y57ru1vs0qvw" path="res://script/level_rating.gd" id="1_ndx5l"]
+[ext_resource type="Script" uid="uid://y57ru1vs0qvw" path="res://script/menu/level_rating.gd" id="1_ndx5l"]
 
 [node name="levelRating" type="HBoxContainer" unique_id=640723317]
 offset_right = 88.0

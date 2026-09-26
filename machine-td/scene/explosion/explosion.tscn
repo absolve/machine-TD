@@ -1,29 +1,38 @@
-[gd_scene load_steps=9 format=3 uid="uid://c8adh3ikjulbd"]
+[gd_scene load_steps=14 format=3 uid="uid://c8adh3ikjulbd"]
 
-[ext_resource type="Script" uid="uid://cxxjryhi1jd0i" path="res://script/explosion.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://b25uhc5pssoam" path="res://sprite/fx/boom_1.png" id="f1"]
-[ext_resource type="Texture2D" uid="uid://7l0qknfdtpey" path="res://sprite/fx/boom_2.png" id="f2"]
-[ext_resource type="Texture2D" uid="uid://bcwfol26yogey" path="res://sprite/fx/boom_3.png" id="f3"]
-[ext_resource type="Texture2D" uid="uid://d13hstitgesbb" path="res://sprite/fx/boom_4.png" id="f4"]
-[ext_resource type="Texture2D" uid="uid://25lmwca6o8gh" path="res://sprite/fx/boom_5.png" id="f5"]
-[ext_resource type="Texture2D" uid="uid://da7qsp7ikemq5" path="res://sprite/fx/boom_6.png" id="f6"]
+[ext_resource type="Script" path="res://script/fx/explosion.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://sprite/fx/big_hit_1.png" id="h1"]
+[ext_resource type="Texture2D" path="res://sprite/fx/big_hit_2.png" id="h2"]
+[ext_resource type="Texture2D" path="res://sprite/fx/big_hit_3.png" id="h3"]
+[ext_resource type="Texture2D" path="res://sprite/fx/big_hit_4.png" id="h4"]
+[ext_resource type="Texture2D" path="res://sprite/fx/big_hit_5.png" id="h5"]
+[ext_resource type="Texture2D" path="res://sprite/fx/big_hit_6.png" id="h6"]
+[ext_resource type="Texture2D" path="res://sprite/fx/big_hit_7.png" id="h7"]
+[ext_resource type="Texture2D" path="res://sprite/fx/big_hit_8.png" id="h8"]
+[ext_resource type="Texture2D" path="res://sprite/fx/big_hit_9.png" id="h9"]
+[ext_resource type="Texture2D" path="res://sprite/fx/big_hit_10.png" id="h10"]
+[ext_resource type="Texture2D" path="res://sprite/fx/big_hit_11.png" id="h11"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_boom"]
+[sub_resource type="SpriteFrames" id="Frames"]
 animations = [{
 "frames": [
-{"duration": 1.0,"texture": ExtResource("f1")},
-{"duration": 1.0,"texture": ExtResource("f2")},
-{"duration": 1.0,"texture": ExtResource("f3")},
-{"duration": 1.0,"texture": ExtResource("f4")},
-{"duration": 1.0,"texture": ExtResource("f5")},
-{"duration": 1.0,"texture": ExtResource("f6")}
+{"duration": 1.0, "texture": ExtResource("h1")},
+{"duration": 1.0, "texture": ExtResource("h2")},
+{"duration": 1.0, "texture": ExtResource("h3")},
+{"duration": 1.0, "texture": ExtResource("h4")},
+{"duration": 1.0, "texture": ExtResource("h5")},
+{"duration": 1.0, "texture": ExtResource("h6")},
+{"duration": 1.0, "texture": ExtResource("h7")},
+{"duration": 1.0, "texture": ExtResource("h8")},
+{"duration": 1.0, "texture": ExtResource("h9")},
+{"duration": 1.0, "texture": ExtResource("h10")},
+{"duration": 1.0, "texture": ExtResource("h11")}
 ],
-"loop": 0,
+"loop": false,
 "name": &"default",
-"speed": 12.0
+"speed": 24.0
 }]
 
-[node name="explosion" type="AnimatedSprite2D" unique_id=1817926851]
-scale = Vector2(1.5, 1.5)
-sprite_frames = SubResource("SpriteFrames_boom")
+[node name="explosion" type="AnimatedSprite2D"]
+sprite_frames = SubResource("Frames")
 script = ExtResource("1_script")

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cgasdc4xix81v"]
 
-[ext_resource type="Script" uid="uid://bwy2irqiglutm" path="res://script/aircraft.gd" id="1_u1o16"]
+[ext_resource type="Script" uid="uid://bwy2irqiglutm" path="res://script/tower/aircraft.gd" id="1_u1o16"]
 
 [node name="aircraft" type="Area2D" unique_id=77046293]
 collision_layer = 0

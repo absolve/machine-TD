@@ -37,21 +37,37 @@ uniform float alpha_scale : hint_range(0.0, 1.0) = 1.0;
 uniform bool enabled_1 = false;
 uniform vec4 source_1 : source_color = vec4(0.0, 0.0, 0.0, 1.0);
 uniform vec4 target_1 : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+// 混色进度：0 = 还是原色，1 = 完全变成 target_1。
+// 给脚本一个 0..1 的量来推渐变（比如可放置区域的白点慢慢变黄），
+// 比直接补间 target 颜色更直观，调速度也只改周期。
+uniform float blend_1 : hint_range(0.0, 1.0) = 1.0;
 
 // ---------------- 色槽 2 ----------------
 uniform bool enabled_2 = false;
 uniform vec4 source_2 : source_color = vec4(0.0, 0.0, 0.0, 1.0);
 uniform vec4 target_2 : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+// 混色进度：0 = 还是原色，1 = 完全变成 target_2。
+// 给脚本一个 0..1 的量来推渐变（比如可放置区域的白点慢慢变黄），
+// 比直接补间 target 颜色更直观，调速度也只改周期。
+uniform float blend_2 : hint_range(0.0, 1.0) = 1.0;
 
 // ---------------- 色槽 3 ----------------
 uniform bool enabled_3 = false;
 uniform vec4 source_3 : source_color = vec4(0.0, 0.0, 0.0, 1.0);
 uniform vec4 target_3 : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+// 混色进度：0 = 还是原色，1 = 完全变成 target_3。
+// 给脚本一个 0..1 的量来推渐变（比如可放置区域的白点慢慢变黄），
+// 比直接补间 target 颜色更直观，调速度也只改周期。
+uniform float blend_3 : hint_range(0.0, 1.0) = 1.0;
 
 // ---------------- 色槽 4 ----------------
 uniform bool enabled_4 = false;
 uniform vec4 source_4 : source_color = vec4(0.0, 0.0, 0.0, 1.0);
 uniform vec4 target_4 : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+// 混色进度：0 = 还是原色，1 = 完全变成 target_4。
+// 给脚本一个 0..1 的量来推渐变（比如可放置区域的白点慢慢变黄），
+// 比直接补间 target 颜色更直观，调速度也只改周期。
+uniform float blend_4 : hint_range(0.0, 1.0) = 1.0;
 
 
 // 命中权重：orig 是贴图原色，src 是这个槽要替换的颜色。
@@ -83,22 +99,22 @@ void fragment() {
 	float alpha = tex.a;
 
 	{
-		float m = enabled_1 ? hit_weight(base, source_1.rgb) : 0.0;
+		float m = enabled_1 ? hit_weight(base, source_1.rgb) * blend_1 : 0.0;
 		col = mix(col, target_1.rgb, m);
 		alpha = mix(alpha, alpha * target_1.a, m);
 	}
 	{
-		float m = enabled_2 ? hit_weight(base, source_2.rgb) : 0.0;
+		float m = enabled_2 ? hit_weight(base, source_2.rgb) * blend_2 : 0.0;
 		col = mix(col, target_2.rgb, m);
 		alpha = mix(alpha, alpha * target_2.a, m);
 	}
 	{
-		float m = enabled_3 ? hit_weight(base, source_3.rgb) : 0.0;
+		float m = enabled_3 ? hit_weight(base, source_3.rgb) * blend_3 : 0.0;
 		col = mix(col, target_3.rgb, m);
 		alpha = mix(alpha, alpha * target_3.a, m);
 	}
 	{
-		float m = enabled_4 ? hit_weight(base, source_4.rgb) : 0.0;
+		float m = enabled_4 ? hit_weight(base, source_4.rgb) * blend_4 : 0.0;
 		col = mix(col, target_4.rgb, m);
 		alpha = mix(alpha, alpha * target_4.a, m);
 	}

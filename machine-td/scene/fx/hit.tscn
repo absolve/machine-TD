@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://byg0x37n22hqm"]
+
+[ext_resource type="Script" uid="uid://1l0001xh6wtj" path="res://script/fx/hit_effect.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cpy1fdfwdx3em" path="res://sprite/fx/p_star.png" id="2_star"]
+
+[sub_resource type="Curve" id="Curve_scale"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.4, 0.9), 0.0, 0.0, 0, 0, Vector2(0.85, 0.45), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Gradient" id="Grad_hit"]
+offsets = PackedFloat32Array(0, 0.14, 0.42, 0.72, 0.9, 1)
+colors = PackedColorArray(1, 1, 0.96, 1, 1, 0.93, 0.6, 1, 1, 0.68, 0.28, 0.98, 0.92, 0.34, 0.13, 0.8, 0.5, 0.14, 0.06, 0.35, 0.16, 0.05, 0.03, 0)
+
+[node name="hit" type="Node2D" unique_id=472898098]
+script = ExtResource("1_script")
+particle_texture = ExtResource("2_star")
+hit_color = Color(1, 1, 1, 1)
+hit_amount = 9
+
+[node name="particles" type="CPUParticles2D" parent="." unique_id=837339560]
+emitting = false
+amount = 4
+texture = ExtResource("2_star")
+lifetime = 0.42
+one_shot = true
+explosiveness = 1.0
+randomness = 0.35
+lifetime_randomness = 0.45
+local_coords = true
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 150.0
+initial_velocity_max = 300.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+damping_min = 160.0
+damping_max = 260.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.5
+scale_amount_curve = SubResource("Curve_scale")
+color_ramp = SubResource("Grad_hit")

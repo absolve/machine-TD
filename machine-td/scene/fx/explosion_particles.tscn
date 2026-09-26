@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://c242gqbg1pp6d"]
+
+[ext_resource type="Script" uid="uid://bl2rfmg464mxu" path="res://script/fx/explosion_particles.gd" id="1_particles"]
+[ext_resource type="Texture2D" uid="uid://c2adildwh1shm" path="res://sprite/fx/p_smoke.png" id="2_smoke"]
+
+[sub_resource type="Gradient" id="Grad_smoke"]
+offsets = PackedFloat32Array(0, 0.35, 0.75, 1)
+colors = PackedColorArray(1, 1, 1, 0.7, 1, 1, 1, 0.5, 1, 1, 1, 0.22, 1, 1, 1, 0)
+
+[node name="explosion_particles" type="Node2D"]
+script = ExtResource("1_particles")
+
+[node name="particles" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 14
+texture = ExtResource("2_smoke")
+lifetime = 1.1
+one_shot = true
+explosiveness = 0.85
+randomness = 0.4
+lifetime_randomness = 0.35
+local_coords = true
+direction = Vector2(0, -1)
+spread = 55.0
+gravity = Vector2(0, -12)
+initial_velocity_min = 20.0
+initial_velocity_max = 62.0
+damping_min = 55.0
+damping_max = 110.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.7
+scale_amount_max = 1.6
+color = Color(0.62, 0.6, 0.58, 1)
+color_ramp = SubResource("Grad_smoke")

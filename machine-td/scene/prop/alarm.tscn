@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" path="res://scene/prop/prop_base.tscn" id="1_base"]
 [ext_resource type="Texture2D" uid="uid://xni7whbmkkaj" path="res://sprite/prop/alarm.png" id="2_sheet"]
-[ext_resource type="Script" uid="uid://evkpng46u7th" path="res://script/prop_alarm.gd" id="3_script"]
+[ext_resource type="Script" uid="uid://evkpng46u7th" path="res://script/level/prop_alarm.gd" id="3_script"]
 
 [sub_resource type="AtlasTexture" id="Atlas_6"]
 atlas = ExtResource("2_sheet")

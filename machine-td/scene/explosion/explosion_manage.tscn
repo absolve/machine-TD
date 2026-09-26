@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://3sxlphafodcg"]
+[gd_scene format=3 uid="uid://3sxlphafodcg"]
 
-[ext_resource type="Script" uid="uid://dl3tvon6pr2be" path="res://script/explosion_manage.gd" id="1_0bjw1"]
+[ext_resource type="Script" uid="uid://dl3tvon6pr2be" path="res://script/fx/explosion_manage.gd" id="1_0bjw1"]
 
-[node name="explosionManage" type="Node2D"]
+[node name="explosionManage" type="Node2D" unique_id=1989306841]
 script = ExtResource("1_0bjw1")
