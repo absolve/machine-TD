@@ -19,14 +19,20 @@ const STYLE_ACTIVE := preload("res://theme/style/btn_hover.tres")
 
 const COLOR_READY := Color(1.0, 1.0, 1.0, 1.0)
 const COLOR_COOLING := Color(0.72, 0.76, 0.80, 1.0)
+## 宝石不够：压得比冷却更暗，一眼能看出"这个现在放不了"
+const COLOR_POOR := Color(0.48, 0.50, 0.55, 1.0)
 
 @onready var bg: Panel = $bg
 @onready var icon: TextureRect = $icon
 @onready var cooldown_rect: ColorRect = $cooldown
 @onready var cooldown_label: Label = $cooldownLabel
 @onready var cooldown_timer: Timer = $Timer
+@onready var cost_label: Label = $costBox/costLabel
+@onready var cost_box: HBoxContainer = $costBox
 
 var ability_id: String = ""
+## 宝石够不够放这个技能（由 refresh_affordable 更新）
+var _affordable: bool = true
 
 
 func _ready() -> void:
@@ -44,8 +50,26 @@ func setup(id: String) -> void:
 	icon.texture = AbilityManager.get_icon(id)
 	cooldown_timer.stop()
 	cooldown_timer.wait_time = maxf(AbilityManager.get_cooldown_total(id), 0.1)
+	# 宝石成本角标：没配置成本（cost <= 0）就整块藏掉
+	var cost := AbilityManager.get_gem_cost(id)
+	cost_label.text = str(cost)
+	cost_box.visible = cost > 0
 	set_highlighted(false)
+	refresh_affordable()
 	_refresh(0.0)
+
+
+## 刷新"宝石够不够"状态。技能消耗宝石后由技能条调用。
+func refresh_affordable() -> void:
+	if ability_id.is_empty():
+		return
+	_affordable = AbilityManager.can_afford(ability_id)
+	# 成本数字也跟着变色：买不起时变红
+	if cost_label != null:
+		cost_label.modulate = Color(1, 1, 1, 1) if _affordable else Color(1, 0.45, 0.45, 1)
+	# 立刻按"当前冷却进度"重算一次配色，不等下一帧
+	var total := cooldown_timer.wait_time
+	_refresh(cooldown_timer.time_left / total if total > 0.0 else 0.0)
 
 
 # 冷却是否进行中
@@ -93,7 +117,14 @@ func _refresh(ratio: float) -> void:
 	if left > 0.0:
 		cooldown_label.text = str(int(ceil(left)))
 
-	modulate = COLOR_READY if clamped <= 0.001 else COLOR_COOLING
+	# 配色优先级：宝石不够 > 冷却中 > 可用
+	# （"买不起"比"冷却中"更该被看见 —— 冷却等一会就有，宝石不够得去打通关）
+	if not _affordable:
+		modulate = COLOR_POOR
+	elif clamped > 0.001:
+		modulate = COLOR_COOLING
+	else:
+		modulate = COLOR_READY
 
 
 func _gui_input(event: InputEvent) -> void:

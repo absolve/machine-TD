@@ -43,9 +43,3 @@ func _physics_process(_delta):
 	var temp = pick_target()
 	if temp != null and aim_at(temp, _delta):
 		fire(temp)
-
-func _on_radar_area_entered(area):
-	target.append(area)
-
-func _on_radar_area_exited(area):
-	target.erase(area)

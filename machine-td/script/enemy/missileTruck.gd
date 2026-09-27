@@ -41,9 +41,3 @@ func _physics_process(_delta):
 		fire(temp)
 
 
-func _on_radar_area_entered(area: Area2D) -> void:
-	target.append(area)
-
-
-func _on_radar_area_exited(area: Area2D) -> void:
-	target.erase(area)

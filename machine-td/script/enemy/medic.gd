@@ -24,12 +24,3 @@ func _physics_process(_delta):
 		owner.queue_free()
 	if target.size() > 0:
 		fire(target)
-
-func _on_radar_area_entered(area: Area2D) -> void:
-	if area !=self:
-		target.append(area)
-
-
-func _on_radar_area_exited(area: Area2D) -> void:
-	if area !=self:
-		target.erase(area)

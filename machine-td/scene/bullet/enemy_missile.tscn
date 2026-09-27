@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://b68i8ysdw6rp2"]
+[gd_scene format=3 uid="uid://b68i8ysdw6rp2"]
 
 [ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet/bullet.tscn" id="1_bullet"]
 [ext_resource type="Script" uid="uid://emkxjq7pe4ia" path="res://script/bullet/enemy_missile.gd" id="2_script"]
@@ -13,19 +13,19 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("3_tex")
 }],
-"loop": false,
+"loop": 0,
 "name": &"default",
 "speed": 5.0
 }]
 
-[node name="enemyMissile" instance=ExtResource("1_bullet")]
+[node name="enemyMissile" unique_id=1060804268 instance=ExtResource("1_bullet")]
 collision_layer = 0
 script = ExtResource("2_script")
 missile_speed = 220.0
 turn_speed = 4.0
 
-[node name="shape" parent="." index="0"]
+[node name="shape" parent="." index="0" unique_id=1677876286]
 shape = SubResource("Shape")
 
-[node name="ani" parent="." index="1"]
+[node name="ani" parent="." index="1" unique_id=1167812739]
 sprite_frames = SubResource("SpriteFrames_b")

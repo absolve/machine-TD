@@ -36,7 +36,7 @@ func _draw():
 	# 未选中时保留原来的范围显示
 	if not selected:
 		draw_circle(Vector2.ZERO, radarScope, Color(EMP_COLOR.r, EMP_COLOR.g, EMP_COLOR.b, 0.1))
-		draw_arc(Vector2.ZERO, radarScope, 0, TAU, 64, Color(EMP_COLOR.r, EMP_COLOR.g, EMP_COLOR.b, 0.4), 1.0)
+		draw_arc(Vector2.ZERO, radarScope, 0, TAU, 64, Color(EMP_COLOR.r, EMP_COLOR.g, EMP_COLOR.b, 0.1), 1.0)
 		return
 	# 选中时沿用父类的统一雷达扫描效果
 	super._draw()

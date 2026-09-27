@@ -33,6 +33,16 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_p16uh"]
 radius = 128.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7fbp7"]
+resource_local_to_scene = true
+shader = ExtResource("3_4p7g2")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 14.0
+shader_parameter/flash_amplitude = 0.8
+shader_parameter/outline_thickness = 0.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_autotur"]
 animations = [{
 "frames": [{
@@ -63,6 +73,7 @@ collision_layer = 16
 shape = SubResource("CircleShape2D_p16uh")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
+material = SubResource("ShaderMaterial_7fbp7")
 sprite_frames = SubResource("SpriteFrames_autotur")
 
 [node name="lifeBar" parent="." index="7" unique_id=1589605555]

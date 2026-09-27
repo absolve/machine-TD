@@ -2,7 +2,7 @@ extends PanelContainer
 ## 地图右侧塔信息面板：选中防御塔后，在右侧集中显示该塔的名称/等级/血量/经验与属性。
 
 @onready var name_label: Label = $Margin/VBox/Header/nameLabel
-@onready var level_label: Label = $Margin/VBox/Header/levelLabel
+@onready var level_label: Label = $Margin/VBox/Level/levelLabel
 @onready var hp_title: Label = $Margin/VBox/HpRow/hpTitle
 @onready var hp_value_label: Label = $Margin/VBox/HpRow/hpValueLabel
 @onready var hp_bar: ProgressBar = $Margin/VBox/hpBar

@@ -4,6 +4,8 @@ extends Control
 @onready var waveLabel = $PanelContainer/hbox/hbox1/waveLabel
 @onready var hpLabel = $PanelContainer/hbox/hbox2/hpLabel
 @onready var moneyLabel = $PanelContainer/hbox/hbox3/moneyLabel
+@onready var gemLabel = $PanelContainer/hbox/hboxGem/gemLabel
+@onready var gemIcon = $PanelContainer/hbox/hboxGem/gemIcon
 @onready var scoreLabel = $PanelContainer/hbox/hbox4/scoreLabel
 @onready var scoreTitle = $PanelContainer/hbox/hbox4/Label
 @onready var speedLabel = $PanelContainer/hbox/HBoxContainer3/btnFast/Label
@@ -48,7 +50,19 @@ var money = 0:
 	set(value):
 		money = value
 		moneyLabel.text = str(value)
-		
+
+## 宝石数量。技能要花宝石，所以顶栏必须常驻显示，玩家才知道还能放几次。
+## 技能消耗时由 AbilityManager 发 gem_changed → map 转给这里刷新。
+var gem = 0:
+	set(value):
+		gem = maxi(value, 0)
+		if gemLabel != null:
+			gemLabel.text = str(gem)
+		# 一颗都没有时压暗，和"还有得用"在视觉上区分开
+		if gemIcon != null:
+			gemIcon.modulate = Color(1, 1, 1, 1) if gem > 0 else Color(1, 1, 1, 0.45)
+			gemLabel.modulate = gemIcon.modulate
+
 var score = 0:
 	set(value):
 		score = value
@@ -135,3 +149,5 @@ func _on_btn_home_pressed() -> void:
 func _ready() -> void:
 	# 顶栏「得分:」之前是场景里硬编码的英文，这里走翻译
 	scoreTitle.text = tr("_Score")
+	# 宝石数来自存档（技能消耗的就是它），进关卡先同步一次
+	gem = UserData.gem

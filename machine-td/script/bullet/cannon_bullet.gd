@@ -1,6 +1,7 @@
 extends "res://script/bullet/bullet.gd"
 
 func _ready():
+	align_to_angle()
 	lifetime = 3
 	vec = Vector2(500, 0).rotated(angle)
 	#damage = source_tower.atk if is_instance_valid(source_tower) else 30

@@ -29,6 +29,9 @@ var laserTower = preload("res://scene/tower/laserTower.tscn")
 var droneBase = preload("res://scene/tower/droneBase.tscn")
 
 var isLastWave = false # 最后一波
+## 结算复查开关：lastWave() 打开，finish() 复查到"敌人全清"后关闭并弹结算。
+## 没有它的话，暂停/失败后 Timer 仍会周期性回调 finish()，可能重复结算。
+var _finish_checking := false
 var cellSize = 64
 var debug = false
 var font
@@ -47,6 +50,8 @@ func _ready():
 	Game.defeatEnemy.connect(defeatEnemy)
 	Game.enemyEscape.connect(enemyEscape)
 	Game.sellTower.connect(sellTower)
+	# 塔被打爆时也要归还格子（出售那条路已经在 sellTower 里还款+归还了）
+	Game.towerGridReleased.connect(_on_tower_grid_released)
 	Game.repairTower.connect(repairTower)
 	Game.lastWave.connect(lastWave)
 	Game.clickTower.connect(clickTower)
@@ -55,6 +60,9 @@ func _ready():
 	# 技能选中的范围预览圈由 map 的 _draw 画；取消时也必须重绘，否则圈会残留
 	AbilityManager.selection_started.connect(_on_ability_selection_changed)
 	AbilityManager.selection_ended.connect(_on_ability_selection_changed)
+	# 技能花掉宝石后刷新顶栏数字
+	AbilityManager.gem_changed.connect(_on_gem_changed)
+	AbilityManager.ability_failed.connect(_on_ability_failed)
 	
 	resultScreen.btnRestart.pressed.connect(restart)
 	resultScreen.btnNextLevel.pressed.connect(nextLevel)
@@ -167,7 +175,6 @@ func syncWaveProgressBar() -> void:
 	
 #放着塔
 func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(1, 1)):
-	print('placeTower', type, grid, towerCoverGrid, gridSize)
 	# 兜底：本关不放行的塔一律拒绝（tower_ui 已经把卡片置灰，这里防止绕过）
 	if not StageData.isTowerAllowed(StageData.currentStageId, type):
 		addNotice(tr("_TowerLockedInStage"))
@@ -260,9 +267,13 @@ func _on_defense_failed() -> void:
 	if resultScreen.visible:
 		return
 	get_tree().paused = true
+	# 失败结算不会再走 finish()，把复查器关掉，避免它继续空转
+	_finish_checking = false
+	finishTimer.stop()
 	resultScreen.setResult(true)
 	resultScreen.levelRating.rating = 0
-	resultScreen.setGemReward(0)
+	# ★ 这里**不要**再调 setGemReward —— setResult(true) 已经把宝石行隐藏了，
+	#   而现在 setGemReward 是"通关时始终显示"，再调一次会把整行又亮出来。
 	resultScreen.show()
 
 func startGame():
@@ -327,9 +338,18 @@ func speedOff():
 
 # 出售防御塔
 func sellTower(money, coverGrid: Array[Vector2i]):
-	print("sellTower ", money, coverGrid)
 	level.removeOccupiedArea(coverGrid)
 	titleNode.money += money
+
+
+## 塔被打爆：只归还格子，**不给钱**（给钱是"出售"才有的收益）。
+## 顺便把右侧信息面板收起来 —— 用 clear() 而不是 hide()，它还会把 tower 引用置空，
+## 免得面板继续指着一座已经被 free 的塔。
+func _on_tower_grid_released(coverGrid: Array[Vector2i]) -> void:
+	if level != null:
+		level.removeOccupiedArea(coverGrid)
+	if towerDetailPanel != null:
+		towerDetailPanel.clear()
 
 # 修理防御塔：扣费成功后把血量回满
 func repairTower(cost: int, tower: Node) -> void:
@@ -343,22 +363,39 @@ func repairTower(cost: int, tower: Node) -> void:
 	if towerDetailPanel:
 		towerDetailPanel.refresh()
 
+## 最后一波**开始生成**时触发（注意：不是"打完了"）。
+## 这里只负责把结算复查器打开 —— 真正的结束判定在 finish() 里反复复查，
+## 直到「生产列表空 + 场上无敌人」才弹结算。
 func lastWave():
-	print('lastWave')
 	isLastWave = true
+	_finish_checking = true
 	finishTimer.start()
-	pass
-	
+
+## 结算复查（周期触发，见 map.tscn 的 Timer：wait_time=0.5, one_shot=false）
+##
+## ⚠️ 旧实现的两个坑（2026-09-26 修）：
+##   ① Timer 是 one_shot=true + wait_time=2.0 —— 只查一次。
+##      如果那一次恰好敌人还没清完，就直接 return 且**再也不会复查**，永远不结算。
+##   ② lastWave 是在最后一波"刚加入生产列表"时发出的，那一刻敌人一个都还没生成，
+##      只靠一次判定很容易在敌人全灭前/后错拍。
+## 现在改成 0.5 秒复查一次，条件满足才结算，满足后停表。
 func finish():
-	#判断敌人是否生产完毕和所有敌人全部消灭，游戏结束
+	if not _finish_checking:
+		return
+	if level == null:
+		return
+	# 敌人还在生产队列里 → 继续等
 	if level.currentSpawner.size() > 0:
-		finishTimer.start()
 		return
+	# 场上还有活着的敌人 → 继续等
 	if get_tree().get_nodes_in_group("enemy").size() > 0:
-		finishTimer.start()
 		return
-		
-	#所有敌人都被消灭，记录最高评分、奖励和下一关解锁状态
+
+	# 到这里才算真的"全部清空"，停止复查
+	_finish_checking = false
+	finishTimer.stop()
+
+	# 记录最高评分、奖励和下一关解锁状态
 	var rating = calculateStars()
 	# rating 为 0 表示基地已经被打爆，不算通关：不写星级、不解锁关卡、不发宝石
 	# （失败结算已经在 _on_defense_failed() 里弹过了，这里直接结束）
@@ -483,6 +520,21 @@ func _physics_process(_delta: float) -> void:
 #    最后一帧画的范围预览圈就会一直留在画布上（黄色的圈不消失）。
 func _on_ability_selection_changed(_ability_id: String) -> void:
 	queue_redraw()
+
+
+## 技能花掉宝石：把顶栏的宝石数字同步成最新值。
+func _on_gem_changed(_gem: int) -> void:
+	if titleNode != null:
+		titleNode.gem = UserData.gem
+	# 宝石数变了，技能槽可不可用也可能变，让技能条刷新一次
+	if abilityBar != null and abilityBar.has_method("refresh_affordable"):
+		abilityBar.refresh_affordable()
+
+
+## 技能没放出来。目前只有"宝石不够"这一种需要提示玩家。
+func _on_ability_failed(_ability_id: String, reason: String) -> void:
+	if reason == "no_gem":
+		addNotice(tr("_NotEnoughGem"))
 	
 
 func _unhandled_input(_event):
@@ -538,9 +590,11 @@ func area_damage(center: Vector2, radius: float, damage: int) -> bool:
 	ExplosionManage.playExplosion(center)
 	if hit_count > 0:
 		addNotice(_t("_ability_bombard_hit", "Airstrike hit %d enemies") % hit_count, Color(1.0, 0.776, 0.102))
-	else:
-		addNotice(_t("_ability_bombard_miss", "Airstrike hit nothing"), Color(0.86, 0.92, 0.95))
-	return true
+		return true
+	# ⚠️ 这里必须返回 false：技能现在要花宝石，而 AbilityManager 只有拿到 true 才扣。
+	#    如果没打中也返回 true，玩家会**白丢一颗宝石**（以前不花宝石时返回啥都无所谓）。
+	addNotice(_t("_ability_bombard_miss", "Airstrike hit nothing"), Color(0.86, 0.92, 0.95))
+	return false
 
 
 # 塔无敌：让范围内所有防御塔在一段时间内免疫伤害
@@ -551,9 +605,10 @@ func area_invincible(center: Vector2, radius: float, duration: float) -> bool:
 	for tower in towers:
 		tower.set_invincible(duration)
 	if towers.is_empty():
+		# 同上：范围内没有塔就不算生效，不扣宝石、不进冷却
 		addNotice(_t("_ability_invincible_miss", "No tower in range"), Color(0.86, 0.92, 0.95))
-	else:
-		addNotice(_t("_ability_invincible_hit", "%d towers are now invincible") % towers.size(), Color(1.0, 0.776, 0.102))
+		return false
+	addNotice(_t("_ability_invincible_hit", "%d towers are now invincible") % towers.size(), Color(1.0, 0.776, 0.102))
 	return true
 
 

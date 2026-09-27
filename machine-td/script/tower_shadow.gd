@@ -10,6 +10,8 @@ var towerType = Game.towerType.machineGunTower # 类型
 var cost = 0 # 花费
 var gridSize: Vector2i = Vector2i(1, 1) # 占用的网格宽高 (列, 行)
 var drawColor = Color.INDIAN_RED # 绘制颜色
+var scope=0  #攻击范围
+var radar_color := Color(0.25, 0.75, 1.0, 1.0)
 
 func _ready():
 	#print(shape.shape.get_rect())
@@ -60,4 +62,4 @@ func _draw() -> void:
 			draw_rect(Rect2(cell_pos, Vector2(tile, tile)), fill_color, true)
 			# 网格边框
 			draw_rect(Rect2(cell_pos, Vector2(tile, tile)), drawColor, false, 2.0)
-	
+	draw_circle(Vector2.ZERO, scope, Color(radar_color.r, radar_color.g, radar_color.b, 0.12))

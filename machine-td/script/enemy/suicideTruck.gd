@@ -44,8 +44,3 @@ func _physics_process(_delta):
 		if distance <= DETONATE_DISTANCE:
 			trigger_self_explode()
 
-func _on_radar_area_entered(area):
-	target.append(area)
-
-func _on_radar_area_exited(area):
-	target.erase(area)

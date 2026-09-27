@@ -15,6 +15,8 @@ signal ability_activated(ability_id: String, target)
 signal selection_started(ability_id: String)
 signal selection_ended(ability_id: String)
 signal ability_failed(ability_id: String, reason: String)
+## 宝石数量变化（花掉技能宝石后发出）。顶栏标题栏据此刷新显示。
+signal gem_changed(gem: int)
 
 # 技能的目标类型
 enum TargetType {
@@ -24,22 +26,31 @@ enum TargetType {
 
 ## 技能定义表（新增技能只改这里）
 ## icon 路径指向 sprite/icon/ 下的图标
+##
+## ★ 数值规范（2026-09-26）：
+##   · 技能改为**消耗宝石**（`gem_cost`），宝石来自首次通关奖励（UserData.gem）
+##   · 冷却大幅缩短（原来 30 / 45 秒太长，一场战斗放不了几次）：
+##     现在主要靠宝石数量来限制使用频率，冷却只是防止连点
+##   · 放技能前必须 `UserData.gem >= gem_cost`，放出去才扣；
+##     目标无效（点到空地）**不扣宝石、不进冷却**，让玩家重选
 const ABILITIES: Dictionary = {
 	"bombard": {
 		"name_key": "_ability_bombard_name",
 		"desc_key": "_ability_bombard_desc",
 		"icon": "res://sprite/icon/ability_bombard.png",
 		"target_type": TargetType.POSITION,
-		"cooldown": 30.0,
-		"effect": {"type": "area_damage", "radius": 140.0, "damage": 200},
+		"gem_cost": 1,
+		"cooldown": 6.0,
+		"effect": {"type": "area_damage", "radius": 100.0, "damage": 200},
 	},
 	"invincible": {
 		"name_key": "_ability_invincible_name",
 		"desc_key": "_ability_invincible_desc",
 		"icon": "res://sprite/icon/ability_invincible.png",
 		"target_type": TargetType.POSITION,
-		"cooldown": 45.0,
-		"effect": {"type": "tower_invincible", "radius": 220.0, "duration": 8.0},
+		"gem_cost": 1,
+		"cooldown": 8.0,
+		"effect": {"type": "tower_invincible", "radius": 120.0, "duration": 8.0},
 	},
 }
 
@@ -101,6 +112,30 @@ func get_cooldown_total(ability_id: String) -> float:
 	return float(get_definition(ability_id).get("cooldown", 0.0))
 
 
+# ===== 宝石消耗 =====
+# 技能现在要花宝石（宝石来源：首次通关奖励，存在 UserData.gem）
+
+## 这个技能要花几颗宝石；没配置就是 0（不消耗）
+func get_gem_cost(ability_id: String) -> int:
+	return int(get_definition(ability_id).get("gem_cost", 0))
+
+
+## 宝石够不够放这个技能
+func can_afford(ability_id: String) -> bool:
+	return UserData.gem >= get_gem_cost(ability_id)
+
+
+## 真正扣宝石。只在效果**确认生效**之后调用（见 _activate）。
+## 扣完发 gem_changed，让顶栏的宝石数字立刻刷新。
+func _spend_gem(ability_id: String) -> void:
+	var cost := get_gem_cost(ability_id)
+	if cost <= 0:
+		return
+	UserData.gem = maxi(0, UserData.gem - cost)
+	UserData.savePlayerData()
+	gem_changed.emit(UserData.gem)
+
+
 # 图标（占位素材可能不存在，返回 null 时 UI 显示空槽）
 func get_icon(ability_id: String) -> Texture2D:
 	if _icon_cache.has(ability_id):
@@ -144,12 +179,16 @@ func try_activate(ability_id: String) -> void:
 	var data := get_definition(ability_id)
 	if data.is_empty():
 		return
-	# 再次点击同一个技能 = 取消选择
+	# 再次点击同一个技能 = 取消选择（取消不花宝石）
 	if _selecting_id == ability_id:
 		cancel_selecting()
 		return
 	if is_selecting():
 		cancel_selecting()
+	# ★ 宝石不够直接拦下（此时还没扣，只是拦）
+	if not can_afford(ability_id):
+		ability_failed.emit(ability_id, "no_gem")
+		return
 	var target_type := int(data.get("target_type", TargetType.NONE))
 	if target_type == TargetType.NONE:
 		_activate(ability_id, null)
@@ -182,9 +221,11 @@ func cancel_selecting() -> void:
 func _activate(ability_id: String, target) -> void:
 	var data := get_definition(ability_id)
 	if not _apply_effect(data.get("effect", {}), target):
-		# 目标无效（比如点到空地）：不进入冷却，让玩家重新选
+		# 目标无效（比如点到空地）：**不扣宝石、不进冷却**，让玩家重新选
 		ability_failed.emit(ability_id, "no_target")
 		return
+	# ★ 效果确认生效后才扣宝石（扣完发 gem_changed 刷新顶栏）
+	_spend_gem(ability_id)
 	# 冷却由技能槽内的 Timer 负责，这里只通知"已生效"
 	ability_activated.emit(ability_id, target)
 

@@ -33,7 +33,7 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5i26j"]
-radius = 128.0
+radius = 140.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_st1ei"]
 resource_local_to_scene = true
@@ -176,10 +176,7 @@ shape = SubResource("RectangleShape2D_k8n1u")
 material = SubResource("ShaderMaterial_i2h4l")
 sprite_frames = SubResource("SpriteFrames_i5mjb")
 
-[node name="radar" parent="." index="2" unique_id=2082783838]
-visible = false
-
-[node name="CollisionShape2D" parent="radar" index="0" unique_id=803920863]
+[node name="CollisionShape2D" parent="radar" parent_id_path=PackedInt32Array(2082783838) index="0" unique_id=803920863]
 shape = SubResource("CircleShape2D_5i26j")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]

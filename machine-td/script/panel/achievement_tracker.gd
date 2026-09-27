@@ -48,6 +48,8 @@ func _on_enemy_defeated(enemy, source) -> void:
 		AchievementManager.add_progress("iron_hunter", 1, false)
 
 	# 连锁反应：本局内由特斯拉线圈塔或火箭塔造成的击杀
+	if !is_instance_valid(source)||source==null:
+		return
 	var tower := source as Tower
 	if tower != null and (tower.type == Game.towerType.teslaCoilTower or tower.type == Game.towerType.rocketTower):
 		_chain_kills += 1

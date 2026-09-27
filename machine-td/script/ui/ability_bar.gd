@@ -47,7 +47,20 @@ func _on_slot_clicked(ability_id: String) -> void:
 	# 冷却中直接拦下（冷却时间以技能槽内的 Timer 为准）
 	if slot and slot.is_cooling():
 		return
+	# 宝石不够也拦下 —— AbilityManager 里还会再判一次（那边才是权威），
+	# 这里拦是为了不发多余的选择状态。提示统一由 map 接 ability_failed 弹。
+	if not AbilityManager.can_afford(ability_id):
+		return
 	AbilityManager.try_activate(ability_id)
+
+
+## 宝石数量变化后刷新所有槽的"买不买得起"状态。
+## 由 map 接 AbilityManager.gem_changed 时调用。
+func refresh_affordable() -> void:
+	for id in _slots.keys():
+		var slot: Control = _slots[id]
+		if slot.has_method("refresh_affordable"):
+			slot.refresh_affordable()
 
 
 func _on_slot_hovered(ability_id: String, slot: Control) -> void:
@@ -90,6 +103,13 @@ func _show_tooltip(ability_id: String, slot: Control) -> void:
 	var target_type := int(data.get("target_type", AbilityManager.TargetType.NONE))
 	if target_type == AbilityManager.TargetType.POSITION:
 		parts.append(_t("_ability_target_position", "Click the map to choose an area."))
+	# 宝石成本放最前面 —— 这是现在最关键的资源限制
+	var cost := AbilityManager.get_gem_cost(ability_id)
+	if cost > 0:
+		var cost_text := _t("_ability_gem_cost_fmt", "Cost: %d gem") % cost
+		if not AbilityManager.can_afford(ability_id):
+			cost_text += "  " + _t("_ability_gem_lack", "(not enough)")
+		parts.append(cost_text)
 	parts.append(_t("_ability_cooldown_fmt", "Cooldown: %ss") % int(AbilityManager.get_cooldown_total(ability_id)))
 	var effect: Dictionary = data.get("effect", {})
 	if effect.has("duration"):

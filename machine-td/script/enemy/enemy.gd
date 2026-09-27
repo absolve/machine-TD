@@ -111,6 +111,33 @@ func _on_input_event(_viewport, _event, _shape_idx):
 # 物理伤害会按 armor 进行减免：实际伤害 = 原伤害 * (1 - armor)
 # armor 取值范围 0~1，1 表示 100% 减免，0 表示不减伤
 # 能量伤害忽略 armor
+## ── 雷达目标收集（对抗/支援型敌人的"看见防御塔"这一环）──
+##
+## ⚠️ 这里曾经是整个敌人攻击链路断掉的地方（2026-09-26 修）：
+##    各子类（mediumTank / missileTruck / attackHelicopter / medic / suicideTruck）
+##    都实现了 _on_radar_area_entered/_exited，但
+##    **没有任何敌人场景把 radar.area_entered 信号接上**（对比塔的场景都有接）。
+##    结果就是 target 数组恒为空 → pick_target() 永远返回 null → 敌人从不开火。
+##    表现："以前会打塔的敌人现在都不打了"。
+##
+## 现在把处理器收到**基类**，连接写在 scene/enemy/enemy.tscn 上，
+## 所有敌人（含以后新加的）自动继承，不会再漏接。
+## 子类里的同名函数已删除，避免覆盖基类实现。
+##
+## 排除 self：敌机主 Area2D 在 layer 2，而各自 radar 的 mask 是 1，
+## 正常不会侦测到自己；但万一以后有人改了层，这里兜一手。
+func _on_radar_area_entered(area) -> void:
+	if area == self or area == null:
+		return
+	target.append(area)
+
+
+func _on_radar_area_exited(area) -> void:
+	if area == self or area == null:
+		return
+	target.erase(area)
+
+
 ## 取"最近的、仍然有效的"目标；顺手把失效条目清掉。
 ##
 ## ⚠️ 三个会开火的敌人（中型坦克 / 导弹车 / 攻击直升机）原来都是直接取 target[0]。

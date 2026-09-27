@@ -105,14 +105,16 @@ func _ready() -> void:
 	call_deferred("update_status_ui")
 
 func _physics_process(delta: float) -> void:
-	if not selected:
-		return
-	radarSweepAngle = fmod(radarSweepAngle + delta * RADAR_SCAN_SPEED, TAU)
-	queue_redraw()
 	if invincible: # 无敌期间
 		_invincible_left -= delta
 		if _invincible_left <= 0.0:
 			_set_invincible_visual(false)
+			
+	if not selected:
+		return
+	radarSweepAngle = fmod(radarSweepAngle + delta * RADAR_SCAN_SPEED, TAU)
+	queue_redraw()
+	
 
 
 func getTarget():
@@ -148,24 +150,24 @@ func init():
 func hideSelect():
 	selected = !selected
 	queue_redraw()
-	update_status_ui()
+	#update_status_ui()
 	Game.clickTower.emit(self, selected)
 
 # 增加经验
 func addExp(amount: int) -> void:
 	if level >= TowerUpgradeManager.MAX_LEVEL:
-		update_status_ui()
+		#update_status_ui()
 		return
 	# 没有升级配置、或被明确排除的塔（如 EMP 干扰塔）不参与升级
 	if not TowerUpgradeManager.canUpgrade(type):
-		update_status_ui()
+		#update_status_ui()
 		return
 	towerExp += amount
 	var threshold = TowerUpgradeManager.getExpThreshold(type, level)
 	if towerExp >= threshold:
 		levelUp()
 		towerExp -= threshold
-	update_status_ui()
+	#update_status_ui()
 
 func update_status_ui() -> void:
 	if maxHp <= 0:
@@ -324,9 +326,27 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 		lifeBar.value = hp
 	update_status_ui()
 	if hp <= 0:
-		# 塔被打爆：金属垮塌声，跟着塔的位置走
-		SoundManage.play_at("tower_destroyed", global_position, -3.0, randf_range(0.95, 1.05))
+		# 塔被打爆：
+		# ① 复用现成的爆炸（动画帧 + 粒子 + 音效三件套，和敌人/火箭弹同一个入口）
+		# ② 金属垮塌声再补一层，塔爆得比小怪"重"
+		# ③ ★ 把占用的格子归还 —— 否则那块地永远建不了新塔
+		# ④ 通知地图（归还格子 + 关掉右侧信息面板），最后释放自己
+		# 注意顺序：ExplosionManage 会把特效挂在 autoload 下，所以塔 free 掉特效还在；
+		# 音效也用 global_position 定位，必须在 queue_free 之前播。
+		ExplosionManage.playExplosion(global_position, "heavy")
+		SoundManage.play_at("tower_destroyed", global_position, -6.0, randf_range(0.95, 1.05))
+		_release_grid()
 		queue_free()
+
+
+## 把本塔占用的格子归还给关卡（出售 / 被打爆 都要走这一步）。
+## ⚠️ 复用 Game.sellTower 那条通路会连带把"售价"也加给玩家 —— 打爆不该给钱，
+##    所以这里单独发 towerGridReleased，只归还格子。
+func _release_grid() -> void:
+	if coverGrid.is_empty():
+		return
+	Game.towerGridReleased.emit(coverGrid)
+	coverGrid = []
 	
 
 func get_muzzle_position() -> Vector2:
@@ -400,7 +420,9 @@ func sell():
 	# 出售：金币响声（先响再 free，free 之后位置就没了）
 	#SoundManage.play_at("tower_sold", global_position, -2.0, randf_range(0.97, 1.05))
 	SoundManage.play("tower_sold_b")
+	# sellTower 负责"给钱 + 归还格子"；归还逻辑和被摧毁时共用同一条通路
 	Game.sellTower.emit(sellingPrice, coverGrid)
+	coverGrid = []
 	queue_free()
 
 

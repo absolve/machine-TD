@@ -21,6 +21,8 @@ _Tutorial,Tutorial,教程
 _LevelFailed,Level Failed,失败
 _LevelCompleted,Level Completed,过关
 _GemReward,Gems earned: +%d,获得宝石：+%d
+_GemRewardNone,No gems (already cleared),本次无宝石（已通关过）
+_GemRewardAlready,Already earned this stage,本关宝石已领取过
 _SelectLevel,Select Level,选择关卡
 _Wave,Wave,波数
 _machineGunTowerDesc,"Quick Fire,Effectively combat the enemy","快速射击,有效打击敌人"
@@ -48,6 +50,7 @@ _Repair,Repair,修理
 _RepairFull,HP Full,血量已满
 _Sell,Sell,出售
 _NotEnoughMoney,Not enough money,金币不足
+_NotEnoughGem,Not enough gems,宝石不足
 _PanelHint,Click the tower again or empty ground to deselect.,再次点击该塔或点击空地取消选择。
 _Speed,Speed,移动速度
 _Armor,Armor,护甲
@@ -83,6 +86,8 @@ _ability_bombard_desc,Click the map to call an airstrike. Deals heavy damage to 
 _ability_invincible_name,Overdrive Shield,塔防御护盾
 _ability_invincible_desc,Click the map to make every tower in the target area invincible for a while. Invincible towers take no damage.,点击地图，使范围内所有防御塔在一段时间内无敌，无敌期间不会受到任何伤害。
 _ability_target_position,Click the map to choose an area.,点击地图选择目标区域。
+_ability_gem_cost_fmt,Cost: %d gem,消耗宝石：%d
+_ability_gem_lack,(not enough),（宝石不足）
 _ability_cooldown_fmt,Cooldown: %ss,冷却时间：%s 秒
 _ability_duration_fmt,Duration: %ss,持续时间：%s 秒
 _ability_bombard_hit,Airstrike hit %d enemies,区域轰炸命中 %d 个敌人

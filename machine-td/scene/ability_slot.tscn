@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://8wnam1gl3nqk" path="res://script/ui/ability_slot.gd" id="1_script"]
 [ext_resource type="StyleBox" uid="uid://djtnjx2ei87o2" path="res://theme/style/btn_normal.tres" id="2_bg"]
 [ext_resource type="Shader" uid="uid://dp3q67f8qyg04" path="res://shader/ability_cooldown.gdshader" id="3_shader"]
+[ext_resource type="Texture2D" uid="uid://hs131te8un77" path="res://sprite/gem.png" id="4_gem"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cooldown"]
 resource_local_to_scene = true
@@ -64,6 +65,39 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 30
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="costBox" type="HBoxContainer" parent="." unique_id=1683555363]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -26.0
+offset_right = -5.0
+offset_bottom = -3.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="costIcon" type="TextureRect" parent="costBox" unique_id=1683555364]
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_gem")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="costLabel" type="Label" parent="costBox" unique_id=1683555365]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 16
+text = "1"
+vertical_alignment = 1
+mouse_filter = 2
 
 [node name="Timer" type="Timer" parent="." unique_id=984540885]
 one_shot = true

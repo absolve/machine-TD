@@ -3,10 +3,10 @@ extends "res://script/bullet/bullet.gd"
 var bomb_scene = preload("res://scene/explosion/bomb.tscn")
 
 func _ready():
+	align_to_angle()
 	lifetime = 5
 	vec = Vector2(300, 0).rotated(angle)
 	damage = 40
-	rotate(angle)
 
 func _spawn_bomb() -> void:
 	if is_queued_for_deletion():
@@ -18,8 +18,9 @@ func _spawn_bomb() -> void:
 	var bomb = bomb_scene.instantiate()
 	bomb.global_position = global_position
 	bomb.damage = source_tower.atk if is_instance_valid(source_tower) else damage
-	bomb.source_tower = source_tower
-	bomb.source = source_tower
+	if is_instance_valid(source_tower):
+		bomb.source_tower = source_tower
+		bomb.source = source_tower
 	bomb.blastRadius = 90.0
 	bomb.z_index = 10
 	bomb.target_mask = 1 << 1 # 只命中敌人 layer 2

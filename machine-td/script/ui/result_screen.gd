@@ -31,9 +31,22 @@ func setResult(_isFailed: bool):
 		resultLabel.text = tr("_LevelCompleted")
 		btnNextLevel.visible = true
 
+## 设置宝石奖励并显示。
+##
+## ⚠️ 旧实现是 `gemRewardRow.visible = amount > 0`，而宝石**只在首次通关发放**
+##    （见 userData.recordStageCompletion），所以重复打同一关时 amount 恒为 0，
+##    整行直接被隐藏 —— 看起来就是"结束菜单上没有奖励宝石"。
+## 现在：通关时**始终显示这一行**，amount 为 0 就明确写"本关宝石已领取过"，
+## 让玩家知道不是漏发了，而是这一关的宝石已经拿过。
 func setGemReward(amount: int) -> void:
-	gemRewardLabel.text = tr("_GemReward") % amount
-	gemRewardRow.visible = amount > 0
+	if amount > 0:
+		gemRewardLabel.text = tr("_GemReward") % amount
+		gemRewardRow.modulate = Color(1, 1, 1, 1)
+	else:
+		gemRewardLabel.text = tr("_GemRewardNone")
+		# 压暗一档，和"真拿到宝石"在视觉上区分开
+		gemRewardRow.modulate = Color(1, 1, 1, 0.55)
+	gemRewardRow.visible = true
 
 
 func _on_btn_restart_pressed():

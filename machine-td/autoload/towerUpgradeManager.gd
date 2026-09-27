@@ -4,48 +4,53 @@ signal tower_leveled_up(tower, level) # 防御塔升级（成就统计用）
 
 const MAX_LEVEL: int = 3  # 最大等级
 
+# ★ 升级数值规范（2026-09-26 第三次调整）：
+#   · **Lv.3 的 atk 也必须 < 100**
+#   · 基础塔的 scope 已被大幅缩短（140~240），敌人穿过单塔射程只有 3~4 秒，
+#     所以 DPS 不能再压 —— 否则一塔一辈子只能打掉三四十点血、完全拦不住。
+#     这里让 Lv2/Lv3 的 DPS 大约是 Lv1 的 1.9x / 2.7x。
 const configs: Dictionary = {
 	Game.towerType.machineGunTower: {
 		"exp2": 8,
 		"exp3": 18,
-		"lv2": {"atk": 24, "reload": 0.18, "scope": 315},
-		"lv3": {"atk": 29, "reload": 0.16, "scope": 330},
+		"lv2": {"atk": 22, "reload": 0.36, "scope": 165},
+		"lv3": {"atk": 31, "reload": 0.30, "scope": 185},
 	},
 	Game.towerType.cannonTower: {
 		"exp2": 12,
 		"exp3": 28,
-		"lv2": {"atk": 39, "reload": 0.72, "scope": 340},
-		"lv3": {"atk": 50, "reload": 0.65, "scope": 360},
+		"lv2": {"atk": 44, "reload": 0.45, "scope": 205},
+		"lv3": {"atk": 62, "reload": 0.38, "scope": 235},
 	},
 	Game.towerType.rocketTower: {
 		"exp2": 15,
 		"exp3": 32,
-		"lv2": {"atk": 52, "reload": 1.35, "scope": 375},
-		"lv3": {"atk": 68, "reload": 1.2, "scope": 400},
+		"lv2": {"atk": 56, "reload": 0.90, "scope": 205},
+		"lv3": {"atk": 78, "reload": 0.75, "scope": 235},
 	},
 	Game.towerType.droneBase: {
 		"exp2": 18,
 		"exp3": 40,
-		"lv2": {"atk": 10, "reload": 0.54, "scope": 440},
-		"lv3": {"atk": 13, "reload": 0.48, "scope": 480},
+		"lv2": {"atk": 10, "reload": 0.18, "scope": 270},
+		"lv3": {"atk": 14, "reload": 0.15, "scope": 300},
 	},
 	Game.towerType.teslaCoilTower: {
 		"exp2": 20,
 		"exp3": 45,
-		"lv2": {"atk": 32, "reload": 1.35, "scope": 440},
-		"lv3": {"atk": 42, "reload": 1.2, "scope": 480},
+		"lv2": {"atk": 30, "reload": 0.85, "scope": 270},
+		"lv3": {"atk": 42, "reload": 0.72, "scope": 305},
 	},
 	Game.towerType.laserTower: {
 		"exp2": 22,
 		"exp3": 50,
-		"lv2": {"atk": 39, "reload": 0.92, "scope": 480},
-		"lv3": {"atk": 51, "reload": 0.84, "scope": 510},
+		"lv2": {"atk": 32, "reload": 0.75, "scope": 270},
+		"lv3": {"atk": 44, "reload": 0.62, "scope": 305},
 	},
 	Game.towerType.EMPTower: {
 		"exp2": 16,
 		"exp3": 36,
-		"lv2": {"atk": 55, "reload": 3.4, "scope": 315},
-		"lv3": {"atk": 60, "reload": 2.8, "scope": 350},
+		"lv2": {"atk": 50, "reload": 3.4, "scope": 165},
+		"lv3": {"atk": 70, "reload": 2.8, "scope": 190},
 	},
 }
 

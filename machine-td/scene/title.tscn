@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://b5ns2yj1xdd15" path="res://sprite/Music-On.png" id="8_5tkpx"]
 [ext_resource type="Texture2D" uid="uid://b5yfaf2b87rp2" path="res://sprite/Music-Off.png" id="9_glyem"]
 [ext_resource type="Texture2D" uid="uid://ogfcb767msec" path="res://sprite/Home.png" id="10_5tkpx"]
+[ext_resource type="Texture2D" uid="uid://hs131te8un77" path="res://sprite/gem.png" id="11_gem"]
 
 [node name="title" type="Control" unique_id=370411937]
 process_mode = 3
@@ -62,7 +63,7 @@ text = "10"
 
 [node name="hbox3" type="HBoxContainer" parent="PanelContainer/hbox" unique_id=116410907]
 layout_mode = 2
-size_flags_horizontal = 2
+size_flags_horizontal = 0
 
 [node name="TextureRect" type="TextureRect" parent="PanelContainer/hbox/hbox3" unique_id=970084469]
 layout_mode = 2
@@ -70,6 +71,21 @@ texture = ExtResource("6_mtnbf")
 expand_mode = 2
 
 [node name="moneyLabel" type="Label" parent="PanelContainer/hbox/hbox3" unique_id=2042860185]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "0"
+
+[node name="hboxGem" type="HBoxContainer" parent="PanelContainer/hbox" unique_id=116410908]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="gemIcon" type="TextureRect" parent="PanelContainer/hbox/hboxGem" unique_id=970084470]
+layout_mode = 2
+texture = ExtResource("11_gem")
+expand_mode = 2
+
+[node name="gemLabel" type="Label" parent="PanelContainer/hbox/hboxGem" unique_id=2042860186]
+custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 text = "0"
 
