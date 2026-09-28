@@ -25,10 +25,8 @@ offsets = PackedFloat32Array(0, 0.45, 1)
 colors = PackedColorArray(0.55, 0.9, 1, 0, 0.55, 0.9, 1, 0.35, 0.62, 0.95, 1, 1)
 
 [node name="aircraft" unique_id=77046293 instance=ExtResource("1_8wg5q")]
+z_index = 10
 script = ExtResource("2_jxxn5")
-max_shots_per_cycle = 10
-long_cooldown = 4.0
-return_to_base_on_reload = false
 
 [node name="ani" parent="." index="0" unique_id=748097984]
 sprite_frames = SubResource("SpriteFrames_il87p")
