@@ -2,7 +2,7 @@ extends "res://script/tower/tower.gd"
 
 var bullet = preload("res://scene/bullet/cannon_bullet.tscn")
 
-@onready var shotSound=$shotSound
+@onready var shotSound = $shotSound
 
 func _ready():
 	turret.rotation = randf() * TAU
