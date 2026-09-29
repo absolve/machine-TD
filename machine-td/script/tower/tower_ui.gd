@@ -1,9 +1,9 @@
 extends Control
 
 
-@onready var info = $towerInfo
+@onready var info = $TowerInfo
 @onready var towerCardList = $ScrollContainer/PanelContainer/vbox
-@onready var player = $player
+@onready var player = $Player
 
 var isOpen = false
 var towerCard = preload("res://scene/tower_card.tscn")
@@ -41,9 +41,9 @@ func _ready() -> void:
 		# 卡片只显示图标 + 价格；塔名由详情面板展示
 		# 本关不放行的塔：卡片变灰、点了只弹提示
 		towerCard1.setLocked(not allowed.is_empty() and not (i.type in allowed))
-		towerCard1.connect("click", towerClick)
-		towerCard1.connect("lockedClick", towerLockedClick)
-		towerCard1.showInfo.connect(showTowerInfo)
+		towerCard1.connect("clicked", towerClick)
+		towerCard1.connect("lockedClicked", towerLockedClick)
+		towerCard1.infoShown.connect(showTowerInfo)
 		towerCard1.connect("mouse_exited", hideTowerInfo)
 
 
@@ -71,21 +71,21 @@ func showTowerInfo(type):
 	info.showDetail(temp, type)
 	# 等待一帧让布局更新，获取正确的尺寸
 	await get_tree().process_frame
-	var info_size = info.size
-	var mouse_pos = get_global_mouse_position()
-	var viewport_size = get_viewport_rect().size
+	var infoSize = info.size
+	var mousePos = get_global_mouse_position()
+	var viewportSize = get_viewport_rect().size
 	# 默认显示在鼠标上方，水平居中对齐鼠标
-	var target_pos = Vector2(
-		mouse_pos.x - info_size.x / 2.0,
-		mouse_pos.y - info_size.y
+	var targetPos = Vector2(
+		mousePos.x - infoSize.x / 2.0,
+		mousePos.y - infoSize.y
 	)
 	# 如果上方超出屏幕，则显示在鼠标下方
-	if target_pos.y < 0:
-		target_pos.y = mouse_pos.y
+	if targetPos.y < 0:
+		targetPos.y = mousePos.y
 	# 限制在屏幕范围内
-	target_pos.x = clamp(target_pos.x, 0, max(0, viewport_size.x - info_size.x))
-	target_pos.y = clamp(target_pos.y, 0, max(0, viewport_size.y - info_size.y))
-	info.global_position = target_pos
+	targetPos.x = clamp(targetPos.x, 0, max(0, viewportSize.x - infoSize.x))
+	targetPos.y = clamp(targetPos.y, 0, max(0, viewportSize.y - infoSize.y))
+	info.global_position = targetPos
 	
 
 func hideTowerInfo():
@@ -98,7 +98,7 @@ func towerClick(type):
 	Game.selectTower.emit(type)
 
 
-func _on_icon_gui_input(_event):
+func _onIconGuiInput(_event):
 	if Input.is_action_just_pressed("click"):
 		isOpen = !isOpen
 		# 工具箱开 / 合各用一声专用机械音（比通用确认音更像"打开工具箱"）。

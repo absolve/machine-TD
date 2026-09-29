@@ -1,11 +1,11 @@
 extends "res://script/bullet/bullet.gd"
 
-@export var bullet_speed := 400.0
+@export var bulletSpeed: float = 400.0
 
 func _ready():
-	align_to_angle()
+	alignToAngle()
 	lifetime = 3.0
-	vec = Vector2(bullet_speed, 0).rotated(angle)
+	vec = Vector2(bulletSpeed, 0).rotated(angle)
 	if damage <= 0:
 		damage = 15
 
@@ -19,7 +19,7 @@ func _physics_process(delta):
 	for area in get_overlapping_areas():
 		if area.has_method("hurt"):
 			area.hurt(damage)
-			spawn_hit_effect()
+			spawnHitEffect()
 			queue_free()
 			break
 

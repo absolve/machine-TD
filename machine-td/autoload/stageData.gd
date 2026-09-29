@@ -36,8 +36,8 @@ const ENEMY_SPAWN_DELAY := {
 
 ## 取某个敌人类型的生成间隔。表里没配就回落到 1.6（最小值），
 ## 保证不会出现"没配 → 瞬间刷一堆"的情况。
-func get_spawn_delay(enemy_type) -> float:
-	return float(ENEMY_SPAWN_DELAY.get(enemy_type, 1.6))
+func getSpawnDelay(enemyType) -> float:
+	return float(ENEMY_SPAWN_DELAY.get(enemyType, 1.6))
 
 
 # 当前选中的关卡ID（由 level_select 点击时设置，map 读取后加载对应场景）
@@ -66,14 +66,14 @@ const stageAbilities := {
 
 
 # 取某关卡启用的能力技能；未配置的关卡返回空数组（不显示技能条）
-func getAbilities(stage_id: int) -> Array:
-	return stageAbilities.get(stage_id, [])
+func getAbilities(stageId: int) -> Array:
+	return stageAbilities.get(stageId, [])
 
 
 ## 各关卡**允许建造**的防御塔（key = 关卡 id，值 = 塔类型数组）
 ## 没有列在这里的关卡 = 不限制（tower_ui 会显示全部 7 座）
 ## 想放开某关就从这张表里删掉它，或补上缺的塔类型
-var stageTowers := {
+var stageTowers: Dictionary = {
 	#0: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower],
 	1: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower],
 	2: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower,
@@ -86,12 +86,12 @@ var stageTowers := {
 }
 
 # 取某关卡允许建造的塔；返回空数组表示「不限制」
-func getTowers(stage_id: int) -> Array:
-	return stageTowers.get(stage_id, [])
+func getTowers(stageId: int) -> Array:
+	return stageTowers.get(stageId, [])
 
 # 该关卡是否允许建造某种塔
-func isTowerAllowed(stage_id: int, tower_type) -> bool:
-	var allowed: Array = getTowers(stage_id)
+func isTowerAllowed(stageId: int, tower_type) -> bool:
+	var allowed: Array = getTowers(stageId)
 	if allowed.is_empty():
 		return true
 	return tower_type in allowed
@@ -100,9 +100,9 @@ func isTowerAllowed(stage_id: int, tower_type) -> bool:
 ## 某关卡声明的路线数（默认 1）。
 ## 真正的路线节点在关卡场景里 —— 场景里按顺序摆几个 Path2D 就有几条路线。
 ## 这个字段是给 UI / 一致性校验用的声明值，两边对不上时 base_level 会 push_warning。
-func getRouteCount(stage_id: int) -> int:
+func getRouteCount(stageId: int) -> int:
 	for s in allStage:
-		if int(s.get("id", -1)) == stage_id:
+		if int(s.get("id", -1)) == stageId:
 			return maxi(1, int(s.get("routes", 1)))
 	return 1
 

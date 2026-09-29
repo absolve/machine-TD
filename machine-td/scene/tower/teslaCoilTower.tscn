@@ -95,5 +95,5 @@ z_index = -1
 sprite_frames = SubResource("SpriteFrames_autotur")
 animation = &"idle"
 
-[connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
-[connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]
+[connection signal="area_entered" from="radar" to="." method="_onRadarAreaEntered"]
+[connection signal="area_exited" from="radar" to="." method="_onRadarAreaExited"]

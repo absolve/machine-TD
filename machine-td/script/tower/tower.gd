@@ -21,8 +21,8 @@ var towerExp: int = 0 # 经验值
 var initTime = 1 # 初始化时间 秒
 
 ## 无敌状态（由能力技能施加）：无敌期间免疫一切伤害
-var invincible := false
-var _invincible_left := 0.0
+var invincible: bool = false
+var _invincibleLeft: float = 0.0
 
 ## 修满血的最高费用占造价的百分比（残血越多越贵，满血时为 0）
 const REPAIR_COST_RATIO := 0.5
@@ -33,10 +33,10 @@ var repairCost: int:
 	get:
 		if maxHp <= 0 or hp >= maxHp:
 			return 0
-		var missing_ratio := float(maxHp - hp) / float(maxHp)
-		return maxi(1, int(ceil(float(money) * REPAIR_COST_RATIO * missing_ratio)))
+		var missingRatio: float = float(maxHp - hp) / float(maxHp)
+		return maxi(1, int(ceil(float(money) * REPAIR_COST_RATIO * missingRatio)))
 
-var radarSweepAngle := 0.0
+var radarSweepAngle: float = 0.0
 const RADAR_SCAN_SPEED := 1.8
 ## 开火动画的播放倍速（喂给 player.speed_scale）。
 ##
@@ -67,16 +67,16 @@ var _baseDelay = 0
 @onready var raderShape = $radar/CollisionShape2D
 @onready var base = $base
 @onready var turret = $turret
-@onready var delayTimer = $delay
+@onready var delayTimer = $Delay
 @onready var marker = $turret/Marker2D
-@onready var player = $player
+@onready var player = $Player
 @onready var initBar = $ProgressBar
-@onready var towerRank = $towerRank
-@onready var lifeBar = $lifeBar
-@onready var deploySound = $deploySound
-@onready var spark = $spark
+@onready var towerRank = $TowerRank
+@onready var lifeBar = $LifeBar
+@onready var deploySound = $DeploySound
+@onready var spark = $Spark
 # 开火特效播放器：只有配置了炮口闪光的塔才有这个节点，其余塔为 null
-@onready var sparkPlayer = get_node_or_null("sparkPlayer")
+@onready var sparkPlayer = get_node_or_null("SparkPlayer")
 
 
 func _ready() -> void:
@@ -102,20 +102,7 @@ func _ready() -> void:
 	var tween = create_tween()
 	tween.tween_property(initBar, "value", 100, initTime)
 	tween.tween_callback(init)
-	call_deferred("update_status_ui")
-
-func _physics_process(delta: float) -> void:
-	if invincible: # 无敌期间
-		_invincible_left -= delta
-		if _invincible_left <= 0.0:
-			_set_invincible_visual(false)
-			
-	if not selected:
-		return
-	radarSweepAngle = fmod(radarSweepAngle + delta * RADAR_SCAN_SPEED, TAU)
-	queue_redraw()
-	
-
+	call_deferred("updateStatusUi")
 
 func getTarget():
 	var temp = null
@@ -126,14 +113,14 @@ func getTarget():
 	
 	return temp
 
-func can_target(area: Area2D) -> bool:
+func canTarget(area: Area2D) -> bool:
 	if not is_instance_valid(area) or not area is Enemy:
 		return false
-	var can_target_air := type in [Game.towerType.droneBase, Game.towerType.laserTower, Game.towerType.rocketTower]
-	return not area.flying or can_target_air
+	var canTargetAir: bool = type in [Game.towerType.droneBase, Game.towerType.laserTower, Game.towerType.rocketTower]
+	return not area.flying or canTargetAir
 
-func add_target(area: Area2D) -> void:
-	if not can_target(area):
+func addTarget(area: Area2D) -> void:
+	if not canTarget(area):
 		return
 	if not target.has(area):
 		target.push_back(area)
@@ -151,7 +138,7 @@ func hideSelect():
 	selected = !selected
 	queue_redraw()
 	#update_status_ui()
-	Game.clickTower.emit(self, selected)
+	Game.towerClicked.emit(self, selected)
 
 # 增加经验
 func addExp(amount: int) -> void:
@@ -169,7 +156,7 @@ func addExp(amount: int) -> void:
 		towerExp -= threshold
 	#update_status_ui()
 
-func update_status_ui() -> void:
+func updateStatusUi() -> void:
 	if maxHp <= 0:
 		maxHp = max(hp, 1)
 	if lifeBar:
@@ -195,8 +182,8 @@ func levelUp() -> void:
 			raderShape.shape.radius = radarScope
 	towerRank.setLevel(level)
 	playUpgradeGlow()
-	update_status_ui()
-	TowerUpgradeManager.tower_leveled_up.emit(self, level)
+	updateStatusUi()
+	TowerUpgradeManager.towerLeveledUp.emit(self, level)
 	
 
 # 升级闪光: 启用 shader -> 亮度淡入 -> 闪烁 -> 淡出 -> 关闭
@@ -205,14 +192,14 @@ func playUpgradeGlow() -> void:
 	#   （droneBase 就没有 turret），而且材质万一不是 ShaderMaterial
 	#   时 as 的结果是 null，直接 set_shader_parameter 会报错。
 	#   stopGlow() 里本来就有判空，这里之前漏了。
-	var bm := base.material as ShaderMaterial
-	var tm := turret.material as ShaderMaterial
+	var bm: ShaderMaterial = base.material as ShaderMaterial
+	var tm: ShaderMaterial = turret.material as ShaderMaterial
 	if bm:
 		bm.set_shader_parameter("enable_flash", true)
 	if tm:
 		tm.set_shader_parameter("enable_flash", true)
 
-	var tw := create_tween()
+	var tw: Tween = create_tween()
 	tw.tween_interval(1.0)
 	tw.tween_callback(stopGlow)
 	# tw.tween_method(setGlowIntensity, 1.0, 0.0, 0.3) # 0.3s 淡出
@@ -225,25 +212,25 @@ func playUpgradeGlow() -> void:
 
 
 func stopGlow() -> void:
-	var bm := base.material as ShaderMaterial
-	var tm := turret.material as ShaderMaterial
+	var bm: ShaderMaterial = base.material as ShaderMaterial
+	var tm: ShaderMaterial = turret.material as ShaderMaterial
 	if bm:
 		bm.set_shader_parameter("enable_flash", false)
 	if tm:
 		tm.set_shader_parameter("enable_flash", false)
 
 
-func _on_delay_timeout():
+func _onDelayTimeout():
 	canShot = true
 
 
 ## 1 级的 reload。查 game.gd 的 towerInfo（那里存的就是 1 级数值）。
 ## 查不到就退回"当前 delay"—— 退回的值会让 aniSpeed 恰好是 1.0，
 ## 也就是"不动画"，比乱算一个倍速安全。
-func _lookup_base_delay() -> float:
+func _lookupBaseDelay() -> float:
 	var info = Game.towerInfo.get(type)
 	if info is Dictionary and info.has("reload"):
-		var r := float(info["reload"])
+		var r: float = float(info["reload"])
 		if r > 0.0:
 			return r
 	return maxf(delay, 0.001)
@@ -285,23 +272,23 @@ func refreshAniSpeed() -> void:
 
 
 # 施加无敌（由能力技能系统调用）
-func set_invincible(duration: float) -> void:
+func setInvincible(duration: float) -> void:
 	if duration <= 0.0:
 		return
 	invincible = true
 	# 重复施加时取更长的剩余时间，不做叠加
-	_invincible_left = maxf(_invincible_left, duration)
-	_set_invincible_visual(true)
+	_invincibleLeft = maxf(_invincibleLeft, duration)
+	_setInvincibleVisual(true)
 	set_process(true)
 
 
 # 无敌期间用安全黄色高亮，和"我方强化"的视觉约定一致
-func _set_invincible_visual(on: bool) -> void:
+func _setInvincibleVisual(on: bool) -> void:
 	if on:
 		modulate = Color(1.0, 0.92, 0.55, 1.0)
 		return
 	invincible = false
-	_invincible_left = 0.0
+	_invincibleLeft = 0.0
 	modulate = Color(1.0, 1.0, 1.0, 1.0)
 	set_process(false)
 
@@ -310,21 +297,21 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 		return
 	if hp <= 0:
 		return
-	var actual_damage: float = float(_num)
+	var actualDamage: float = float(_num)
 	if _damage_type == "physical":
-		actual_damage *= 1.0
+		actualDamage *= 1.0
 	elif _damage_type == "energy":
-		actual_damage = float(_num)
+		actualDamage = float(_num)
 	else:
-		actual_damage *= 1.0
+		actualDamage *= 1.0
 	
-	hp -= int(max(0.0, ceil(actual_damage)))
+	hp -= int(max(0.0, ceil(actualDamage)))
 	if maxHp <= 0:
 		maxHp = max(hp, 1)
 	if lifeBar:
 		lifeBar.maxHp = maxHp
 		lifeBar.value = hp
-	update_status_ui()
+	updateStatusUi()
 	if hp <= 0:
 		# 塔被打爆：
 		# ① 复用现成的爆炸（动画帧 + 粒子 + 音效三件套，和敌人/火箭弹同一个入口）
@@ -334,22 +321,22 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 		# 注意顺序：ExplosionManage 会把特效挂在 autoload 下，所以塔 free 掉特效还在；
 		# 音效也用 global_position 定位，必须在 queue_free 之前播。
 		ExplosionManage.playExplosion(global_position, "heavy")
-		SoundManage.play_at("tower_destroyed", global_position, -6.0, randf_range(0.95, 1.05))
-		_release_grid()
+		SoundManage.playAt("tower_destroyed", global_position, -6.0, randf_range(0.95, 1.05))
+		_releaseGrid()
 		queue_free()
 
 
 ## 把本塔占用的格子归还给关卡（出售 / 被打爆 都要走这一步）。
 ## ⚠️ 复用 Game.sellTower 那条通路会连带把"售价"也加给玩家 —— 打爆不该给钱，
 ##    所以这里单独发 towerGridReleased，只归还格子。
-func _release_grid() -> void:
+func _releaseGrid() -> void:
 	if coverGrid.is_empty():
 		return
 	Game.towerGridReleased.emit(coverGrid)
 	coverGrid = []
 	
 
-func get_muzzle_position() -> Vector2:
+func getMuzzlePosition() -> Vector2:
 	if is_instance_valid(marker):
 		return marker.global_position
 	return global_position
@@ -358,47 +345,13 @@ func get_muzzle_position() -> Vector2:
 # 开火特效：把炮口闪光转到目标方向，并播放一次 spark 动画
 # spark 是挂在塔根节点下的（不跟着炮管转），所以这里要手动设一次朝向
 # 没有配置 sparkPlayer 的塔（EMP / 特斯拉 / 激光 / 无人机基地）会自动跳过
-func play_muzzle_flash(target_position: Vector2) -> void:
+func playMuzzleFlash(target_position: Vector2) -> void:
 	if spark == null or sparkPlayer == null:
 		return
 	spark.rotation = (target_position - marker.global_position).angle()
 	sparkPlayer.play("spark")
 
-func _draw():
-	if not selected:
-		return
-	var radar_color := Color(0.25, 0.75, 1.0, 1.0)
-	draw_circle(Vector2.ZERO, radarScope, Color(radar_color.r, radar_color.g, radar_color.b, 0.12))
-	draw_arc(Vector2.ZERO, radarScope, 0.0, TAU, 64, Color(radar_color.r, radar_color.g, radar_color.b, 0.8), 2.0)
-	for i in range(1, 4):
-		var r = radarScope * (i / 4.0)
-		draw_arc(Vector2.ZERO, r, 0.0, TAU, 64, Color(radar_color.r, radar_color.g, radar_color.b, 0.15), 1.0)
-	var segments := 24
-	var tail_span := PI / 3.0
-	for s in range(segments):
-		var t = float(s) / segments
-		var a = radarSweepAngle - tail_span * t
-		var alpha = (1.0 - t) * 0.5
-		var next_a = radarSweepAngle - tail_span * (float(s + 1) / segments)
-		var p1 = Vector2(cos(a), sin(a)) * radarScope
-		var p2 = Vector2(cos(next_a), sin(next_a)) * radarScope
-		draw_polygon(
-			PackedVector2Array([Vector2.ZERO, p1, p2]),
-			PackedColorArray([
-				Color(radar_color.r, radar_color.g, radar_color.b, alpha),
-				Color(radar_color.r, radar_color.g, radar_color.b, alpha),
-				Color(radar_color.r, radar_color.g, radar_color.b, 0.0)
-			])
-		)
-	draw_line(
-		Vector2.ZERO,
-		Vector2(cos(radarSweepAngle), sin(radarSweepAngle)) * radarScope,
-		Color(radar_color.r, radar_color.g, radar_color.b, 1.0),
-		2.0
-	)
-	
-
-func _on_input_event(_viewport, _event, _shape_idx):
+func _onInputEvent(_viewport, _event, _shape_idx):
 	#if event is InputEventMouseButton:
 		#if event.is_pressed()&& event.button_index==MouseButton.MOUSE_BUTTON_LEFT:
 			#selected=!selected
@@ -408,7 +361,7 @@ func _on_input_event(_viewport, _event, _shape_idx):
 
 
 # 出售前需要额外清理的塔（如无人机基地）覆写本方法
-func _on_before_sell() -> void:
+func _onBeforeSell() -> void:
 	pass
 
 
@@ -416,45 +369,91 @@ func _on_before_sell() -> void:
 func sell():
 	if selected:
 		hideSelect() # 出售前先取消选中，让右侧信息面板与地图状态同步清理
-	_on_before_sell()
+	_onBeforeSell()
 	# 出售：金币响声（先响再 free，free 之后位置就没了）
 	#SoundManage.play_at("tower_sold", global_position, -2.0, randf_range(0.97, 1.05))
 	SoundManage.play("tower_sold_b")
 	# sellTower 负责"给钱 + 归还格子"；归还逻辑和被摧毁时共用同一条通路
-	Game.sellTower.emit(sellingPrice, coverGrid)
+	Game.towerSold.emit(sellingPrice, coverGrid)
 	coverGrid = []
 	queue_free()
 
 
 # 请求修理：费用由 map 统一扣款，扣款成功后 map 会回调 apply_repair()
-func request_repair() -> bool:
-	var cost := repairCost
+func requestRepair() -> bool:
+	var cost: int = repairCost
 	if cost <= 0:
 		return false
-	Game.repairTower.emit(cost, self)
+	Game.towerRepaired.emit(cost, self)
 	return true
 
 
 # 实际把血量回满（由 map 在扣除费用后调用）
-func apply_repair() -> void:
+func applyRepair() -> void:
 	if maxHp <= 0:
 		return
 	hp = maxHp
-	update_status_ui()
+	updateStatusUi()
 	# 回满血：能量充盈声
 	# 素材已归一化过响度，不要再压（压了会像 tower_select 那次一样几乎听不见）
-	SoundManage.play_at("tower_healed", global_position, 0.0)
+	SoundManage.playAt("tower_healed", global_position, 0.0)
 	playRepairGlow()
 
 
 # 修理完成后的闪光反馈（复用升级闪光 shader）
 func playRepairGlow() -> void:
-	var bm := base.material as ShaderMaterial
-	var tm := turret.material as ShaderMaterial
+	var bm: ShaderMaterial = base.material as ShaderMaterial
+	var tm: ShaderMaterial = turret.material as ShaderMaterial
 	if bm:
 		bm.set_shader_parameter("enable_flash", true)
 	if tm:
 		tm.set_shader_parameter("enable_flash", true)
-	var tw := create_tween()
+	var tw: Tween = create_tween()
 	tw.tween_interval(0.6)
 	tw.tween_callback(stopGlow)
+
+
+func _physics_process(delta: float) -> void:
+	if invincible: # 无敌期间
+		_invincibleLeft -= delta
+		if _invincibleLeft <= 0.0:
+			_setInvincibleVisual(false)
+			
+	if not selected:
+		return
+	radarSweepAngle = fmod(radarSweepAngle + delta * RADAR_SCAN_SPEED, TAU)
+	queue_redraw()
+
+
+func _draw():
+	if not selected:
+		return
+	var radarColor: Color = Color(0.25, 0.75, 1.0, 1.0)
+	draw_circle(Vector2.ZERO, radarScope, Color(radarColor.r, radarColor.g, radarColor.b, 0.12))
+	draw_arc(Vector2.ZERO, radarScope, 0.0, TAU, 64, Color(radarColor.r, radarColor.g, radarColor.b, 0.8), 2.0)
+	for i in range(1, 4):
+		var r = radarScope * (i / 4.0)
+		draw_arc(Vector2.ZERO, r, 0.0, TAU, 64, Color(radarColor.r, radarColor.g, radarColor.b, 0.15), 1.0)
+	var segments: int = 24
+	var tailSpan: float = PI / 3.0
+	for s in range(segments):
+		var t = float(s) / segments
+		var a = radarSweepAngle - tailSpan * t
+		var alpha = (1.0 - t) * 0.5
+		var nextA = radarSweepAngle - tailSpan * (float(s + 1) / segments)
+		var p1 = Vector2(cos(a), sin(a)) * radarScope
+		var p2 = Vector2(cos(nextA), sin(nextA)) * radarScope
+		draw_polygon(
+			PackedVector2Array([Vector2.ZERO, p1, p2]),
+			PackedColorArray([
+				Color(radarColor.r, radarColor.g, radarColor.b, alpha),
+				Color(radarColor.r, radarColor.g, radarColor.b, alpha),
+				Color(radarColor.r, radarColor.g, radarColor.b, 0.0)
+			])
+		)
+	draw_line(
+		Vector2.ZERO,
+		Vector2(cos(radarSweepAngle), sin(radarSweepAngle)) * radarScope,
+		Color(radarColor.r, radarColor.g, radarColor.b, 1.0),
+		2.0
+	)

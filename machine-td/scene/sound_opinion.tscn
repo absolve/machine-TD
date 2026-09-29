@@ -18,12 +18,12 @@ layout_mode = 2
 horizontal_alignment = 1
 uppercase = true
 
-[node name="volumeRow" type="HBoxContainer" parent="." unique_id=1903112233]
+[node name="VolumeRow" type="HBoxContainer" parent="." unique_id=1903112233]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="HSlider" type="HSlider" parent="volumeRow" unique_id=245821150]
+[node name="HSlider" type="HSlider" parent="VolumeRow" unique_id=245821150]
 custom_minimum_size = Vector2(360, 28)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -35,7 +35,7 @@ theme_override_styles/grabber_area_highlight = ExtResource("4_slider_fill")
 step = 10.0
 value = 100.0
 
-[node name="btnMute" type="TextureButton" parent="volumeRow" unique_id=558217461]
+[node name="btnMute" type="TextureButton" parent="VolumeRow" unique_id=558217461]
 visible = false
 custom_minimum_size = Vector2(56, 56)
 layout_mode = 2

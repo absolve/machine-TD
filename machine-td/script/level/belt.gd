@@ -17,48 +17,48 @@ extends AnimatedSprite2D
 ## 动画名写错 / 检查器里没选动画时的兜底方向
 const DEFAULT_KEY := "we"
 
-@export var snap_to_grid := true ## 进场景时把节点对齐到所在格子的中心
+@export var snapToGrid: bool = true ## 进场景时把节点对齐到所在格子的中心
 ## 本格在整条路线上的位置（单位：格）。关卡生成脚本按弧长算好写进场景；
 ## 相邻格差 1 左右，明暗波就沿路线传下去了。
-@export var route_phase := 0.0
+@export var routePhase: float = 0.0
 
 
 func _ready() -> void:
-	if snap_to_grid:
-		_snap_to_cell()
-	_ensure_animation()
+	if snapToGrid:
+		_snapToCell()
+	_ensureAnimation()
 	play() ## 帧动画得手动起跑（autoplay 留空，方向由 animation 决定）
-	_apply_shader()
+	_applyShader()
 
 
 ## 本实例覆盖的格子（中心坐标 → 格子索引）
-func get_grid() -> Vector2i:
+func getGrid() -> Vector2i:
 	var t: int = StageData.TileSize
 	return Vector2i(floori(position.x / t), floori(position.y / t))
 
 
 ## 检查器里没选对动画时，回落到一个确实存在的动画，避免 play() 报错。
 ## 注意 has_animation() 是 SpriteFrames 上的方法，AnimatedSprite2D 没有。
-func _ensure_animation() -> void:
+func _ensureAnimation() -> void:
 	if sprite_frames == null or sprite_frames.has_animation(animation):
 		return
-	var names := sprite_frames.get_animation_names()
+	var names: Array = sprite_frames.get_animation_names()
 	if names.is_empty():
 		return
 	animation = DEFAULT_KEY if sprite_frames.has_animation(DEFAULT_KEY) else names[0]
 
 
-func _apply_shader() -> void:
-	var mat := material as ShaderMaterial
+func _applyShader() -> void:
+	var mat: ShaderMaterial = material as ShaderMaterial
 	if mat == null:
 		return
 	# 同一个 .tscn 实例化出来的材质默认是共享的，各带各的相位就得先复制一份
 	if not mat.resource_local_to_scene:
 		mat = mat.duplicate() as ShaderMaterial
 		material = mat
-	mat.set_shader_parameter("route_phase", route_phase)
+	mat.set_shader_parameter("route_phase", routePhase)
 
 
-func _snap_to_cell() -> void:
+func _snapToCell() -> void:
 	var t: int = StageData.TileSize
-	position = Vector2(get_grid() * t) + Vector2(t, t) * 0.5
+	position = Vector2(getGrid() * t) + Vector2(t, t) * 0.5

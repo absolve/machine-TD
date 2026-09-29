@@ -17,13 +17,80 @@ extends Node
 # 单局型成就的目标（用于日志/校验，实际目标值以 AchievementManager 为准）
 const RUN_BEST_ACHIEVEMENTS: Array[String] = ["full_armory", "chain_reaction"]
 
-var _tower_types_used: Dictionary = {} # 本局用过的塔类型（全域火力）
-var _chain_kills: int = 0 # 本局由特斯拉/火箭塔击杀的数量（连锁反应）
+var _towerTypesUsed: Dictionary = {} # 本局用过的塔类型（全域火力）
+var _chainKills: int = 0 # 本局由特斯拉/火箭塔击杀的数量（连锁反应）
 
 
 func _ready() -> void:
-	Game.enemyDefeated.connect(_on_enemy_defeated)
-	TowerUpgradeManager.tower_leveled_up.connect(_on_tower_leveled_up)
+	Game.enemyDefeated.connect(_onEnemyDefeated)
+	TowerUpgradeManager.towerLeveledUp.connect(_onTowerLeveledUp)
+
+
+func _onEnemyDefeated(enemy, source) -> void:
+	if enemy == null or not is_instance_valid(enemy):
+		return
+
+	# 天空守卫 / 地面清扫者：按是否飞行分流
+	if enemy.flying:
+		AchievementManager.addProgress("sky_guardian", 1, false)
+	else:
+		AchievementManager.addProgress("ground_breaker", 1, false)
+
+	# 重装猎手：重型坦克 / 装甲坦克
+	if enemy.enemyType == Game.enemyType.heavyTank or enemy.enemyType == Game.enemyType.armoredTank:
+		AchievementManager.addProgress("iron_hunter", 1, false)
+
+	# 连锁反应：本局内由特斯拉线圈塔或火箭塔造成的击杀
+	if !is_instance_valid(source)||source==null:
+		return
+	var tower: Tower = source as Tower
+	if tower != null and (tower.type == Game.towerType.teslaCoilTower or tower.type == Game.towerType.rocketTower):
+		_chainKills += 1
+		_submitRunBest("chain_reaction", _chainKills)
+
+
+# ---------- 建造类 ----------
+
+# 由 map.placeTower 在塔真正放置成功后调用
+func recordTowerBuilt(tower_type) -> void:
+	_towerTypesUsed[tower_type] = true
+	_submitRunBest("full_armory", _towerTypesUsed.size())
+
+
+# ---------- 成长类 ----------
+
+func _onTowerLeveledUp(_tower, level: int) -> void:
+	# 老兵塔：任意一座塔升到满级
+	if level >= TowerUpgradeManager.MAX_LEVEL:
+		AchievementManager.setProgress("veteran_tower", TowerUpgradeManager.MAX_LEVEL, false)
+
+
+# ---------- 关卡结算 ----------
+
+# 由 map.finish() 在通关时调用
+# flawless: 基地全程没掉血（等价于没有任何敌人逃脱）
+# multi_route: 该关卡是多路线关卡（存在多条 Path2D）
+func recordStageCleared(stageId: int, flawless: bool, multi_route: bool) -> void:
+	if stageId == 1:
+		AchievementManager.setProgress("first_defense", 1, false)
+	if flawless:
+		AchievementManager.setProgress("perfect_base", 1, false)
+		if multi_route:
+			AchievementManager.setProgress("route_master", 1, false)
+	flush()
+
+
+# ---------- 内部 ----------
+
+# 单局型成就：只在超过历史最好成绩时提交，避免被下一局的低分覆盖
+func _submitRunBest(achievement_id: String, value: int) -> void:
+	if value > AchievementManager.getProgress(achievement_id):
+		AchievementManager.setProgress(achievement_id, value, false)
+
+
+# 把内存里的进度写进存档文件
+func flush() -> void:
+	AchievementManager.savePlayerAchievements()
 
 
 func _exit_tree() -> void:
@@ -32,69 +99,3 @@ func _exit_tree() -> void:
 
 
 # ---------- 击杀类 ----------
-
-func _on_enemy_defeated(enemy, source) -> void:
-	if enemy == null or not is_instance_valid(enemy):
-		return
-
-	# 天空守卫 / 地面清扫者：按是否飞行分流
-	if enemy.flying:
-		AchievementManager.add_progress("sky_guardian", 1, false)
-	else:
-		AchievementManager.add_progress("ground_breaker", 1, false)
-
-	# 重装猎手：重型坦克 / 装甲坦克
-	if enemy.enemyType == Game.enemyType.heavyTank or enemy.enemyType == Game.enemyType.armoredTank:
-		AchievementManager.add_progress("iron_hunter", 1, false)
-
-	# 连锁反应：本局内由特斯拉线圈塔或火箭塔造成的击杀
-	if !is_instance_valid(source)||source==null:
-		return
-	var tower := source as Tower
-	if tower != null and (tower.type == Game.towerType.teslaCoilTower or tower.type == Game.towerType.rocketTower):
-		_chain_kills += 1
-		_submit_run_best("chain_reaction", _chain_kills)
-
-
-# ---------- 建造类 ----------
-
-# 由 map.placeTower 在塔真正放置成功后调用
-func record_tower_built(tower_type) -> void:
-	_tower_types_used[tower_type] = true
-	_submit_run_best("full_armory", _tower_types_used.size())
-
-
-# ---------- 成长类 ----------
-
-func _on_tower_leveled_up(_tower, level: int) -> void:
-	# 老兵塔：任意一座塔升到满级
-	if level >= TowerUpgradeManager.MAX_LEVEL:
-		AchievementManager.set_progress("veteran_tower", TowerUpgradeManager.MAX_LEVEL, false)
-
-
-# ---------- 关卡结算 ----------
-
-# 由 map.finish() 在通关时调用
-# flawless: 基地全程没掉血（等价于没有任何敌人逃脱）
-# multi_route: 该关卡是多路线关卡（存在多条 Path2D）
-func record_stage_cleared(stage_id: int, flawless: bool, multi_route: bool) -> void:
-	if stage_id == 1:
-		AchievementManager.set_progress("first_defense", 1, false)
-	if flawless:
-		AchievementManager.set_progress("perfect_base", 1, false)
-		if multi_route:
-			AchievementManager.set_progress("route_master", 1, false)
-	flush()
-
-
-# ---------- 内部 ----------
-
-# 单局型成就：只在超过历史最好成绩时提交，避免被下一局的低分覆盖
-func _submit_run_best(achievement_id: String, value: int) -> void:
-	if value > AchievementManager.get_progress(achievement_id):
-		AchievementManager.set_progress(achievement_id, value, false)
-
-
-# 把内存里的进度写进存档文件
-func flush() -> void:
-	AchievementManager.savePlayerAchievements()

@@ -13,7 +13,7 @@ func _ready() -> void:
 	#lifeBar.value = hp
 	#if hp < 0:
 		#ExplosionManage.playExplosion(global_position)
-		#Game.defeatEnemy.emit(reward)
+		#Game.enemyRewarded.emit(reward)
 		#owner.queue_free()
 
 func fire(t):
@@ -29,7 +29,7 @@ func fire(t):
 		b.target = t
 		Game.addObj(b)
 		# 开火音：每个敌人一种，带音高抖动，连射时不会听着像复读
-		SoundManage.play_at("cannon_fire_c", turret.global_position, -6.0, randf_range(0.95, 1.05))
+		SoundManage.playAt("cannon_fire_c", turret.global_position, -6.0, randf_range(0.95, 1.05))
 		delayTimer.start()
 	
 
@@ -38,8 +38,8 @@ func _physics_process(_delta):
 		return
 	parent.progress += speed * _delta
 	if parent.progress_ratio >= 1:
-		Game.enemyEscape.emit(lossPoints)
+		Game.enemyEscaped.emit(lossPoints)
 		owner.queue_free()
-	var temp = pick_target()
-	if temp != null and aim_at(temp, _delta):
+	var temp = pickTarget()
+	if temp != null and aimAt(temp, _delta):
 		fire(temp)

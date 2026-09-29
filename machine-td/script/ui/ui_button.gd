@@ -22,14 +22,14 @@ const CLICK_GUARD_MSEC := 120
 
 @export var click_sound: ClickSound = ClickSound.COIN
 
-var _last_click_msec: int = -100000
+var _lastClickMsec: int = -100000
 
 
 func _on_pressed() -> void:
-	var now := Time.get_ticks_msec()
-	if now - _last_click_msec < CLICK_GUARD_MSEC:
+	var now: int = Time.get_ticks_msec()
+	if now - _lastClickMsec < CLICK_GUARD_MSEC:
 		return
-	_last_click_msec = now
+	_lastClickMsec = now
 	match click_sound:
 		ClickSound.CONFIRM:
 			SoundManage.playConfirm()

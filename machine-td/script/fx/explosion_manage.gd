@@ -63,7 +63,7 @@ const HIT_VARIANTS := {
 	"blast":   "res://scene/fx/hit_blast.tscn",   # 爆炸型火花：火团贴图，最大最亮
 }
 ## 每种变体各有一个池子（路径 -> Array）
-var _hit_pools: Dictionary = {}
+var _hitPools: Dictionary = {}
 const HIT_POOL_MAX := 24
 ## 排查命中特效位置时打开它，会在控制台打印传入坐标和节点当前坐标
 const _debug_hit_pos := false
@@ -73,7 +73,7 @@ const _debug_hit_pos := false
 func playHit(pos: Vector2, variant: String = "default") -> void:
 	if not HIT_VARIANTS.has(variant):
 		variant = "default"
-	var fx := _acquire_hit(variant)
+	var fx: Node2D = _acquireHit(variant)
 	if fx == null:
 		return
 	if _debug_hit_pos:
@@ -81,15 +81,15 @@ func playHit(pos: Vector2, variant: String = "default") -> void:
 			variant, str(pos), str(fx.global_position), str(fx.busy)])
 	fx.position = pos
 	fx.global_position = pos
-	fx.play_at(pos)
+	fx.playAt(pos)
 
 
 ## 取一个空闲的命中特效；池子满了就抢最早那个（永不新建超过上限）
-func _acquire_hit(variant: String) -> Node2D:
+func _acquireHit(variant: String) -> Node2D:
 	var path: String = HIT_VARIANTS[variant]
-	if not _hit_pools.has(variant):
-		_hit_pools[variant] = []
-	var pool: Array = _hit_pools[variant]
+	if not _hitPools.has(variant):
+		_hitPools[variant] = []
+	var pool: Array = _hitPools[variant]
 	for f in pool:
 		if is_instance_valid(f) and not f.busy:
 			return f
@@ -98,7 +98,7 @@ func _acquire_hit(variant: String) -> Node2D:
 		pool.remove_at(0)
 		if is_instance_valid(stolen):
 			stolen.free()
-	var fresh := (load(path) as PackedScene).instantiate()
+	var fresh: Node = (load(path) as PackedScene).instantiate()
 	add_child(fresh)
 	pool.append(fresh)
 	return fresh
@@ -113,10 +113,10 @@ func playExplosion(pos: Vector2, variant: String = "") -> void:
 		variant = BOOM_RANDOM_POOL[randi() % BOOM_RANDOM_POOL.size()]
 
 	# ① 爆炸动画帧
-	var anim_path: String = str(VARIANT_ANIM.get(variant, BOOM_ANIMS[0]))
-	if not ResourceLoader.exists(anim_path):
-		anim_path = BOOM_ANIMS[0]
-	var boom := (load(anim_path) as PackedScene).instantiate()
+	var animPath: String = str(VARIANT_ANIM.get(variant, BOOM_ANIMS[0]))
+	if not ResourceLoader.exists(animPath):
+		animPath = BOOM_ANIMS[0]
+	var boom: Node = (load(animPath) as PackedScene).instantiate()
 	boom.position = pos
 	add_child(boom)
 
@@ -125,9 +125,9 @@ func playExplosion(pos: Vector2, variant: String = "") -> void:
 	for path in plan.keys():
 		if not ResourceLoader.exists(path):
 			continue
-		var fx := (load(path) as PackedScene).instantiate()
+		var fx: Node = (load(path) as PackedScene).instantiate()
 		fx.position = pos + (plan[path] as Vector2)
 		add_child(fx)
 
 	# ③ 音效：统一一个爆炸音，不加音高抖动 —— 每次都一样，听着才"确定"
-	SoundManage.play_at(EXPLO_SOUND, pos, -4.0)
+	SoundManage.playAt(EXPLO_SOUND, pos, -4.0)

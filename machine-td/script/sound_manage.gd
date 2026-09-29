@@ -40,9 +40,9 @@ const SFX_DIR := "res://sound/sfx/"
 #@export var trace_plays: bool = false
 
 ## 音效播放器池上限。池子满了就临时再加一个（很少发生）
-@export var sfx_pool_size: int = 16
+@export var sfxPoolSize: int = 16
 ## play_at 用的 2D 播放器池上限
-@export var pos_pool_size: int = 8
+@export var posPoolSize: int = 8
 
 ## 悬停音的节流（毫秒）。鼠标扫过一排按钮时会连续触发 mouse_entered，
 ## 取 60ms 让它是"清脆的一下"，而不是哒哒哒响成一片。
@@ -52,21 +52,21 @@ const SFX_DIR := "res://sound/sfx/"
 ##   听起来是"哒哒哒"而不是干净的一声"滴"。
 const HOVER_GUARD_MSEC := 95
 
-@onready var button_sound: AudioStreamPlayer = $ButtonSound
-@onready var confirm_sound: AudioStreamPlayer = $ConfirmSound
-@onready var hover_sound: AudioStreamPlayer = $HoverSound
+@onready var buttonSound: AudioStreamPlayer = $ButtonSound
+@onready var confirmSound: AudioStreamPlayer = $ConfirmSound
+@onready var hoverSound: AudioStreamPlayer = $HoverSound
 
-var _last_play_msec: int = -100000
+var _lastPlayMsec: int = -100000
 ## 悬停音单独计时。
 ## ⚠️ 不能和 _last_play_msec 共用 —— 那样"鼠标 hover 完立刻点击"会把点击吃掉。
-var _last_hover_msec: int = -100000
+var _lastHoverMsec: int = -100000
 
 ## 通用音效的播放器池
-var _sfx_pool: Array[AudioStreamPlayer] = []
+var _sfxPool: Array[AudioStreamPlayer] = []
 ## play_at 用的 2D 播放器池
-var _pos_pool: Array[AudioStreamPlayer2D] = []
+var _posPool: Array[AudioStreamPlayer2D] = []
 ## 名字 -> AudioStream；查不到也缓存（存 null），避免每次都去 exists()
-var _sfx_cache: Dictionary = {}
+var _sfxCache: Dictionary = {}
 ## 循环音：key -> 播放器
 var _loops: Dictionary = {}
 
@@ -75,15 +75,15 @@ const BGM_DIR := "res://sound/bgm/"
 
 ## 背景音乐专用播放器。**常驻一个**，切曲就是换 stream，
 ## 不走 _sfx_pool —— 音效池会被 stop_all() 清掉，音乐会跟着断。
-@onready var bgm_player: AudioStreamPlayer = $Bgm
+@onready var bgmPlayer: AudioStreamPlayer = $Bgm
 
 ## 当前在播的曲名（文件名去扩展名）。空 = 没在播。
 ## 用它做去重：同一首重复调用不必重头开始。
-var _bgm_current: String = ""
+var _bgmCurrent: String = ""
 ## BGM 音量（dB）。素材本身已归一到 -16 LUFS，所以默认不再衰减。
-var _bgm_volume_db: float = 0.0
+var _bgmVolumeDb: float = 0.0
 ## 歌名 -> AudioStream 缓存（查不到也缓存 null，避免反复打文件系统）
-var _bgm_cache: Dictionary = {}
+var _bgmCache: Dictionary = {}
 
 
 # ============================================================
@@ -91,32 +91,32 @@ var _bgm_cache: Dictionary = {}
 # ============================================================
 
 func playEffect() -> void:
-	_play(button_sound, "effect")
+	_play(buttonSound, "effect")
 
 
 func playConfirm() -> void:
-	_play(confirm_sound, "confirm")
+	_play(confirmSound, "confirm")
 
 
 ## 鼠标移上按钮的音（sfx/ui_hover.ogg）。
 ## 比点击音轻，所以不走去重闸、也不打调用栈 —— 但有自己的节流。
 func playHover() -> void:
-	if UserData.sfxMuted or hover_sound.stream == null:
+	if UserData.sfxMuted or hoverSound.stream == null:
 		return
-	var now := Time.get_ticks_msec()
-	if now - _last_hover_msec < HOVER_GUARD_MSEC:
+	var now: int = Time.get_ticks_msec()
+	if now - _lastHoverMsec < HOVER_GUARD_MSEC:
 		return
-	_last_hover_msec = now
-	hover_sound.play()
+	_lastHoverMsec = now
+	hoverSound.play()
 
 
 func _play(player: AudioStreamPlayer, kind: String) -> void:
 	if UserData.sfxMuted or player.stream == null:
 		return
-	var now := Time.get_ticks_msec()
-	if now - _last_play_msec < int(DEDUPE_WINDOW * 1000.0):
+	var now: int = Time.get_ticks_msec()
+	if now - _lastPlayMsec < int(DEDUPE_WINDOW * 1000.0):
 		return
-	_last_play_msec = now
+	_lastPlayMsec = now
 	player.play()
 	played.emit(kind)
 	#if trace_plays or OS.is_debug_build():
@@ -144,10 +144,10 @@ func _play(player: AudioStreamPlayer, kind: String) -> void:
 func play(sound: String, volume_db: float = 0.0, pitch_scale: float = 1.0) -> AudioStreamPlayer:
 	if UserData.sfxMuted:
 		return null
-	var stream := _get_sfx(sound)
+	var stream: AudioStream = _getSfx(sound)
 	if stream == null:
 		return null
-	var p := _acquire()
+	var p: AudioStreamPlayer = _acquire()
 	p.stream = stream
 	p.volume_db = volume_db
 	p.pitch_scale = pitch_scale
@@ -156,11 +156,11 @@ func play(sound: String, volume_db: float = 0.0, pitch_scale: float = 1.0) -> Au
 
 
 ## 从几个音效里随机挑一个播，并给一点音高抖动 —— 连续开火 / 连续命中时不会听腻。
-func play_varied(sounds: Array, volume_db: float = 0.0, pitch_jitter: float = 0.06) -> AudioStreamPlayer:
+func playVaried(sounds: Array, volume_db: float = 0.0, pitch_jitter: float = 0.06) -> AudioStreamPlayer:
 	if sounds.is_empty():
 		return null
-	var pick := str(sounds[randi() % sounds.size()])
-	var jitter := 1.0 if pitch_jitter <= 0.0 else randf_range(1.0 - pitch_jitter, 1.0 + pitch_jitter)
+	var pick: String = str(sounds[randi() % sounds.size()])
+	var jitter: float = 1.0 if pitch_jitter <= 0.0 else randf_range(1.0 - pitch_jitter, 1.0 + pitch_jitter)
 	return play(pick, volume_db, jitter)
 
 
@@ -168,7 +168,7 @@ func play_varied(sounds: Array, volume_db: float = 0.0, pitch_jitter: float = 0.
 ## ⚠️ 场景里没有 Camera2D / AudioListener2D 时，2D 播放器会以原点当听者，
 ##    声音会全跑到一边。所以这里兜一手：没有听者就退化成普通播放，
 ##    宁可没有声像，也不要没声音或者只有一边响。
-func play_at(
+func playAt(
 	sound: String,
 	world_pos: Vector2,
 	volume_db: float = 0.0,
@@ -177,12 +177,12 @@ func play_at(
 ) -> Node:
 	if UserData.sfxMuted:
 		return null
-	var stream := _get_sfx(sound)
+	var stream: AudioStream = _getSfx(sound)
 	if stream == null:
 		return null
-	if not _has_listener():
+	if not _hasListener():
 		return play(sound, volume_db, pitch_scale)
-	var p := _acquire_2d()
+	var p: AudioStreamPlayer2D = _acquire2d()
 	p.stream = stream
 	p.global_position = world_pos
 	p.volume_db = volume_db
@@ -194,12 +194,12 @@ func play_at(
 
 ## 这个名字有没有对应文件（想在代码里先判断时用）
 ## 按名字取音频流（不播放）。给"自己持有播放器"的场景用，比如爆炸三件套里的 sound 节点。
-func get_stream_for(sound: String) -> AudioStream:
-	return _get_sfx(sound)
+func getStreamFor(sound: String) -> AudioStream:
+	return _getSfx(sound)
 
 
-func has_sfx(sound: String) -> bool:
-	return _get_sfx(sound) != null
+func hasSfx(sound: String) -> bool:
+	return _getSfx(sound) != null
 
 
 # ============================================================
@@ -207,16 +207,16 @@ func has_sfx(sound: String) -> bool:
 # ============================================================
 
 ## 开一个循环音。同一个 key 重复调用只当一次（已经在响就什么都不做）。
-func start_loop(key: String, sound: String, volume_db: float = 0.0) -> void:
+func startLoop(key: String, sound: String, volume_db: float = 0.0) -> void:
 	if UserData.sfxMuted or _loops.has(key):
 		return
-	var stream := _get_sfx(sound)
+	var stream: AudioStream = _getSfx(sound)
 	if stream == null:
 		return
 	# ogg 靠 loop 属性无缝循环；不勾的话播完就停
 	if stream is AudioStreamOggVorbis:
 		(stream as AudioStreamOggVorbis).loop = true
-	var p := AudioStreamPlayer.new()
+	var p: AudioStreamPlayer = AudioStreamPlayer.new()
 	p.stream = stream
 	p.bus = "Sfx"
 	p.volume_db = volume_db
@@ -225,7 +225,7 @@ func start_loop(key: String, sound: String, volume_db: float = 0.0) -> void:
 	_loops[key] = p
 
 
-func stop_loop(key: String) -> void:
+func stopLoop(key: String) -> void:
 	if not _loops.has(key):
 		return
 	var p: AudioStreamPlayer = _loops[key]
@@ -235,9 +235,9 @@ func stop_loop(key: String) -> void:
 		p.queue_free()
 
 
-func stop_all_loops() -> void:
+func stopAllLoops() -> void:
 	for key in _loops.keys():
-		stop_loop(key)
+		stopLoop(key)
 
 
 # ============================================================
@@ -256,55 +256,55 @@ func stop_all_loops() -> void:
 
 ## 放一首 BGM。参数是 sound/bgm/ 下的文件名（不带 .ogg）。
 ## 同一首且正在播 → 什么都不做（所以在"每次点开始"里无脑调也安全）。
-func play_bgm(sound: String, volume_db: float = 0.0) -> void:
+func playBgm(sound: String, volume_db: float = 0.0) -> void:
 	if sound.is_empty():
 		return
 	# ★ 已经在放同一首就别重头开始 —— 暂停后继续、重开关卡都会走到这里
-	if _bgm_current == sound and bgm_player.playing:
+	if _bgmCurrent == sound and bgmPlayer.playing:
 		return
-	var stream := _get_bgm(sound)
+	var stream: AudioStream = _getBgm(sound)
 	if stream == null:
 		push_warning("SoundManage.play_bgm: 找不到 sound/bgm/%s.ogg" % sound)
-		stop_bgm()
+		stopBgm()
 		return
-	_bgm_current = sound
+	_bgmCurrent = sound
 	if stream is AudioStreamOggVorbis:
 		# 兜底：.import 里的 loop 已设 true，但顺手再置一次，
 		# 这样以后直接丢一首新 ogg 进 sound/bgm/ 也能循环，不用管导入参数。
 		(stream as AudioStreamOggVorbis).loop = true
-	bgm_player.stream = stream
-	bgm_player.volume_db = volume_db
+	bgmPlayer.stream = stream
+	bgmPlayer.volume_db = volume_db
 	# 暂停游戏时（get_tree().paused = true）音乐要继续放，所以不受 pause 影响
-	bgm_player.process_mode = Node.PROCESS_MODE_ALWAYS
-	bgm_player.play()
+	bgmPlayer.process_mode = Node.PROCESS_MODE_ALWAYS
+	bgmPlayer.play()
 
 
 ## 停掉 BGM。stop_bgm(false) 会保留 _bgm_current，下次 play_bgm 同一首仍会重放。
-func stop_bgm(clear_current: bool = true) -> void:
-	bgm_player.stop()
-	bgm_player.stream = null
+func stopBgm(clear_current: bool = true) -> void:
+	bgmPlayer.stop()
+	bgmPlayer.stream = null
 	if clear_current:
-		_bgm_current = ""
+		_bgmCurrent = ""
 
 
 ## 当前在播的曲名（空 = 没在播）
-func current_bgm() -> String:
-	return _bgm_current
+func currentBgm() -> String:
+	return _bgmCurrent
 
 
 ## BGM 是否正在响
-func is_bgm_playing() -> bool:
-	return bgm_player != null and bgm_player.playing
+func isBgmPlaying() -> bool:
+	return bgmPlayer != null and bgmPlayer.playing
 
 
 ## 临时压低/恢复 BGM（比如想给剧情语音让路）
-func duck_bgm(volume_db: float) -> void:
-	bgm_player.volume_db = volume_db
+func duckBgm(volume_db: float) -> void:
+	bgmPlayer.volume_db = volume_db
 
 
 ## 当前 BGM 的播放进度（秒），没在播返回 0
-func bgm_playback_position() -> float:
-	return bgm_player.get_playback_position() if is_bgm_playing() else 0.0
+func bgmPlaybackPosition() -> float:
+	return bgmPlayer.get_playback_position() if isBgmPlaying() else 0.0
 
 
 # ============================================================
@@ -312,19 +312,19 @@ func bgm_playback_position() -> float:
 # ============================================================
 
 ## 停掉所有正在响的音效（切场景 / 关面板时用）
-func stop_all() -> void:
-	for p in _sfx_pool:
+func stopAll() -> void:
+	for p in _sfxPool:
 		if is_instance_valid(p):
 			p.stop()
-	for p in _pos_pool:
+	for p in _posPool:
 		if is_instance_valid(p):
 			p.stop()
 
 
 ## 回收空闲播放器，把节点释放掉
-func trim_pools() -> void:
-	_free_idle(_sfx_pool)
-	_free_idle(_pos_pool)
+func trimPools() -> void:
+	_freeIdle(_sfxPool)
+	_freeIdle(_posPool)
 
 
 # ============================================================
@@ -332,79 +332,79 @@ func trim_pools() -> void:
 # ============================================================
 
 ## 名字 -> AudioStream。查不到也缓存（存 null），这样写错名字不会反复查文件系统。
-func _get_sfx(sound: String) -> AudioStream:
+func _getSfx(sound: String) -> AudioStream:
 	if sound.is_empty():
 		return null
-	if _sfx_cache.has(sound):
-		return _sfx_cache[sound]
-	var path := SFX_DIR + sound + ".ogg"
+	if _sfxCache.has(sound):
+		return _sfxCache[sound]
+	var path: String = SFX_DIR + sound + ".ogg"
 	var stream: AudioStream = null
 	if ResourceLoader.exists(path):
 		stream = load(path) as AudioStream
 	elif OS.is_debug_build():
 		push_warning("[SoundManage] 找不到音效 %s（%s）" % [sound, path])
-	_sfx_cache[sound] = stream
+	_sfxCache[sound] = stream
 	return stream
 
 
 ## 名字 -> BGM AudioStream。查不到也缓存（存 null）。
-func _get_bgm(sound: String) -> AudioStream:
+func _getBgm(sound: String) -> AudioStream:
 	if sound.is_empty():
 		return null
-	if _bgm_cache.has(sound):
-		return _bgm_cache[sound]
-	var path := BGM_DIR + sound + ".ogg"
+	if _bgmCache.has(sound):
+		return _bgmCache[sound]
+	var path: String = BGM_DIR + sound + ".ogg"
 	var stream: AudioStream = null
 	if ResourceLoader.exists(path):
 		stream = load(path) as AudioStream
 	else:
 		push_warning("[SoundManage] 找不到背景音乐 %s（%s）" % [sound, path])
-	_bgm_cache[sound] = stream
+	_bgmCache[sound] = stream
 	return stream
 
 
 func _acquire() -> AudioStreamPlayer:
-	_reap_dead(_sfx_pool)
+	_reapDead(_sfxPool)
 	# 先找空闲的
-	for p in _sfx_pool:
+	for p in _sfxPool:
 		if not p.playing:
 			return p
 	# 池子已经建满、又全在响 —— 抢最早开始的那个复用。
 	# ⚠️ 不能"再 new 一个"，那样新建的没进池子，用完就永远漏着（这里踩过）
-	if _sfx_pool.size() >= sfx_pool_size:
-		var oldest: AudioStreamPlayer = _sfx_pool[0]
-		for p in _sfx_pool:
+	if _sfxPool.size() >= sfxPoolSize:
+		var oldest: AudioStreamPlayer = _sfxPool[0]
+		for p in _sfxPool:
 			if p.get_playback_position() > oldest.get_playback_position():
 				oldest = p
 		return oldest
-	var fresh := AudioStreamPlayer.new()
+	var fresh: AudioStreamPlayer = AudioStreamPlayer.new()
 	fresh.bus = "Sfx"
 	add_child(fresh)
-	_sfx_pool.append(fresh)
+	_sfxPool.append(fresh)
 	return fresh
 
 
-func _acquire_2d() -> AudioStreamPlayer2D:
-	_reap_dead(_pos_pool)
-	for p in _pos_pool:
+func _acquire2d() -> AudioStreamPlayer2D:
+	_reapDead(_posPool)
+	for p in _posPool:
 		if not p.playing:
 			return p
-	if _pos_pool.size() >= pos_pool_size:
-		var oldest: AudioStreamPlayer2D = _pos_pool[0]
-		for p in _pos_pool:
+	if _posPool.size() >= posPoolSize:
+		var oldest: AudioStreamPlayer2D = _posPool[0]
+		for p in _posPool:
 			if p.get_playback_position() > oldest.get_playback_position():
 				oldest = p
 		return oldest
-	var fresh := AudioStreamPlayer2D.new()
+	var fresh: AudioStreamPlayer2D = AudioStreamPlayer2D.new()
 	fresh.bus = "Sfx"
 	add_child(fresh)
-	_pos_pool.append(fresh)
+	_posPool.append(fresh)
 	return fresh
 
 
 ## 场景里有没有可用的听者（Camera2D 或 AudioListener2D）
-func _has_listener() -> bool:
-	var tree := get_tree()
+func _hasListener() -> bool:
+	var tree: SceneTree = get_tree()
 	if tree == null:
 		return false
 	if not tree.get_nodes_in_group("audio_listener").is_empty():
@@ -416,14 +416,14 @@ func _has_listener() -> bool:
 	return false
 
 
-func _free_idle(pool: Array) -> void:
+func _freeIdle(pool: Array) -> void:
 	for p in pool.duplicate():
 		if is_instance_valid(p) and not p.playing:
 			pool.erase(p)
 			p.queue_free()
 
 
-func _reap_dead(pool: Array) -> void:
+func _reapDead(pool: Array) -> void:
 	for p in pool.duplicate():
 		if not is_instance_valid(p):
 			pool.erase(p)

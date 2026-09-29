@@ -13,5 +13,5 @@ func _ready() -> void:
 		#return
 	#parent.progress+=speed*_delta	
 	#if parent.progress_ratio>=1:
-		#Game.enemyEscape.emit(lossPoints)
+		#Game.enemyEscaped.emit(lossPoints)
 		#owner.queue_free()

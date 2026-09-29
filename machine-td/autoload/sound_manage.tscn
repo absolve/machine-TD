@@ -24,4 +24,3 @@ bus = &"Sfx"
 [node name="Bgm" type="AudioStreamPlayer" parent="." unique_id=1388930598]
 bus = &"Bg"
 process_mode = 3
-

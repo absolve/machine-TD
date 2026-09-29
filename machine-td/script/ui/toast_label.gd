@@ -6,7 +6,7 @@ extends Label
 
 
 ## 移除信号（通知父节点移除自身）
-signal remove
+signal removed
 
 ## 显示时长（秒）
 var displayTime = 2
@@ -72,5 +72,5 @@ func movePos(index):
 ## 移除标签
 # 发出移除信号并销毁自身
 func removeLabel():
-	remove.emit(self)
+	removed.emit(self)
 	queue_free()

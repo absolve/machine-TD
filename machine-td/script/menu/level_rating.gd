@@ -1,9 +1,9 @@
 extends HBoxContainer
 
 
-@onready var star1 = $star1
-@onready var star2 = $star2
-@onready var star3 = $star3
+@onready var star1 = $Star1
+@onready var star2 = $Star2
+@onready var star3 = $Star3
 
 var starFull = preload("res://sprite/star-4.png")
 var starEmpty = preload("res://sprite/star-2.png")

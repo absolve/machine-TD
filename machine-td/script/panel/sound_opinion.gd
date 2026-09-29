@@ -44,14 +44,14 @@ signal muteToggled(isMuted: bool)
 
 @onready var busNameLabel = $name
 @onready var sound = $sound
-@onready var slider: HSlider = $volumeRow/HSlider
-@onready var btnMute: TextureButton = get_node_or_null("volumeRow/btnMute")
+@onready var slider: HSlider = $VolumeRow/HSlider
+@onready var btnMute: TextureButton = get_node_or_null("VolumeRow/btnMute")
 
 
 func _ready() -> void:
 	if btnMute:
 		btnMute.set_pressed_no_signal(muted)
-		btnMute.toggled.connect(_on_btn_mute_toggled)
+		btnMute.toggled.connect(_onBtnMuteToggled)
 	_refreshMuteButtonVisible()
 	_refreshMuteVisual()
 	_applyMute()
@@ -83,12 +83,12 @@ func _applyMute() -> void:
 	# 没有静音按钮的音量条不接管总线静音，避免影响别处的静音设置
 	if not showMuteButton and not muted:
 		return
-	var bus_index := AudioServer.get_bus_index(busName)
-	if bus_index >= 0:
-		AudioServer.set_bus_mute(bus_index, muted)
+	var busIndex: int = AudioServer.get_bus_index(busName)
+	if busIndex >= 0:
+		AudioServer.set_bus_mute(busIndex, muted)
 
 
-func _on_btn_mute_toggled(toggled_on: bool) -> void:
+func _onBtnMuteToggled(toggled_on: bool) -> void:
 	muted = toggled_on
 	muteToggled.emit(muted)
 

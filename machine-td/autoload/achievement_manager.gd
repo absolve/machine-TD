@@ -1,6 +1,6 @@
 extends Node
 
-signal achievement_unlocked(achievement_id: String, achievement: Dictionary)
+signal achievementUnlocked(achievement_id: String, achievement: Dictionary)
 
 const ACHIEVEMENTS: Dictionary = {
 	"first_defense": {
@@ -86,60 +86,60 @@ const ACHIEVEMENTS: Dictionary = {
 	}
 }
 
-var unlocked_achievements: Array[String] = []
-var achievement_progress: Dictionary = {}
+var unlockedAchievements: Array[String] = []
+var achievementProgress: Dictionary = {}
 
 func _ready() -> void:
 	loadPlayerAchievements()
 
 func loadPlayerAchievements() -> void:
-	unlocked_achievements = UserData.unlockedAchievements.duplicate()
-	achievement_progress = UserData.achievementProgress.duplicate(true)
+	unlockedAchievements = UserData.unlockedAchievements.duplicate()
+	achievementProgress = UserData.achievementProgress.duplicate(true)
 
 func savePlayerAchievements() -> void:
-	UserData.unlockedAchievements = unlocked_achievements.duplicate()
-	UserData.achievementProgress = achievement_progress.duplicate(true)
+	UserData.unlockedAchievements = unlockedAchievements.duplicate()
+	UserData.achievementProgress = achievementProgress.duplicate(true)
 	UserData.savePlayerData()
 
-func get_achievement(achievement_id: String) -> Dictionary:
+func getAchievement(achievement_id: String) -> Dictionary:
 	return ACHIEVEMENTS.get(achievement_id, {}).duplicate(true)
 
-func get_all_achievements() -> Dictionary:
+func getAllAchievements() -> Dictionary:
 	return ACHIEVEMENTS.duplicate(true)
 
-func is_unlocked(achievement_id: String) -> bool:
-	return achievement_id in unlocked_achievements
+func isUnlocked(achievement_id: String) -> bool:
+	return achievement_id in unlockedAchievements
 
-func get_progress(achievement_id: String) -> int:
-	return int(achievement_progress.get(achievement_id, 0))
+func getProgress(achievement_id: String) -> int:
+	return int(achievementProgress.get(achievement_id, 0))
 
-func set_progress(achievement_id: String, value: int, auto_save: bool = true) -> int:
+func setProgress(achievement_id: String, value: int, auto_save: bool = true) -> int:
 	if not ACHIEVEMENTS.has(achievement_id):
 		return 0
-	var progress := maxi(0, int(value))
-	achievement_progress[achievement_id] = progress
+	var progress: int = maxi(0, int(value))
+	achievementProgress[achievement_id] = progress
 	if auto_save:
 		savePlayerAchievements()
-	check_unlock(achievement_id)
+	checkUnlock(achievement_id)
 	return progress
 
-func add_progress(achievement_id: String, delta: int = 1, auto_save: bool = true) -> int:
-	return set_progress(achievement_id, get_progress(achievement_id) + delta, auto_save)
+func addProgress(achievement_id: String, delta: int = 1, auto_save: bool = true) -> int:
+	return setProgress(achievement_id, getProgress(achievement_id) + delta, auto_save)
 
-func check_unlock(achievement_id: String) -> bool:
-	if not ACHIEVEMENTS.has(achievement_id) or is_unlocked(achievement_id):
+func checkUnlock(achievement_id: String) -> bool:
+	if not ACHIEVEMENTS.has(achievement_id) or isUnlocked(achievement_id):
 		return false
-	var achievement: Dictionary = get_achievement(achievement_id)
+	var achievement: Dictionary = getAchievement(achievement_id)
 	var target: int = int(achievement.get("target", 0))
-	if get_progress(achievement_id) < target:
+	if getProgress(achievement_id) < target:
 		return false
 	unlock(achievement_id)
 	return true
 
 func unlock(achievement_id: String) -> bool:
-	if not ACHIEVEMENTS.has(achievement_id) or is_unlocked(achievement_id):
+	if not ACHIEVEMENTS.has(achievement_id) or isUnlocked(achievement_id):
 		return false
-	unlocked_achievements.append(achievement_id)
+	unlockedAchievements.append(achievement_id)
 	savePlayerAchievements()
-	achievement_unlocked.emit(achievement_id, get_achievement(achievement_id))
+	achievementUnlocked.emit(achievement_id, getAchievement(achievement_id))
 	return true

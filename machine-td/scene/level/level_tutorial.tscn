@@ -334,152 +334,152 @@ z_index = -1
 [node name="belt_0_8" parent="beltLayer" index="0" unique_id=425803715 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_dd73y")
 position = Vector2(32, 544)
-route_phase = 0.5
+routePhase = 0.5
 
 [node name="belt_1_8" parent="beltLayer" index="1" unique_id=1743722079 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_wpg6i")
 position = Vector2(96, 544)
-route_phase = 1.5
+routePhase = 1.5
 
 [node name="belt_2_8" parent="beltLayer" index="2" unique_id=1071298726 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_w76eh")
 position = Vector2(160, 544)
-route_phase = 2.5
+routePhase = 2.5
 
 [node name="belt_3_8" parent="beltLayer" index="3" unique_id=2214509 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_o0kiu")
 position = Vector2(224, 544)
-route_phase = 3.5
+routePhase = 3.5
 
 [node name="belt_4_8" parent="beltLayer" index="4" unique_id=2008017967 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_pojvi")
 position = Vector2(288, 544)
-route_phase = 4.5
+routePhase = 4.5
 
 [node name="belt_5_8" parent="beltLayer" index="5" unique_id=1830066028 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_ib141")
 position = Vector2(352, 544)
-route_phase = 5.5
+routePhase = 5.5
 
 [node name="belt_6_8" parent="beltLayer" index="6" unique_id=571804391 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_4bfg4")
 position = Vector2(416, 544)
-route_phase = 6.5
+routePhase = 6.5
 
 [node name="belt_7_8" parent="beltLayer" index="7" unique_id=1232838308 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_v4nry")
 position = Vector2(480, 544)
-route_phase = 7.5
+routePhase = 7.5
 
 [node name="belt_8_8" parent="beltLayer" index="8" unique_id=542078836 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_yaqcg")
 position = Vector2(544, 544)
-route_phase = 8.5
+routePhase = 8.5
 
 [node name="belt_9_8" parent="beltLayer" index="9" unique_id=1617480022 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_ae0ys")
 position = Vector2(608, 544)
-route_phase = 9.5
+routePhase = 9.5
 
 [node name="belt_10_8" parent="beltLayer" index="10" unique_id=586472878 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_a1j14")
 position = Vector2(672, 544)
-route_phase = 10.5
+routePhase = 10.5
 
 [node name="belt_11_8" parent="beltLayer" index="11" unique_id=777582019 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_lvwry")
 position = Vector2(736, 544)
-route_phase = 11.5
+routePhase = 11.5
 
 [node name="belt_12_8" parent="beltLayer" index="12" unique_id=1912060190 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_wxnmm")
 position = Vector2(800, 544)
-route_phase = 12.5
+routePhase = 12.5
 
 [node name="belt_13_8" parent="beltLayer" index="13" unique_id=215502104 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_tvvfc")
 position = Vector2(864, 544)
-route_phase = 13.5
+routePhase = 13.5
 
 [node name="belt_14_8" parent="beltLayer" index="14" unique_id=1453157241 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_goxob")
 position = Vector2(928, 544)
-route_phase = 14.5
+routePhase = 14.5
 
 [node name="belt_15_8" parent="beltLayer" index="15" unique_id=1345230657 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_qjev0")
 position = Vector2(992, 544)
-route_phase = 15.5
+routePhase = 15.5
 
 [node name="belt_16_8" parent="beltLayer" index="16" unique_id=179748527 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_6jtpn")
 position = Vector2(1056, 544)
-route_phase = 16.5
+routePhase = 16.5
 
 [node name="belt_17_8" parent="beltLayer" index="17" unique_id=1999232054 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_53oce")
 position = Vector2(1120, 544)
-route_phase = 17.5
+routePhase = 17.5
 
 [node name="belt_18_8" parent="beltLayer" index="18" unique_id=1427319883 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_lhfch")
 position = Vector2(1184, 544)
-route_phase = 18.5
+routePhase = 18.5
 
 [node name="belt_19_8" parent="beltLayer" index="19" unique_id=1732739257 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_s364d")
 position = Vector2(1248, 544)
-route_phase = 19.5
+routePhase = 19.5
 
 [node name="belt_20_8" parent="beltLayer" index="20" unique_id=1497544980 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_ihfhf")
 position = Vector2(1312, 544)
-route_phase = 20.5
+routePhase = 20.5
 
 [node name="belt_21_8" parent="beltLayer" index="21" unique_id=1259328733 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_sdkss")
 position = Vector2(1376, 544)
-route_phase = 21.5
+routePhase = 21.5
 
 [node name="belt_22_8" parent="beltLayer" index="22" unique_id=957162839 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_bdcii")
 position = Vector2(1440, 544)
-route_phase = 22.5
+routePhase = 22.5
 
 [node name="belt_23_8" parent="beltLayer" index="23" unique_id=962444850 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_cyjv7")
 position = Vector2(1504, 544)
-route_phase = 23.5
+routePhase = 23.5
 
 [node name="belt_24_8" parent="beltLayer" index="24" unique_id=1138785324 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_jm8hp")
 position = Vector2(1568, 544)
-route_phase = 24.5
+routePhase = 24.5
 
 [node name="belt_25_8" parent="beltLayer" index="25" unique_id=1927278263 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_4bnkx")
 position = Vector2(1632, 544)
-route_phase = 25.5
+routePhase = 25.5
 
 [node name="belt_26_8" parent="beltLayer" index="26" unique_id=1033189718 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_qb7up")
 position = Vector2(1696, 544)
-route_phase = 26.5
+routePhase = 26.5
 
 [node name="belt_27_8" parent="beltLayer" index="27" unique_id=33945457 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_edil7")
 position = Vector2(1760, 544)
-route_phase = 27.5
+routePhase = 27.5
 
 [node name="belt_28_8" parent="beltLayer" index="28" unique_id=197902587 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_1tt7b")
 position = Vector2(1824, 544)
-route_phase = 28.5
+routePhase = 28.5
 
 [node name="belt_29_8" parent="beltLayer" index="29" unique_id=2047694785 instance=ExtResource("4_belt")]
 material = SubResource("ShaderMaterial_53p16")
 position = Vector2(1888, 544)
-route_phase = 29.5
+routePhase = 29.5
 
 [node name="placeableLayer" type="Node2D" parent="." index="6" unique_id=607054215]
 z_index = -1
@@ -699,5 +699,5 @@ position = Vector2(1824, 992)
 [node name="alarm_25_9" parent="propLayer" index="34" unique_id=1518990524 instance=ExtResource("7_prop_alarm")]
 position = Vector2(1632, 608)
 
-[connection signal="timeout" from="waveTimer" to="." method="_on_wave_timer_timeout"]
-[connection signal="timeout" from="spawnerTimer" to="." method="_on_spawner_timer_timeout"]
+[connection signal="timeout" from="WaveTimer" to="." method="_onWaveTimerTimeout"]
+[connection signal="timeout" from="SpawnerTimer" to="." method="_onSpawnerTimerTimeout"]

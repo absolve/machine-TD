@@ -77,7 +77,7 @@ shape = SubResource("CircleShape2D_0llar")
 z_index = -1
 sprite_frames = SubResource("SpriteFrames_autotur")
 
-[node name="muzzleFx" type="CPUParticles2D" parent="." index="11" unique_id=1166174513]
+[node name="MuzzleFx" type="CPUParticles2D" parent="." index="11" unique_id=1166174513]
 emitting = false
 amount = 14
 texture = ExtResource("90_spark")
@@ -163,5 +163,5 @@ scale_amount_min = 0.45
 scale_amount_curve = SubResource("Curve_laserhit")
 color_ramp = SubResource("Grad_laserhit")
 
-[connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
-[connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]
+[connection signal="area_entered" from="radar" to="." method="_onRadarAreaEntered"]
+[connection signal="area_exited" from="radar" to="." method="_onRadarAreaExited"]

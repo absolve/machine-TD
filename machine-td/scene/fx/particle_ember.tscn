@@ -9,7 +9,7 @@ colors = PackedColorArray(1, 0.78, 0.38, 1, 1, 0.55, 0.16, 0.9, 1, 0.7, 0.28, 0.
 
 [node name="particle_ember" instance=ExtResource("1_base")]
 
-[node name="particles" parent="." index="0"]
+[node name="Particles" parent="." index="0"]
 amount = 16
 texture = ExtResource("2_glow")
 lifetime = 1.5

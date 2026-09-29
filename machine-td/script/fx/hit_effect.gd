@@ -17,18 +17,18 @@ extends Node2D
 ## 空闲时把节点扔到这个坐标（远在屏幕外）
 const OFFSCREEN := Vector2(-100000, -100000)
 
-@export var particle_texture: Texture2D
-@export var hit_color := Color(1.0, 0.9, 0.7, 1.0)
-@export var hit_amount := 10
-@export var hit_scale := 0.7
-@export var hit_duration := 0.5
+@export var particleTexture: Texture2D
+@export var hitColor: Color = Color(1.0, 0.9, 0.7, 1.0)
+@export var hitAmount: int = 10
+@export var hitScale: float = 0.7
+@export var hitDuration: float = 0.5
 
 ## 池子用：true 表示正忙，不能借出去
-var busy := false
+var busy: bool = false
 
-@onready var _particles: CPUParticles2D = $particles
+@onready var _particles: CPUParticles2D = $Particles
 
-var _cd := 0.0
+var _cd: float = 0.0
 
 
 func _ready() -> void:
@@ -41,7 +41,7 @@ func _ready() -> void:
 
 
 ## 池子借出时调用：定位、重播粒子、开始计时
-func play_at(pos: Vector2) -> void:
+func playAt(pos: Vector2) -> void:
 	# 1) 先藏 + 停粒子 —— 池子里的节点还带着上次的坐标，这一步保证不会闪在旧位置
 	visible = false
 	_particles.emitting = false
@@ -54,18 +54,11 @@ func play_at(pos: Vector2) -> void:
 	_particles.emitting = true
 	# 4) 全部就位了才显形
 	busy = true
-	_cd = hit_duration
+	_cd = hitDuration
 	visible = true
 	set_process(true)
 
 
-func _process(delta: float) -> void:
-	_cd -= delta
-	if _cd <= 0.0:
-		_idle()
-
-
-## 回池：藏起来、停粒子、挪到屏幕外（但**不销毁**）
 func _idle() -> void:
 	visible = false
 	busy = false
@@ -79,11 +72,20 @@ func _idle() -> void:
 func _apply() -> void:
 	if _particles == null:
 		return
-	if particle_texture != null:
-		_particles.texture = particle_texture
-	_particles.amount = hit_amount
-	_particles.color = hit_color
+	if particleTexture != null:
+		_particles.texture = particleTexture
+	_particles.amount = hitAmount
+	_particles.color = hitColor
 	# local_coords = true 表示粒子坐标相对本节点 —— 必须这样，
 	# 否则 restart() 可能按旧的全局坐标发射，位置就错到上一次的命中点去了
 	_particles.local_coords = true
-	scale = Vector2.ONE * hit_scale
+	scale = Vector2.ONE * hitScale
+
+
+func _process(delta: float) -> void:
+	_cd -= delta
+	if _cd <= 0.0:
+		_idle()
+
+
+## 回池：藏起来、停粒子、挪到屏幕外（但**不销毁**）

@@ -106,16 +106,16 @@ radius = 80.0
 
 [node name="alarm" unique_id=265241294 instance=ExtResource("1_base")]
 script = ExtResource("3_script")
-trigger_radius = 280.0
-release_delay = 1.2
+triggerRadius = 280.0
+releaseDelay = 1.2
 
-[node name="anim" parent="." index="0"]
+[node name="Anim" parent="." index="0"]
 sprite_frames = SubResource("Frames")
 animation = &"idle"
 
-[node name="detect" type="Area2D" parent="." index="1" unique_id=363597977]
+[node name="Detect" type="Area2D" parent="." index="1" unique_id=363597977]
 collision_layer = 0
 collision_mask = 2
 
-[node name="shape" type="CollisionShape2D" parent="detect" index="0" unique_id=1676544294]
+[node name="shape" type="CollisionShape2D" parent="Detect" index="0" unique_id=1676544294]
 shape = SubResource("Circle_detect")

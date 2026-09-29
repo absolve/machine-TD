@@ -26,5 +26,5 @@ script = ExtResource("2_script")
 [node name="shape" parent="." index="0"]
 shape = SubResource("Shape")
 
-[node name="ani" parent="." index="1"]
+[node name="Ani" parent="." index="1"]
 sprite_frames = SubResource("SpriteFrames_b")

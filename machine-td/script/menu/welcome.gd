@@ -1,98 +1,98 @@
 extends Node2D
 
-@onready var aboutPanel = $aboutPanel
+@onready var aboutPanel = $AboutPanel
 @onready var settingPanel = $setting
-@onready var achievementIcon: TextureButton = $ui/achievement
-@onready var achievementPanel = $achievementPanel
-@onready var codexPanel = $codexPanel
+@onready var achievementIcon: TextureButton = $Ui/achievement
+@onready var achievementPanel = $AchievementPanel
+@onready var codexPanel = $CodexPanel
 
-var _glow_tween: Tween
+var _glowTween: Tween
 
 
 func _ready() -> void:
-	var sfx_bus := AudioServer.get_bus_index("Sfx")
-	if sfx_bus >= 0:
-		AudioServer.set_bus_mute(sfx_bus, UserData.sfxMuted)
+	var sfxBus: int = AudioServer.get_bus_index("Sfx")
+	if sfxBus >= 0:
+		AudioServer.set_bus_mute(sfxBus, UserData.sfxMuted)
 
 	if achievementPanel:
 		achievementPanel.visible = false
-		achievementPanel.closed.connect(_on_achievement_panel_closed)
+		achievementPanel.closed.connect(_onAchievementPanelClosed)
 	if achievementIcon:
-		achievementIcon.mouse_entered.connect(_on_achievement_icon_mouse_entered)
-		achievementIcon.mouse_exited.connect(_on_achievement_icon_mouse_exited)
-		achievementIcon.pressed.connect(_on_achievement_icon_pressed)
-		_set_achievement_glow(0.0)
+		achievementIcon.mouse_entered.connect(_onAchievementIconMouseEntered)
+		achievementIcon.mouse_exited.connect(_onAchievementIconMouseExited)
+		achievementIcon.pressed.connect(_onAchievementIconPressed)
+		_setAchievementGlow(0.0)
 
 
-func _on_button_3_pressed():
+func _onButton3Pressed():
 	aboutPanel.show()
 
 
 # 单位图鉴（敌人 / 防御塔资料）—— 按钮在"关于"上方
 # 面板自己管显示（场景里就是 visible = false，close() 里自己隐藏），这里只管打开
-func _on_codex_pressed() -> void:
+func _onCodexPressed() -> void:
 	codexPanel.open()
 
 
-func _on_tutorial_pressed() -> void:
+func _onTutorialPressed() -> void:
 	StageData.currentStageId = 0
-	SceneTransition.change_scene("res://scene/map.tscn")
+	SceneTransition.changeScene("res://scene/map.tscn")
 
 
-func _on_btn_s_start_pressed() -> void:
+func _onBtnSStartPressed() -> void:
 	#var map=load("res://scene/map.tscn")
 	#get_tree().change_scene_to_packed(map)
 	#get_tree().change_scene_to_file("res://scene/level_select.tscn")
-	SceneTransition.change_scene("res://scene/level_select.tscn")
+	SceneTransition.changeScene("res://scene/level_select.tscn")
 
-func _on_setting_pressed() -> void:
+func _onSettingPressed() -> void:
 	settingPanel.show()
 
 
-func _on_setting_close() -> void:
+func _onSettingClose() -> void:
 	settingPanel.hide()
 
 
 # ---------- 成就图标：悬停时轮廓发光 ----------
 
-func _on_achievement_icon_mouse_entered() -> void:
-	_tween_achievement_glow(1.0)
+func _onAchievementIconMouseEntered() -> void:
+	_tweenAchievementGlow(1.0)
 
 
-func _on_achievement_icon_mouse_exited() -> void:
-	_tween_achievement_glow(0.0)
+func _onAchievementIconMouseExited() -> void:
+	_tweenAchievementGlow(0.0)
 
 
-func _on_achievement_icon_pressed() -> void:
+func _onAchievementIconPressed() -> void:
 	SoundManage.playEffect()
 	if achievementPanel:
 		achievementPanel.open()
 
 
-func _on_achievement_panel_closed() -> void:
+func _onAchievementPanelClosed() -> void:
 	if achievementPanel:
 		achievementPanel.visible = false
 
 
 # 把着色器的 glow 参数补间到目标值（0=不发光，1=满强度）
-func _tween_achievement_glow(target: float) -> void:
-	var mat := _achievement_material()
+func _tweenAchievementGlow(target: float) -> void:
+	var mat: ShaderMaterial = _achievementMaterial()
 	if mat == null:
 		return
-	if _glow_tween != null and _glow_tween.is_valid():
-		_glow_tween.kill()
+	if _glowTween != null and _glowTween.is_valid():
+		_glowTween.kill()
 	var from: float = float(mat.get_shader_parameter("glow"))
-	_glow_tween = create_tween()
-	_glow_tween.tween_method(_set_achievement_glow, from, target, 0.18)
+	_glowTween = create_tween()
+	_glowTween.tween_method(_setAchievementGlow, from, target, 0.18)
 
 
-func _set_achievement_glow(value: float) -> void:
-	var mat := _achievement_material()
+func _setAchievementGlow(value: float) -> void:
+	var mat: ShaderMaterial = _achievementMaterial()
 	if mat != null:
 		mat.set_shader_parameter("glow", value)
 
 
-func _achievement_material() -> ShaderMaterial:
+func _achievementMaterial() -> ShaderMaterial:
 	if achievementIcon == null or not is_instance_valid(achievementIcon):
 		return null
 	return achievementIcon.material as ShaderMaterial

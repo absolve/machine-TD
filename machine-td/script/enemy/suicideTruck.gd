@@ -10,7 +10,7 @@ func _ready():
 	parent = get_parent()
 	setupEnemyInfo()
 
-func trigger_self_explode() -> void:
+func triggerSelfExplode() -> void:
 	if dead:
 		return
 	dead = true
@@ -19,9 +19,9 @@ func trigger_self_explode() -> void:
 	bomb.damage = atk if atk > 0 else hp
 	bomb.blastRadius = 120.0
 	bomb.source = self
-	bomb.source_tower = null
-	bomb.damage_type = "physical"
-	bomb.target_mask = 1 << 0 # 只命中塔 layer 1
+	bomb.sourceTower = null
+	bomb.damageType = "physical"
+	bomb.targetMask = 1 << 0 # 只命中塔 layer 1
 	Game.addObj(bomb)
 	if is_instance_valid(owner):
 		owner.queue_free()
@@ -33,7 +33,7 @@ func _physics_process(_delta):
 		return
 	parent.progress += speed * _delta
 	if parent.progress_ratio >= 1:
-		trigger_self_explode()
+		triggerSelfExplode()
 		return
 	# 雷达内的目标可能已被出售/摧毁，先剔除失效引用
 	while not target.is_empty() and not is_instance_valid(target[0]):
@@ -42,5 +42,4 @@ func _physics_process(_delta):
 		var temp = target[0]
 		var distance = global_position.distance_to(temp.global_position)
 		if distance <= DETONATE_DISTANCE:
-			trigger_self_explode()
-
+			triggerSelfExplode()

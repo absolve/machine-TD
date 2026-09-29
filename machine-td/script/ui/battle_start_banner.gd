@@ -15,17 +15,17 @@ signal finished ## 播放结束（已经自动 hide）
 ## 各段时长（秒）。改这里是最省事的方式 —— 全局生效，不用动任何场景。
 ## 想给某一关单独调，可以在 map.tscn 里选中 battleStartBanner 改同名属性
 ## （那是实例覆盖，记得 Ctrl+S 存 map.tscn，否则不生效）。
-@export var fade_in_sec := 0.26
-@export var hold_sec := 1.15
-@export var fade_out_sec := 0.45
+@export var fadeInSec: float = 0.26
+@export var holdSec: float = 1.15
+@export var fadeOutSec: float = 0.45
 ## 入场时的起始缩放（1.0 = 不缩放）
-@export var from_scale := 0.86
+@export var fromScale: float = 0.86
 ## 出场时上移的像素
-@export var out_offset_y := -34.0
+@export var outOffsetY: float = -34.0
 
 @onready var band: Control = $center/band
-@onready var title_label: Label = $center/band/content/VBox/titleLabel
-@onready var sub_label: Label = $center/band/content/VBox/subLabel
+@onready var titleLabel: Label = $center/band/content/VBox/titleLabel
+@onready var subLabel: Label = $center/band/content/VBox/subLabel
 
 var _tween: Tween
 
@@ -34,25 +34,25 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
 	# 文字走翻译；调用 play() 时可以覆盖
-	title_label.text = _t("_BattleStart", "Battle Start")
-	sub_label.text = _t("_EnemiesIncoming", "Enemies incoming")
+	titleLabel.text = _t("_BattleStart", "Battle Start")
+	subLabel.text = _t("_EnemiesIncoming", "Enemies incoming")
 
 
 ## 播一遍。title / sub 留空就用翻译里的默认文案。
 ## hold_override >= 0 时用它的停留时长，否则用导出属性 hold_sec。
 func play(title: String = "", sub: String = "", hold_override: float = -1.0) -> void:
 	if not title.is_empty():
-		title_label.text = title
+		titleLabel.text = title
 	if not sub.is_empty():
-		sub_label.text = sub
-	var hold := hold_sec if hold_override < 0.0 else hold_override
+		subLabel.text = sub
+	var hold: float = holdSec if hold_override < 0.0 else hold_override
 	print(hold)
 	if _tween != null and _tween.is_valid():
 		_tween.kill()
 
 	visible = true
 	modulate.a = 0.0
-	band.scale = Vector2(from_scale, from_scale)
+	band.scale = Vector2(fromScale, fromScale)
 	band.position.y = 0.0
 	# pivot 取中心，缩放才是"从中间长出来"而不是从左上角
 	band.pivot_offset = band.size * 0.5
@@ -60,18 +60,18 @@ func play(title: String = "", sub: String = "", hold_override: float = -1.0) -> 
 	_tween = create_tween()
 	#_tween.set_parallel(true)
 	# 第一段：淡入 + 放大
-	_tween.tween_property(self, "modulate:a", 1.0, fade_in_sec)
-	_tween.tween_property(band, "scale", Vector2.ONE, fade_in_sec).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	_tween.tween_property(self, "modulate:a", 1.0, fadeInSec)
+	_tween.tween_property(band, "scale", Vector2.ONE, fadeInSec).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	# 第二段：停住
 	_tween.chain().tween_interval(hold)
 	# 第三段：淡出 + 上移
 	#_tween.chain().set_parallel(true)
-	_tween.tween_property(self, "modulate:a", 0.0, fade_out_sec)
-	_tween.tween_property(band, "position:y", out_offset_y, fade_out_sec).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	_tween.chain().tween_callback(_on_done)
+	_tween.tween_property(self, "modulate:a", 0.0, fadeOutSec)
+	_tween.tween_property(band, "position:y", outOffsetY, fadeOutSec).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	_tween.chain().tween_callback(_onDone)
 	await  _tween.finished
 
-func _on_done() -> void:
+func _onDone() -> void:
 	visible = false
 	finished.emit()
 
@@ -81,11 +81,11 @@ func skip() -> void:
 	if _tween != null and _tween.is_valid():
 		_tween.kill()
 	if visible:
-		_on_done()
+		_onDone()
 
 
 func _t(key: String, fallback: String) -> String:
 	if key.is_empty():
 		return fallback
-	var translated := tr(key)
+	var translated: String = tr(key)
 	return fallback if translated == key else translated

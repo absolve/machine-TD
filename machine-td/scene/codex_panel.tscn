@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_btn"]
 
-[node name="codexPanel" type="Control" unique_id=1443458816]
+[node name="CodexPanel" type="Control" unique_id=1443458816]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0

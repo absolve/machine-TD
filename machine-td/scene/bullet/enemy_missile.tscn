@@ -21,11 +21,11 @@ animations = [{
 [node name="enemyMissile" unique_id=1060804268 instance=ExtResource("1_bullet")]
 collision_layer = 0
 script = ExtResource("2_script")
-missile_speed = 220.0
-turn_speed = 4.0
+missileSpeed = 220.0
+turnSpeed = 4.0
 
 [node name="shape" parent="." index="0" unique_id=1677876286]
 shape = SubResource("Shape")
 
-[node name="ani" parent="." index="1" unique_id=1167812739]
+[node name="Ani" parent="." index="1" unique_id=1167812739]
 sprite_frames = SubResource("SpriteFrames_b")

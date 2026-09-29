@@ -34,9 +34,9 @@ size = Vector2(64, 64)
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_iexqj")
-dot_cycle_sec = 3.0
+dotCycleSec = 3.0
 
-[node name="slot" type="AnimatedSprite2D" parent="." unique_id=680806382]
+[node name="Slot" type="AnimatedSprite2D" parent="." unique_id=680806382]
 material = SubResource("ShaderMaterial_dot")
 sprite_frames = ExtResource("2_frames")
 

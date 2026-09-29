@@ -25,4 +25,4 @@ animations = [{
 
 [node name="explosion_small" instance=ExtResource("1_base")]
 sprite_frames = SubResource("Frames_small")
-anim_scale = 1.3
+animScale = 1.3

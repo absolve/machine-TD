@@ -36,12 +36,12 @@ theme_override_constants/margin_right = 5
 [node name="levelRating" parent="VBoxContainer/MarginContainer" unique_id=640723317 instance=ExtResource("4_bgjfb")]
 layout_mode = 2
 
-[node name="selected" type="TextureRect" parent="." unique_id=987321347]
+[node name="Selected" type="TextureRect" parent="." unique_id=987321347]
 visible = false
 layout_mode = 2
 texture = ExtResource("5_7je8j")
 
-[node name="lockLabel" type="Label" parent="."]
+[node name="LockLabel" type="Label" parent="."]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -58,6 +58,6 @@ theme_override_font_sizes/font_size = 20
 text = "LOCKED"
 horizontal_alignment = 1
 
-[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="gui_input" from="." to="." method="_onGuiInput"]
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

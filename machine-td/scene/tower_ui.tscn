@@ -102,7 +102,7 @@ anchors_preset = 0
 theme = ExtResource("2_tg0id")
 script = ExtResource("1_yx7l2")
 
-[node name="towerInfo" parent="." unique_id=1894004533 instance=ExtResource("3_gwmlu")]
+[node name="TowerInfo" parent="." unique_id=1894004533 instance=ExtResource("3_gwmlu")]
 visible = false
 layout_mode = 0
 offset_right = 304.0
@@ -138,7 +138,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 20
 
-[node name="player" type="AnimationPlayer" parent="." unique_id=184727995]
+[node name="Player" type="AnimationPlayer" parent="." unique_id=184727995]
 libraries/ = SubResource("AnimationLibrary_fbohf")
 
-[connection signal="gui_input" from="icon" to="." method="_on_icon_gui_input"]
+[connection signal="gui_input" from="icon" to="." method="_onIconGuiInput"]

@@ -8,10 +8,10 @@ extends PanelContainer
 
 @onready var num = $VBoxContainer/num
 @onready var levelRating = $VBoxContainer/MarginContainer/levelRating
-@onready var selected = $selected
-@onready var lockLabel = $lockLabel
+@onready var selected = $Selected
+@onready var lockLabel = $LockLabel
 
-signal click
+signal clicked
 
 func _ready() -> void:
 	num.text = str(level)
@@ -41,7 +41,7 @@ func _on_mouse_exited() -> void:
 	self_modulate = Color.WHITE
 
 
-func _on_gui_input(_event):
+func _onGuiInput(_event):
 	if _event is InputEventMouseButton && _event.is_action_pressed("click"):
 		if !isLock:
-			click.emit(levelId)
+			clicked.emit(levelId)

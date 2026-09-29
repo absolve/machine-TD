@@ -2,6 +2,6 @@
 
 [ext_resource type="Script" uid="uid://bj4a8gjky8pgq" path="res://script/custom_camera.gd" id="1_r38ya"]
 
-[node name="customCamera" type="Camera2D" unique_id=1331816399]
+[node name="CustomCamera" type="Camera2D" unique_id=1331816399]
 anchor_mode = 0
 script = ExtResource("1_r38ya")

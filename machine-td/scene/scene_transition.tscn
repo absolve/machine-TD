@@ -43,11 +43,11 @@ shader_parameter/shape_treshold = 1.0
 process_mode = 3
 script = ExtResource("1_script")
 
-[node name="canvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = 100
 process_mode = 3
 
-[node name="overlay" type="ColorRect" parent="canvasLayer"]
+[node name="overlay" type="ColorRect" parent="CanvasLayer"]
 material = SubResource("ShaderMaterial_transition")
 anchors_preset = 15
 anchor_right = 1.0

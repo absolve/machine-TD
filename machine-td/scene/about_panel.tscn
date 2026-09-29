@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://b6k1p768pwknc" path="res://script/panel/about_panel.gd" id="2_5mklv"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_fdyvv"]
 
-[node name="aboutPanel" type="Control" unique_id=968686525]
+[node name="AboutPanel" type="Control" unique_id=968686525]
 visible = false
 layout_mode = 3
 anchors_preset = 0

@@ -49,5 +49,5 @@ func setGemReward(amount: int) -> void:
 	gemRewardRow.visible = true
 
 
-func _on_btn_restart_pressed():
+func _onBtnRestartPressed():
 	pass # Replace with function body.

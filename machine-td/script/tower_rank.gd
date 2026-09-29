@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var ani = $ani
+@onready var ani = $Ani
 @export var level = 1 # 等级
 
 func _ready() -> void:

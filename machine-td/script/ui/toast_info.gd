@@ -26,7 +26,7 @@ func display(_str: String, color: Color = Color.WHITE):
 	var temp = label.instantiate()
 	
 	# 连接移除信号
-	temp.remove.connect(removeLabel)
+	temp.removed.connect(removeLabel)
 	
 	# 设置消息内容和颜色
 	temp.s = _str

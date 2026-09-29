@@ -5,8 +5,8 @@ extends Node2D
 const COLUMNS_PER_ROW := 6
 const GAP := 40 # 行内卡片间距（行间距由 ui/levels 的 separation 控制，两边保持一致）
 
-@onready var levelsNode = $ui/levels
-@onready var descriptionPanel = $ui/descriptionPanel
+@onready var levelsNode = $Ui/levels
+@onready var descriptionPanel = $Ui/descriptionPanel
 
 
 var levelCard = preload("res://scene/level_card.tscn")
@@ -29,7 +29,7 @@ func populateLevels() -> void:
 
 # 加一行空行（行本身撑满可用宽度，卡片靠 alignment 水平居中）
 func addRow() -> HBoxContainer:
-	var row := HBoxContainer.new()
+	var row: HBoxContainer = HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", GAP)
 	levelsNode.add_child(row)
@@ -41,7 +41,7 @@ func makeCard(stage: Dictionary) -> Control:
 	card.level = stage['name']
 	card.levelId = stage['id']
 	card.rating = UserData.getStageRating(stage['id'])
-	card.click.connect(loadMap)
+	card.clicked.connect(loadMap)
 	card.isLock = not UserData.isStageUnlocked(stage['id'])
 	return card
 
@@ -52,8 +52,8 @@ func loadMap(levelId: int) -> void:
 		return
 	StageData.currentStageId = levelId
 	# get_tree().change_scene_to_file("res://scene/map.tscn")
-	SceneTransition.change_scene("res://scene/map.tscn")
+	SceneTransition.changeScene("res://scene/map.tscn")
 
-func _on_ui_button_pressed() -> void:
+func _onUiButtonPressed() -> void:
 	# get_tree().change_scene_to_file("res://scene/welcome.tscn")
-	SceneTransition.change_scene("res://scene/welcome.tscn")
+	SceneTransition.changeScene("res://scene/welcome.tscn")

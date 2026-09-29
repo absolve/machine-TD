@@ -8,4 +8,4 @@ script = ExtResource("1_qwydi")
 
 [node name="shape" type="CollisionShape2D" parent="." unique_id=1677876286]
 
-[node name="ani" type="AnimatedSprite2D" parent="." unique_id=1167812739]
+[node name="Ani" type="AnimatedSprite2D" parent="." unique_id=1167812739]

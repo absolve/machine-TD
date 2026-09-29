@@ -49,7 +49,7 @@ theme_override_colors/font_color = Color(1, 0.7764706, 0.101960786, 1)
 theme_override_font_sizes/font_size = 30
 text = "0"
 
-[node name="selected" type="TextureRect" parent="." unique_id=1392114164]
+[node name="Selected" type="TextureRect" parent="." unique_id=1392114164]
 visible = false
 layout_mode = 2
 texture = ExtResource("5_0iufg")

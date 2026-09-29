@@ -1,80 +1,80 @@
 extends PanelContainer
 ## 地图右侧塔信息面板：选中防御塔后，在右侧集中显示该塔的名称/等级/血量/经验与属性。
 
-@onready var name_label: Label = $Margin/VBox/Header/nameLabel
-@onready var level_label: Label = $Margin/VBox/Level/levelLabel
-@onready var hp_title: Label = $Margin/VBox/HpRow/hpTitle
-@onready var hp_value_label: Label = $Margin/VBox/HpRow/hpValueLabel
-@onready var hp_bar: ProgressBar = $Margin/VBox/hpBar
-@onready var exp_title: Label = $Margin/VBox/ExpRow/expTitle
-@onready var exp_value_label: Label = $Margin/VBox/ExpRow/expValueLabel
-@onready var exp_bar: ProgressBar = $Margin/VBox/expBar
-@onready var atk_title: Label = $Margin/VBox/Stats/atkRow/Title
-@onready var atk_value_label: Label = $Margin/VBox/Stats/atkRow/Value
-@onready var reload_title: Label = $Margin/VBox/Stats/reloadRow/Title
-@onready var reload_value_label: Label = $Margin/VBox/Stats/reloadRow/Value
-@onready var scope_title: Label = $Margin/VBox/Stats/scopeRow/Title
-@onready var scope_value_label: Label = $Margin/VBox/Stats/scopeRow/Value
-@onready var cost_title: Label = $Margin/VBox/Economy/costRow/Title
-@onready var cost_value_label: Label = $Margin/VBox/Economy/costRow/Value
-@onready var btn_repair: Button = $Margin/VBox/ActionRow/btnRepair
-@onready var btn_sell: Button = $Margin/VBox/ActionRow/btnSell
-@onready var hint_label: Label = $Margin/VBox/hintLabel
+@onready var nameLabel: Label = $Margin/VBox/Header/nameLabel
+@onready var levelLabel: Label = $Margin/VBox/Level/levelLabel
+@onready var hpTitle: Label = $Margin/VBox/HpRow/hpTitle
+@onready var hpValueLabel: Label = $Margin/VBox/HpRow/hpValueLabel
+@onready var hpBar: ProgressBar = $Margin/VBox/hpBar
+@onready var expTitle: Label = $Margin/VBox/ExpRow/expTitle
+@onready var expValueLabel: Label = $Margin/VBox/ExpRow/expValueLabel
+@onready var expBar: ProgressBar = $Margin/VBox/expBar
+@onready var atkTitle: Label = $Margin/VBox/Stats/atkRow/Title
+@onready var atkValueLabel: Label = $Margin/VBox/Stats/atkRow/Value
+@onready var reloadTitle: Label = $Margin/VBox/Stats/reloadRow/Title
+@onready var reloadValueLabel: Label = $Margin/VBox/Stats/reloadRow/Value
+@onready var scopeTitle: Label = $Margin/VBox/Stats/scopeRow/Title
+@onready var scopeValueLabel: Label = $Margin/VBox/Stats/scopeRow/Value
+@onready var costTitle: Label = $Margin/VBox/Economy/costRow/Title
+@onready var costValueLabel: Label = $Margin/VBox/Economy/costRow/Value
+@onready var btnRepair: Button = $Margin/VBox/ActionRow/btnRepair
+@onready var btnSell: Button = $Margin/VBox/ActionRow/btnSell
+@onready var hintLabel: Label = $Margin/VBox/hintLabel
 
 var tower: Node = null # 当前选中的塔
 # 缓存按钮文案，避免每帧刷新时反复触发布局重算
-var _last_repair_text := ""
-var _last_sell_text := ""
+var _lastRepairText: String = ""
+var _lastSellText: String = ""
 
 
 func _ready() -> void:
 	visible = false
-	hp_title.text = _t("_HP", "HP")
-	exp_title.text = _t("_EXP", "EXP")
-	atk_title.text = _t("_Atk", "ATK")
-	reload_title.text = _t("_FireRate", "Fire Rate")
-	scope_title.text = _t("_Range", "Range")
-	cost_title.text = _t("_Cost", "Cost")
-	hint_label.text = _t("_PanelHint", "Click the tower again or empty ground to deselect.")
-	btn_repair.pressed.connect(_on_repair_pressed)
-	btn_sell.pressed.connect(_on_sell_pressed)
-	_refresh_action_text()
+	hpTitle.text = _t("_HP", "HP")
+	expTitle.text = _t("_EXP", "EXP")
+	atkTitle.text = _t("_Atk", "ATK")
+	reloadTitle.text = _t("_FireRate", "Fire Rate")
+	scopeTitle.text = _t("_Range", "Range")
+	costTitle.text = _t("_Cost", "Cost")
+	hintLabel.text = _t("_PanelHint", "Click the tower again or empty ground to deselect.")
+	btnRepair.pressed.connect(_onRepairPressed)
+	btnSell.pressed.connect(_onSellPressed)
+	_refreshActionText()
 
 
 # 修理按钮文案：满血时提示无需修理，否则显示“修理 + 费用”
-func _refresh_action_text() -> void:
-	var repair_text := _t("_RepairFull", "HP Full")
-	var sell_text := _t("_Sell", "Sell")
+func _refreshActionText() -> void:
+	var repairText: String = _t("_RepairFull", "HP Full")
+	var sellText: String = _t("_Sell", "Sell")
 	if is_instance_valid(tower):
-		var t := tower as Tower
+		var t: Tower = tower as Tower
 		if t != null:
 			if t.repairCost > 0:
-				repair_text = "%s %d" % [_t("_Repair", "Repair"), t.repairCost]
-			sell_text = "%s %d" % [_t("_Sell", "Sell"), int(t.sellingPrice)]
-	if repair_text != _last_repair_text:
-		_last_repair_text = repair_text
-		btn_repair.text = repair_text
-	if sell_text != _last_sell_text:
-		_last_sell_text = sell_text
-		btn_sell.text = sell_text
+				repairText = "%s %d" % [_t("_Repair", "Repair"), t.repairCost]
+			sellText = "%s %d" % [_t("_Sell", "Sell"), int(t.sellingPrice)]
+	if repairText != _lastRepairText:
+		_lastRepairText = repairText
+		btnRepair.text = repairText
+	if sellText != _lastSellText:
+		_lastSellText = sellText
+		btnSell.text = sellText
 
 
-func _on_repair_pressed() -> void:
-	var t := tower as Tower
+func _onRepairPressed() -> void:
+	var t: Tower = tower as Tower
 	if t == null or not is_instance_valid(t):
 		return
-	t.request_repair()
+	t.requestRepair()
 
 
-func _on_sell_pressed() -> void:
-	var t := tower as Tower
+func _onSellPressed() -> void:
+	var t: Tower = tower as Tower
 	if t == null or not is_instance_valid(t):
 		return
 	t.sell()
 
 
 # 选中塔 -> 显示该塔信息
-func show_tower(t: Node) -> void:
+func showTower(t: Node) -> void:
 	tower = t
 	visible = true
 	refresh()
@@ -86,61 +86,51 @@ func clear() -> void:
 	visible = false
 
 
-func _process(_delta: float) -> void:
-	if not visible:
-		return
-	# 塔在选中期间被出售/销毁时自动隐藏
-	if tower == null or not is_instance_valid(tower):
-		clear()
-		return
-	refresh()
-
-
 func refresh() -> void:
 	if not is_instance_valid(tower):
 		return
-	var t := tower as Tower
+	var t: Tower = tower as Tower
 	if t == null:
 		return
 
 	# 名称与等级
-	name_label.text = Game.get_tower_display_name(t.type)
-	level_label.text = "Lv.%d" % maxi(1, t.level)
+	nameLabel.text = Game.getTowerDisplayName(t.type)
+	levelLabel.text = "Lv.%d" % maxi(1, t.level)
 
 	# 血量
-	var max_hp := maxi(1, t.maxHp)
-	hp_bar.max_value = max_hp
-	hp_bar.value = clampi(t.hp, 0, max_hp)
-	hp_value_label.text = "%d/%d" % [maxi(0, t.hp), max_hp]
+	var maxHp: int = maxi(1, t.maxHp)
+	hpBar.max_value = maxHp
+	hpBar.value = clampi(t.hp, 0, maxHp)
+	hpValueLabel.text = "%d/%d" % [maxi(0, t.hp), maxHp]
 
 	# 经验（满级 / 该塔不参与升级时显示 MAX）
 	var maxed: bool = t.level >= TowerUpgradeManager.MAX_LEVEL or not TowerUpgradeManager.canUpgrade(t.type)
 	if maxed:
-		exp_bar.max_value = 1
-		exp_bar.value = 1
-		exp_value_label.text = "MAX"
+		expBar.max_value = 1
+		expBar.value = 1
+		expValueLabel.text = "MAX"
 	else:
-		var needed := int(TowerUpgradeManager.getExpThreshold(t.type, t.level))
+		var needed: int = int(TowerUpgradeManager.getExpThreshold(t.type, t.level))
 		needed = maxi(1, needed)
-		exp_bar.max_value = needed
-		exp_bar.value = clampi(t.towerExp, 0, needed)
-		exp_value_label.text = "%d/%d" % [t.towerExp, needed]
+		expBar.max_value = needed
+		expBar.value = clampi(t.towerExp, 0, needed)
+		expValueLabel.text = "%d/%d" % [t.towerExp, needed]
 
 	# 属性与价格
-	atk_value_label.text = str(t.atk)
-	reload_value_label.text = _fmt_fire_rate(t.delay)
-	scope_value_label.text = str(t.radarScope)
-	cost_value_label.text = str(t.money)
+	atkValueLabel.text = str(t.atk)
+	reloadValueLabel.text = _fmtFireRate(t.delay)
+	scopeValueLabel.text = str(t.radarScope)
+	costValueLabel.text = str(t.money)
 
 	# 操作按钮：满血时修理按钮不可点，其余状态实时显示修理费与出售价
-	var repair_cost := t.repairCost
-	btn_repair.disabled = repair_cost <= 0
-	btn_sell.disabled = false
-	_refresh_action_text()
+	var repairCost: int = t.repairCost
+	btnRepair.disabled = repairCost <= 0
+	btnSell.disabled = false
+	_refreshActionText()
 
 
 # reload 为开火间隔(秒)，换算成每秒攻击次数展示
-func _fmt_fire_rate(reload_s: float) -> String:
+func _fmtFireRate(reload_s: float) -> String:
 	if reload_s <= 0.0:
 		return "--"
 	return "%.1f/s" % (1.0 / reload_s)
@@ -150,5 +140,15 @@ func _fmt_fire_rate(reload_s: float) -> String:
 func _t(key: String, fallback: String) -> String:
 	if key.is_empty():
 		return fallback
-	var translated := tr(key)
+	var translated: String = tr(key)
 	return fallback if translated == key else translated
+
+
+func _process(_delta: float) -> void:
+	if not visible:
+		return
+	# 塔在选中期间被出售/销毁时自动隐藏
+	if tower == null or not is_instance_valid(tower):
+		clear()
+		return
+	refresh()

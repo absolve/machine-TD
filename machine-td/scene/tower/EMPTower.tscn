@@ -76,7 +76,7 @@ shape = SubResource("CircleShape2D_p16uh")
 material = SubResource("ShaderMaterial_7fbp7")
 sprite_frames = SubResource("SpriteFrames_autotur")
 
-[node name="lifeBar" parent="." index="7" unique_id=1589605555]
+[node name="LifeBar" parent="." index="7" unique_id=1589605555]
 position = Vector2(0, -51)
 
 [node name="ProgressBar" parent="." index="9" unique_id=1203597731]

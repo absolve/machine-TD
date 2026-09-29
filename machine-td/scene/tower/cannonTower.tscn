@@ -179,18 +179,18 @@ shape = SubResource("CircleShape2D_v83o1")
 sprite_frames = SubResource("SpriteFrames_lm0w6")
 offset = Vector2(10, 0)
 
-[node name="spark" parent="." index="4" unique_id=2136824957]
+[node name="Spark" parent="." index="4" unique_id=2136824957]
 modulate = Color(1, 0.91, 0.1, 1)
 sprite_frames = SubResource("SpriteFrames_spark")
 offset = Vector2(47, 0)
 
-[node name="lifeBar" parent="." index="7" unique_id=1589605555]
+[node name="LifeBar" parent="." index="7" unique_id=1589605555]
 position = Vector2(0, -53)
 
-[node name="player" parent="." index="8" unique_id=1035425773]
+[node name="Player" parent="." index="8" unique_id=1035425773]
 libraries/ = SubResource("AnimationLibrary_lm0w6")
 
-[node name="sparkPlayer" type="AnimationPlayer" parent="." index="9" unique_id=2136824958]
+[node name="SparkPlayer" type="AnimationPlayer" parent="." index="9" unique_id=2136824958]
 libraries/ = SubResource("AnimationLibrary_spark")
 speed_scale = 2.0
 
@@ -200,11 +200,11 @@ offset_top = -13.0
 offset_right = 32.0
 offset_bottom = 14.0
 
-[node name="shotSound" type="AudioStreamPlayer2D" parent="." index="11" unique_id=176625612]
+[node name="ShotSound" type="AudioStreamPlayer2D" parent="." index="11" unique_id=176625612]
 stream = ExtResource("5_shot")
 volume_db = -4.0
 max_distance = 1400.0
 bus = &"Sfx"
 
-[connection signal="area_entered" from="radar" to="." method="_on_radar_area_entered"]
-[connection signal="area_exited" from="radar" to="." method="_on_radar_area_exited"]
+[connection signal="area_entered" from="radar" to="." method="_onRadarAreaEntered"]
+[connection signal="area_exited" from="radar" to="." method="_onRadarAreaExited"]

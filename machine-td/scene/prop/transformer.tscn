@@ -60,7 +60,7 @@ animations = [{
 }]
 
 [node name="transformer" instance=ExtResource("1_base")]
-snap_to_grid = false
+snapToGrid = false
 
-[node name="anim" parent="." index="0"]
+[node name="Anim" parent="." index="0"]
 sprite_frames = SubResource("Frames")

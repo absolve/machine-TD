@@ -3,16 +3,16 @@ extends PanelContainer
 
 @onready var img = $VBoxContainer/MarginContainer2/img
 @onready var costLabel = $VBoxContainer/MarginContainer/HBoxContainer/costLabel
-@onready var selected = $selected
+@onready var selected = $Selected
 
 @export var type: Game.towerType = Game.towerType.machineGunTower
 
 ## 本关是否禁用了这座塔。由 tower_ui 按 StageData.getTowers() 设置。
-var locked := false
+var locked: bool = false
 
-signal click
-signal lockedClick   # 点了被禁用的塔（用来弹一句提示，而不是静默失败）
-signal showInfo
+signal clicked
+signal lockedClicked   # 点了被禁用的塔（用来弹一句提示，而不是静默失败）
+signal infoShown
 
 
 func setImg(obj):
@@ -31,20 +31,20 @@ func setLocked(value: bool) -> void:
 		selected.visible = false
 
 
-func _gui_input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed("click"):
-		if locked:
-			lockedClick.emit(type)
-			return
-		click.emit(type)
-
-
 func _on_mouse_entered() -> void:
 	if locked:
 		return
 	selected.visible = true
-	showInfo.emit(type)
+	infoShown.emit(type)
 
 
 func _on_mouse_exited() -> void:
 	selected.visible = false
+
+
+func _gui_input(_event: InputEvent) -> void:
+	if Input.is_action_just_pressed("click"):
+		if locked:
+			lockedClicked.emit(type)
+			return
+		clicked.emit(type)

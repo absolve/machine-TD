@@ -6,12 +6,12 @@ extends Node2D
 @onready var hpLabel = $VBoxContainer/HpRow/hpLabel
 @onready var expLabel = $VBoxContainer/ExpRow/expLabel
 
-var max_hp: int = 100
+var maxHp: int = 100
 var hp: int = 100
 var currExp: int = 0
-var exp_needed: int = 10
+var expNeeded: int = 10
 var selected: bool = false
-var tower_name: String = "Tower"
+var towerName: String = "Tower"
 
 func _ready() -> void:
 	refresh()
@@ -19,35 +19,35 @@ func _ready() -> void:
 
 func refresh() -> void:
 	if nameLabel:
-		nameLabel.text = tower_name
+		nameLabel.text = towerName
 	if hpBar:
-		hpBar.max_value = max(1, max_hp)
+		hpBar.max_value = max(1, maxHp)
 		hpBar.value = clamp(hp, 0, hpBar.max_value)
 	if expBar:
-		expBar.max_value = max(1, exp_needed)
+		expBar.max_value = max(1, expNeeded)
 		expBar.value = clamp(currExp, 0, expBar.max_value)
 	if hpLabel:
-		hpLabel.text = "%d/%d" % [max(0, hp), max(1, max_hp)]
+		hpLabel.text = "%d/%d" % [max(0, hp), max(1, maxHp)]
 	if expLabel:
-		if exp_needed <= 0:
+		if expNeeded <= 0:
 			expLabel.text = "MAX"
 		else:
-			expLabel.text = "%d/%d" % [currExp, exp_needed]
+			expLabel.text = "%d/%d" % [currExp, expNeeded]
 	visible = selected
 
-func set_status(_hp: int, _max_hp: int, _currExp: int, _exp_needed: int, _selected: bool = false, _tower_name: String = "Tower") -> void:
+func setStatus(_hp: int, _max_hp: int, _currExp: int, _exp_needed: int, _selected: bool = false, _tower_name: String = "Tower") -> void:
 	hp = _hp
-	max_hp = max(1, _max_hp)
+	maxHp = max(1, _max_hp)
 	currExp = _currExp
-	exp_needed = max(1, _exp_needed)
+	expNeeded = max(1, _exp_needed)
 	selected = _selected
-	tower_name = _tower_name
+	towerName = _tower_name
 	refresh()
 
-func show_status() -> void:
+func showStatus() -> void:
 	selected = true
 	refresh()
 
-func hide_status() -> void:
+func hideStatus() -> void:
 	selected = false
 	refresh()

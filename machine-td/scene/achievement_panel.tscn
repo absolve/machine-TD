@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_lunp2"]
 
-[node name="achievementPanel" type="Control" unique_id=1920206854]
+[node name="AchievementPanel" type="Control" unique_id=1920206854]
 visible = false
 layout_mode = 3
 anchors_preset = 0

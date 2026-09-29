@@ -26,7 +26,7 @@ const PLAYER_DATA_FILE_NAME := "player_data.cfg"
 var settingsPath: String
 var playerDataPath: String
 # 旧 schema 的设置被迁移过，需要回写一次（否则每次启动都要重新判定语言）
-var _needsSettingsSave := false
+var _needsSettingsSave: bool = false
 
 func _ready() -> void:
 	settingsPath = getSettingsPath()
@@ -58,12 +58,12 @@ func getFilePath(file_name: String) -> String:
 
 #获取设置
 func loadSettings() -> void:
-	var config := ConfigFile.new()
+	var config: ConfigFile = ConfigFile.new()
 	if config.load(settingsPath) != OK:
 		return
 	# schema 1 及更早：language 默认写死 "en"，玩家就算从没选过语言也会被存成 en。
 	# 升级时这种"继承来的 en"要按系统语言重新判定，否则老玩家永远停在英文。
-	var schema := int(config.get_value("general", "schema", 1))
+	var schema: int = int(config.get_value("general", "schema", 1))
 	language = str(config.get_value("general", "language", language))
 	if schema < SETTINGS_SCHEMA and language == "en" and OS.get_locale().begins_with("zh"):
 		language = "zh"
@@ -76,7 +76,7 @@ func loadSettings() -> void:
 	sfxMuted = bool(config.get_value("volume", "sfxMuted", sfxMuted))
 
 func saveSettings() -> void:
-	var config := ConfigFile.new()
+	var config: ConfigFile = ConfigFile.new()
 	config.set_value("general", "schema", SETTINGS_SCHEMA)
 	config.set_value("general", "language", language)
 	config.set_value("volume", "master", masterVolume)
@@ -87,7 +87,7 @@ func saveSettings() -> void:
 	config.save(settingsPath)
 
 func loadPlayerData() -> void:
-	var config := ConfigFile.new()
+	var config: ConfigFile = ConfigFile.new()
 	if config.load(playerDataPath) != OK:
 		return
 	score = int(config.get_value("player", "score", score))
@@ -95,8 +95,8 @@ func loadPlayerData() -> void:
 	var savedStages = config.get_value("player", "unlockedStages", unlockedStages)
 	if savedStages is Array:
 		unlockedStages.clear()
-		for stage_id in savedStages:
-			unlockedStages.append(int(stage_id))
+		for stageId in savedStages:
+			unlockedStages.append(int(stageId))
 	if 1 not in unlockedStages:
 		unlockedStages.append(1)
 	var savedRatings = config.get_value("player", "stageRatings", stageRatings)
@@ -110,47 +110,47 @@ func loadPlayerData() -> void:
 		achievementProgress = savedProgress
 
 func savePlayerData() -> void:
-	var config := ConfigFile.new()
+	var config: ConfigFile = ConfigFile.new()
 	config.set_value("player", "score", score)
 	config.set_value("player", "gem", gem)
 	config.set_value("player", "unlockedStages", unlockedStages)
 	config.set_value("player", "stageRatings", stageRatings)
 	config.set_value("achievements", "unlocked", unlockedAchievements)
 	config.set_value("achievements", "progress", achievementProgress)
-	var error := config.save(playerDataPath)
+	var error: int = config.save(playerDataPath)
 	if error != OK:
 		push_error("无法保存玩家进度: %s (%s)" % [playerDataPath, error])
 
-func isStageUnlocked(stage_id: int) -> bool:
-	return stage_id == 1 or stage_id in unlockedStages
+func isStageUnlocked(stageId: int) -> bool:
+	return stageId == 1 or stageId in unlockedStages
 
-func getStageRating(stage_id: int) -> int:
-	return int(stageRatings.get(str(stage_id), stageRatings.get(stage_id, 0)))
+func getStageRating(stageId: int) -> int:
+	return int(stageRatings.get(str(stageId), stageRatings.get(stageId, 0)))
 
-func recordStageCompletion(stage_id: int, rating: int) -> int:
+func recordStageCompletion(stageId: int, rating: int) -> int:
 	rating = clampi(rating, 0, 3)
 	# rating 为 0 表示基地被打爆，不算通关：
 	# 不记星级、不解锁关卡、不发宝石（这里兜底，防止调用方漏判）
 	if rating <= 0:
 		return 0
-	var old_rating := getStageRating(stage_id)
-	var first_completion := not stageRatings.has(str(stage_id)) and not stageRatings.has(stage_id)
-	if rating > old_rating:
-		stageRatings[str(stage_id)] = rating
-	if stage_id not in unlockedStages:
-		unlockedStages.append(stage_id)
-	var next_stage_id := stage_id + 1
+	var oldRating: int = getStageRating(stageId)
+	var firstCompletion: bool = not stageRatings.has(str(stageId)) and not stageRatings.has(stageId)
+	if rating > oldRating:
+		stageRatings[str(stageId)] = rating
+	if stageId not in unlockedStages:
+		unlockedStages.append(stageId)
+	var nextStageId: int = stageId + 1
 	for stage in StageData.allStage:
-		if int(stage.get("id", -1)) == next_stage_id:
-			if next_stage_id not in unlockedStages:
-				unlockedStages.append(next_stage_id)
+		if int(stage.get("id", -1)) == nextStageId:
+			if nextStageId not in unlockedStages:
+				unlockedStages.append(nextStageId)
 			break
-	var reward_gem := 0
+	var rewardGem: int = 0
 	for stage in StageData.allStage:
-		if int(stage.get("id", -1)) == stage_id:
-			reward_gem = int(stage.get("gemReward", 0)) if first_completion else 0
+		if int(stage.get("id", -1)) == stageId:
+			rewardGem = int(stage.get("gemReward", 0)) if firstCompletion else 0
 			break
-	gem += reward_gem
+	gem += rewardGem
 	score += rating * 100
 	savePlayerData()
-	return reward_gem
+	return rewardGem

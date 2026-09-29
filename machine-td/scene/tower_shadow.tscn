@@ -70,7 +70,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="towerShadow" type="Area2D" unique_id=1602345415]
+[node name="TowerShadow" type="Area2D" unique_id=1602345415]
 collision_layer = 0
 collision_mask = 9
 script = ExtResource("1_gmqdi")
@@ -78,7 +78,7 @@ script = ExtResource("1_gmqdi")
 [node name="shape" type="CollisionShape2D" parent="." unique_id=428327064]
 shape = SubResource("RectangleShape2D_gmqdi")
 
-[node name="ani" type="AnimatedSprite2D" parent="." unique_id=492756695]
+[node name="Ani" type="AnimatedSprite2D" parent="." unique_id=492756695]
 modulate = Color(1, 1, 1, 0.5)
 sprite_frames = SubResource("SpriteFrames_gmqdi")
 animation = &"machineGunTower"

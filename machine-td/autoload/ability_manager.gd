@@ -11,12 +11,12 @@ extends Node
 ## 技能定义集中在下面的 ABILITIES 表里，新增技能只需要加一条。
 ## 图标在 sprite/icon/ 下，128x128 简笔画风格。
 
-signal ability_activated(ability_id: String, target)
-signal selection_started(ability_id: String)
-signal selection_ended(ability_id: String)
-signal ability_failed(ability_id: String, reason: String)
+signal abilityActivated(abilityId: String, target)
+signal selectionStarted(abilityId: String)
+signal selectionEnded(abilityId: String)
+signal abilityFailed(abilityId: String, reason: String)
 ## 宝石数量变化（花掉技能宝石后发出）。顶栏标题栏据此刷新显示。
-signal gem_changed(gem: int)
+signal gemChanged(gem: int)
 
 # 技能的目标类型
 enum TargetType {
@@ -55,192 +55,192 @@ const ABILITIES: Dictionary = {
 }
 
 # 本关启用的技能 id（顺序即 UI 显示顺序）
-var _active_ids: Array[String] = []
+var _activeIds: Array[String] = []
 # 当前正在等待玩家选择目标的技能 id（空串表示没有在选择）
-var _selecting_id: String = ""
+var _selectingId: String = ""
 
 # 图标缓存，避免每次重建 UI 都重新加载
-var _icon_cache: Dictionary = {}
+var _iconCache: Dictionary = {}
 
 
 # ===== 战斗开始时由 map 调用 =====
 # ability_ids 来自 StageData.stageAbilities；空数组表示本关没有技能
-func begin_battle(ability_ids: Array) -> void:
-	_active_ids.clear()
-	_selecting_id = ""
-	for id in ability_ids:
-		var key := str(id)
+func beginBattle(abilityIds: Array) -> void:
+	_activeIds.clear()
+	_selectingId = ""
+	for id in abilityIds:
+		var key: String = str(id)
 		if not ABILITIES.has(key):
 			push_warning("未知的技能 id，已忽略: " + key)
 			continue
-		if key in _active_ids:
+		if key in _activeIds:
 			continue
-		_active_ids.append(key)
+		_activeIds.append(key)
 
 
 # ===== 查询 =====
-func get_active_ids() -> Array[String]:
-	return _active_ids.duplicate()
+func getActiveIds() -> Array[String]:
+	return _activeIds.duplicate()
 
 
-func get_definition(ability_id: String) -> Dictionary:
-	return ABILITIES.get(ability_id, {})
+func getDefinition(abilityId: String) -> Dictionary:
+	return ABILITIES.get(abilityId, {})
 
 
 # 技能显示名（多语言，缺失时回退到 id）
-func get_display_name(ability_id: String) -> String:
-	var data := get_definition(ability_id)
-	var key := str(data.get("name_key", ""))
+func getDisplayName(abilityId: String) -> String:
+	var data: Dictionary = getDefinition(abilityId)
+	var key: String = str(data.get("name_key", ""))
 	if key.is_empty():
-		return ability_id
-	var translated := tr(key)
-	return ability_id if translated == key else translated
+		return abilityId
+	var translated: String = tr(key)
+	return abilityId if translated == key else translated
 
 
 # 技能说明（多语言，缺失时回退为空串）
-func get_description(ability_id: String) -> String:
-	var data := get_definition(ability_id)
-	var key := str(data.get("desc_key", ""))
+func getDescription(abilityId: String) -> String:
+	var data: Dictionary = getDefinition(abilityId)
+	var key: String = str(data.get("desc_key", ""))
 	if key.is_empty():
 		return ""
-	var translated := tr(key)
+	var translated: String = tr(key)
 	return "" if translated == key else translated
 
 
 # 冷却总时长（技能槽用它设置内置 Timer 的 wait_time）
-func get_cooldown_total(ability_id: String) -> float:
-	return float(get_definition(ability_id).get("cooldown", 0.0))
+func getCooldownTotal(abilityId: String) -> float:
+	return float(getDefinition(abilityId).get("cooldown", 0.0))
 
 
 # ===== 宝石消耗 =====
 # 技能现在要花宝石（宝石来源：首次通关奖励，存在 UserData.gem）
 
 ## 这个技能要花几颗宝石；没配置就是 0（不消耗）
-func get_gem_cost(ability_id: String) -> int:
-	return int(get_definition(ability_id).get("gem_cost", 0))
+func getGemCost(abilityId: String) -> int:
+	return int(getDefinition(abilityId).get("gem_cost", 0))
 
 
 ## 宝石够不够放这个技能
-func can_afford(ability_id: String) -> bool:
-	return UserData.gem >= get_gem_cost(ability_id)
+func canAfford(abilityId: String) -> bool:
+	return UserData.gem >= getGemCost(abilityId)
 
 
 ## 真正扣宝石。只在效果**确认生效**之后调用（见 _activate）。
 ## 扣完发 gem_changed，让顶栏的宝石数字立刻刷新。
-func _spend_gem(ability_id: String) -> void:
-	var cost := get_gem_cost(ability_id)
+func _spendGem(abilityId: String) -> void:
+	var cost: int = getGemCost(abilityId)
 	if cost <= 0:
 		return
 	UserData.gem = maxi(0, UserData.gem - cost)
 	UserData.savePlayerData()
-	gem_changed.emit(UserData.gem)
+	gemChanged.emit(UserData.gem)
 
 
 # 图标（占位素材可能不存在，返回 null 时 UI 显示空槽）
-func get_icon(ability_id: String) -> Texture2D:
-	if _icon_cache.has(ability_id):
-		return _icon_cache[ability_id]
-	var path := str(get_definition(ability_id).get("icon", ""))
+func getIcon(abilityId: String) -> Texture2D:
+	if _iconCache.has(abilityId):
+		return _iconCache[abilityId]
+	var path: String = str(getDefinition(abilityId).get("icon", ""))
 	var texture: Texture2D = null
 	if not path.is_empty() and ResourceLoader.exists(path):
 		var res: Resource = load(path)
 		if res is Texture2D:
 			texture = res
-	_icon_cache[ability_id] = texture
+	_iconCache[abilityId] = texture
 	return texture
 
 
 # ===== 目标选择状态 =====
-func is_selecting() -> bool:
-	return not _selecting_id.is_empty()
+func isSelecting() -> bool:
+	return not _selectingId.is_empty()
 
 
-func get_selecting_id() -> String:
-	return _selecting_id
+func getSelectingId() -> String:
+	return _selectingId
 
 
 # 正在等待"点击位置"的技能；map 用它决定要不要画范围预览
-func is_selecting_position() -> bool:
-	if _selecting_id.is_empty():
+func isSelectingPosition() -> bool:
+	if _selectingId.is_empty():
 		return false
-	return int(get_definition(_selecting_id).get("target_type", TargetType.NONE)) == TargetType.POSITION
+	return int(getDefinition(_selectingId).get("target_type", TargetType.NONE)) == TargetType.POSITION
 
 
 # 当前选择中的技能范围（供预览绘制）
-func get_selecting_radius() -> float:
-	if _selecting_id.is_empty():
+func getSelectingRadius() -> float:
+	if _selectingId.is_empty():
 		return 0.0
-	return float(get_definition(_selecting_id).get("effect", {}).get("radius", 0.0))
+	return float(getDefinition(_selectingId).get("effect", {}).get("radius", 0.0))
 
 
 # ===== 触发流程 =====
 # 玩家点击技能图标
-func try_activate(ability_id: String) -> void:
-	var data := get_definition(ability_id)
+func tryActivate(abilityId: String) -> void:
+	var data: Dictionary = getDefinition(abilityId)
 	if data.is_empty():
 		return
 	# 再次点击同一个技能 = 取消选择（取消不花宝石）
-	if _selecting_id == ability_id:
-		cancel_selecting()
+	if _selectingId == abilityId:
+		cancelSelecting()
 		return
-	if is_selecting():
-		cancel_selecting()
+	if isSelecting():
+		cancelSelecting()
 	# ★ 宝石不够直接拦下（此时还没扣，只是拦）
-	if not can_afford(ability_id):
-		ability_failed.emit(ability_id, "no_gem")
+	if not canAfford(abilityId):
+		abilityFailed.emit(abilityId, "no_gem")
 		return
-	var target_type := int(data.get("target_type", TargetType.NONE))
+	var target_type: int = int(data.get("target_type", TargetType.NONE))
 	if target_type == TargetType.NONE:
-		_activate(ability_id, null)
+		_activate(abilityId, null)
 		return
 	# 需要选目标：进入选择模式，等 map 调用 confirm_target
-	_selecting_id = ability_id
-	selection_started.emit(ability_id)
+	_selectingId = abilityId
+	selectionStarted.emit(abilityId)
 
 
 # 玩家在地图上选好目标后由 map 调用
-func confirm_target(target) -> void:
-	if _selecting_id.is_empty():
+func confirmTarget(target) -> void:
+	if _selectingId.is_empty():
 		return
-	var id := _selecting_id
-	_selecting_id = ""
-	selection_ended.emit(id)
+	var id: String = _selectingId
+	_selectingId = ""
+	selectionEnded.emit(id)
 	_activate(id, target)
 
 
 # 玩家取消选择（右键 / ESC / 再点一次图标）
-func cancel_selecting() -> void:
-	if _selecting_id.is_empty():
+func cancelSelecting() -> void:
+	if _selectingId.is_empty():
 		return
-	var id := _selecting_id
-	_selecting_id = ""
-	selection_ended.emit(id)
+	var id: String = _selectingId
+	_selectingId = ""
+	selectionEnded.emit(id)
 
 
 # ===== 生效 =====
-func _activate(ability_id: String, target) -> void:
-	var data := get_definition(ability_id)
-	if not _apply_effect(data.get("effect", {}), target):
+func _activate(abilityId: String, target) -> void:
+	var data: Dictionary = getDefinition(abilityId)
+	if not _applyEffect(data.get("effect", {}), target):
 		# 目标无效（比如点到空地）：**不扣宝石、不进冷却**，让玩家重新选
-		ability_failed.emit(ability_id, "no_target")
+		abilityFailed.emit(abilityId, "no_target")
 		return
 	# ★ 效果确认生效后才扣宝石（扣完发 gem_changed 刷新顶栏）
-	_spend_gem(ability_id)
+	_spendGem(abilityId)
 	# 冷却由技能槽内的 Timer 负责，这里只通知"已生效"
-	ability_activated.emit(ability_id, target)
+	abilityActivated.emit(abilityId, target)
 
 
 # 返回 true 表示效果已成功生效
-func _apply_effect(effect: Dictionary, target) -> bool:
+func _applyEffect(effect: Dictionary, target) -> bool:
 	if Game.map == null:
 		return false
 	match str(effect.get("type", "")):
 		"area_damage":
 			if not (target is Vector2):
 				return false
-			return Game.map.area_damage(target, float(effect.get("radius", 0.0)), int(effect.get("damage", 0)))
+			return Game.map.areaDamage(target, float(effect.get("radius", 0.0)), int(effect.get("damage", 0)))
 		"tower_invincible":
 			if not (target is Vector2):
 				return false
-			return Game.map.area_invincible(target, float(effect.get("radius", 0.0)), float(effect.get("duration", 0.0)))
+			return Game.map.areaInvincible(target, float(effect.get("radius", 0.0)), float(effect.get("duration", 0.0)))
 	return false

@@ -12,13 +12,13 @@ extends Control
 ## 面板关闭时发出（点了「开始战斗」）。map 接这个信号去提示玩家点顶栏的开始按钮。
 signal closed
 
-@onready var title_label: Label = $Center/panelBg/Margin/VBox/titleLabel
-@onready var subtitle_label: Label = $Center/panelBg/Margin/VBox/subtitleLabel
-@onready var info_box: HBoxContainer = $Center/panelBg/Margin/VBox/InfoBox
-@onready var intel_title: Label = $Center/panelBg/Margin/VBox/intelTitle
-@onready var enemy_list: VBoxContainer = $Center/panelBg/Margin/VBox/ScrollContainer/enemyList
-@onready var hint_label: Label = $Center/panelBg/Margin/VBox/Footer/hintLabel
-@onready var start_button: Button = $Center/panelBg/Margin/VBox/Footer/btnStart
+@onready var titleLabel: Label = $Center/panelBg/Margin/VBox/titleLabel
+@onready var subtitleLabel: Label = $Center/panelBg/Margin/VBox/subtitleLabel
+@onready var infoBox: HBoxContainer = $Center/panelBg/Margin/VBox/InfoBox
+@onready var intelTitle: Label = $Center/panelBg/Margin/VBox/intelTitle
+@onready var enemyList: VBoxContainer = $Center/panelBg/Margin/VBox/ScrollContainer/enemyList
+@onready var hintLabel: Label = $Center/panelBg/Margin/VBox/Footer/hintLabel
+@onready var startButton: Button = $Center/panelBg/Margin/VBox/Footer/btnStart
 
 # 敌人列表各列的固定宽度，表头与数据行共用，保证纵向对齐
 const COL_WIDTH_ROLE := 200
@@ -32,10 +32,10 @@ const COLOR_TEXT := Color(0.89411765, 0.92156863, 0.8745098, 1.0)
 
 
 func _ready() -> void:
-	start_button.pressed.connect(close)
-	intel_title.text = _t("_EnemyIntel", "Enemy Intel")
-	hint_label.text = _t("_IntelHint", "Close this window and press Start to begin the battle.")
-	start_button.text = _t("_BeginBattle", "Begin Battle")
+	startButton.pressed.connect(close)
+	intelTitle.text = _t("_EnemyIntel", "Enemy Intel")
+	hintLabel.text = _t("_IntelHint", "Close this window and press Start to begin the battle.")
+	startButton.text = _t("_BeginBattle", "Begin Battle")
 
 
 # 关闭面板。**统一走这里**，closed 信号才会一定发出去
@@ -48,81 +48,81 @@ func close() -> void:
 
 
 # 地图加载完成后调用：填充关卡信息并弹出
-func show_level(stage_data: Dictionary) -> void:
+func showLevel(stage_data: Dictionary) -> void:
 	if stage_data.is_empty():
 		return
-	_fill_header(stage_data)
-	_build_info(stage_data)
-	_build_enemy_list(stage_data)
+	_fillHeader(stage_data)
+	_buildInfo(stage_data)
+	_buildEnemyList(stage_data)
 	show()
 
 
-func _fill_header(stage_data: Dictionary) -> void:
-	var level_name := str(stage_data.get("name", ""))
-	if level_name.is_valid_int():
-		title_label.text = _t("_LevelTitleFmt", "Level %s") % level_name
+func _fillHeader(stage_data: Dictionary) -> void:
+	var levelName: String = str(stage_data.get("name", ""))
+	if levelName.is_valid_int():
+		titleLabel.text = _t("_LevelTitleFmt", "Level %s") % levelName
 	else:
 		# 教程等具名关卡：优先取同名翻译键（如 _Tutorial）
-		title_label.text = _t("_" + level_name, level_name)
+		titleLabel.text = _t("_" + levelName, levelName)
 
-	var category := str(stage_data.get("category", ""))
-	var description := str(stage_data.get("description", ""))
+	var category: String = str(stage_data.get("category", ""))
+	var description: String = str(stage_data.get("description", ""))
 	if category.is_empty():
-		subtitle_label.text = description
+		subtitleLabel.text = description
 	elif description.is_empty():
-		subtitle_label.text = category
+		subtitleLabel.text = category
 	else:
-		subtitle_label.text = "%s  ·  %s" % [category, description]
+		subtitleLabel.text = "%s  ·  %s" % [category, description]
 
 
 # 关卡基础信息：波数 / 基地生命 / 初始金币 / 宝石奖励 / 敌人种类 / 敌人总数
-func _build_info(stage_data: Dictionary) -> void:
-	_clear_children(info_box)
-	var stats := _collect_enemy_stats(stage_data)
-	_add_chip(_t("_Wave", "Wave"), str(int(stage_data.get("wave", 0))), Color(0.75, 0.95, 1.0, 1.0))
-	_add_chip(_t("_BaseHealth", "Base HP"), str(int(stage_data.get("health", 0))), Color(1.0, 0.78, 0.72, 1.0))
-	_add_chip(_t("_StartMoney", "Start Money"), str(int(stage_data.get("money", 0))), Color(1.0, 0.85, 0.6, 1.0))
-	_add_chip(_t("_GemRewardShort", "Gem Reward"), str(int(stage_data.get("gemReward", 0))), Color(0.4, 0.9, 1.0, 1.0))
-	_add_chip(_t("_EnemyTypes", "Enemy Types"), str(stats["types"].size()), COLOR_TEXT)
-	_add_chip(_t("_TotalEnemies", "Total Enemies"), str(stats["total"]), COLOR_TEXT)
+func _buildInfo(stage_data: Dictionary) -> void:
+	_clearChildren(infoBox)
+	var stats: Dictionary = _collectEnemyStats(stage_data)
+	_addChip(_t("_Wave", "Wave"), str(int(stage_data.get("wave", 0))), Color(0.75, 0.95, 1.0, 1.0))
+	_addChip(_t("_BaseHealth", "Base HP"), str(int(stage_data.get("health", 0))), Color(1.0, 0.78, 0.72, 1.0))
+	_addChip(_t("_StartMoney", "Start Money"), str(int(stage_data.get("money", 0))), Color(1.0, 0.85, 0.6, 1.0))
+	_addChip(_t("_GemRewardShort", "Gem Reward"), str(int(stage_data.get("gemReward", 0))), Color(0.4, 0.9, 1.0, 1.0))
+	_addChip(_t("_EnemyTypes", "Enemy Types"), str(stats["types"].size()), COLOR_TEXT)
+	_addChip(_t("_TotalEnemies", "Total Enemies"), str(stats["total"]), COLOR_TEXT)
 
 
 # 按出现顺序汇总本关敌人类型和数量
-func _collect_enemy_stats(stage_data: Dictionary) -> Dictionary:
+func _collectEnemyStats(stage_data: Dictionary) -> Dictionary:
 	var order: Array = []
 	var counts: Dictionary = {}
-	var total := 0
+	var total: int = 0
 	var spawner = stage_data.get("enemySpawner", [])
 	if spawner is Array:
 		for entry in spawner:
 			if not (entry is Dictionary):
 				continue
-			var enemy_type = entry.get("type", null)
-			if enemy_type == null:
+			var enemyType = entry.get("type", null)
+			if enemyType == null:
 				continue
-			if not counts.has(enemy_type):
-				counts[enemy_type] = 0
-				order.append(enemy_type)
-			var number := int(entry.get("number", 0))
-			counts[enemy_type] += number
+			if not counts.has(enemyType):
+				counts[enemyType] = 0
+				order.append(enemyType)
+			var number: int = int(entry.get("number", 0))
+			counts[enemyType] += number
 			total += number
 	return {"types": order, "counts": counts, "total": total}
 
 
-func _build_enemy_list(stage_data: Dictionary) -> void:
-	_clear_children(enemy_list)
-	var stats := _collect_enemy_stats(stage_data)
+func _buildEnemyList(stage_data: Dictionary) -> void:
+	_clearChildren(enemyList)
+	var stats: Dictionary = _collectEnemyStats(stage_data)
 	var order: Array = stats["types"]
 	if order.is_empty():
-		var empty := Label.new()
+		var empty: Label = Label.new()
 		empty.text = _t("_NoEnemyData", "No enemy data for this level.")
 		empty.add_theme_font_size_override("font_size", 26)
 		empty.add_theme_color_override("font_color", COLOR_HEADER)
-		enemy_list.add_child(empty)
+		enemyList.add_child(empty)
 		return
 
 	# 表头
-	_add_row(
+	_addRow(
 		_t("_EnemyColName", "Enemy"),
 		_t("_EnemyColRole", "Role"),
 		_t("_EnemyColCount", "Count"),
@@ -132,21 +132,21 @@ func _build_enemy_list(stage_data: Dictionary) -> void:
 		COLOR_HEADER, 26, true)
 
 	# 每种敌人一行，属性取 Game.enemyInfo，名称/定位取多语言显示名
-	for enemy_type in order:
-		var info: Dictionary = Game.enemyInfo.get(enemy_type, {})
-		var is_air := bool(info.get("flying", false))
-		_add_row(
-			Game.get_enemy_display_name(enemy_type),
-			Game.get_enemy_role_name(enemy_type),
-			"x%d" % int(stats["counts"].get(enemy_type, 0)),
+	for enemyType in order:
+		var info: Dictionary = Game.enemyInfo.get(enemyType, {})
+		var isAir: bool = bool(info.get("flying", false))
+		_addRow(
+			Game.getEnemyDisplayName(enemyType),
+			Game.getEnemyRoleName(enemyType),
+			"x%d" % int(stats["counts"].get(enemyType, 0)),
 			str(int(info.get("hp", 0))),
 			str(int(info.get("speed", 0))),
-			_t("_Yes", "Yes") if is_air else "-",
+			_t("_Yes", "Yes") if isAir else "-",
 			COLOR_TEXT, 30, false)
 
 
 # 一行敌人信息；is_header 为 true 时在行后追加分隔线
-func _add_row(
+func _addRow(
 	col_name: String,
 	col_role: String,
 	col_count: String,
@@ -157,26 +157,26 @@ func _add_row(
 	font_size: int,
 	is_header: bool
 ) -> void:
-	var row := HBoxContainer.new()
+	var row: HBoxContainer = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
 
-	var name_cell := _make_cell(col_name, 0, HORIZONTAL_ALIGNMENT_LEFT, color, font_size)
-	name_cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(name_cell)
+	var nameCell: Label = _makeCell(col_name, 0, HORIZONTAL_ALIGNMENT_LEFT, color, font_size)
+	nameCell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(nameCell)
 
-	row.add_child(_make_cell(col_role, COL_WIDTH_ROLE, HORIZONTAL_ALIGNMENT_LEFT, color, font_size))
-	row.add_child(_make_cell(col_count, COL_WIDTH_COUNT, HORIZONTAL_ALIGNMENT_CENTER, color, font_size))
-	row.add_child(_make_cell(col_hp, COL_WIDTH_HP, HORIZONTAL_ALIGNMENT_RIGHT, color, font_size))
-	row.add_child(_make_cell(col_speed, COL_WIDTH_SPEED, HORIZONTAL_ALIGNMENT_RIGHT, color, font_size))
-	row.add_child(_make_cell(col_air, COL_WIDTH_AIR, HORIZONTAL_ALIGNMENT_CENTER, color, font_size))
+	row.add_child(_makeCell(col_role, COL_WIDTH_ROLE, HORIZONTAL_ALIGNMENT_LEFT, color, font_size))
+	row.add_child(_makeCell(col_count, COL_WIDTH_COUNT, HORIZONTAL_ALIGNMENT_CENTER, color, font_size))
+	row.add_child(_makeCell(col_hp, COL_WIDTH_HP, HORIZONTAL_ALIGNMENT_RIGHT, color, font_size))
+	row.add_child(_makeCell(col_speed, COL_WIDTH_SPEED, HORIZONTAL_ALIGNMENT_RIGHT, color, font_size))
+	row.add_child(_makeCell(col_air, COL_WIDTH_AIR, HORIZONTAL_ALIGNMENT_CENTER, color, font_size))
 
-	enemy_list.add_child(row)
+	enemyList.add_child(row)
 	if is_header:
-		enemy_list.add_child(HSeparator.new())
+		enemyList.add_child(HSeparator.new())
 
 
-func _make_cell(text: String, width: int, align: int, color: Color, font_size: int) -> Label:
-	var cell := Label.new()
+func _makeCell(text: String, width: int, align: int, color: Color, font_size: int) -> Label:
+	var cell: Label = Label.new()
 	cell.text = text
 	cell.horizontal_alignment = align
 	cell.add_theme_font_size_override("font_size", font_size)
@@ -187,30 +187,30 @@ func _make_cell(text: String, width: int, align: int, color: Color, font_size: i
 
 
 # 两条路线：路线1 走上方，路线2 走下方（折点见同名 .tscn 里的两个 Path2D）
-func _add_chip(title: String, value: String, color: Color) -> void:
-	var chip := VBoxContainer.new()
+func _addChip(title: String, value: String, color: Color) -> void:
+	var chip: VBoxContainer = VBoxContainer.new()
 	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	chip.alignment = BoxContainer.ALIGNMENT_CENTER
 
-	var title_label := Label.new()
-	title_label.text = title
-	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title_label.add_theme_font_size_override("font_size", 24)
-	title_label.add_theme_color_override("font_color", COLOR_HEADER)
+	var titleLabel: Label = Label.new()
+	titleLabel.text = title
+	titleLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	titleLabel.add_theme_font_size_override("font_size", 24)
+	titleLabel.add_theme_color_override("font_color", COLOR_HEADER)
 
-	var value_label := Label.new()
-	value_label.text = value
-	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	value_label.add_theme_font_size_override("font_size", 40)
-	value_label.add_theme_color_override("font_color", color)
+	var valueLabel: Label = Label.new()
+	valueLabel.text = value
+	valueLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	valueLabel.add_theme_font_size_override("font_size", 40)
+	valueLabel.add_theme_color_override("font_color", color)
 
-	chip.add_child(title_label)
-	chip.add_child(value_label)
-	info_box.add_child(chip)
+	chip.add_child(titleLabel)
+	chip.add_child(valueLabel)
+	infoBox.add_child(chip)
 
 
 # 清空动态生成的子节点（立即移除，避免同帧残留）
-func _clear_children(node: Node) -> void:
+func _clearChildren(node: Node) -> void:
 	for child in node.get_children():
 		node.remove_child(child)
 		child.queue_free()
@@ -220,5 +220,5 @@ func _clear_children(node: Node) -> void:
 func _t(key: String, fallback: String) -> String:
 	if key.is_empty():
 		return fallback
-	var translated := tr(key)
+	var translated: String = tr(key)
 	return fallback if translated == key else translated

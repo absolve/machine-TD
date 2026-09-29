@@ -195,31 +195,31 @@ const language = [{'text': 'English', 'code': 'en' ,'id':0},
 
 
 @warning_ignore("unused_signal")
-signal defeatEnemy # 击败敌人
+signal enemyRewarded # 击败敌人
 @warning_ignore("unused_signal")
-signal enemyEscape # 敌人逃脱
+signal enemyEscaped # 敌人逃脱
 @warning_ignore("unused_signal")
 signal selectTower # 选择塔
 @warning_ignore("unused_signal")
-signal placeTower # 放置塔
+signal towerPlaced # 放置塔
 @warning_ignore("unused_signal")
-signal refreshData # 游戏数据刷新
+signal dataRefreshed # 游戏数据刷新
 @warning_ignore("unused_signal")
-signal sellTower # 出售塔
+signal towerSold # 出售塔
 ## 塔**离开棋盘**时发出（出售 or 被打爆），参数是它占用的格子。
 ## map 收到后把格子归还到 occupiedArea。
 ## ⚠️ 原来只有"出售"会归回格子，塔被打爆时格子永远占着 —— 那块地就再也建不了塔了。
 signal towerGridReleased(coverGrid: Array[Vector2i])
 @warning_ignore("unused_signal")
-signal repairTower # 修理塔（参数：花费, 塔节点）
+signal towerRepaired # 修理塔（参数：花费, 塔节点）
 @warning_ignore("unused_signal")
-signal lastWave # 最后一波
+signal lastWaveStarted # 最后一波
 @warning_ignore("unused_signal")
-signal clickTower
+signal towerClicked
 @warning_ignore("unused_signal")
 signal towerLocked # 玩家点了本关禁用的防御塔（tower_ui 发出，map 弹提示）
 @warning_ignore("unused_signal")
-signal clickEnemy # 点击敌人（在地图上选中敌人，由 enemy.gd 的 input_event 发出）
+signal enemyClicked # 点击敌人（在地图上选中敌人，由 enemy.gd 的 input_event 发出）
 @warning_ignore("unused_signal")
 signal enemyDefeated(enemy, source) # 敌人被击杀（成就统计用；在节点释放前发出）
 
@@ -235,22 +235,22 @@ func addObj(obj):
 # 例如 "_TowerName_machineGun" / "_EnemyRole_pusher"。
 # 所以取显示名只要一次 tr()，不再需要额外维护三张映射表。
 
-func get_tower_display_name(tower_type) -> String:
+func getTowerDisplayName(tower_type) -> String:
 	return tr(str(towerInfo.get(tower_type, {}).get("name", "")))
 
 
-func get_enemy_display_name(enemy_type) -> String:
-	return tr(str(enemyInfo.get(enemy_type, {}).get("name", "")))
+func getEnemyDisplayName(enemyType) -> String:
+	return tr(str(enemyInfo.get(enemyType, {}).get("name", "")))
 
 
 # 敌人行为定位标签（role 字段同样是翻译键）
-func get_enemy_role_name(enemy_type) -> String:
-	return tr(str(enemyInfo.get(enemy_type, {}).get("role", "")))
+func getEnemyRoleName(enemyType) -> String:
+	return tr(str(enemyInfo.get(enemyType, {}).get("role", "")))
 
 
 # 取翻译；未找到对应 key（语言文件未导入）时回退到默认文本
 func _t(key: String, fallback: String) -> String:
 	if key.is_empty():
 		return fallback
-	var translated := tr(key)
+	var translated: String = tr(key)
 	return fallback if translated == key else translated

@@ -7,4 +7,4 @@ collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_u1o16")
 
-[node name="ani" type="AnimatedSprite2D" parent="." unique_id=748097984]
+[node name="Ani" type="AnimatedSprite2D" parent="." unique_id=748097984]

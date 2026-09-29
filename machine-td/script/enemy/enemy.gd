@@ -31,8 +31,8 @@ var parent: PathFollow2D
 ##    更早的坑：attackHelicopter.gd 里无条件访问 turret.global_position，
 ##    它一开火就会崩 —— 现在统一走 get_muzzle_position()，没有炮塔就退回机身前方。
 @onready var turret = get_node_or_null("turret")
-@onready var lifeBar = $lifeBar
-@onready var delayTimer = $delay
+@onready var lifeBar = $LifeBar
+@onready var delayTimer = $Delay
 @onready var radar = $radar
 @onready var radarShape = $radar/shape
 
@@ -48,7 +48,7 @@ var parent: PathFollow2D
 ##    基场景 scene/enemy/enemy.tscn **自带 turret 节点**，派生场景里删不掉它
 ##    （删了会退回继承基场景的那个），所以"这个敌人没有炮塔"是靠
 ##    `visible = false` 表达的。只看 null 会把隐藏的炮塔位置当成枪口。
-func get_muzzle_position() -> Vector2:
+func getMuzzlePosition() -> Vector2:
 	if turret != null and is_instance_valid(turret) and turret.visible:
 		return turret.global_position
 	if base != null and is_instance_valid(base):
@@ -89,7 +89,7 @@ func _applyRadarScope() -> void:
 	if radarScope <= 0.0:
 		radar.monitoring = false
 		return
-	var circle := radarShape.shape as CircleShape2D
+	var circle: CircleShape2D = radarShape.shape as CircleShape2D
 	if circle == null:
 		circle = CircleShape2D.new()
 		radarShape.shape = circle
@@ -100,12 +100,12 @@ func _applyRadarScope() -> void:
 # 点击敌人：通知地图选中它
 # 这里主动把事件标记为已处理，阻止它继续传导到 map._unhandled_input 的“点空地取消选中”，
 # 否则刚弹出的敌人信息面板会被同一击立刻收起来
-func _on_input_event(_viewport, _event, _shape_idx):
+func _onInputEvent(_viewport, _event, _shape_idx):
 	if _event.is_action_pressed("click"):
-		var vp := get_viewport()
+		var vp: Viewport = get_viewport()
 		if vp:
 			vp.set_input_as_handled()
-		Game.clickEnemy.emit(self)
+		Game.enemyClicked.emit(self)
 
 #受到伤害
 # 物理伤害会按 armor 进行减免：实际伤害 = 原伤害 * (1 - armor)
@@ -126,13 +126,13 @@ func _on_input_event(_viewport, _event, _shape_idx):
 ##
 ## 排除 self：敌机主 Area2D 在 layer 2，而各自 radar 的 mask 是 1，
 ## 正常不会侦测到自己；但万一以后有人改了层，这里兜一手。
-func _on_radar_area_entered(area) -> void:
+func _onRadarAreaEntered(area) -> void:
 	if area == self or area == null:
 		return
 	target.append(area)
 
 
-func _on_radar_area_exited(area) -> void:
+func _onRadarAreaExited(area) -> void:
 	if area == self or area == null:
 		return
 	target.erase(area)
@@ -143,17 +143,17 @@ func _on_radar_area_exited(area) -> void:
 ## ⚠️ 三个会开火的敌人（中型坦克 / 导弹车 / 攻击直升机）原来都是直接取 target[0]。
 ##    那是雷达 area_entered 的**插入顺序**，不是最近的 —— 看着就像"乱打"。
 ##    而且失效的条目不会被清掉，会一直占着第 0 位，导致后面明明有目标却不开火。
-func pick_target():
+func pickTarget():
 	var best = null
-	var best_d := INF
+	var bestD: float = INF
 	var alive: Array = []
 	for t in target:
 		if not is_instance_valid(t):
 			continue
 		alive.append(t)
 		var d: float = global_position.distance_squared_to(t.global_position)
-		if d < best_d:
-			best_d = d
+		if d < bestD:
+			bestD = d
 			best = t
 	target = alive
 	return best
@@ -161,7 +161,7 @@ func pick_target():
 
 ## 把炮塔转向目标，返回"是否已经瞄准到位"。
 ## 到位才开火 —— 否则子弹会顺着炮塔当时的朝向飞出去，看着就是乱射。
-func aim_at(t, delta: float) -> bool:
+func aimAt(t, delta: float) -> bool:
 	if turret == null or not is_instance_valid(t):
 		return false
 	# t 是无类型的（Variant），减法结果推不出类型，必须显式标注
@@ -174,23 +174,23 @@ func aim_at(t, delta: float) -> bool:
 	return absf(wrapf(turret.rotation - want, -PI, PI)) < 0.10
 
 func hurt(_num: int, _source = null, _damage_type: String = "physical"):
-	var actual_damage: float = float(_num)
+	var actualDamage: float = float(_num)
 	if _damage_type == "physical":
-		actual_damage *= max(0.0, 1.0 - armor)
+		actualDamage *= max(0.0, 1.0 - armor)
 	elif _damage_type == "energy":
-		actual_damage = float(_num)
+		actualDamage = float(_num)
 	else:
-		actual_damage *= max(0.0, 1.0 - armor)
+		actualDamage *= max(0.0, 1.0 - armor)
 
-	hp -= int(max(0.0, ceil(actual_damage)))
+	hp -= int(max(0.0, ceil(actualDamage)))
 	# 被击中亮一下（所有敌人通用，材质在基场景上）
-	play_hit_flash()
+	playHitFlash()
 	if lifeBar:
 		lifeBar.visible = true
 		lifeBar.value = hp
 	if hp <= 0:
 		ExplosionManage.playExplosion(global_position)
-		Game.defeatEnemy.emit(reward)
+		Game.enemyRewarded.emit(reward)
 		# 成就统计需要知道敌人类型和击杀来源，必须在节点释放之前发出
 		Game.enemyDefeated.emit(self, _source)
 		owner.queue_free()
@@ -202,23 +202,23 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 ## 这里只负责把 shader 的 flash 参数从 1 补间到 0。
 const HIT_FLASH_TIME := 0.10
 
-var _hit_flash_tween: Tween
+var _hitFlashTween: Tween
 
 
-func play_hit_flash() -> void:
-	_set_hit_flash(1.0)
-	if _hit_flash_tween != null and _hit_flash_tween.is_valid():
-		_hit_flash_tween.kill()
-	_hit_flash_tween = create_tween()
-	_hit_flash_tween.tween_method(_set_hit_flash, 1.0, 0.0, HIT_FLASH_TIME)
+func playHitFlash() -> void:
+	_setHitFlash(1.0)
+	if _hitFlashTween != null and _hitFlashTween.is_valid():
+		_hitFlashTween.kill()
+	_hitFlashTween = create_tween()
+	_hitFlashTween.tween_method(_setHitFlash, 1.0, 0.0, HIT_FLASH_TIME)
 
 
-func _set_hit_flash(v: float) -> void:
+func _setHitFlash(v: float) -> void:
 	# base / turret 都可能不存在（无人机之类只有 base），逐个判空
 	for n in [base, turret]:
 		if n == null:
 			continue
-		var m := n.material as ShaderMaterial
+		var m: ShaderMaterial = n.material as ShaderMaterial
 		if m != null:
 			m.set_shader_parameter("flash", v)
 
@@ -236,7 +236,7 @@ func fire(_t):
 # 开火冷却结束：复位 canShot，允许下一次开火
 # 对抗型敌人（中型坦克 / 导弹车 / 攻击直升机 / 维修车）开火后会把 canShot 置 false
 # 并启动 delay 定时器，靠这个回调复位，否则整局只会开火一次
-func _on_delay_timeout() -> void:
+func _onDelayTimeout() -> void:
 	canShot = true
 
 
@@ -245,5 +245,5 @@ func _physics_process(_delta):
 		return
 	parent.progress += speed * _delta
 	if parent.progress_ratio >= 1:
-		Game.enemyEscape.emit(lossPoints)
+		Game.enemyEscaped.emit(lossPoints)
 		owner.queue_free()

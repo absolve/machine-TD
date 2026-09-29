@@ -4,7 +4,7 @@
 [ext_resource type="StyleBox" path="res://theme/style/tower_panel_style.tres" id="2_card"]
 [ext_resource type="StyleBox" path="res://theme/style/tower_separator.tres" id="3_sep"]
 
-[node name="towerInfo" type="PanelContainer" unique_id=712368973]
+[node name="TowerInfo" type="PanelContainer" unique_id=712368973]
 z_index = 10
 custom_maximum_size = Vector2(-1, 500)
 offset_right = 180.0

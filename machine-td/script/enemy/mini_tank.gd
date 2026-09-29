@@ -12,7 +12,7 @@ func _ready():
 	#lifeBar.value = hp
 	#if hp < 0:
 		#ExplosionManage.playExplosion(global_position)
-		#Game.defeatEnemy.emit(reward)
+		#Game.enemyRewarded.emit(reward)
 		#owner.queue_free()
 
 #func _physics_process(_delta):
@@ -20,5 +20,5 @@ func _ready():
 		#return
 	#parent.progress += speed * _delta
 	#if parent.progress_ratio >= 1:
-		#Game.enemyEscape.emit(lossPoints)
+		#Game.enemyEscaped.emit(lossPoints)
 		#owner.queue_free()

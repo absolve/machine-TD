@@ -9,33 +9,33 @@ extends Node2D
 ## 摆放位置由关卡生成脚本挑「既不是路面、也不是可建造格」的空地写进场景。
 
 ## 随机起始帧 + 随机播放速度，避免一排装饰物整齐划一地动
-@export var random_start := true
+@export var randomStart: bool = true
 ## 进场景时把节点对齐到所在格子的中心
-@export var snap_to_grid := true
+@export var snapToGrid: bool = true
 
-@onready var anim: AnimatedSprite2D = $anim
+@onready var anim: AnimatedSprite2D = $Anim
 
 
 func _ready() -> void:
-	if snap_to_grid:
-		_snap_to_cell()
+	if snapToGrid:
+		_snapToCell()
 	if anim == null or anim.sprite_frames == null:
 		return
 	if not anim.sprite_frames.has_animation("default"):
 		return
-	var n := anim.sprite_frames.get_frame_count("default")
-	if random_start and n > 1:
+	var n: int = anim.sprite_frames.get_frame_count("default")
+	if randomStart and n > 1:
 		anim.frame = randi() % n
 		anim.speed_scale = randf_range(0.85, 1.2)
 	anim.play("default")
 
 
 ## 本实例覆盖的格子（中心坐标 → 格子索引）
-func get_grid() -> Vector2i:
+func getGrid() -> Vector2i:
 	var t: int = StageData.TileSize
 	return Vector2i(floori(position.x / t), floori(position.y / t))
 
 
-func _snap_to_cell() -> void:
+func _snapToCell() -> void:
 	var t: int = StageData.TileSize
-	position = Vector2(get_grid() * t) + Vector2(t, t) * 0.5
+	position = Vector2(getGrid() * t) + Vector2(t, t) * 0.5

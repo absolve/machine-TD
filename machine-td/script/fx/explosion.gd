@@ -10,15 +10,15 @@ extends AnimatedSprite2D
 ##   SoundManage                        （音效，统一管理）
 
 ## 整体缩放。派生场景里按需覆盖。
-@export var anim_scale := 1.5
+@export var animScale: float = 1.5
 ## 播完自动销毁
-@export var auto_free := true
+@export var autoFree: bool = true
 
 
 func _ready() -> void:
 	z_index = 10
-	scale = Vector2.ONE * anim_scale
+	scale = Vector2.ONE * animScale
 	play("default")
-	if auto_free:
+	if autoFree:
 		await animation_finished
 		queue_free()

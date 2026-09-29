@@ -78,6 +78,5 @@ animations = [{
 
 [node name="vent_fan" instance=ExtResource("1_base")]
 
-[node name="anim" parent="." index="0"]
+[node name="Anim" parent="." index="0"]
 sprite_frames = SubResource("Frames")
-

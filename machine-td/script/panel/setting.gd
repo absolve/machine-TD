@@ -4,26 +4,26 @@ extends Control
 var sound = preload("res://sound/Pickup.wav")
 
 
-@onready var master = $box/VBoxContainer/volumeBox/VBoxContainer/master
-@onready var bg = $box/VBoxContainer/volumeBox/VBoxContainer/bg
-@onready var sfx = $box/VBoxContainer/volumeBox/VBoxContainer/sfx
-@onready var language = $box/VBoxContainer/languageBox/HBoxContainer/language
+@onready var master = $Box/VBoxContainer/volumeBox/VBoxContainer/master
+@onready var bg = $Box/VBoxContainer/volumeBox/VBoxContainer/bg
+@onready var sfx = $Box/VBoxContainer/volumeBox/VBoxContainer/sfx
+@onready var language = $Box/VBoxContainer/languageBox/HBoxContainer/language
 
-signal close
+signal closed
 
 
 func _ready() -> void:
 	language.clear()
-	var selected_index = 0
-	var current_language_code = getLanguageCode(UserData.language)
+	var selectedIndex = 0
+	var currentLanguageCode = getLanguageCode(UserData.language)
 	for language_info in Game.language:
-		var language_code: String = language_info.get('code', 'en')
-		language.add_item(language_info.get('text', language_code))
-		language.set_item_metadata(language.item_count - 1, language_code)
-		if language_code == current_language_code:
-			selected_index = language.item_count - 1
-	language.select(selected_index)
-	UserData.language = current_language_code
+		var languageCode: String = language_info.get('code', 'en')
+		language.add_item(language_info.get('text', languageCode))
+		language.set_item_metadata(language.item_count - 1, languageCode)
+		if languageCode == currentLanguageCode:
+			selectedIndex = language.item_count - 1
+	language.select(selectedIndex)
+	UserData.language = currentLanguageCode
 	master.busName = 'Master'
 	bg.busName = 'Bg'
 	sfx.busName = 'Sfx'
@@ -33,14 +33,14 @@ func _ready() -> void:
 	master.setVolume(UserData.masterVolume)
 	bg.setVolume(UserData.musicVolume)
 	sfx.setVolume(UserData.sfxVolume)
-	master.slider.value_changed.connect(_on_master_value_changed)
-	bg.slider.value_changed.connect(_on_bg_value_changed)
-	sfx.slider.value_changed.connect(_on_sfx_value_changed)
+	master.slider.value_changed.connect(_onMasterValueChanged)
+	bg.slider.value_changed.connect(_onBgValueChanged)
+	sfx.slider.value_changed.connect(_onSfxValueChanged)
 	# 背景音/音效显示静音开关，并同步上次保存的静音状态
 	bg.muted = UserData.musicMuted
 	sfx.muted = UserData.sfxMuted
-	bg.muteToggled.connect(_on_bg_mute_toggled)
-	sfx.muteToggled.connect(_on_sfx_mute_toggled)
+	bg.muteToggled.connect(_onBgMuteToggled)
+	sfx.muteToggled.connect(_onSfxMuteToggled)
 	TranslationServer.set_locale(UserData.language)
 
 func getLanguageCode(language_value: String) -> String:
@@ -49,41 +49,41 @@ func getLanguageCode(language_value: String) -> String:
 			return language_info.get('code', 'en')
 	return Game.language[0].get('code', 'en') if not Game.language.is_empty() else 'en'
 
-func _on_master_value_changed(value: float):
+func _onMasterValueChanged(value: float):
 	UserData.masterVolume = int(value)
 	UserData.saveSettings()
 	master.volume = value / 100
 	master.playSound()
 
-func _on_bg_value_changed(value: float):
+func _onBgValueChanged(value: float):
 	UserData.musicVolume = int(value)
 	UserData.saveSettings()
 	bg.volume = value / 100
 	bg.playSound()
 
 	
-func _on_sfx_value_changed(value: float):
+func _onSfxValueChanged(value: float):
 	UserData.sfxVolume = int(value)
 	UserData.saveSettings()
 	sfx.volume = value / 100
 	sfx.playSound()
 
 
-func _on_option_button_item_selected(index: int) -> void:
+func _onOptionButtonItemSelected(index: int) -> void:
 	UserData.language = str(language.get_item_metadata(index))
 	UserData.saveSettings()
 	UserData.applyLanguage()
 
 
-func _on_bg_mute_toggled(muted: bool) -> void:
+func _onBgMuteToggled(muted: bool) -> void:
 	UserData.musicMuted = muted
 	UserData.saveSettings()
 
 
-func _on_sfx_mute_toggled(muted: bool) -> void:
+func _onSfxMuteToggled(muted: bool) -> void:
 	UserData.sfxMuted = muted
 	UserData.saveSettings()
 
 
-func _on_btn_close_pressed() -> void:
-	close.emit()
+func _onBtnClosePressed() -> void:
+	closed.emit()

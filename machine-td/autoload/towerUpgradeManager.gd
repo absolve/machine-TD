@@ -1,6 +1,6 @@
 extends Node
 
-signal tower_leveled_up(tower, level) # 防御塔升级（成就统计用）
+signal towerLeveledUp(tower, level) # 防御塔升级（成就统计用）
 
 const MAX_LEVEL: int = 3  # 最大等级
 

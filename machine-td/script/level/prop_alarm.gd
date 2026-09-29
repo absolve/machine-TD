@@ -12,58 +12,47 @@ extends "res://script/level/prop.gd"
 ## 计数而不是布尔：多批敌人同时进出时不会算错。
 
 ## 感应圈半径（像素）。运行时会被同步到 detect/shape 上，改这里就行。
-@export var trigger_radius := 280.0
+@export var triggerRadius: float = 280.0
 ## 敌人离开后再保持报警这么久（秒），免得刚打完一闪一闪
-@export var release_delay := 1.2
+@export var releaseDelay: float = 1.2
 
 ## 当前圈里有几个敌人
-var _inside := 0
+var _inside: int = 0
 ## 还要维持报警多久
-var _hot := 0.0
+var _hot: float = 0.0
 
-@onready var detect: Area2D = get_node_or_null("detect")
+@onready var detect: Area2D = get_node_or_null("Detect")
 
 
 func _ready() -> void:
 	super._ready()
 	if detect != null:
-		_apply_radius()
-		detect.area_entered.connect(_on_entered)
-		detect.area_exited.connect(_on_exited)
+		_applyRadius()
+		detect.area_entered.connect(_onEntered)
+		detect.area_exited.connect(_onExited)
 	_play("idle")
 
 
-func _process(delta: float) -> void:
-	if _inside > 0:
-		_hot = release_delay
-	elif _hot > 0.0:
-		_hot = maxf(0.0, _hot - delta)
-	var want := "alarm" if _hot > 0.0 else "idle"
-	if anim != null and anim.animation != want:
-		_play(want)
-
-
-## 把 export 的半径同步到 CollisionShape2D —— 改半径不用去动场景
-func _apply_radius() -> void:
-	var cs := detect.get_node_or_null("shape") as CollisionShape2D
+func _applyRadius() -> void:
+	var cs: CollisionShape2D = detect.get_node_or_null("shape") as CollisionShape2D
 	if cs == null:
 		return
-	var circle := cs.shape as CircleShape2D
+	var circle: CircleShape2D = cs.shape as CircleShape2D
 	if circle == null:
 		return
 	# 复制一份：同一个 .tscn 的实例默认共享 sub_resource，
 	# 直接改会把所有警报器的形状一起改掉
-	var c := circle.duplicate() as CircleShape2D
-	c.radius = trigger_radius
+	var c: CircleShape2D = circle.duplicate() as CircleShape2D
+	c.radius = triggerRadius
 	cs.shape = c
 
 
-func _on_entered(a: Area2D) -> void:
+func _onEntered(a: Area2D) -> void:
 	if a != null and a.is_in_group("enemy"):
 		_inside += 1
 
 
-func _on_exited(a: Area2D) -> void:
+func _onExited(a: Area2D) -> void:
 	if a != null and a.is_in_group("enemy"):
 		_inside = maxi(0, _inside - 1)
 
@@ -75,3 +64,16 @@ func _play(anim_name: String) -> void:
 	if not anim.sprite_frames.has_animation(anim_name):
 		return
 	anim.play(anim_name)
+
+
+func _process(delta: float) -> void:
+	if _inside > 0:
+		_hot = releaseDelay
+	elif _hot > 0.0:
+		_hot = maxf(0.0, _hot - delta)
+	var want: String = "alarm" if _hot > 0.0 else "idle"
+	if anim != null and anim.animation != want:
+		_play(want)
+
+
+## 把 export 的半径同步到 CollisionShape2D —— 改半径不用去动场景

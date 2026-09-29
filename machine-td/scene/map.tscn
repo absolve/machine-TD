@@ -19,68 +19,68 @@
 [node name="map" type="Node2D" unique_id=988854810]
 script = ExtResource("1_rgtto")
 
-[node name="customCamera" parent="." unique_id=1331816399 instance=ExtResource("5_jp76l")]
-zoom_max = 4.0
+[node name="CustomCamera" parent="." unique_id=1331816399 instance=ExtResource("5_jp76l")]
+zoomMax = 4.0
 
-[node name="hud" type="CanvasLayer" parent="." unique_id=487852858]
+[node name="Hud" type="CanvasLayer" parent="." unique_id=487852858]
 
-[node name="title" parent="hud" unique_id=845388962 instance=ExtResource("2_4xw1d")]
+[node name="title" parent="Hud" unique_id=845388962 instance=ExtResource("2_4xw1d")]
 
-[node name="towerUI" parent="hud" unique_id=54976183 instance=ExtResource("3_bq37x")]
+[node name="towerUI" parent="Hud" unique_id=54976183 instance=ExtResource("3_bq37x")]
 offset_left = -8.0
 offset_top = 877.0
 offset_right = -8.0
 offset_bottom = 877.0
 
-[node name="Button" type="Button" parent="hud" unique_id=1786368414]
+[node name="Button" type="Button" parent="Hud" unique_id=1786368414]
 visible = false
 offset_top = 500.0
 offset_right = 38.0
 offset_bottom = 531.0
 text = "test"
 
-[node name="toastInfo" parent="hud" unique_id=1968260455 instance=ExtResource("4_jp76l")]
+[node name="toastInfo" parent="Hud" unique_id=1968260455 instance=ExtResource("4_jp76l")]
 
-[node name="waveProgressBar" parent="hud" unique_id=1398223869 instance=ExtResource("5_7ac5c")]
+[node name="waveProgressBar" parent="Hud" unique_id=1398223869 instance=ExtResource("5_7ac5c")]
 offset_left = 1552.0
 offset_top = 1008.0
 offset_right = 1552.0
 offset_bottom = 1008.0
 
-[node name="towerDetailPanel" parent="hud" unique_id=830242403 instance=ExtResource("7_panel")]
+[node name="towerDetailPanel" parent="Hud" unique_id=830242403 instance=ExtResource("7_panel")]
 offset_left = 1536.0
 offset_top = 150.0
 offset_right = 1896.0
 offset_bottom = 850.0
 
-[node name="enemyDetailPanel" parent="hud" unique_id=830242404 instance=ExtResource("8_enemy")]
+[node name="enemyDetailPanel" parent="Hud" unique_id=830242404 instance=ExtResource("8_enemy")]
 offset_left = 1536.0
 offset_top = 150.0
 offset_right = 1896.0
 offset_bottom = 850.0
 
-[node name="achievementToast" parent="hud" unique_id=990114278 instance=ExtResource("11_toast")]
+[node name="achievementToast" parent="Hud" unique_id=990114278 instance=ExtResource("11_toast")]
 
-[node name="abilityBar" parent="hud" unique_id=990114279 instance=ExtResource("12_ability")]
+[node name="abilityBar" parent="Hud" unique_id=990114279 instance=ExtResource("12_ability")]
 layout_mode = 3
 
-[node name="popupLayer" type="CanvasLayer" parent="." unique_id=2027661789]
+[node name="PopupLayer" type="CanvasLayer" parent="." unique_id=2027661789]
 layer = 10
 
-[node name="battleStartBanner" parent="popupLayer" unique_id=990114280 instance=ExtResource("13_banner")]
-hold_sec = 2.0
+[node name="battleStartBanner" parent="PopupLayer" unique_id=990114280 instance=ExtResource("13_banner")]
+holdSec = 2.0
 
-[node name="levelIntroPanel" parent="popupLayer" unique_id=990114276 instance=ExtResource("9_intro")]
+[node name="levelIntroPanel" parent="PopupLayer" unique_id=990114276 instance=ExtResource("9_intro")]
 
-[node name="resultScreen" parent="popupLayer" unique_id=1746614916 instance=ExtResource("4_bq37x")]
+[node name="resultScreen" parent="PopupLayer" unique_id=1746614916 instance=ExtResource("4_bq37x")]
 
-[node name="pauseMenu" parent="popupLayer" unique_id=1869636577 instance=ExtResource("6_pause")]
+[node name="pauseMenu" parent="PopupLayer" unique_id=1869636577 instance=ExtResource("6_pause")]
 
-[node name="achievementTracker" type="Node" parent="." unique_id=990114277]
+[node name="AchievementTracker" type="Node" parent="." unique_id=990114277]
 script = ExtResource("10_track")
 
 [node name="Timer" type="Timer" parent="." unique_id=1553136818]
 wait_time = 0.5
 
-[connection signal="pressed" from="hud/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Hud/Button" to="." method="_onButtonPressed"]
 [connection signal="timeout" from="Timer" to="." method="finish"]

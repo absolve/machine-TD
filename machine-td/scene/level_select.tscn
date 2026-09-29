@@ -9,17 +9,17 @@
 [node name="levelSelect" type="Node2D" unique_id=1452072642]
 script = ExtResource("1_jcnwc")
 
-[node name="ui" type="Control" parent="." unique_id=1791906365]
+[node name="Ui" type="Control" parent="." unique_id=1791906365]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("2_rch43")
 
-[node name="bg" parent="ui" unique_id=150621738 instance=ExtResource("2_lc6rc")]
+[node name="bg" parent="Ui" unique_id=150621738 instance=ExtResource("2_lc6rc")]
 layout_mode = 0
 
-[node name="Label" type="Label" parent="ui" unique_id=528409908]
+[node name="Label" type="Label" parent="Ui" unique_id=528409908]
 layout_mode = 0
 offset_left = 704.0
 offset_top = 75.0
@@ -29,7 +29,7 @@ theme_override_font_sizes/font_size = 90
 text = "_SelectLevel"
 horizontal_alignment = 1
 
-[node name="levels" type="VBoxContainer" parent="ui" unique_id=835426219]
+[node name="levels" type="VBoxContainer" parent="Ui" unique_id=835426219]
 layout_mode = 0
 offset_left = 135.0
 offset_top = 215.0
@@ -38,7 +38,7 @@ offset_bottom = 905.0
 theme_override_constants/separation = 40
 alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ui" unique_id=1887196183]
+[node name="HBoxContainer" type="HBoxContainer" parent="Ui" unique_id=1887196183]
 layout_mode = 0
 offset_left = 800.0
 offset_top = 947.0
@@ -47,11 +47,11 @@ offset_bottom = 1024.0
 alignment = 1
 metadata/_edit_group_ = true
 
-[node name="UIButton" parent="ui/HBoxContainer" unique_id=1077812873 instance=ExtResource("4_xd2ss")]
+[node name="UIButton" parent="Ui/HBoxContainer" unique_id=1077812873 instance=ExtResource("4_xd2ss")]
 layout_mode = 2
 text = "_Main_Menu"
 
-[node name="descriptionPanel" parent="ui" unique_id=2055277463 instance=ExtResource("5_w31kt")]
+[node name="descriptionPanel" parent="Ui" unique_id=2055277463 instance=ExtResource("5_w31kt")]
 visible = false
 layout_mode = 1
 anchors_preset = -1
@@ -60,4 +60,4 @@ anchor_bottom = 4.0
 offset_right = -2108.0
 offset_bottom = -1200.0
 
-[connection signal="pressed" from="ui/HBoxContainer/UIButton" to="." method="_on_ui_button_pressed"]
+[connection signal="pressed" from="Ui/HBoxContainer/UIButton" to="." method="_onUiButtonPressed"]

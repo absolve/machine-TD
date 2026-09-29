@@ -23,9 +23,9 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="towerRank" type="Node2D" unique_id=1195618471]
+[node name="TowerRank" type="Node2D" unique_id=1195618471]
 script = ExtResource("1_kning")
 
-[node name="ani" type="AnimatedSprite2D" parent="." unique_id=555367891]
+[node name="Ani" type="AnimatedSprite2D" parent="." unique_id=555367891]
 sprite_frames = SubResource("SpriteFrames_x1k4k")
 animation = &"lv3"

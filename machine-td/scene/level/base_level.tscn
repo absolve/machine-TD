@@ -9,8 +9,8 @@ script = ExtResource("1_dxhww")
 [node name="bg" type="TileMapLayer" parent="." unique_id=858766704]
 z_index = -1
 
-[node name="waveTimer" type="Timer" parent="." unique_id=1926411625]
+[node name="WaveTimer" type="Timer" parent="." unique_id=1926411625]
 
-[node name="spawnerTimer" type="Timer" parent="." unique_id=1141747298]
+[node name="SpawnerTimer" type="Timer" parent="." unique_id=1141747298]
 
-[node name="towerShadow" parent="." unique_id=1602345415 instance=ExtResource("2_ivasy")]
+[node name="TowerShadow" parent="." unique_id=1602345415 instance=ExtResource("2_ivasy")]

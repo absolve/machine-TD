@@ -20,7 +20,7 @@ const ASSIGN_INTERVAL := 0.35
 
 var drones: Array = []
 
-var _assign_timer := 0.0
+var _assignTimer: float = 0.0
 ## 目标 -> 已经派给它的无人机数（分配时用来做均衡）
 var _claim: Dictionary = {}
 
@@ -29,43 +29,28 @@ func _ready():
 	# 雷达形状在代码里补（场景里没配形状），信号也在这里接
 	if not raderShape.shape:
 		raderShape.shape = CircleShape2D.new()
-	rader.area_entered.connect(_on_radar_area_entered)
-	rader.area_exited.connect(_on_radar_area_exited)
+	rader.area_entered.connect(_onRadarAreaEntered)
+	rader.area_exited.connect(_onRadarAreaExited)
 	super._ready()
 
 
 func init():
 	super.init()
-	_spawn_drones()
+	_spawnDrones()
 
 
-func _physics_process(delta: float) -> void:
-	super._physics_process(delta)
-	if drones.is_empty():
-		return
-	_assign_timer -= delta
-	if _assign_timer > 0.0:
-		return
-	_assign_timer = ASSIGN_INTERVAL
-	_dispatch_drones()
-
-
-# ============================================================
-# 生成 / 回收
-# ============================================================
-
-func _spawn_drones() -> void:
-	_recycle_drones()   # 防止重复 init 时生成两批
+func _spawnDrones() -> void:
+	_recycleDrones()   # 防止重复 init 时生成两批
 	for i in range(DRONE_COUNT):
 		var d = DRONE_SCENE.instantiate()
-		d.setup_drone(self, i, DRONE_COUNT)
+		d.setupDrone(self, i, DRONE_COUNT)
 		# 先摆到各自的轨道起点，再入树，避免第一帧从 (0,0) 飞过来
 		d.global_position = global_position + Vector2.from_angle(TAU * float(i) / DRONE_COUNT) * 46.0
 		Game.addObj(d)
 		drones.append(d)
 
 
-func _recycle_drones() -> void:
+func _recycleDrones() -> void:
 	for d in drones:
 		if is_instance_valid(d):
 			d.queue_free()
@@ -74,26 +59,26 @@ func _recycle_drones() -> void:
 
 ## 出售 / 被打爆 都走这里回收无人机
 ## （基类 sell() 调 _on_before_sell；被打爆时 tower.gd 也应调它，见下面的 _release_grid 覆写）
-func _on_before_sell() -> void:
-	_recycle_drones()
+func _onBeforeSell() -> void:
+	_recycleDrones()
 
 
 ## 覆写基类的"归还格子"：先回收无人机，再走基类逻辑。
 ## 这样塔被打爆时无人机不会留在场上乱飞。
-func _release_grid() -> void:
-	_recycle_drones()
-	super._release_grid()
+func _releaseGrid() -> void:
+	_recycleDrones()
+	super._releaseGrid()
 
 
 # ============================================================
 # 侦测（雷达信号 → 目标集合，和别的塔一样）
 # ============================================================
 
-func _on_radar_area_entered(area):
-	add_target(area)
+func _onRadarAreaEntered(area):
+	addTarget(area)
 
 
-func _on_radar_area_exited(area):
+func _onRadarAreaExited(area):
 	target.erase(area)
 
 
@@ -105,7 +90,7 @@ func _on_radar_area_exited(area):
 ##   ① 清掉失效目标
 ##   ② 按"离基地由近到远"排个序（先打最靠近基地的，符合塔防直觉）
 ##   ③ 给每架无人机挑一个目标，并分配包围方位角
-func _dispatch_drones() -> void:
+func _dispatchDrones() -> void:
 	# ① 清理失效 / 飞出射程的目标
 	var alive: Array = []
 	for e in target:
@@ -125,22 +110,38 @@ func _dispatch_drones() -> void:
 		var d = drones[i]
 		if not is_instance_valid(d):
 			continue
-		var pick = _pick_target_for(i, alive)
+		var pick = _pickTargetFor(i, alive)
 		if pick == null:
 			d.assign(null, 0.0)
 			continue
 		# 包围方位角：同一目标上的第 n 架分到 2π/n 的位置
 		var n: int = int(_claim.get(pick, 0))
 		_claim[pick] = n + 1
-		var around := n % MAX_DRONES_PER_TARGET
+		var around: int = n % MAX_DRONES_PER_TARGET
 		d.assign(pick, TAU * float(around) / float(MAX_DRONES_PER_TARGET))
 
 
 ## 给第 i 架无人机挑目标：
 ##   · 还没被占满的目标优先（保证火力分散，别 3 架全去打同一个残血怪）
 ##   · 都满了就退回离基地最近的
-func _pick_target_for(_i: int, alive: Array):
+func _pickTargetFor(_i: int, alive: Array):
 	for e in alive:
 		if int(_claim.get(e, 0)) < MAX_DRONES_PER_TARGET:
 			return e
 	return null
+
+
+func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
+	if drones.is_empty():
+		return
+	_assignTimer -= delta
+	if _assignTimer > 0.0:
+		return
+	_assignTimer = ASSIGN_INTERVAL
+	_dispatchDrones()
+
+
+# ============================================================
+# 生成 / 回收
+# ============================================================

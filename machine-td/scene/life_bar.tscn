@@ -17,7 +17,7 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[node name="lifeBar" type="Node2D" unique_id=1445793735]
+[node name="LifeBar" type="Node2D" unique_id=1445793735]
 script = ExtResource("1_lnig0")
 
 [node name="ProgressBar" type="ProgressBar" parent="." unique_id=2025079301]
@@ -34,4 +34,4 @@ show_percentage = false
 wait_time = 3.0
 one_shot = true
 
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="Timer" to="." method="_onTimerTimeout"]

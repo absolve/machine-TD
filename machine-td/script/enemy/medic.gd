@@ -20,7 +20,7 @@ func _physics_process(_delta):
 		return
 	parent.progress += speed * _delta
 	if parent.progress_ratio >= 1:
-		Game.enemyEscape.emit(lossPoints)
+		Game.enemyEscaped.emit(lossPoints)
 		owner.queue_free()
 	if target.size() > 0:
 		fire(target)

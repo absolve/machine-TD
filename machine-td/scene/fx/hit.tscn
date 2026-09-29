@@ -13,11 +13,11 @@ colors = PackedColorArray(1, 1, 0.96, 1, 1, 0.93, 0.6, 1, 1, 0.68, 0.28, 0.98, 0
 
 [node name="hit" type="Node2D" unique_id=472898098]
 script = ExtResource("1_script")
-particle_texture = ExtResource("2_star")
-hit_color = Color(1, 1, 1, 1)
-hit_amount = 9
+particleTexture = ExtResource("2_star")
+hitColor = Color(1, 1, 1, 1)
+hitAmount = 9
 
-[node name="particles" type="CPUParticles2D" parent="." unique_id=837339560]
+[node name="Particles" type="CPUParticles2D" parent="." unique_id=837339560]
 emitting = false
 amount = 4
 texture = ExtResource("2_star")

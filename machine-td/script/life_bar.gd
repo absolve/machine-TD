@@ -22,5 +22,5 @@ func _ready():
 	bar.visible = false
 
 
-func _on_timer_timeout() -> void:
+func _onTimerTimeout() -> void:
 	bar.visible = false

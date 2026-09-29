@@ -41,8 +41,8 @@ script = ExtResource("1_owhvf")
 [node name="shape" type="CollisionShape2D" parent="." unique_id=232777936]
 shape = SubResource("CircleShape2D_4eul8")
 
-[node name="ani" type="AnimatedSprite2D" parent="." unique_id=856008420]
+[node name="Ani" type="AnimatedSprite2D" parent="." unique_id=856008420]
 sprite_frames = SubResource("SpriteFrames_owhvf")
 
-[connection signal="animation_finished" from="ani" to="." method="_on_ani_animation_finished"]
-[connection signal="frame_changed" from="ani" to="." method="_on_ani_frame_changed"]
+[connection signal="animation_finished" from="Ani" to="." method="_onAniAnimationFinished"]
+[connection signal="frame_changed" from="Ani" to="." method="_onAniFrameChanged"]
