@@ -44,5 +44,5 @@ shape = SubResource("CircleShape2D_4eul8")
 [node name="Ani" type="AnimatedSprite2D" parent="." unique_id=856008420]
 sprite_frames = SubResource("SpriteFrames_owhvf")
 
-[connection signal="animation_finished" from="Ani" to="." method="_onAniAnimationFinished"]
-[connection signal="frame_changed" from="Ani" to="." method="_onAniFrameChanged"]
+[connection signal="animation_finished" from="Ani" to="." method="onAniAnimationFinished"]
+[connection signal="frame_changed" from="Ani" to="." method="onAniFrameChanged"]

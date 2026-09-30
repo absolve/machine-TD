@@ -4,9 +4,9 @@
 [ext_resource type="Script" uid="uid://bxm1puyb5lju" path="res://script/tower/cannon_tower.gd" id="2_v83o1"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_lm0w6"]
 [ext_resource type="AudioStream" uid="uid://di5op8h2w0qns" path="res://sound/sfx/cannon_fire.ogg" id="5_shot"]
-[ext_resource type="Texture2D" uid="uid://tt16bwdxq1kt" path="res://sprite/fx/circle_05_a.png" id="6_r7o82"]
+[ext_resource type="Texture2D" uid="uid://d0nx7p1qhfx3d" path="res://sprite/fx/circle_05_a.png" id="6_r7o82"]
 [ext_resource type="Texture2D" uid="uid://bqswrgamjea3q" path="res://sprite/tower/base_octagon.png" id="99_base"]
-[ext_resource type="Texture2D" uid="uid://7yecnnnlb1op" path="res://sprite/tower/turret_cannon.png" id="99_turret"]
+[ext_resource type="Texture2D" uid="uid://b3g5uxcm1t0hc" path="res://sprite/tower/turret_cannon.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v83o1"]
 size = Vector2(64, 64)
@@ -34,6 +34,16 @@ animations = [{
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_v83o1"]
 radius = 300.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ut8b2"]
+resource_local_to_scene = true
+shader = ExtResource("3_lm0w6")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 14.0
+shader_parameter/flash_amplitude = 0.8
+shader_parameter/outline_thickness = 0.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lm0w6"]
 animations = [{
@@ -176,6 +186,7 @@ visibility_layer = 2
 shape = SubResource("CircleShape2D_v83o1")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
+material = SubResource("ShaderMaterial_ut8b2")
 sprite_frames = SubResource("SpriteFrames_lm0w6")
 offset = Vector2(10, 0)
 

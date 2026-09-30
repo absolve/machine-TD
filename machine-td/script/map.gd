@@ -27,6 +27,7 @@ var EMPTower = preload("res://scene/tower/EMPTower.tscn")
 var teslaCoilTower = preload("res://scene/tower/teslaCoilTower.tscn")
 var laserTower = preload("res://scene/tower/laserTower.tscn")
 var droneBase = preload("res://scene/tower/droneBase.tscn")
+var ironBox = preload("res://scene/tower/ironBox.tscn")
 
 var isLastWave = false # 最后一波
 ## 结算复查开关：lastWave() 打开，finish() 复查到"敌人全清"后关闭并弹结算。
@@ -180,7 +181,7 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 		addNotice(tr("_TowerLockedInStage"))
 		return
 	if titleNode.money < cost:
-		print('Insufficient funds')
+		# print('Insufficient funds')
 		addNotice(tr("_NotEnoughMoney"))
 		return
 	var temp = null
@@ -199,7 +200,11 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 		temp = laserTower.instantiate()
 	elif type == Game.towerType.droneBase:
 		temp = droneBase.instantiate()
-
+	elif type == Game.towerType.ironBox:
+		temp = ironBox.instantiate()
+	else:
+		push_error("未知塔类型: " + str(type))
+		return
 	var info = Game.towerInfo.get(type)
 	temp.type = type
 	temp.money = info.cost

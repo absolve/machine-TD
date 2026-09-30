@@ -38,8 +38,8 @@
 | 1 | 函数、变量用 **camelCase** | 官方是 snake_case，**本项目不用** |
 | 2 | 常量用 **CONSTANT_CASE**，类名/枚举名用 **PascalCase** | 见 §2 |
 | 3 | 不得占用 Godot 内置名 | 如 `position`/`scale`/`name`/`visible`/`get`/`set` |
-| 4 | 内置虚函数放**脚本末尾**，自定义函数放**前面** | 本项目约定，与官方相反 |
-| 5 | 所有类型**显式声明** | `@export`/成员/参数/返回值都写类型，不用 `:=` 推断 |
+| 4 | 顺序：`@onready` → `_ready` → 自定义函数 → **其它内置虚函数放最后** | 本项目约定，与官方相反 |
+| 5 | 成员 / 参数 / 返回值**显式声明类型** | 局部变量可省略类型；不用 `:=` 推断 |
 | 6 | 场景能设的属性在**编辑器 Inspector** 里设 | 不要全塞进代码 |
 | 7 | 可复用功能先做**基础场景 + 基础脚本** | 子类只覆盖差异 |
 | 8 | 缩进 **Tab**、行宽 ≤ 100、UTF-8 无 BOM、LF 换行 | 见 §1.1 |
@@ -180,7 +180,7 @@ var array = [1, 2, 3]
 | --- | --- | --- | --- |
 | 函数 | **camelCase** | `func loadLevel()` | 本项目约定（官方为 snake_case） |
 | 变量 | **camelCase** | `var towerUINode` | 本项目约定（官方为 snake_case） |
-| 私有函数 / 变量 | `_` + camelCase | `var _finishChecking`、`func _onEnemyEscaped()` | 本项目约定 |
+| 私有函数 / 变量 | **camelCase，不加 `_` 前缀** | `var finishChecking`、`func onEnemyEscaped()` | 本项目约定（官方为 `_snake_case`） |
 | 常量 | **CONSTANT_CASE** | `const MAX_SPEED = 200` | 官方 |
 | 类名 `class_name` | **PascalCase** | `class_name Enemy` | 官方 |
 | 节点名 | **PascalCase** | `TowerUI`、`PopupLayer` | 官方（新建场景尽量照此） |
@@ -190,7 +190,9 @@ var array = [1, 2, 3]
 | Autoload 单例 | **PascalCase** | `Game`、`StageData` | 官方 |
 | 脚本 / 场景文件名 | **snake_case** | `base_level.gd`、`tower_ui.tscn` | 官方（避免跨平台大小写问题） |
 
-> **现状说明**：现有代码里函数名存在新旧混用（如 `setup_abilities` 与 `refreshData` 并存）。
+> **例外**：**Godot 引擎回调必须保留 `_` 前缀**（`_ready`、`_process`、`_physics_process`、`_input`、`_unhandled_input`、`_draw`、`_notification`、`_enter_tree`、`_init` 等），它们是引擎按名字调用的，改名会失效。
+
+> **现状说明**：现有代码里命名存在新旧混用（如 `setup_abilities` 与 `refreshData` 并存）。
 > 新写代码一律按上表执行；改造旧文件时**只改本次触碰到的部分**，不要为了统一风格去做全量重命名。
 
 ### 2.2 禁止占用 Godot 内置名（本项目约定，强制）
@@ -214,7 +216,9 @@ var array = [1, 2, 3]
 
 ### 3.1 所有声明都写显式类型（本项目约定）
 
-> 官方风格是「能推断就用 `:=`」，**本项目相反**：为了可读性与统一，一律写显式类型，不使用推断。
+> 官方风格是「能推断就用 `:=`」，**本项目相反**：为了可读性与统一，**成员变量、函数参数、返回值**一律写显式类型，不使用 `:=` 推断。
+>
+> **例外**：函数内部的**局部变量**可以不写类型（如 `var count = 0`），就近声明即可。
 
 ```gdscript
 # 好
@@ -247,7 +251,7 @@ func heal(amount):
 - 变量 / 参数 / 返回值：`名字: 类型`；返回类型用 `-> 类型`。
 - 数组元素类型：`Array[Enemy]`；字典键值类型：`Dictionary[String, int]`。
   **不支持嵌套**，如 `Array[Array[int]]` 是非法的。
-- 即使不打算做泛型约束，也至少写 `Array` / `Dictionary`，不要留裸 `var`。
+- 即使不打算做泛型约束，成员变量也至少写 `Array` / `Dictionary`，不要留裸 `var`（局部变量除外）。
 - `get_node()` 无法被推断类型，必须显式声明：
 
 ```gdscript
@@ -260,7 +264,7 @@ func heal(amount):
 - 需要暴露错误时，用 `is` / `is not` + `push_error()`，比 `as` 更安全。
 
 ```gdscript
-var player := body as PlayerController
+var player = body as PlayerController # 局部变量，可以不写类型
 if player == null:
 	return
 player.damage()
@@ -285,7 +289,7 @@ player.damage()
 extends Node2D
 ## 塔的基类：管理血量、升级与攻击流程。
 ##
-## 所有具体塔（机枪塔 / 火箭塔……）都继承本脚本，只需覆盖 [method _fire]。
+## 所有具体塔（机枪塔 / 火箭塔……）都继承本脚本，只需覆盖 [method fire]。
 ##
 ## @tutorial: https://example.com/tower
 ## @experimental
@@ -328,12 +332,12 @@ extends Node2D
 06. enums
 07. constants
 08. @export 变量
-09. 普通成员变量（public 在前，private（_ 前缀）在后）
+09. 普通成员变量（public 在前，private 在后；private 不加 `_` 前缀）
 10. @onready 变量
-11. Godot _ready 或者初始化函数
-12. 自定义函数（public 在前，private（_ 前缀）在后）
-13. Godot 内置虚函数 / 回调（放最后）：
-      _init / _enter_tree /  / _process / _physics_process /
+11. _ready()（或初始化函数）
+12. 自定义函数（public 在前，private 在后）
+13. 其它 Godot 内置虚函数 / 回调（放最后）：
+      _init / _enter_tree / _process / _physics_process /
       _input / _unhandled_input / _draw / _notification ……
 14. 内部类（inner class）
 ```
@@ -358,7 +362,7 @@ const MAX_HP: int = 100
 @export var speed: float = 60.0
 
 var state: State = State.IDLE
-var _attackCooldown: float = 0.0
+var attackCooldown: float = 0.0
 
 @onready var sprite: AnimatedSprite2D = $base
 
@@ -517,12 +521,13 @@ func _ready() -> void:
 
 ```gdscript
 func _ready() -> void:
-	$Button.pressed.connect(_onButtonPressed)
-	Game.enemyEscaped.connect(_onEnemyEscaped)
+	$Button.pressed.connect(onButtonPressed)
+	Game.enemyEscaped.connect(onEnemyEscaped)
 ```
 
 - 优先在代码里 `.connect()`（便于检索），或使用编辑器「节点 → 信号」面板连接。
-- 回调命名统一 `_onXxxYyy`（camelCase）。
+- 回调命名统一 `onXxxYyy`（camelCase，不加 `_` 前缀）。
+- ⚠️ 若在**编辑器**里连的信号，方法名写死在 `.tscn` 的 `[connection ... method=...]` 里，改名时必须一起改。
 
 ### 7.5 安全与健壮性
 
@@ -538,8 +543,9 @@ func _ready() -> void:
 
 - [ ] 命名：函数/变量 camelCase，常量 CONSTANT_CASE，类/枚举 PascalCase，信号过去式。
 - [ ] 没有与 Godot 内置名（属性 / 方法 / 全局函数）重名。
-- [ ] 类型全部显式声明，无 `:=` 推断，无裸 `var`。
-- [ ] 脚本顺序：自定义函数在前，内置虚函数在后。
+- [ ] 成员变量 / 参数 / 返回值类型全部显式声明；无 `:=` 推断、无裸 `var`（局部变量可省略类型）。
+- [ ] 私有成员不加 `_` 前缀；Godot 引擎回调保留 `_`。
+- [ ] 脚本顺序：`@onready` → `_ready` → 自定义函数 → 其它内置虚函数放最后。
 - [ ] 静态属性都在场景 Inspector 里设置，没有堆在代码里。
 - [ ] 可复用逻辑已抽成「基础场景 + 基础脚本」，没有重复造轮子。
 - [ ] Tab 缩进、行宽 ≤ 100、UTF-8 无 BOM、LF 换行。

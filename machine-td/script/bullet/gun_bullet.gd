@@ -1,13 +1,14 @@
 extends "res://script/bullet/bullet.gd"
 
 
-func _ready():
+func _ready() -> void:
 	alignToAngle()
-	lifetime = 3
+	lifetime = 3.0
 	vec = Vector2(500, 0).rotated(angle)
 	#damage = source_tower.atk if is_instance_valid(source_tower) else 20
 
-func _physics_process(delta):
+
+func _physics_process(delta: float) -> void:
 	timer += delta
 	position += vec * delta
 	if timer > lifetime:

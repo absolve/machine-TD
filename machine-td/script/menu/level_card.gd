@@ -1,17 +1,18 @@
 extends PanelContainer
 
-@export var level = 1 # 关卡名字
-@export var rating = 0 # 评分
-@export var description = '' # 关卡描述
-@export var isLock = true
-@export var levelId = 1 # 关卡id
-
-@onready var num = $VBoxContainer/num
-@onready var levelRating = $VBoxContainer/MarginContainer/levelRating
-@onready var selected = $Selected
-@onready var lockLabel = $LockLabel
-
 signal clicked
+
+@export var level: int = 1 # 关卡名字
+@export var rating: int = 0 # 评分
+@export var description: String = "" # 关卡描述
+@export var isLock: bool = true
+@export var levelId: int = 1 # 关卡id
+
+@onready var num: Label = $VBoxContainer/num
+@onready var levelRating: LevelRating = $VBoxContainer/MarginContainer/levelRating
+@onready var selected: TextureRect = $Selected
+@onready var lockLabel: Label = $LockLabel
+
 
 func _ready() -> void:
 	num.text = str(level)
@@ -27,7 +28,7 @@ func _ready() -> void:
 		lockLabel.visible = false
 
 
-func _on_mouse_entered() -> void:
+func onMouseEntered() -> void:
 	selected.visible = not isLock
 	# 悬停时把卡片自己的边框提亮。
 	# 用 self_modulate（只影响本节点自己的绘制）而不是 modulate ——
@@ -36,12 +37,12 @@ func _on_mouse_entered() -> void:
 		self_modulate = Color(1.35, 1.35, 1.35)
 
 
-func _on_mouse_exited() -> void:
+func onMouseExited() -> void:
 	selected.visible = false
 	self_modulate = Color.WHITE
 
 
-func _onGuiInput(_event):
-	if _event is InputEventMouseButton && _event.is_action_pressed("click"):
-		if !isLock:
+func onGuiInput(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.is_action_pressed("click"):
+		if not isLock:
 			clicked.emit(levelId)

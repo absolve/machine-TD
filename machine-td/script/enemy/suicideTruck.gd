@@ -1,12 +1,13 @@
 extends "res://script/enemy/enemy.gd"
-#自爆卡车 敌人
+# 自爆卡车：推进型自爆敌人
 
 # 与目标的引爆距离（必须小于该敌人在 Game.enemyInfo 里配置的 scope，否则雷达还没锁到目标就已擦身而过）
 const DETONATE_DISTANCE := 80.0
 
-var bombScene = preload("res://scene/explosion/bomb.tscn")
+var bombScene: PackedScene = preload("res://scene/explosion/bomb.tscn")
 
-func _ready():
+
+func _ready() -> void:
 	parent = get_parent()
 	setupEnemyInfo()
 
@@ -28,10 +29,10 @@ func triggerSelfExplode() -> void:
 	else:
 		queue_free()
 
-func _physics_process(_delta):
+func _physics_process(delta: float) -> void:
 	if points.size() == 0:
 		return
-	parent.progress += speed * _delta
+	parent.progress += speed * delta
 	if parent.progress_ratio >= 1:
 		triggerSelfExplode()
 		return

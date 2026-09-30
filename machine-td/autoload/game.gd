@@ -1,6 +1,6 @@
 extends Node
 
-const app_vec="1.0.0"  #程序版本
+const app_vec = "1.0.0" # 程序版本
 
 enum bulletType {
 	player, enemy
@@ -20,7 +20,7 @@ enum enemyType {
 # 塔类型
 enum towerType {
 	machineGunTower = 1000, cannonTower, rocketTower, EMPTower,
-	droneBase, teslaCoilTower, laserTower
+	droneBase, teslaCoilTower, laserTower, ironBox
 }
 
 # 塔信息
@@ -33,7 +33,7 @@ enum towerType {
 const towerInfo = {
 	towerType.machineGunTower: {
 	"name": "_TowerName_machineGun",
-	"atk": 14,          # DPS 35（scope 只有 140，覆盖窗口短，DPS 不能再压）
+	"atk": 14, # DPS 35（scope 只有 140，覆盖窗口短，DPS 不能再压）
 	"cost": 20,
 	"reload": 0.4,
 	"scope": 140,
@@ -45,7 +45,7 @@ const towerInfo = {
 	},
 	towerType.cannonTower: {
 	"name": "_TowerName_cannon",
-	"atk": 30,          # DPS 60（单发高、打得慢）
+	"atk": 30, # DPS 60（单发高、打得慢）
 	"cost": 35,
 	"reload": 0.5,
 	"scope": 180,
@@ -57,7 +57,7 @@ const towerInfo = {
 	},
 	towerType.rocketTower: {
 	"name": "_TowerName_rocket",
-	"atk": 40,          # DPS 40，范围伤害
+	"atk": 40, # DPS 40，范围伤害
 	"cost": 50,
 	"reload": 1.0,
 	"scope": 180,
@@ -69,7 +69,7 @@ const towerInfo = {
 	},
 	towerType.EMPTower: {
 	"name": "_TowerName_emp",
-	"atk": 30,          # 不减血，atk 当"减速强度%"用（见 emp_tower.gd）
+	"atk": 20, # 不减血，atk 当"减速强度%"用（见 emp_tower.gd）
 	"cost": 45,
 	"reload": 4.0,
 	"scope": 140,
@@ -81,7 +81,7 @@ const towerInfo = {
 	},
 	towerType.droneBase: {
 	"name": "_TowerName_drone",
-	"atk": 6,           # DPS 30，靠多架同时输出
+	"atk": 6, # DPS 30，靠多架同时输出
 	"cost": 65,
 	"reload": 0.2,
 	"scope": 240,
@@ -93,7 +93,7 @@ const towerInfo = {
 	},
 	towerType.teslaCoilTower: {
 	"name": "_TowerName_tesla",
-	"atk": 34,          # DPS 40，链式闪电每跳 75%
+	"atk": 34, # DPS 40，链式闪电每跳 75%
 	"cost": 65,
 	"reload": 0.85,
 	"scope": 240,
@@ -105,7 +105,7 @@ const towerInfo = {
 	},
 	towerType.laserTower: {
 	"name": "_TowerName_laser",
-	"atk": 38,          # DPS 38 单体，一次打所有锁定目标
+	"atk": 38, # DPS 38 单体，一次打所有锁定目标
 	"cost": 90,
 	"reload": 1.0,
 	"scope": 240,
@@ -115,6 +115,18 @@ const towerInfo = {
 	"desc": "_laserTowerDesc",
 	"gridSize": Vector2i(2, 2)
 	},
+	towerType.ironBox: {
+	"name": "_TowerName_ironBox",
+	"atk": 0, # 不攻击，纯防御
+	"cost": 30,
+	"reload": 1.0,
+	"scope": 0,
+	"hp": 400,
+	"maxHp": 400,
+	"initTime": 1.0,
+	"desc": "_ironBoxDesc",
+	"gridSize": Vector2i(1, 1)
+	}
 }
 
 
@@ -189,10 +201,9 @@ const enemyInfo = {
 }
 
 #支持的语言
-const language = [{'text': 'English', 'code': 'en' ,'id':0},
- {'text': '简体中文', 'code': 'zh' ,'id':1}]
+const language = [ {'text': 'English', 'code': 'en', 'id': 0},
+ {'text': '简体中文', 'code': 'zh', 'id': 1}]
 	
-
 
 @warning_ignore("unused_signal")
 signal enemyRewarded # 击败敌人
@@ -209,6 +220,7 @@ signal towerSold # 出售塔
 ## 塔**离开棋盘**时发出（出售 or 被打爆），参数是它占用的格子。
 ## map 收到后把格子归还到 occupiedArea。
 ## ⚠️ 原来只有"出售"会归回格子，塔被打爆时格子永远占着 —— 那块地就再也建不了塔了。
+@warning_ignore("unused_signal")
 signal towerGridReleased(coverGrid: Array[Vector2i])
 @warning_ignore("unused_signal")
 signal towerRepaired # 修理塔（参数：花费, 塔节点）
@@ -239,13 +251,13 @@ func getTowerDisplayName(tower_type) -> String:
 	return tr(str(towerInfo.get(tower_type, {}).get("name", "")))
 
 
-func getEnemyDisplayName(enemyType) -> String:
-	return tr(str(enemyInfo.get(enemyType, {}).get("name", "")))
+func getEnemyDisplayName(_enemyType) -> String:
+	return tr(str(enemyInfo.get(_enemyType, {}).get("name", "")))
 
 
 # 敌人行为定位标签（role 字段同样是翻译键）
-func getEnemyRoleName(enemyType) -> String:
-	return tr(str(enemyInfo.get(enemyType, {}).get("role", "")))
+func getEnemyRoleName(_enemyType) -> String:
+	return tr(str(enemyInfo.get(_enemyType, {}).get("role", "")))
 
 
 # 取翻译；未找到对应 key（语言文件未导入）时回退到默认文本

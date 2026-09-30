@@ -1,8 +1,8 @@
 extends "res://script/enemy/enemy.gd"
 
-#攻击直升机 敌人
+# 攻击直升机：空中对抗型敌人
 
-var bullet = preload("res://scene/bullet/enemy_bullet.tscn")
+var bullet: PackedScene = preload("res://scene/bullet/enemy_bullet.tscn")
 
 
 func _ready() -> void:
@@ -10,8 +10,8 @@ func _ready() -> void:
 	setupEnemyInfo()
 
 
-func fire(t):
-	if not is_instance_valid(t):
+func fire(target: Node2D) -> void:
+	if not is_instance_valid(target):
 		return
 	if canShot:
 		canShot = false
@@ -21,24 +21,24 @@ func fire(t):
 		var muzzle: Vector2 = getMuzzlePosition()
 		b.global_position = muzzle
 		# 瞄着目标发射，而不是顺着炮塔当时的朝向（炮塔没转到位时那会打偏）
-		b.angle = (t.global_position - muzzle).angle()
+		b.angle = (target.global_position - muzzle).angle()
 		b.damage = atk
-		b.target = t
+		b.target = target
 		Game.addObj(b)
 		# 开火音：每个敌人一种，带音高抖动，连射时不会听着像复读
 		SoundManage.playAt("mg_fire_b", muzzle, -8.0, randf_range(0.94, 1.08))
 		delayTimer.start()
 
 
-func _physics_process(_delta):
+func _physics_process(delta: float) -> void:
 	if points.size() == 0:
 		return
-	parent.progress += speed * _delta
+	parent.progress += speed * delta
 	if parent.progress_ratio >= 1:
 		Game.enemyEscaped.emit(lossPoints)
 		owner.queue_free()
 	# 取最近的**有效**目标，并把炮塔转过去；到位了才开火。
 	# 原来这里既不看最近、也不转炮塔，子弹顺着炮塔当时的朝向飞 —— 就是"胡乱攻击"。
 	var temp = pickTarget()
-	if temp != null and aimAt(temp, _delta):
+	if temp != null and aimAt(temp, delta):
 		fire(temp)

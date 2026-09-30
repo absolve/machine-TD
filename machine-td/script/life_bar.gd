@@ -1,26 +1,27 @@
 extends Node2D
 
-@onready var bar = $ProgressBar
-@onready var timer = $Timer
+@export var maxHp: int = 100:
+	set(newValue):
+		maxHp = newValue
+		bar.max_value = newValue
 
-@export var maxHp = 100:
-	set(v):
-		maxHp = v
-		bar.max_value = v
-		
-@export var value = 100:
-	set(v):
-		value = v
-		bar.value = v
+@export var value: int = 100:
+	set(newValue):
+		value = newValue
+		bar.value = newValue
 		bar.visible = true
 		timer.stop()
 		timer.start()
 
-func _ready():
+@onready var bar: ProgressBar = $ProgressBar
+@onready var timer: Timer = $Timer
+
+
+func _ready() -> void:
 	bar.max_value = maxHp
 	bar.value = value
 	bar.visible = false
 
 
-func _onTimerTimeout() -> void:
+func onTimerTimeout() -> void:
 	bar.visible = false

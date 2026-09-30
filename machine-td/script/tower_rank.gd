@@ -1,7 +1,9 @@
 extends Node2D
 
-@onready var ani = $Ani
-@export var level = 1 # 等级
+@export var level: int = 1 # 等级
+
+@onready var ani: AnimatedSprite2D = $Ani
+
 
 func _ready() -> void:
 	if level > 1:
@@ -10,11 +12,12 @@ func _ready() -> void:
 	else:
 		ani.hide()
 
+
 # 设置等级
-func setLevel(_level: int) -> void:
-	self.level = _level
-	if _level > 1:
+func setLevel(newLevel: int) -> void:
+	level = newLevel
+	if newLevel > 1:
 		ani.show()
-		ani.play("lv" + str(_level))
+		ani.play("lv" + str(newLevel))
 	else:
 		ani.hide()

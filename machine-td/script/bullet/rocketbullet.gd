@@ -1,14 +1,16 @@
 extends "res://script/bullet/bullet.gd"
 
-var bombScene = preload("res://scene/explosion/bomb.tscn")
+var bombScene: PackedScene = preload("res://scene/explosion/bomb.tscn")
 
-func _ready():
+
+func _ready() -> void:
 	alignToAngle()
-	lifetime = 5
+	lifetime = 5.0
 	vec = Vector2(300, 0).rotated(angle)
 	damage = 40
 
-func _spawnBomb() -> void:
+
+func spawnBomb() -> void:
 	if is_queued_for_deletion():
 		return
 	spawnHitEffect()
@@ -27,12 +29,12 @@ func _spawnBomb() -> void:
 	Game.addObj(bomb)
 	queue_free()
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	timer += delta
 	position += vec * delta
 	if timer > lifetime:
-		_spawnBomb()
+		spawnBomb()
 		return
 	var temp = get_overlapping_areas()
 	if temp:
-		_spawnBomb()
+		spawnBomb()

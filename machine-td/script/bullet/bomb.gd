@@ -1,8 +1,5 @@
 extends Area2D
 
-@onready var aniNode = $Ani
-@onready var shapeNode = $shape
-
 var blastRadius: float = 90.0 # 爆炸范围
 var explosionScale: float = 1.0 # 爆炸动画缩放，根据爆炸范围调整
 var damage: int = 40 # 伤害
@@ -13,12 +10,15 @@ var hasDamage: bool = false
 var processedEnemies: Array[Enemy] = []
 var processedTowers: Array[Tower] = []
 
+@onready var aniNode: AnimatedSprite2D = $Ani
+@onready var shapeNode: CollisionShape2D = $shape
+
 # 由 collision_mask 决定爆炸能命中哪些对象。
 # 例如：敌人通常在 layer 2，塔通常在 layer 1。
 # 这样炸弹脚本不需要手写敌人/塔分支判定。
 var targetMask: int = 0
 
-func _ready():
+func _ready() -> void:
 	if shapeNode and shapeNode.shape is CircleShape2D:
 		shapeNode.shape.radius = blastRadius
 	if blastRadius > 0:
@@ -35,15 +35,17 @@ func _ready():
 		collision_mask = targetMask
 	aniNode.play("default")
 
-func _onAniFrameChanged():
+
+func onAniFrameChanged() -> void:
 	if not hasDamage and aniNode.frame >= 1:
 		hasDamage = true
 
-func _onAniAnimationFinished():
+
+func onAniAnimationFinished() -> void:
 	queue_free()
 
 
-func _physics_process(_delta):
+func _physics_process(_delta: float) -> void:
 	if hasDamage:
 		return
 

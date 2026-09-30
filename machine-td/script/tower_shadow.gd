@@ -1,23 +1,25 @@
 extends Area2D
 
 
-@onready var shape = $shape
-@onready var ani = $Ani
-
-var placeable = false # 可放置
-var active = false # 是否活动
-var towerType = Game.towerType.machineGunTower # 类型
-var cost = 0 # 花费
+var placeable: bool = false # 可放置
+var active: bool = false # 是否活动
+var towerType: Game.towerType = Game.towerType.machineGunTower # 类型
+var cost: int = 0 # 花费
 var gridSize: Vector2i = Vector2i(1, 1) # 占用的网格宽高 (列, 行)
-var drawColor = Color.INDIAN_RED # 绘制颜色
-var scope=0  #攻击范围
+var drawColor: Color = Color.INDIAN_RED # 绘制颜色
+var scope: float = 0.0 # 攻击范围
 var radarColor: Color = Color(0.25, 0.75, 1.0, 1.0)
 
-func _ready():
+@onready var shape: CollisionShape2D = $shape
+@onready var ani: AnimatedSprite2D = $Ani
+
+
+func _ready() -> void:
 	#print(shape.shape.get_rect())
 	visible = false
 
-func setActive():
+
+func setActive() -> void:
 	active = true
 	visible = true
 	# 动画名 = 塔类型名（tower_shadow.tscn 里每种塔一条动画）
@@ -32,14 +34,15 @@ func setActive():
 		_: anim = "machineGunTower"
 	ani.play(anim)
 
-func setInactive():
+
+func setInactive() -> void:
 	active = false
 	visible = false
 	placeable = false
 
 func _physics_process(_delta: float) -> void:
 	if active:
-		if !placeable:
+		if not placeable:
 			drawColor = Color.INDIAN_RED
 		else:
 			drawColor = Color.GREEN

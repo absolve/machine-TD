@@ -1,16 +1,16 @@
 extends "res://script/enemy/enemy.gd"
-#导弹车  每隔一段时间发射导弹攻击范围的防御塔
+## 导弹车：每隔一段时间发射导弹攻击范围内的防御塔。
 
-var bulletScene = preload("res://scene/bullet/enemy_missile.tscn")
+var bulletScene: PackedScene = preload("res://scene/bullet/enemy_missile.tscn")
 
 
-func _ready():
+func _ready() -> void:
 	parent = get_parent()
 	setupEnemyInfo()
 
 
-func fire(t):
-	if not is_instance_valid(t):
+func fire(target: Node2D) -> void:
+	if not is_instance_valid(target):
 		return
 	if canShot:
 		canShot = false
@@ -20,22 +20,22 @@ func fire(t):
 		var muzzle: Vector2 = getMuzzlePosition()
 		b.global_position = muzzle
 		# 瞄着目标发射，而不是顺着炮塔当时的朝向（炮塔没转到位时那会打偏）
-		b.angle = (t.global_position - muzzle).angle()
+		b.angle = (target.global_position - muzzle).angle()
 		b.damage = atk
-		b.target = t
+		b.target = target
 		Game.addObj(b)
 		# 开火音：每个敌人一种，带音高抖动，连射时不会听着像复读
 		SoundManage.playAt("rocket_fire_b", muzzle, -6.0, randf_range(0.95, 1.05))
 		delayTimer.start()
 
 
-func _physics_process(_delta):
+func _physics_process(delta: float) -> void:
 	if points.size() == 0:
 		return
-	parent.progress += speed * _delta
+	parent.progress += speed * delta
 	if parent.progress_ratio >= 1:
 		Game.enemyEscaped.emit(lossPoints)
 		owner.queue_free()
 	var temp = pickTarget()
-	if temp != null and aimAt(temp, _delta):
+	if temp != null and aimAt(temp, delta):
 		fire(temp)

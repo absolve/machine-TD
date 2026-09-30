@@ -2,7 +2,7 @@ extends "res://script/tower/tower.gd"
 
 var bullet = preload("res://scene/bullet/gunBullet.tscn")
 
-@onready var shotSound=$ShotSound
+@onready var shotSound = $ShotSound
 
 func _ready():
 	turret.rotation = randf() * TAU
@@ -43,7 +43,7 @@ func _physics_process(_delta):
 	if temp == null:
 		return
 
-	var muzzlePos= marker.global_position
+	var muzzlePos = marker.global_position
 	var direction = temp.global_position - muzzlePos
 	if direction.length_squared() < 0.01:
 		return

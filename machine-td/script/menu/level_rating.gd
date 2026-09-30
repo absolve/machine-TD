@@ -1,35 +1,39 @@
 extends HBoxContainer
+## 关卡星级评价。三颗星按 rating 点亮，rating 超出 0~3 会被夹紧。
+class_name LevelRating
 
+const STAR_FULL: Texture2D = preload("res://sprite/star-4.png")
+const STAR_EMPTY: Texture2D = preload("res://sprite/star-2.png")
 
-@onready var star1 = $Star1
-@onready var star2 = $Star2
-@onready var star3 = $Star3
+var ratingValue: int = 0
 
-var starFull = preload("res://sprite/star-4.png")
-var starEmpty = preload("res://sprite/star-2.png")
-
-var _rating: int = 0
 var rating: int:
-	set(val):
-		_rating = clampi(val, 0, 3)
+	set(value):
+		ratingValue = clampi(value, 0, 3)
 		updateRating()
 	get:
-		return _rating
+		return ratingValue
+
+@onready var star1: TextureRect = $Star1
+@onready var star2: TextureRect = $Star2
+@onready var star3: TextureRect = $Star3
+
 
 func _ready() -> void:
 	pass
 
-#更新评分显示
-func updateRating():
-	star1.texture = starEmpty
-	star2.texture = starEmpty
-	star3.texture = starEmpty
+
+# 更新评分显示
+func updateRating() -> void:
+	star1.texture = STAR_EMPTY
+	star2.texture = STAR_EMPTY
+	star3.texture = STAR_EMPTY
 	if rating == 1:
-		star1.texture = starFull
+		star1.texture = STAR_FULL
 	if rating == 2:
-		star1.texture = starFull
-		star2.texture = starFull
+		star1.texture = STAR_FULL
+		star2.texture = STAR_FULL
 	if rating == 3:
-		star1.texture = starFull
-		star2.texture = starFull
-		star3.texture = starFull
+		star1.texture = STAR_FULL
+		star2.texture = STAR_FULL
+		star3.texture = STAR_FULL

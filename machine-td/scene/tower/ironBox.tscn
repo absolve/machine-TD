@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://cksybgmaq8aci"]
+
+[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_70ned"]
+[ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="2_qwmsa"]
+[ext_resource type="Script" uid="uid://c231fmff0n34w" path="res://script/tower/iron_box.gd" id="2_v6a2k"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qwmsa"]
+size = Vector2(64, 64)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_70ned"]
+resource_local_to_scene = true
+shader = ExtResource("2_qwmsa")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 14.0
+shader_parameter/flash_amplitude = 0.8
+shader_parameter/outline_thickness = 0.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qwmsa"]
+resource_local_to_scene = true
+shader = ExtResource("2_qwmsa")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 14.0
+shader_parameter/flash_amplitude = 0.8
+shader_parameter/outline_thickness = 0.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+
+[node name="Tower" unique_id=1676258242 instance=ExtResource("1_70ned")]
+script = ExtResource("2_v6a2k")
+
+[node name="shape" parent="." index="0" unique_id=1958475246]
+shape = SubResource("RectangleShape2D_qwmsa")
+
+[node name="base" parent="." index="1" unique_id=1580788916]
+material = SubResource("ShaderMaterial_70ned")
+
+[node name="turret" parent="." index="3" unique_id=1212426607]
+material = SubResource("ShaderMaterial_qwmsa")
+
+[node name="ProgressBar" parent="." index="9" unique_id=1203597731]
+offset_left = -32.0
+offset_right = 32.0

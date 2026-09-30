@@ -3,16 +3,16 @@ extends Area2D
 ## 命中音候选。打装甲 / 打机械 / 打硬表面分开，听起来才像"打中了不一样的东西"。
 const HIT_SOUNDS: Array[String] = ["hit_metal", "hit_hard", "hit_armor"]
 
-var vec = Vector2.ZERO # 速度
-var target = null # 目标
-var timer = 0
-var lifetime = 0 # 存活时间
-var angle = 0 # 角度
-var damage = 0 # 伤害
-var speed = 0 # 速度
+var vec: Vector2 = Vector2.ZERO # 速度
+var target: Node2D = null # 目标
+var timer: float = 0.0
+var lifetime: float = 0.0 # 存活时间
+var angle: float = 0.0 # 角度
+var damage: int = 0 # 伤害
+var speed: float = 0.0 # 速度
 var sourceTower: Tower = null
 
-@onready var aniNode = $Ani
+@onready var aniNode: AnimatedSprite2D = $Ani
 
 
 ## 让**贴图朝向**跟上飞行方向。

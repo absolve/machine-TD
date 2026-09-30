@@ -2,14 +2,15 @@ extends "res://script/bullet/bullet.gd"
 
 @export var bulletSpeed: float = 400.0
 
-func _ready():
+func _ready() -> void:
 	alignToAngle()
 	lifetime = 3.0
 	vec = Vector2(bulletSpeed, 0).rotated(angle)
 	if damage <= 0:
 		damage = 15
 
-func _physics_process(delta):
+
+func _physics_process(delta: float) -> void:
 	timer += delta
 	position += vec * delta
 	if timer > lifetime:

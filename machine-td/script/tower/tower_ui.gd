@@ -19,7 +19,9 @@ var tower7 = preload("res://sprite/tower/tower_drone.png")
 
 var towerIcon = preload("res://scene/tower_icon.tscn")
 
-var towersData = [ {'type': Game.towerType.machineGunTower, 'img': tower1},
+var towersData = [ 
+	{'type': Game.towerType.ironBox, 'img': tower1},
+	{'type': Game.towerType.machineGunTower, 'img': tower1},
 {'type': Game.towerType.cannonTower, 'img': tower2}, {'type': Game.towerType.rocketTower, 'img': tower3},
 {'type': Game.towerType.EMPTower, 'img': tower4},
 {'type': Game.towerType.teslaCoilTower, 'img': tower5},
