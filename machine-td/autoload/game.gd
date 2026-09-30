@@ -261,7 +261,7 @@ func getEnemyRoleName(_enemyType) -> String:
 
 
 # 取翻译；未找到对应 key（语言文件未导入）时回退到默认文本
-func _t(key: String, fallback: String) -> String:
+func t(key: String, fallback: String) -> String:
 	if key.is_empty():
 		return fallback
 	var translated: String = tr(key)

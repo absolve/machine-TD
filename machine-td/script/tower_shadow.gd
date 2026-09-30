@@ -31,6 +31,7 @@ func setActive() -> void:
 		Game.towerType.teslaCoilTower: anim = "teslaCoilTower"
 		Game.towerType.laserTower: anim = "laserTower"
 		Game.towerType.droneBase: anim = "droneBase"
+		Game.towerType.ironBox:anim="ironBox"
 		_: anim = "machineGunTower"
 	ani.play(anim)
 

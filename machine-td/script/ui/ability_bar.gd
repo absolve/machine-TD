@@ -102,18 +102,18 @@ func _showTooltip(abilityId: String, slot: Control) -> void:
 	var parts: Array[String] = []
 	var target_type: int = int(data.get("target_type", AbilityManager.TargetType.NONE))
 	if target_type == AbilityManager.TargetType.POSITION:
-		parts.append(_t("_ability_target_position", "Click the map to choose an area."))
+		parts.append(Game.t("_ability_target_position", "Click the map to choose an area."))
 	# 宝石成本放最前面 —— 这是现在最关键的资源限制
 	var cost: int = AbilityManager.getGemCost(abilityId)
 	if cost > 0:
-		var costText: String = _t("_ability_gem_cost_fmt", "Cost: %d gem") % cost
+		var costText: String = Game.t("_ability_gem_cost_fmt", "Cost: %d gem") % cost
 		if not AbilityManager.canAfford(abilityId):
-			costText += "  " + _t("_ability_gem_lack", "(not enough)")
+			costText += "  " + Game.t("_ability_gem_lack", "(not enough)")
 		parts.append(costText)
-	parts.append(_t("_ability_cooldown_fmt", "Cooldown: %ss") % int(AbilityManager.getCooldownTotal(abilityId)))
+	parts.append(Game.t("_ability_cooldown_fmt", "Cooldown: %ss") % int(AbilityManager.getCooldownTotal(abilityId)))
 	var effect: Dictionary = data.get("effect", {})
 	if effect.has("duration"):
-		parts.append(_t("_ability_duration_fmt", "Duration: %ss") % int(effect.get("duration", 0)))
+		parts.append(Game.t("_ability_duration_fmt", "Duration: %ss") % int(effect.get("duration", 0)))
 	infoLabel.text = "\n".join(parts)
 
 	tooltipPanel.visible = true
@@ -129,11 +129,3 @@ func _clearSlots() -> void:
 		child.queue_free()
 	_slots.clear()
 	tooltipPanel.visible = false
-
-
-# 取翻译；语言文件未导入该 key 时回退到默认英文文本
-func _t(key: String, fallback: String) -> String:
-	if key.is_empty():
-		return fallback
-	var translated: String = tr(key)
-	return fallback if translated == key else translated

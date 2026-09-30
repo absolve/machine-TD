@@ -34,8 +34,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = false
 	# 文字走翻译；调用 play() 时可以覆盖
-	titleLabel.text = _t("_BattleStart", "Battle Start")
-	subLabel.text = _t("_EnemiesIncoming", "Enemies incoming")
+	titleLabel.text = Game.t("_BattleStart", "Battle Start")
+	subLabel.text = Game.t("_EnemiesIncoming", "Enemies incoming")
 
 
 ## 播一遍。title / sub 留空就用翻译里的默认文案。
@@ -82,10 +82,3 @@ func skip() -> void:
 		_tween.kill()
 	if visible:
 		_onDone()
-
-
-func _t(key: String, fallback: String) -> String:
-	if key.is_empty():
-		return fallback
-	var translated: String = tr(key)
-	return fallback if translated == key else translated

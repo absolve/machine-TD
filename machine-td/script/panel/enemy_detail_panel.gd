@@ -33,17 +33,17 @@ var enemy: Node = null # 当前选中的敌人
 
 func _ready() -> void:
 	visible = false
-	hpTitle.text = _t("_HP", "HP")
-	atkTitle.text = _t("_Atk", "ATK")
-	reloadTitle.text = _t("_FireRate", "Fire Rate")
-	dpsTitle.text = _t("_Dps", "DPS")
-	speedTitle.text = _t("_Speed", "Speed")
-	armorTitle.text = _t("_Armor", "Armor")
-	flyingTitle.text = _t("_Flying", "Flying")
-	rewardTitle.text = _t("_Reward", "Kill Reward")
-	escapeTitle.text = _t("_EscapeCost", "Escape Loss")
-	expTitle.text = _t("_RewardExp", "Kill EXP")
-	hintLabel.text = _t("_EnemyPanelHint", "Click the enemy again or empty ground to deselect.")
+	hpTitle.text = Game.t("_HP", "HP")
+	atkTitle.text = Game.t("_Atk", "ATK")
+	reloadTitle.text = Game.t("_FireRate", "Fire Rate")
+	dpsTitle.text = Game.t("_Dps", "DPS")
+	speedTitle.text = Game.t("_Speed", "Speed")
+	armorTitle.text = Game.t("_Armor", "Armor")
+	flyingTitle.text = Game.t("_Flying", "Flying")
+	rewardTitle.text = Game.t("_Reward", "Kill Reward")
+	escapeTitle.text = Game.t("_EscapeCost", "Escape Loss")
+	expTitle.text = Game.t("_RewardExp", "Kill EXP")
+	hintLabel.text = Game.t("_EnemyPanelHint", "Click the enemy again or empty ground to deselect.")
 
 
 # 选中敌人 -> 显示该敌人信息
@@ -83,7 +83,7 @@ func refresh() -> void:
 		dpsValueLabel.text = "--"
 	elif e.shootDelay <= 0.0:
 		# 自爆型：一次性总伤害，没有持续输出
-		reloadValueLabel.text = _t("_OneShot", "One-shot")
+		reloadValueLabel.text = Game.t("_OneShot", "One-shot")
 		dpsValueLabel.text = "--"
 	else:
 		reloadValueLabel.text = _fmtFireRate(e.shootDelay)
@@ -92,7 +92,7 @@ func refresh() -> void:
 	# 移动与防护
 	speedValueLabel.text = str(e.speed)
 	armorValueLabel.text = "%d%%" % roundi(e.armor * 100.0)
-	flyingValueLabel.text = _t("_Yes", "Yes") if e.flying else _t("_No", "No")
+	flyingValueLabel.text = Game.t("_Yes", "Yes") if e.flying else Game.t("_No", "No")
 
 	# 收益与代价
 	rewardValueLabel.text = str(e.reward)
@@ -105,14 +105,6 @@ func _fmtFireRate(reload_s: float) -> String:
 	if reload_s <= 0.0:
 		return "--"
 	return "%.1f/s" % (1.0 / reload_s)
-
-
-# 取翻译；未找到对应 key（语言文件未导入）时回退到默认英文文本
-func _t(key: String, fallback: String) -> String:
-	if key.is_empty():
-		return fallback
-	var translated: String = tr(key)
-	return fallback if translated == key else translated
 
 
 func _process(_delta: float) -> void:

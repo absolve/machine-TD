@@ -563,11 +563,11 @@ func areaDamage(center: Vector2, radius: float, damage: int) -> bool:
 			hitCount += 1
 	ExplosionManage.playExplosion(center)
 	if hitCount > 0:
-		addNotice(_t("_ability_bombard_hit", "Airstrike hit %d enemies") % hitCount, Color(1.0, 0.776, 0.102))
+		addNotice(Game.t("_ability_bombard_hit", "Airstrike hit %d enemies") % hitCount, Color(1.0, 0.776, 0.102))
 		return true
 	# ⚠️ 这里必须返回 false：技能现在要花宝石，而 AbilityManager 只有拿到 true 才扣。
 	#    如果没打中也返回 true，玩家会**白丢一颗宝石**（以前不花宝石时返回啥都无所谓）。
-	addNotice(_t("_ability_bombard_miss", "Airstrike hit nothing"), Color(0.86, 0.92, 0.95))
+	addNotice(Game.t("_ability_bombard_miss", "Airstrike hit nothing"), Color(0.86, 0.92, 0.95))
 	return false
 
 
@@ -580,18 +580,11 @@ func areaInvincible(center: Vector2, radius: float, duration: float) -> bool:
 		tower.setInvincible(duration)
 	if towers.is_empty():
 		# 同上：范围内没有塔就不算生效，不扣宝石、不进冷却
-		addNotice(_t("_ability_invincible_miss", "No tower in range"), Color(0.86, 0.92, 0.95))
+		addNotice(Game.t("_ability_invincible_miss", "No tower in range"), Color(0.86, 0.92, 0.95))
 		return false
-	addNotice(_t("_ability_invincible_hit", "%d towers are now invincible") % towers.size(), Color(1.0, 0.776, 0.102))
+	addNotice(Game.t("_ability_invincible_hit", "%d towers are now invincible") % towers.size(), Color(1.0, 0.776, 0.102))
 	return true
 
-
-# 取翻译；语言文件未导入该 key 时回退到默认英文文本
-func _t(key: String, fallback: String) -> String:
-	if key.is_empty():
-		return fallback
-	var translated: String = tr(key)
-	return fallback if translated == key else translated
 
 func _onButtonPressed():
 	# 地图内按钮用 ui_confirm（区别于菜单里的 coin）

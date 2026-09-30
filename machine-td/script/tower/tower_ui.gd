@@ -16,11 +16,12 @@ var tower4 = preload("res://sprite/tower/turret_emp.png")
 var tower5 = preload("res://sprite/tower/tower_tesla.png")
 var tower6 = preload("res://sprite/tower/tower_laser.png")
 var tower7 = preload("res://sprite/tower/tower_drone.png")
+var tower8 = preload("res://sprite/tower/turret_ironBox.png")
 
 var towerIcon = preload("res://scene/tower_icon.tscn")
 
-var towersData = [ 
-	{'type': Game.towerType.ironBox, 'img': tower1},
+var towersData = [
+	{'type': Game.towerType.ironBox, 'img': tower8},
 	{'type': Game.towerType.machineGunTower, 'img': tower1},
 {'type': Game.towerType.cannonTower, 'img': tower2}, {'type': Game.towerType.rocketTower, 'img': tower3},
 {'type': Game.towerType.EMPTower, 'img': tower4},

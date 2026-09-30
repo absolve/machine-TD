@@ -29,13 +29,13 @@ var _lastSellText: String = ""
 
 func _ready() -> void:
 	visible = false
-	hpTitle.text = _t("_HP", "HP")
-	expTitle.text = _t("_EXP", "EXP")
-	atkTitle.text = _t("_Atk", "ATK")
-	reloadTitle.text = _t("_FireRate", "Fire Rate")
-	scopeTitle.text = _t("_Range", "Range")
-	costTitle.text = _t("_Cost", "Cost")
-	hintLabel.text = _t("_PanelHint", "Click the tower again or empty ground to deselect.")
+	hpTitle.text = Game.t("_HP", "HP")
+	expTitle.text = Game.t("_EXP", "EXP")
+	atkTitle.text = Game.t("_Atk", "ATK")
+	reloadTitle.text = Game.t("_FireRate", "Fire Rate")
+	scopeTitle.text = Game.t("_Range", "Range")
+	costTitle.text = Game.t("_Cost", "Cost")
+	hintLabel.text = Game.t("_PanelHint", "Click the tower again or empty ground to deselect.")
 	btnRepair.pressed.connect(_onRepairPressed)
 	btnSell.pressed.connect(_onSellPressed)
 	_refreshActionText()
@@ -43,14 +43,14 @@ func _ready() -> void:
 
 # 修理按钮文案：满血时提示无需修理，否则显示“修理 + 费用”
 func _refreshActionText() -> void:
-	var repairText: String = _t("_RepairFull", "HP Full")
-	var sellText: String = _t("_Sell", "Sell")
+	var repairText: String = Game.t("_RepairFull", "HP Full")
+	var sellText: String = Game.t("_Sell", "Sell")
 	if is_instance_valid(tower):
 		var t: Tower = tower as Tower
 		if t != null:
 			if t.repairCost > 0:
-				repairText = "%s %d" % [_t("_Repair", "Repair"), t.repairCost]
-			sellText = "%s %d" % [_t("_Sell", "Sell"), int(t.sellingPrice)]
+				repairText = "%s %d" % [Game.t("_Repair", "Repair"), t.repairCost]
+			sellText = "%s %d" % [Game.t("_Sell", "Sell"), int(t.sellingPrice)]
 	if repairText != _lastRepairText:
 		_lastRepairText = repairText
 		btnRepair.text = repairText
@@ -134,14 +134,6 @@ func _fmtFireRate(reload_s: float) -> String:
 	if reload_s <= 0.0:
 		return "--"
 	return "%.1f/s" % (1.0 / reload_s)
-
-
-# 取翻译；未找到对应 key（语言文件未导入）时回退到默认英文文本
-func _t(key: String, fallback: String) -> String:
-	if key.is_empty():
-		return fallback
-	var translated: String = tr(key)
-	return fallback if translated == key else translated
 
 
 func _process(_delta: float) -> void:

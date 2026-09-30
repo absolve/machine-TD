@@ -82,6 +82,7 @@ var TOWERICONS: Dictionary = {
 	Game.towerType.droneBase: "res://sprite/icon/unit/droneBase.png",
 	Game.towerType.teslaCoilTower: "res://sprite/icon/unit/teslaCoilTower.png",
 	Game.towerType.laserTower: "res://sprite/icon/unit/laserTower.png",
+	Game.towerType.ironBox: "res://sprite/icon/unit/ironBox.png",
 }
 
 # ---------- 节点 ----------
@@ -183,11 +184,11 @@ func refresh() -> void:
 
 
 func _applyTexts() -> void:
-	titleLabel.text = _t("_Codex", "Codex")
-	closeButton.text = _t("_Close", "Close")
+	titleLabel.text = Game.t("_Codex", "Codex")
+	closeButton.text = Game.t("_Close", "Close")
 	# 页签带上条目数，新增敌人 / 塔时会自己变
-	tabEnemies.text = "%s  %d" % [_t("_CodexEnemies", "Enemies"), Game.enemyInfo.size()]
-	tabTowers.text = "%s  %d" % [_t("_CodexTowers", "Towers"), Game.towerInfo.size()]
+	tabEnemies.text = "%s  %d" % [Game.t("_CodexEnemies", "Enemies"), Game.enemyInfo.size()]
+	tabTowers.text = "%s  %d" % [Game.t("_CodexTowers", "Towers"), Game.towerInfo.size()]
 
 
 func _styleTab(button: Button, active: bool) -> void:
@@ -276,7 +277,7 @@ func _showDetail(entry: Dictionary) -> void:
 
 func _showHint() -> void:
 	detailIcon.texture = null
-	detailName.text = _t("_CodexHoverHint", "Pick a unit to see its details")
+	detailName.text = Game.t("_CodexHoverHint", "Pick a unit to see its details")
 	detailName.modulate = COLOR_LABEL
 	detailTag.text = ""
 	detailDesc.text = ""
@@ -326,22 +327,22 @@ func _enemyEntry(id: int) -> Dictionary:
 	return {
 		"name": Game.getEnemyDisplayName(id),
 		"tag": Game.getEnemyRoleName(id),
-		"desc": _t(str(ENEMY_DESC_KEYS.get(str(info.get("role", "")), "")), ""),
+		"desc": Game.t(str(ENEMY_DESC_KEYS.get(str(info.get("role", "")), "")), ""),
 		"icon": _icon(ENEMY_ICONS, id),
 		"color": COLOR_RED,
 		"stat_columns": 6, # 11 项数值排两行
 		"stats": [
-			[_t("_HP", "HP"), str(int(info.get("hp", 0))), COLOR_RED],
-			[_t("_Speed", "Speed"), str(int(info.get("speed", 0))), COLOR_TEXT],
-			[_t("_Armor", "Armor"), "%d%%" % roundi(float(info.get("armor", 0.0)) * 100.0), COLOR_TEXT],
-			[_t("_Flying", "Flying"), _yesNo(bool(info.get("flying", false))), COLOR_TEXT],
-			[_t("_Atk", "ATK"), _positive(atk), COLOR_TEXT],
-			[_t("_FireRate", "Fire Rate"), _fireRate(atk, delay), COLOR_TEXT],
-			[_t("_Dps", "DPS"), _dps(atk, delay), COLOR_TEXT],
-			[_t("_Range", "Range"), _positive(int(info.get("scope", 0))), COLOR_TEXT],
-			[_t("_Reward", "Kill Reward"), str(int(info.get("reward", 0))), COLOR_GOLD],
-			[_t("_EscapeCost", "Escape Loss"), str(int(info.get("lossPoints", 0))), COLOR_RED],
-			[_t("_RewardExp", "Kill EXP"), str(int(info.get("rewardExp", 0))), COLOR_GOLD],
+			[Game.t("_HP", "HP"), str(int(info.get("hp", 0))), COLOR_RED],
+			[Game.t("_Speed", "Speed"), str(int(info.get("speed", 0))), COLOR_TEXT],
+			[Game.t("_Armor", "Armor"), "%d%%" % roundi(float(info.get("armor", 0.0)) * 100.0), COLOR_TEXT],
+			[Game.t("_Flying", "Flying"), _yesNo(bool(info.get("flying", false))), COLOR_TEXT],
+			[Game.t("_Atk", "ATK"), _positive(atk), COLOR_TEXT],
+			[Game.t("_FireRate", "Fire Rate"), _fireRate(atk, delay), COLOR_TEXT],
+			[Game.t("_Dps", "DPS"), _dps(atk, delay), COLOR_TEXT],
+			[Game.t("_Range", "Range"), _positive(int(info.get("scope", 0))), COLOR_TEXT],
+			[Game.t("_Reward", "Kill Reward"), str(int(info.get("reward", 0))), COLOR_GOLD],
+			[Game.t("_EscapeCost", "Escape Loss"), str(int(info.get("lossPoints", 0))), COLOR_RED],
+			[Game.t("_RewardExp", "Kill EXP"), str(int(info.get("rewardExp", 0))), COLOR_GOLD],
 		],
 	}
 
@@ -353,20 +354,20 @@ func _towerEntry(id: int) -> Dictionary:
 	var gridSize: Vector2i = info.get("gridSize", Vector2i.ONE)
 	return {
 		"name": Game.getTowerDisplayName(id),
-		"tag": "%s %d" % [_t("_Cost", "Cost"), int(info.get("cost", 0))],
-		"desc": _t(str(info.get("desc", "")), ""),
+		"tag": "%s %d" % [Game.t("_Cost", "Cost"), int(info.get("cost", 0))],
+		"desc": Game.t(str(info.get("desc", "")), ""),
 		"icon": _icon(TOWERICONS, id),
 		"color": COLOR_TEAL,
 		"stat_columns": 4, # 8 项数值排两行
 		"stats": [
-			[_t("_Atk", "ATK"), str(atk), COLOR_TEXT],
-			[_t("_FireRate", "Fire Rate"), _fireRate(atk, reload), COLOR_TEXT],
-			[_t("_Dps", "DPS"), _dps(atk, reload), COLOR_TEXT],
-			[_t("_Range", "Range"), str(int(info.get("scope", 0))), COLOR_TEXT],
-			[_t("_HP", "HP"), str(int(info.get("hp", 0))), COLOR_TEXT],
-			[_t("_Cost", "Cost"), str(int(info.get("cost", 0))), COLOR_GOLD],
-			[_t("_InitTime", "Build Time"), "%.1fs" % float(info.get("initTime", 0.0)), COLOR_TEXT],
-			[_t("_GridSize", "Grid"), "%dx%d" % [gridSize.x, gridSize.y], COLOR_TEXT],
+			[Game.t("_Atk", "ATK"), str(atk), COLOR_TEXT],
+			[Game.t("_FireRate", "Fire Rate"), _fireRate(atk, reload), COLOR_TEXT],
+			[Game.t("_Dps", "DPS"), _dps(atk, reload), COLOR_TEXT],
+			[Game.t("_Range", "Range"), str(int(info.get("scope", 0))), COLOR_TEXT],
+			[Game.t("_HP", "HP"), str(int(info.get("hp", 0))), COLOR_TEXT],
+			[Game.t("_Cost", "Cost"), str(int(info.get("cost", 0))), COLOR_GOLD],
+			[Game.t("_InitTime", "Build Time"), "%.1fs" % float(info.get("initTime", 0.0)), COLOR_TEXT],
+			[Game.t("_GridSize", "Grid"), "%dx%d" % [gridSize.x, gridSize.y], COLOR_TEXT],
 		],
 	}
 
@@ -390,7 +391,7 @@ func _clearChildren(node: Node) -> void:
 
 
 func _yesNo(value: bool) -> String:
-	return _t("_Yes", "Yes") if value else _t("_No", "No")
+	return Game.t("_Yes", "Yes") if value else Game.t("_No", "No")
 
 
 ## 只有正数才有意义的值（不参战的敌人 scope / atk 都是 0）
@@ -402,18 +403,10 @@ func _positive(value: int) -> String:
 func _fireRate(atk: int, delay_s: float) -> String:
 	if atk <= 0:
 		return "--"
-	return _t("_OneShot", "One-shot") if delay_s <= 0.0 else "%.1f/s" % (1.0 / delay_s)
+	return Game.t("_OneShot", "One-shot") if delay_s <= 0.0 else "%.1f/s" % (1.0 / delay_s)
 
 
 func _dps(atk: int, delay_s: float) -> String:
 	if atk <= 0 or delay_s <= 0.0:
 		return "--"
 	return "%.1f" % (float(atk) / delay_s)
-
-
-## 取翻译；未找到对应 key（语言文件未导入）时回退到默认英文文本
-func _t(key: String, fallback: String) -> String:
-	if key.is_empty():
-		return fallback
-	var translated: String = tr(key)
-	return fallback if translated == key else translated

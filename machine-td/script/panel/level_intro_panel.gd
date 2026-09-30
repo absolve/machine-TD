@@ -33,9 +33,9 @@ const COLOR_TEXT := Color(0.89411765, 0.92156863, 0.8745098, 1.0)
 
 func _ready() -> void:
 	startButton.pressed.connect(close)
-	intelTitle.text = _t("_EnemyIntel", "Enemy Intel")
-	hintLabel.text = _t("_IntelHint", "Close this window and press Start to begin the battle.")
-	startButton.text = _t("_BeginBattle", "Begin Battle")
+	intelTitle.text = Game.t("_EnemyIntel", "Enemy Intel")
+	hintLabel.text = Game.t("_IntelHint", "Close this window and press Start to begin the battle.")
+	startButton.text = Game.t("_BeginBattle", "Begin Battle")
 
 
 # 关闭面板。**统一走这里**，closed 信号才会一定发出去
@@ -60,10 +60,10 @@ func showLevel(stage_data: Dictionary) -> void:
 func _fillHeader(stage_data: Dictionary) -> void:
 	var levelName: String = str(stage_data.get("name", ""))
 	if levelName.is_valid_int():
-		titleLabel.text = _t("_LevelTitleFmt", "Level %s") % levelName
+		titleLabel.text = Game.t("_LevelTitleFmt", "Level %s") % levelName
 	else:
 		# 教程等具名关卡：优先取同名翻译键（如 _Tutorial）
-		titleLabel.text = _t("_" + levelName, levelName)
+		titleLabel.text = Game.t("_" + levelName, levelName)
 
 	var category: String = str(stage_data.get("category", ""))
 	var description: String = str(stage_data.get("description", ""))
@@ -79,12 +79,12 @@ func _fillHeader(stage_data: Dictionary) -> void:
 func _buildInfo(stage_data: Dictionary) -> void:
 	_clearChildren(infoBox)
 	var stats: Dictionary = _collectEnemyStats(stage_data)
-	_addChip(_t("_Wave", "Wave"), str(int(stage_data.get("wave", 0))), Color(0.75, 0.95, 1.0, 1.0))
-	_addChip(_t("_BaseHealth", "Base HP"), str(int(stage_data.get("health", 0))), Color(1.0, 0.78, 0.72, 1.0))
-	_addChip(_t("_StartMoney", "Start Money"), str(int(stage_data.get("money", 0))), Color(1.0, 0.85, 0.6, 1.0))
-	_addChip(_t("_GemRewardShort", "Gem Reward"), str(int(stage_data.get("gemReward", 0))), Color(0.4, 0.9, 1.0, 1.0))
-	_addChip(_t("_EnemyTypes", "Enemy Types"), str(stats["types"].size()), COLOR_TEXT)
-	_addChip(_t("_TotalEnemies", "Total Enemies"), str(stats["total"]), COLOR_TEXT)
+	_addChip(Game.t("_Wave", "Wave"), str(int(stage_data.get("wave", 0))), Color(0.75, 0.95, 1.0, 1.0))
+	_addChip(Game.t("_BaseHealth", "Base HP"), str(int(stage_data.get("health", 0))), Color(1.0, 0.78, 0.72, 1.0))
+	_addChip(Game.t("_StartMoney", "Start Money"), str(int(stage_data.get("money", 0))), Color(1.0, 0.85, 0.6, 1.0))
+	_addChip(Game.t("_GemRewardShort", "Gem Reward"), str(int(stage_data.get("gemReward", 0))), Color(0.4, 0.9, 1.0, 1.0))
+	_addChip(Game.t("_EnemyTypes", "Enemy Types"), str(stats["types"].size()), COLOR_TEXT)
+	_addChip(Game.t("_TotalEnemies", "Total Enemies"), str(stats["total"]), COLOR_TEXT)
 
 
 # 按出现顺序汇总本关敌人类型和数量
@@ -115,7 +115,7 @@ func _buildEnemyList(stage_data: Dictionary) -> void:
 	var order: Array = stats["types"]
 	if order.is_empty():
 		var empty: Label = Label.new()
-		empty.text = _t("_NoEnemyData", "No enemy data for this level.")
+		empty.text = Game.t("_NoEnemyData", "No enemy data for this level.")
 		empty.add_theme_font_size_override("font_size", 26)
 		empty.add_theme_color_override("font_color", COLOR_HEADER)
 		enemyList.add_child(empty)
@@ -123,12 +123,12 @@ func _buildEnemyList(stage_data: Dictionary) -> void:
 
 	# 表头
 	_addRow(
-		_t("_EnemyColName", "Enemy"),
-		_t("_EnemyColRole", "Role"),
-		_t("_EnemyColCount", "Count"),
-		_t("_EnemyColHp", "HP"),
-		_t("_EnemyColSpeed", "Speed"),
-		_t("_EnemyColAir", "Air"),
+		Game.t("_EnemyColName", "Enemy"),
+		Game.t("_EnemyColRole", "Role"),
+		Game.t("_EnemyColCount", "Count"),
+		Game.t("_EnemyColHp", "HP"),
+		Game.t("_EnemyColSpeed", "Speed"),
+		Game.t("_EnemyColAir", "Air"),
 		COLOR_HEADER, 26, true)
 
 	# 每种敌人一行，属性取 Game.enemyInfo，名称/定位取多语言显示名
@@ -141,7 +141,7 @@ func _buildEnemyList(stage_data: Dictionary) -> void:
 			"x%d" % int(stats["counts"].get(enemyType, 0)),
 			str(int(info.get("hp", 0))),
 			str(int(info.get("speed", 0))),
-			_t("_Yes", "Yes") if isAir else "-",
+			Game.t("_Yes", "Yes") if isAir else "-",
 			COLOR_TEXT, 30, false)
 
 
@@ -214,11 +214,3 @@ func _clearChildren(node: Node) -> void:
 	for child in node.get_children():
 		node.remove_child(child)
 		child.queue_free()
-
-
-# 取翻译；语言文件未导入该 key 时回退到默认英文文本
-func _t(key: String, fallback: String) -> String:
-	if key.is_empty():
-		return fallback
-	var translated: String = tr(key)
-	return fallback if translated == key else translated

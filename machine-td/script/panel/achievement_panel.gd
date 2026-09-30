@@ -75,7 +75,7 @@ func refresh() -> void:
 		grid.add_child(_makeTile(achievement_id, achievement))
 
 	# 标题带上总进度，例如「成就 3/9」；语言切换后重新拼接即可生效
-	titleLabel.text = "%s  %d/%d" % [_t("_Achievements", "Achievements"), unlockedCount, ids.size()]
+	titleLabel.text = "%s  %d/%d" % [Game.t("_Achievements", "Achievements"), unlockedCount, ids.size()]
 
 	# 重置详情区为提示文案
 	_showDetail("")
@@ -173,7 +173,7 @@ func _showDetail(achievement_id: String) -> void:
 	if achievement_id.is_empty():
 		detailIcon.texture = load(FALLBACK_ICON) as Texture2D
 		detailIcon.material = _matLocked
-		detailName.text = _t("_AchvHoverHint", "Hover an achievement to see its details")
+		detailName.text = Game.t("_AchvHoverHint", "Hover an achievement to see its details")
 		detailName.modulate = Color(0.62352943, 0.7058824, 0.76862746)
 		detailStatus.text = ""
 		detailDesc.text = ""
@@ -189,7 +189,7 @@ func _showDetail(achievement_id: String) -> void:
 	detailName.text = _achievementName(achievement_id, achievement)
 	detailName.modulate = Color(0.97254902, 0.98431373, 0.99215686) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
 
-	detailStatus.text = _t("_AchievementUnlocked", "Unlocked") if unlocked else _t("_AchievementLocked", "Locked")
+	detailStatus.text = Game.t("_AchievementUnlocked", "Unlocked") if unlocked else Game.t("_AchievementLocked", "Locked")
 	detailStatus.modulate = Color(0.654902, 0.9411765, 0.4392157) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
 
 	detailDesc.text = _achievementDesc(achievement_id, achievement)
@@ -224,11 +224,11 @@ func _progressText(achievement_id: String, achievement: Dictionary) -> String:
 
 # 成就名称/描述在 ACHIEVEMENTS 里存的是多语言 key，这里按当前语言解析
 func _achievementName(achievement_id: String, achievement: Dictionary) -> String:
-	return _t(str(achievement.get("name", "")), achievement_id)
+	return Game.t(str(achievement.get("name", "")), achievement_id)
 
 
 func _achievementDesc(achievement_id: String, achievement: Dictionary) -> String:
-	return _t(str(achievement.get("description", "")), achievement_id)
+	return Game.t(str(achievement.get("description", "")), achievement_id)
 
 
 # 取成就图标；路径缺失或加载失败时回退到默认成就图
@@ -239,11 +239,3 @@ func _loadIcon(achievement: Dictionary) -> Texture2D:
 		if tex is Texture2D:
 			return tex
 	return load(FALLBACK_ICON) as Texture2D
-
-
-# 取翻译；未找到对应 key（语言文件未导入）时回退到默认文本
-func _t(key: String, fallback: String) -> String:
-	if key.is_empty():
-		return fallback
-	var translated: String = tr(key)
-	return fallback if translated == key else translated

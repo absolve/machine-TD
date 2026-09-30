@@ -1,8 +1,10 @@
-[gd_scene format=3 uid="uid://cksybgmaq8aci"]
+[gd_scene load_steps=8 format=3 uid="uid://cksybgmaq8aci"]
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_70ned"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="2_qwmsa"]
 [ext_resource type="Script" uid="uid://c231fmff0n34w" path="res://script/tower/iron_box.gd" id="2_v6a2k"]
+[ext_resource type="Texture2D" uid="uid://da46jt53dsfgu" path="res://sprite/tower/base_plate.png" id="99_base"]
+[ext_resource type="Texture2D" uid="uid://d23rob4qaxp5w" path="res://sprite/tower/turret_ironbox.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qwmsa"]
 size = Vector2(64, 64)
@@ -17,6 +19,17 @@ shader_parameter/flash_amplitude = 0.8
 shader_parameter/outline_thickness = 0.0
 shader_parameter/outline_color = Color(1, 1, 1, 1)
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_plate"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("99_base")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 5.0
+}]
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qwmsa"]
 resource_local_to_scene = true
 shader = ExtResource("2_qwmsa")
@@ -27,6 +40,17 @@ shader_parameter/flash_amplitude = 0.8
 shader_parameter/outline_thickness = 0.0
 shader_parameter/outline_color = Color(1, 1, 1, 1)
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_box"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("99_turret")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="Tower" unique_id=1676258242 instance=ExtResource("1_70ned")]
 script = ExtResource("2_v6a2k")
 
@@ -35,9 +59,11 @@ shape = SubResource("RectangleShape2D_qwmsa")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
 material = SubResource("ShaderMaterial_70ned")
+sprite_frames = SubResource("SpriteFrames_plate")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
 material = SubResource("ShaderMaterial_qwmsa")
+sprite_frames = SubResource("SpriteFrames_box")
 
 [node name="ProgressBar" parent="." index="9" unique_id=1203597731]
 offset_left = -32.0

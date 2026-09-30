@@ -15,11 +15,11 @@ extends PanelContainer
 @onready var hpValue: Label = $MarginContainer/vbox/Stats/hpRow/Value
 
 func _ready() -> void:
-	atkTitle.text = _t("_Atk", "ATK")
-	reloadTitle.text = _t("_FireRate", "Fire Rate")
-	scopeTitle.text = _t("_Range", "Range")
-	costTitle.text = _t("_Cost", "Cost")
-	hpTitle.text = _t("_HP", "HP")
+	atkTitle.text = Game.t("_Atk", "ATK")
+	reloadTitle.text = Game.t("_FireRate", "Fire Rate")
+	scopeTitle.text = Game.t("_Range", "Range")
+	costTitle.text = Game.t("_Cost", "Cost")
+	hpTitle.text = Game.t("_HP", "HP")
 
 func showDetail(obj, tower_type = 0):
 	if tower_type:
@@ -43,10 +43,3 @@ func _fmtFireRate(reload_s: float) -> String:
 	if reload_s <= 0.0:
 		return "--"
 	return "%.1f/s" % (1.0 / reload_s)
-
-# 取翻译；未找到对应 key（语言文件未导入）时回退到默认英文文本
-func _t(key: String, fallback: String) -> String:
-	if key.is_empty():
-		return fallback
-	var translated: String = tr(key)
-	return fallback if translated == key else translated

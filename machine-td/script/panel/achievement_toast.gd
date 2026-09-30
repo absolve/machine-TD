@@ -27,7 +27,7 @@ var _hiddenX: float = 0.0 # 屏幕外位置
 
 func _ready() -> void:
 	visible = false
-	headerLabel.text = _t("_AchievementToast", "Achievement Unlocked")
+	headerLabel.text = Game.t("_AchievementToast", "Achievement Unlocked")
 	_layout()
 	get_viewport().size_changed.connect(_layout)
 	if AchievementManager:
@@ -55,8 +55,8 @@ func _processQueue() -> void:
 func _play(item: Dictionary) -> void:
 	var achievement: Dictionary = item.get("achievement", {})
 	icon.texture = _loadIcon(achievement)
-	nameLabel.text = _t(str(achievement.get("name", "")), str(item.get("id", "")))
-	descLabel.text = _t(str(achievement.get("description", "")), "")
+	nameLabel.text = Game.t(str(achievement.get("name", "")), str(item.get("id", "")))
+	descLabel.text = Game.t(str(achievement.get("description", "")), "")
 
 	_layout()
 	visible = true
@@ -92,11 +92,3 @@ func _loadIcon(achievement: Dictionary) -> Texture2D:
 		if tex is Texture2D:
 			return tex
 	return load("res://sprite/achievement.png") as Texture2D
-
-
-# 取翻译；未找到对应 key（语言文件未导入）时回退到默认文本
-func _t(key: String, fallback: String) -> String:
-	if key.is_empty():
-		return fallback
-	var translated: String = tr(key)
-	return fallback if translated == key else translated
