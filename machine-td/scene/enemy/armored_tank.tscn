@@ -1,20 +1,39 @@
-[gd_scene load_steps=9 format=3 uid="uid://byk4oxb8xh4mt"]
+[gd_scene load_steps=13 format=3 uid="uid://byk4oxb8xh4mt"]
 
-[ext_resource type="PackedScene" path="res://scene/enemy/enemy.tscn" id="1_base"]
-[ext_resource type="Script" path="res://script/enemy/armoredTank.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://6bj63bxtt0se" path="res://script/enemy/armoredTank.gd" id="2_script"]
 
-[ext_resource type="Texture2D" path="res://sprite/enemy/armored_tank_body.png" id="3_body"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/armored_tank_turret.png" id="4_turret"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/armored_tank_body.svg" id="3_body"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/armored_tank_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/armored_tank_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/armored_tank_body_4.svg" id="3_body4"]
+[ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_l4g64"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/armored_tank_turret.svg" id="4_turret"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mugqh"]
+resource_local_to_scene = true
+shader = ExtResource("3_l4g64")
+shader_parameter/flash = 0.0
+shader_parameter/brighten = 0.85
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_body"]
 animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("3_body")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_body2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_body3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_body4")
 }],
 "loop": 1,
 "name": &"default",
-"speed": 5.0
+"speed": 16.0
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_turret"]
@@ -37,11 +56,14 @@ loop = false
 [node name="Enemy" parent="." instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 3
+muzzleOffset = 35.0
 
 [node name="base" parent="Enemy" index="0"]
+material = SubResource("ShaderMaterial_mugqh")
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="turret" parent="Enemy" index="2"]
+material = SubResource("ShaderMaterial_mugqh")
 sprite_frames = SubResource("SpriteFrames_turret")
 offset = Vector2(17, 0)
 

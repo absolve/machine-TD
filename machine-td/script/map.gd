@@ -1,5 +1,11 @@
 extends Node2D
 
+## 无尽模式的关卡场景（与 15 个关卡平级，见 endless_mode_design.md）
+const ENDLESS_LEVEL_SCENE := "res://scene/level/endless.tscn"
+
+## 无尽结算要写进结算面板的那行文字（普通关卡用不到，一直是空串）
+var _endlessStatsText: String = ""
+
 @onready var hud = $Hud
 #@onready var towerShadow = $TowerShadow
 @onready var titleNode = $Hud/title
@@ -49,6 +55,7 @@ func _ready():
 	Game.towerPlaced.connect(placeTower)
 	Game.dataRefreshed.connect(refreshData)
 	Game.enemyRewarded.connect(_onEnemyDefeated)
+	Game.gemRewarded.connect(_onGemRewarded)
 	Game.enemyEscaped.connect(_onEnemyEscaped)
 	Game.towerSold.connect(_onTowerSold)
 	# 塔被打爆时也要归还格子（出售那条路已经在 sellTower 里还款+归还了）
@@ -71,8 +78,9 @@ func _ready():
 	pauseMenu.resumePressed.connect(resumeGame)
 	pauseMenu.restartPressed.connect(restart)
 	pauseMenu.menuPressed.connect(returnHome)
+	# 无尽模式：暂停里允许主动结束本局（普通关卡该按钮隐藏）
+	pauseMenu.giveUpPressed.connect(_onEndlessGiveUp)
 		
-	#加载关卡
 	loadLevel()
 	AudioServer.set_bus_mute(AudioServer.get_bus_index("Sfx"), UserData.sfxMuted)
 	AudioServer.set_bus_mute(AudioServer.get_bus_index("Bg"), UserData.musicMuted)
@@ -81,7 +89,10 @@ func _ready():
 	titleNode.wave = level.wave
 	titleNode.money = level.money
 	titleNode.score = UserData.score
-	syncWaveProgressBar()
+	# 波次进度条暂时用不上（无尽模式没有总波数），先整条隐藏 ——
+	# 需要恢复时把下面这行删掉，并还原 syncWaveProgressBar() 的调用即可。
+	if waveProgressBar:
+		waveProgressBar.visible = false
 	#titleNode.score=level.score
 	titleNode.started.connect(startGame)
 	titleNode.paused.connect(pauseGame)
@@ -107,16 +118,24 @@ func _ready():
 var _battleStarted: bool = false
 
 
-#按关卡配置启用能力技能（未配置的关卡不显示技能条）
+## 未配置技能的关卡不创建技能条，避免显示空控件。
 func setupAbilities() -> void:
 	var stageId: int = int(stageData.get("id", StageData.currentStageId))
-	var abilityIds: Array = StageData.getAbilities(stageId)
+	# 无尽模式：两个技能都开（普通关卡按 StageData.stageAbilities 配置）
+	var abilityIds: Array = (["bombard", "invincible"] if Game.endlessMode
+		else StageData.getAbilities(stageId))
 	AbilityManager.beginBattle(abilityIds)
 	if abilityBar:
 		abilityBar.setup(abilityIds)
 
-#显示关卡情报弹窗（关卡名 + 本关敌人类型等信息）
 func showLevelIntro() -> void:
+	# 无尽模式：用同一个情报面板，但内容是"规则 + 最高记录"（不读关卡数据）
+	if Game.endlessMode:
+		if levelIntroPanel == null:
+			titleNode.promptStart()
+			return
+		levelIntroPanel.showEndless(UserData.endlessBestWave)
+		return
 	if levelIntroPanel == null:
 		# 没有弹窗的关卡（比如教程）直接就开始提示玩家点开始
 		titleNode.promptStart()
@@ -124,12 +143,15 @@ func showLevelIntro() -> void:
 	levelIntroPanel.showLevel(stageData)
 
 
-#情报弹窗关掉之后：让顶栏的 ▶ 一闪一闪，提示玩家点它开打
+# 情报关闭后提示玩家开战，避免首屏直接进入战斗。
 func _onIntroClosed() -> void:
 	titleNode.promptStart()
 	
-#载入关卡
 func loadLevel():
+	# 无尽模式：不走 allStage 查表，直接加载独立关卡场景
+	if Game.endlessMode:
+		_loadEndlessLevel()
+		return
 	var stageId = StageData.currentStageId
 	var stage_data: Dictionary = {}
 	for s in StageData.allStage:
@@ -150,21 +172,38 @@ func loadLevel():
 	levelInstance.levelId = stageId
 	add_child(levelInstance)
 	level = levelInstance
-	syncWaveProgressBar()
+	# syncWaveProgressBar()
 	# 复位相机：回到「整关刚好铺满」，避免上一关放大/拖动后带过来
 	customCamera.resetView()
 
-func syncWaveProgressBar() -> void:
-	if level == null or waveProgressBar == null:
+## 无尽模式：加载独立关卡场景（设计见 endless_mode_design.md）。
+## 数值由关卡脚本自己定（10 血 / 400 金），所以 levelId 传 -1 ——
+## base_level._ready() 在 allStage 里匹配不到 -1，就不会覆盖脚本里的值。
+func _loadEndlessLevel() -> void:
+	var levelScene: PackedScene = load(ENDLESS_LEVEL_SCENE)
+	if levelScene == null:
+		push_error("加载无尽关卡失败: " + ENDLESS_LEVEL_SCENE)
 		return
-	var totalWave: float = max(float(level.wave), 1.0)
-	var currentWave: float = 0.0
-	if "currWave" in level:
-		currentWave = float(level.currWave)
-	waveProgressBar.maxProgress = totalWave
-	waveProgressBar.setProgress(currentWave)
+	stageData = {}
+	var levelInstance = levelScene.instantiate()
+	levelInstance.levelId = -1
+	add_child(levelInstance)
+	level = levelInstance
+	customCamera.resetView()
 
-#选中塔
+
+# 波次进度条暂时停用（连带上面的节点隐藏与各处调用一起注释）：
+#func syncWaveProgressBar() -> void:
+#	if level == null or waveProgressBar == null:
+#		return
+#	var totalWave: float = max(float(level.wave), 1.0)
+#	var currentWave: float = 0.0
+#	if "currWave" in level:
+#		currentWave = float(level.currWave)
+#	waveProgressBar.maxProgress = totalWave
+#	waveProgressBar.setProgress(currentWave)
+
+# 旧选塔逻辑已迁移到 _onTowerClicked，保留此段仅供对照。
 #func selectTower(item):
 	#print(item)
 	#var temp = Game.towerInfo.get(item)
@@ -174,10 +213,10 @@ func syncWaveProgressBar() -> void:
 	#for i in get_tree().get_nodes_in_group("placeableArea"):
 		#i.isShow = true
 	
-#放着塔
+# 先校验建造条件，避免无效建造造成资源损失。
 func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(1, 1)):
 	# 兜底：本关不放行的塔一律拒绝（tower_ui 已经把卡片置灰，这里防止绕过）
-	if not StageData.isTowerAllowed(StageData.currentStageId, type):
+	if not Game.endlessMode and not StageData.isTowerAllowed(StageData.currentStageId, type):
 		addNotice(tr("_TowerLockedInStage"))
 		return
 	if titleNode.money < cost:
@@ -236,7 +275,6 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 	#level.setShadowHide()
 	
 		
-#更新游戏中数据
 func refreshData(dict):
 	print(dict)
 	if dict.get("hp") != null:
@@ -247,13 +285,21 @@ func refreshData(dict):
 		titleNode.money = dict.money
 	if dict.get("score") != null:
 		titleNode.score = dict.score
-	syncWaveProgressBar()
+	# syncWaveProgressBar()
 
-#获得奖励
 func _onEnemyDefeated(point):
 	titleNode.money += point
 
-#敌人逃脱
+
+## 击败特殊敌人掉落宝石：入账 + 立刻落盘，再复用"宝石变化"那条现成链路
+## （AbilityManager.gemChanged → _onGemChanged）刷新顶栏数字与技能条可购买状态。
+## 掉落数量由 enemyInfo.gemReward 决定（1 或 2），普通敌人根本不发这个信号。
+func _onGemRewarded(amount: int) -> void:
+	UserData.addGem(amount)
+	AbilityManager.gemChanged.emit(UserData.gem)
+	# 青色提示，和关卡情报里的"宝石奖励"用同一个色，玩家一眼能认出是宝石
+	addNotice(tr("_GemPicked") % amount, Color(0.4, 0.9, 1.0))
+
 func _onEnemyEscaped(point):
 	# 逃脱敲钟：一声低沉的锣，提示玩家漏怪了。
 	# 放在这里而不是各个敌人脚本里 —— 所有敌人（敌坦/直升机/维修车/导弹车…）
@@ -266,6 +312,27 @@ func _onEnemyEscaped(point):
 	if titleNode.hp <= 0:
 		_onDefenseFailed()
 
+## 无尽结算：记录最高波数（击杀数 / 用时留到 M3 补）。
+## ⚠️ 这里**不**碰 stageRatings / 关卡解锁 / 关卡通关成就 —— 无尽与关卡系统解耦。
+func _recordEndlessResult() -> void:
+	var reached: int = int(level.currWave) if level != null else 0
+	var kills: int = int(level.kills) if level != null and "kills" in level else 0
+	var seconds: int = int(level.elapsedSeconds()) if level != null and level.has_method("elapsedSeconds") else 0
+	UserData.endlessRuns += 1
+	if reached > UserData.endlessBestWave:
+		UserData.endlessBestWave = reached
+		UserData.endlessBestKills = kills
+	UserData.savePlayerData()
+	# 无尽成就：按"撑到第几波"推进（目标值在 achievement_manager 里）
+	AchievementManager.setProgress("endless_10", reached, false)
+	AchievementManager.setProgress("endless_30", reached, false)
+	AchievementManager.savePlayerAchievements()
+	var minutes: int = int(floor(float(seconds) / 60.0))
+	_endlessStatsText = "%s · %s %d · %s %d:%02d" % [tr("_EndlessResult") % reached,
+		tr("_EndlessKills"), kills, tr("_EndlessTime"), minutes, seconds % 60]
+	addNotice(_endlessStatsText, Color(1.0, 0.85, 0.4))
+
+
 # 基地被打爆：直接进入失败结算
 # 这里刻意不调用 pauseGame()，否则暂停菜单会和结算窗叠在一起
 func _onDefenseFailed() -> void:
@@ -275,7 +342,13 @@ func _onDefenseFailed() -> void:
 	# 失败结算不会再走 finish()，把复查器关掉，避免它继续空转
 	_finishChecking = false
 	finishTimer.stop()
+	# 无尽模式：结算前把最高记录落盘（无尽没有"通关"，只有活到第几波）
+	if Game.endlessMode:
+		_recordEndlessResult()
 	resultScreen.setResult(true)
+	# ⚠️ 必须在 setResult() 之后：它自己也会写 waveLabel
+	if Game.endlessMode and not _endlessStatsText.is_empty():
+		resultScreen.waveLabel.text = _endlessStatsText
 	resultScreen.levelRating.rating = 0
 	# ★ 这里**不要**再调 setGemReward —— setResult(true) 已经把宝石行隐藏了，
 	#   而现在 setGemReward 是"通关时始终显示"，再调一次会把整行又亮出来。
@@ -299,12 +372,22 @@ func startGame():
 		if battleStartBanner != null:
 			await battleStartBanner.play()
 	level.start()
-	syncWaveProgressBar()
+	# syncWaveProgressBar()
+
+## 无尽模式的「结束本局」：主动认输，走和基地被打爆**完全一样**的结算
+## （包括最高记录落盘与无尽成就），只是不用等基地真的没血。
+func _onEndlessGiveUp() -> void:
+	pauseMenu.hide()
+	get_tree().paused = false
+	_onDefenseFailed()
+
 
 func pauseGame():
 	get_tree().paused = true
 	titleNode.setPlaying(false)
 	if not pauseMenu.visible:
+		# 「结束本局」只在无尽模式出现
+		pauseMenu.showGiveUp(Game.endlessMode)
 		pauseMenu.show()
 
 func resumeGame():
@@ -446,7 +529,7 @@ func _isMultiRouteLevel() -> bool:
 				return true
 	return false
 
-#添加通知
+## 统一通过提示组件显示短时通知，避免各处重复管理提示节点。
 func addNotice(s, color: Color = Color.CORAL):
 	toastInfo.display(s, color)
 
@@ -454,7 +537,7 @@ func addNotice(s, color: Color = Color.CORAL):
 func onTowerLocked() -> void:
 	addNotice(tr("_TowerLockedInStage"))
 
-#选中塔
+## 塔与敌人共用右侧详情栏，因此这里负责保持单选并更新面板。
 func _onTowerClicked(item, selected):
 	# 点地图上已放置的塔：给一声"选中"反馈。
 	# 和工具箱里点塔卡片用的是同一个音，但音高略低一点，
@@ -477,8 +560,7 @@ func _onTowerClicked(item, selected):
 		if towerDetailPanel:
 			towerDetailPanel.clear()
 
-#选中敌人（由 enemy.gd 的 input_event 触发）
-# 敌人与塔共用屏幕右侧同一个信息面板槽位，两者互斥：选中敌人会先取消已选中的塔
+## 敌人与塔共用右侧详情栏，选中敌人前必须先取消塔的选择状态。
 func _onEnemyClicked(enemy):
 	if enemy == null or not is_instance_valid(enemy):
 		return
@@ -511,6 +593,8 @@ func nextLevel():
 	SceneTransition.changeScene("res://scene/level_select.tscn")
 
 func returnHome():
+	# 离开无尽模式：清掉标记，避免下一局/下一关被当成无尽
+	Game.endlessMode = false
 	get_tree().paused = false
 	SceneTransition.changeScene("res://scene/welcome.tscn")
 
@@ -548,6 +632,10 @@ func _getTowersInRadius(center: Vector2, radius: float) -> Array[Tower]:
 	return result
 
 
+## 轰炸技能的专属爆炸演出（比普通爆炸大一圈 + 有扩散烟，见 script/fx/bombard_strike.gd）
+const BOMBARD_STRIKE := preload("res://scene/fx/bombard_strike.tscn")
+
+
 # 区域轰炸：对范围内所有敌人造成伤害，并用提示反馈命中数量
 func areaDamage(center: Vector2, radius: float, damage: int) -> bool:
 	if radius <= 0.0 or damage <= 0:
@@ -562,6 +650,7 @@ func areaDamage(center: Vector2, radius: float, damage: int) -> bool:
 			enemy.hurt(damage, null, "energy")
 			hitCount += 1
 	ExplosionManage.playExplosion(center)
+	_playBombardStrike(center, radius)
 	if hitCount > 0:
 		addNotice(Game.t("_ability_bombard_hit", "Airstrike hit %d enemies") % hitCount, Color(1.0, 0.776, 0.102))
 		return true
@@ -569,6 +658,15 @@ func areaDamage(center: Vector2, radius: float, damage: int) -> bool:
 	#    如果没打中也返回 true，玩家会**白丢一颗宝石**（以前不花宝石时返回啥都无所谓）。
 	addNotice(Game.t("_ability_bombard_miss", "Airstrike hit nothing"), Color(0.86, 0.92, 0.95))
 	return false
+
+
+## 轰炸技能的专属爆炸演出（比普通爆炸大一圈 + 带一圈往外扩散的烟）。
+## 普通的子弹/塔爆炸仍然走 ExplosionManage，这里只给技能用。
+func _playBombardStrike(center: Vector2, radius: float) -> void:
+	var strike: Node2D = BOMBARD_STRIKE.instantiate()
+	strike.position = center
+	add_child(strike)
+	strike.play(radius)
 
 
 # 塔无敌：让范围内所有防御塔在一段时间内免疫伤害

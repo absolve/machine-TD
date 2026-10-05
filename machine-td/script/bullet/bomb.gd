@@ -7,6 +7,8 @@ var sourceTower: Tower = null
 var source: Node = null
 var damageType: String = "physical"
 var hasDamage: bool = false
+var filterFlyingTargets: bool = false
+var targetFlying: bool = false
 var processedEnemies: Array[Enemy] = []
 var processedTowers: Array[Tower] = []
 
@@ -52,6 +54,8 @@ func _physics_process(_delta: float) -> void:
 	var targets = get_overlapping_areas()
 	for area in targets:
 		if area is Enemy:
+			if filterFlyingTargets and area.flying != targetFlying:
+				continue
 			if area in processedEnemies:
 				continue
 			processedEnemies.append(area)

@@ -2,9 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://de1xh8lbgnoye" path="res://script/enemy/mini_tank.gd" id="2_script"]
-[ext_resource type="Texture2D" uid="uid://fxcy1dpcvlay" path="res://sprite/enemy/miniTank_body.png" id="3_body"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/mini_tank_body.svg" id="3_body"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/mini_tank_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/mini_tank_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/mini_tank_body_4.svg" id="3_body4"]
 [ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_qanbx"]
-[ext_resource type="Texture2D" uid="uid://cce55filyeppo" path="res://sprite/enemy/miniTank_turret.png" id="4_turret"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/mini_tank_turret.svg" id="4_turret"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_evx06"]
 resource_local_to_scene = true
@@ -17,10 +20,19 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("3_body")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_body2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_body3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_body4")
 }],
 "loop": 1,
 "name": &"default",
-"speed": 5.0
+"speed": 16.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_radar"]
@@ -45,6 +57,7 @@ loop = false
 
 [node name="Enemy" parent="." unique_id=815407966 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
+muzzleOffset = 26.0
 
 [node name="base" parent="Enemy" index="0" unique_id=1108324432]
 material = SubResource("ShaderMaterial_evx06")
@@ -59,7 +72,7 @@ shape = SubResource("CircleShape2D_radar")
 [node name="turret" parent="Enemy" index="2" unique_id=108539921]
 material = SubResource("ShaderMaterial_evx06")
 sprite_frames = SubResource("SpriteFrames_turret")
-offset = Vector2(11, 0)
+offset = Vector2(6, 0)
 
 [node name="shape" parent="Enemy" index="3" unique_id=359688443]
 visible = false

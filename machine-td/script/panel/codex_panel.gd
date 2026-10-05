@@ -38,7 +38,7 @@ enum Tab { ENEMY, TOWER }
 const COLOR_TEXT := Color(0.91764706, 0.9490196, 0.96862745, 1.0)
 const COLOR_LABEL := Color(0.65882355, 0.6862745, 0.65882355, 1.0)
 const COLOR_GOLD := Color(1, 0.7764706, 0.101960786, 1.0)
-const COLOR_RED := Color(1, 0.5529412, 0.5019608, 1.0)      # 敌人主色：暖红
+const COLOR_RED := Color(1, 0.5529412, 0.5019608, 1.0) # 敌人主色：暖红
 const COLOR_TEAL := Color(0.49803922, 0.8156863, 0.7764706, 1.0) # 防御塔主色：青
 const COLOR_HOVER := Color(1, 0.8509804, 0.39215687, 1.0)
 
@@ -52,24 +52,29 @@ const ENEMY_DESC_KEYS := {
 	"_EnemyRole_bomber": "_EnemyDesc_bomber",
 	"_EnemyRole_siege": "_EnemyDesc_siege",
 	"_EnemyRole_air": "_EnemyDesc_air",
+	"_EnemyRole_fortress": "_EnemyDesc_fortress",
 }
 
 # ---------- 图片路径表 ----------
 # 图鉴里每个单位显示哪张图，就写在这儿。**想换图直接改路径就行**，别的都不用动。
-# 这些图是用 .td_verify/gen_unit_icons.gd 按游戏里的样子渲染出来的；
-# 你也可以把它们换成项目里任意一张图。
+# 全部 20 张图标（12 敌人 + 8 防御塔）都是 192×192 的 PNG，由
+# tools/codex_icon_gen.html + tools/codex_icon_server.py 按游戏里的**真实素材**
+# 分层合成后光栅化出来的（敌人：车体 + 炮塔 / 旋翼；塔：底座 + 炮塔；炮塔一律画在上层），
+# 改动 / 新增单位图标跑一遍那两个工具即可，不用手工画。
 
 const ENEMY_ICONS := {
-	0: "res://sprite/icon/unit/miniTank.png",          # 迷你坦克
-	1: "res://sprite/icon/unit/medium_tank.png",       # 中型坦克
-	2: "res://sprite/icon/unit/heavy_tank.png",        # 重型坦克
-	3: "res://sprite/icon/unit/armored_tank.png",      # 装甲坦克
-	4: "res://sprite/icon/unit/assault_buggy.png",     # 突击车
-	5: "res://sprite/icon/unit/medic.png",             # 维修车
-	6: "res://sprite/icon/unit/suicide_truck.png",     # 自爆车
-	7: "res://sprite/icon/unit/missile_truck.png",     # 导弹车
-	8: "res://sprite/icon/unit/scout_drone.png",       # 侦察无人机
+	0: "res://sprite/icon/unit/miniTank.png", # 迷你坦克
+	1: "res://sprite/icon/unit/medium_tank.png", # 中型坦克
+	2: "res://sprite/icon/unit/heavy_tank.png", # 重型坦克
+	3: "res://sprite/icon/unit/armored_tank.png", # 装甲坦克
+	4: "res://sprite/icon/unit/assault_buggy.png", # 突击车
+	5: "res://sprite/icon/unit/medic.png", # 维修车
+	6: "res://sprite/icon/unit/suicide_truck.png", # 自爆车
+	7: "res://sprite/icon/unit/missile_truck.png", # 导弹车
+	8: "res://sprite/icon/unit/scout_drone.png", # 侦察无人机
 	9: "res://sprite/icon/unit/attack_helicopter.png", # 攻击直升机
+	10: "res://sprite/icon/unit/experimental_tank.png", # 实验坦克（4 炮塔）
+	11: "res://sprite/icon/unit/battle_plane.png", # 战斗飞机（飞越地图）
 }
 
 # 防御塔同理。键是 Game.towerType 的枚举值，所以用 var 不用 const
@@ -102,10 +107,10 @@ var TOWERICONS: Dictionary = {
 
 var _cardScene: PackedScene = preload("res://scene/codex_card.tscn")
 var _tab: int = Tab.ENEMY
-var _entries: Array = []      # 当前页签的条目（顺序 = Game 表里的声明顺序）
-var _cards: Array = []        # 与 _entries 一一对应的卡片
-var _selected: int = 0            # 锁定的条目下标；-1 = 该页没有单位
-var _hover: int = -1              # 鼠标悬停的下标；-1 = 没悬停
+var _entries: Array = [] # 当前页签的条目（顺序 = Game 表里的声明顺序）
+var _cards: Array = [] # 与 _entries 一一对应的卡片
+var _selected: int = 0 # 锁定的条目下标；-1 = 该页没有单位
+var _hover: int = -1 # 鼠标悬停的下标；-1 = 没悬停
 var _sbNormal: StyleBoxFlat
 var _sbHover: StyleBoxFlat
 var _sbActive: StyleBoxFlat

@@ -1,0 +1,54 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Texture2D" path="res://sprite/fx/p_flame.png" id="1_flame"]
+[ext_resource type="Texture2D" path="res://sprite/fx/p_smoke.png" id="2_smoke"]
+
+[sub_resource type="Gradient" id="Gradient_flame"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(1, 0.68, 0.25, 0.95, 0.2, 0.08, 0.04, 0)
+
+[sub_resource type="Gradient" id="Gradient_smoke"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.38, 0.36, 0.34, 0.55, 0.2, 0.19, 0.18, 0)
+
+[node name="TowerFireSmoke" type="Node2D"]
+visible = false
+
+[node name="Flames" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 12
+texture = ExtResource("1_flame")
+lifetime = 0.6
+one_shot = false
+randomness = 0.35
+direction = Vector2(0, -1)
+spread = 32.0
+gravity = Vector2(0, -24)
+initial_velocity_min = 24.0
+initial_velocity_max = 52.0
+damping_min = 35.0
+damping_max = 65.0
+scale_amount_min = 0.3
+scale_amount_max = 0.75
+color = Color(1, 0.68, 0.25, 1)
+color_ramp = SubResource("Gradient_flame")
+
+[node name="Smoke" type="CPUParticles2D" parent="."]
+position = Vector2(0, -8)
+emitting = false
+amount = 10
+texture = ExtResource("2_smoke")
+lifetime = 1.35
+one_shot = false
+randomness = 0.5
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, -10)
+initial_velocity_min = 12.0
+initial_velocity_max = 28.0
+damping_min = 12.0
+damping_max = 28.0
+scale_amount_min = 0.3
+scale_amount_max = 0.65
+color = Color(0.45, 0.43, 0.41, 0.8)
+color_ramp = SubResource("Gradient_smoke")

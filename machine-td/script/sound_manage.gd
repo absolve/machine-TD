@@ -8,12 +8,12 @@ extends Node2D
 ##   ④ 背景音乐    —— play_bgm("bgm_07_heaven_pad") / stop_bgm()，走 Bg 总线。
 ##
 ## 用法：
-##   SoundManage.play("hit_metal")                          # 最简
-##   SoundManage.play("explode_small", -6.0)                # 第二个参数是音量(dB)
-##   SoundManage.play("tower_mg_fire", 0.0, randf_range(0.96, 1.04))   # 第三个是音高
-##   SoundManage.play_varied(["hit_hard", "hit_armor"])     # 从几个里随机挑，带轻微音高抖动
-##   SoundManage.play_at("explode_large", global_position)  # 按世界坐标摆左右声像
-##   SoundManage.play_bgm("bgm_07_heaven_pad")              # 背景音乐（同名重复调用不会重头开始）
+##   SoundManage.play("hit_metal") # 最简
+##   SoundManage.play("explode_small", -6.0) # 第二个参数是音量(dB)
+##   SoundManage.play("tower_mg_fire", 0.0, randf_range(0.96, 1.04)) # 第三个是音高
+##   SoundManage.play_varied(["hit_hard", "hit_armor"]) # 从几个里随机挑，带轻微音高抖动
+##   SoundManage.play_at("explode_large", global_position) # 按世界坐标摆左右声像
+##   SoundManage.play_bgm("bgm_07_heaven_pad") # 背景音乐（同名重复调用不会重头开始）
 ##
 ## 名字就是 sound/sfx/ 下的文件名（不带 .ogg）。加新音效直接把 ogg 丢进去就能用，
 ## 这里一行都不用改。
@@ -165,9 +165,10 @@ func playVaried(sounds: Array, volume_db: float = 0.0, pitch_jitter: float = 0.0
 
 
 ## 按世界坐标播（左右声像 + 距离衰减）。
-## ⚠️ 场景里没有 Camera2D / AudioListener2D 时，2D 播放器会以原点当听者，
-##    声音会全跑到一边。所以这里兜一手：没有听者就退化成普通播放，
-##    宁可没有声像，也不要没声音或者只有一边响。
+## 听者 = map 相机上的 AudioListener2D（`scene/custom_camera.tscn`，跟着可视区中心走），
+## 所以塔开火 / 命中 / 爆炸这些声音才有左右方位和远近。
+## 兜底：万一以后有场景既没听者也没相机，就退化成普通播放 ——
+## 宁可没有声像，也不要“声音位置算错、听起来全在一边”。
 func playAt(
 	sound: String,
 	world_pos: Vector2,
@@ -250,7 +251,7 @@ func stopAllLoops() -> void:
 #   · 同名重复调用直接返回，不会把正在放的曲子重头开始
 #
 # 用法：
-#   SoundManage.play_bgm("bgm_07_heaven_pad")   # 名字 = sound/bgm/ 下的文件名
+#   SoundManage.play_bgm("bgm_07_heaven_pad") # 名字 = sound/bgm/ 下的文件名
 #   SoundManage.stop_bgm()
 #   if SoundManage.current_bgm() == "bgm_08_lunar_amb": ...
 
@@ -402,18 +403,29 @@ func _acquire2d() -> AudioStreamPlayer2D:
 	return fresh
 
 
-## 场景里有没有可用的听者（Camera2D 或 AudioListener2D）
+## 场景里有没有可用的听者。
+##
+## ⚠️ 不要再用 `get_nodes_in_group("cameras")` 找相机 —— Godot 4 的 Camera2D 只加入
+##    `__cameras_<视口id>` / `__cameras_c<画布id>` 这种**带 id 的内部组**，
+##    `"cameras"` 永远是空的。旧代码就是这么写的，结果听者检测一直返回 false，
+##    所有 playAt() 都静默退化成了普通播放（没有声像、没有距离衰减）。
+##
+## 现在只认两种：
+##   ① 场景里挂了 AudioListener2D 且是 current（map 的相机就是这种，见 custom_camera.tscn）；
+##   ② 有启用的 Camera2D —— Godot 4 没有生效的 AudioListener2D 时，听者取**屏幕中心**
+##      （不是节点原点），跟着相机动，所以有声像可用。
 func _hasListener() -> bool:
 	var tree: SceneTree = get_tree()
 	if tree == null:
 		return false
-	if not tree.get_nodes_in_group("audio_listener").is_empty():
-		return true
-	# Camera2D 在 Godot 4 里默认充当听者，但要处于启用状态
-	for n in tree.get_nodes_in_group("cameras"):
-		if n is Camera2D and (n as Camera2D).enabled:
+	for n in tree.get_nodes_in_group("audio_listener"):
+		if n is AudioListener2D and (n as AudioListener2D).is_current():
 			return true
-	return false
+	var vp: Viewport = get_viewport()
+	if vp == null:
+		return false
+	var cam: Camera2D = vp.get_camera_2d()
+	return cam != null and cam.enabled
 
 
 func _freeIdle(pool: Array) -> void:

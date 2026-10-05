@@ -4,9 +4,14 @@ extends Control
 @onready var info = $TowerInfo
 @onready var towerCardList = $ScrollContainer/PanelContainer/vbox
 @onready var player = $Player
+@onready var toolboxIcon: TextureRect = $icon
 
 var isOpen = false
 var towerCard = preload("res://scene/tower_card.tscn")
+
+# 工具箱图标两态：合着 = 关上的工具箱；打开 = 掀开盖子、里面一把锤子（由 _onIconGuiInput 切换）
+var iconClosed = preload("res://sprite/icon/ui/redesigned/toolbox_closed.svg")
+var iconOpen = preload("res://sprite/icon/ui/redesigned/toolbox_open.svg")
 
 
 var tower1 = preload("res://sprite/tower/turret_machinegun.png")
@@ -104,6 +109,8 @@ func towerClick(type):
 func _onIconGuiInput(_event):
 	if Input.is_action_just_pressed("click"):
 		isOpen = !isOpen
+		# 图标跟着开合状态换（箱子状态一眼可见，不再靠“变淡”区分）
+		toolboxIcon.texture = iconOpen if isOpen else iconClosed
 		# 工具箱开 / 合各用一声专用机械音（比通用确认音更像"打开工具箱"）。
 		# 开是闩锁咔哒、合是收回时略低一档，听得出方向。
 		if isOpen:

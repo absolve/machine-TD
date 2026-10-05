@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" shape-rendering="crispEdges">
+  <!-- 两叶桨（对称的十字转起来看不出在转），绕自己中心旋转 -->
+  <g fill="#dceaf2" stroke="#1a1c2c" stroke-width="1">
+    <rect x="1.5" y="9.5" width="8.5" height="3" rx="1.5"/>
+    <rect x="12" y="9.5" width="8.5" height="3" rx="1.5"/>
+  </g>
+  <circle cx="11" cy="11" r="2.5" fill="#94b0c2" stroke="#333c57" stroke-width="1.5"/>
+</svg>

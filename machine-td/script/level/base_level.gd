@@ -16,6 +16,9 @@ const MIN_SPAWN_DELAY := 0.05
 ## 本关的兜底生成间隔（_ready 时从关卡配置读入）
 var _spawnInterval: float = DEFAULT_SPAWN_INTERVAL
 
+## 出怪间隔的整体缩放：无尽模式按波次把节奏调快（普通关卡恒为 1.0）。
+var spawnDelayScale: float = 1.0
+
 @onready var waveTimer = $WaveTimer
 @onready var spawnerTimer = $SpawnerTimer
 @onready var towerShadow = $TowerShadow
@@ -25,6 +28,12 @@ var _spawnInterval: float = DEFAULT_SPAWN_INTERVAL
 ## 目前所有关卡都只摆了一个（单路线）；要加多路线不用改这里，场景里多摆一个 Path2D 就行。
 ## map.gd 的 _is_multi_route_level() 也是按「Path2D 数量 > 1」判断的。
 var routes: Array[Path2D] = []
+
+## 本关需要"航线提示"的路线号（1 开始），来自关卡数据的 'hintRoutes'。
+## 敌人生成时如果走的是这几条之一，就先画一次航线提示。
+var hintRoutes: Array[int] = []
+## 本波是否已经画过航线提示。同一波可能连着刷好几架飞机，提醒一次就够。
+var _hintShownInWave: bool = false
 
 
 var currWave = 0  #当前波次
@@ -68,8 +77,17 @@ const OFFSET_HALF_WIDTH := {
 	Game.enemyType.armoredTank: 3.0,
 	Game.enemyType.missileTruck: 3.0,
 	Game.enemyType.attackHelicopter: 3.0,
+	Game.enemyType.experimentalTank: 3.0,
+	Game.enemyType.battlePlane: 6.0,
 }
 const OFFSET_HALF_DEFAULT := 4.0
+
+## ── 空中航线提示（见 script/level/air_route_hint.gd）──
+##
+## 哪几条路线需要提示由**关卡数据直接声明**（allStage 里的 'hintRoutes'，见
+## StageData.getHintRoutes）：地面路线都铺了传送带，玩家一眼看得出敌人往哪走；
+## 战斗飞机走的那条空中航线在场景里什么都没铺，所以敌机第一次生成时补画一次提示。
+const AIR_ROUTE_HINT := preload("res://scene/level/air_route_hint.tscn")
 
 ## 同一兵种内的交替计数器：类型 -> 已经刷了几个
 var _spawnLane: Dictionary = {}
@@ -95,6 +113,9 @@ func _ready() -> void:
 			break
 	# 可建造区：关卡里摆的 placeableArea 实例（子节点 _ready 已先跑完，位置对齐过了）
 	_collectAllowArea()
+	# 需要提示的航线由关卡数据声明（地面路线有传送带，玩家看得出走向，不用提示）
+	for routeNo in StageData.getHintRoutes(levelId):
+		hintRoutes.append(int(routeNo))
 
 # 收集本关所有路线：场景里的 Path2D 子节点，按摆放顺序。
 # 约定第 1 个就是「路线1」—— 所以关卡配置里不写 route 的敌人默认走它。
@@ -103,6 +124,21 @@ func _collectRoutes() -> void:
 	for child in get_children():
 		if child is Path2D:
 			routes.append(child)
+
+
+## 把这条航线的走向画一遍给玩家看（画完自己消失）。每波最多提醒一次。
+func _showRouteHint(route: Path2D) -> void:
+	if route.curve == null:
+		return
+	_hintShownInWave = true
+	# 局部变量不写类型：AirRouteHint 是刚加的 class_name，工程要重新扫描一次才认，
+	# 这里走动态调用就不依赖扫描时机了
+	var hint = AIR_ROUTE_HINT.instantiate()
+	add_child(hint)
+	var points: PackedVector2Array = PackedVector2Array()
+	for p in route.curve.get_baked_points():
+		points.append(hint.to_local(route.to_global(p)))
+	hint.play(points)
 
 # 取第 route_no 条路线。route_no 从 1 开始（和关卡配置里的写法一致）。
 # 越界时回落到最后一条，路线一条都没有时返回 null ——
@@ -155,6 +191,16 @@ func canPlace(coverGrids: Array[Vector2i]) -> bool:
 func start():
 	waveTimer.start()
 
+## 取第 waveNo 波的生成记录。默认＝从关卡数据里筛 time == waveNo；
+## 无尽模式覆写这里，按波次**现场生成**编制（见 script/level/endless_level.gd）。
+func _build_wave_spawner(waveNo: int) -> Array:
+	var rows: Array = []
+	for spawnInfo in enemyList:
+		if int(spawnInfo.get("time", 0)) == waveNo:
+			rows.append(spawnInfo.duplicate())
+	return rows
+
+
 func _onWaveTimerTimeout():
 	if currentSpawner.size() > 0:
 		waveTimer.start()
@@ -165,9 +211,9 @@ func _onWaveTimerTimeout():
 
 	currWave += 1
 	Game.dataRefreshed.emit({'wave': currWave})
-	for spawnInfo in enemyList:
-		if int(spawnInfo.get("time", 0)) == currWave:
-			currentSpawner.append(spawnInfo.duplicate())
+	# 新的一波：航线提示可以再提醒一次（同一波内只提示一次，避免连着刷）
+	_hintShownInWave = false
+	currentSpawner.append_array(_build_wave_spawner(currWave))
 
 	if currentSpawner.size() > 0:
 		# 本波第一拍也要按队首记录的 delay 走，不能沿用上一波残留的 wait_time
@@ -221,8 +267,8 @@ func _nextSpawnDelay() -> float:
 		return _spawnInterval
 	var enemyType = currentSpawner[0].get("type", null)
 	if enemyType == null:
-		return maxf(_spawnInterval, MIN_SPAWN_DELAY)
-	return maxf(StageData.getSpawnDelay(enemyType), MIN_SPAWN_DELAY)
+		return maxf(_spawnInterval * spawnDelayScale, MIN_SPAWN_DELAY)
+	return maxf(StageData.getSpawnDelay(enemyType) * spawnDelayScale, MIN_SPAWN_DELAY)
 
 
 
@@ -277,6 +323,10 @@ func _spawnEnemy(spawnInfo: Dictionary):
 		enemyInstance.queue_free()
 		return
 	enemyNode.points = route.curve.get_baked_points()
+	# 走的是数据里标了"需要提示"的航线（空中航线，场景里看不见）→ 先画一遍提醒玩家
+	var routeNo: int = routes.find(route) + 1
+	if routeNo > 0 and routeNo in hintRoutes and not _hintShownInWave:
+		_showRouteHint(route)
 
 # 获取塔占用的网格
 func getTowerCoverGrid(center_grid: Vector2i, tower_size: Vector2i) -> Array[Vector2i]:
@@ -300,7 +350,7 @@ func setShadowHide():
 	towerShadow.setInactive()
 	queue_redraw()
 
-#添加已占用的区域
+## 记录塔占用的格子，供后续建造校验避免重叠。
 func addOccupiedArea(grid: Array[Vector2i]):
 	occupiedArea.append_array(grid)
 	
@@ -319,15 +369,27 @@ func _physics_process(_delta: float) -> void:
 		towerShadow.placeable = canPlace(towerCoverGrid)
 		# print(towerShadow.placeable)
 		queue_redraw()
-		if Input.is_action_just_pressed("click"):
-			if towerShadow.placeable:
-				#var grid = world2Grid(towerShadow.position)
-				#var towerCoverGrid = getTowerCoverGrid(grid, towerShadow.gridSize)
-				Game.towerPlaced.emit(towerShadow.towerType, towerShadow.cost, grid, towerCoverGrid, towerShadow.gridSize)
 		if Input.is_action_just_pressed("selectCancel"):
 			if towerShadow.active:
 				towerShadow.setInactive()
 				queue_redraw()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not towerShadow.active or AbilityManager.isSelecting():
+		return
+	if not event.is_action_pressed("click"):
+		return
+
+	var mousePosition: Vector2 = get_global_mouse_position()
+	var grid: Vector2i = world2Grid(mousePosition)
+	var towerCoverGrid: Array[Vector2i] = getTowerCoverGrid(grid, towerShadow.gridSize)
+	if not canPlace(towerCoverGrid):
+		return
+
+	Game.towerPlaced.emit(towerShadow.towerType, towerShadow.cost, grid,
+			towerCoverGrid, towerShadow.gridSize)
+	get_viewport().set_input_as_handled()
 	
 #func _input(_event: InputEvent) -> void:
 	#if towerShadow.active:

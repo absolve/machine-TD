@@ -10,9 +10,10 @@ extends Control
 
 signal closed # 面板已关闭，宿主可以据此做后续处理
 
-const ICON_SIZE := Vector2(150, 150) # 徽章格图标绘制区
+const ICON_SIZE := Vector2(146, 146) # 徽章格图标绘制区
+const BADGE_SIZE := Vector2(184, 184)
 const TILE_MIN_SIZE := Vector2(300, 300) # 单格最小尺寸：5 列铺满面板宽度
-const FALLBACK_ICON := "res://sprite/achievement.png" # 没配图标时的兜底图
+const FALLBACK_ICON := "res://sprite/achievement_3d.png" # 没配图标时的兜底图
 
 @onready var grid: GridContainer = $PanelContainer/VBoxContainer/ScrollContainer/GridContainer
 @onready var titleLabel: Label = $PanelContainer/VBoxContainer/Header/Label
@@ -103,6 +104,14 @@ func _makeTile(achievement_id: String, achievement: Dictionary) -> PanelContaine
 	iconCenter.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	content.add_child(iconCenter)
 
+	var badge: PanelContainer = PanelContainer.new()
+	badge.custom_minimum_size = BADGE_SIZE
+	badge.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	badge.add_theme_stylebox_override("panel", makeBadgeStyle(achievement, unlocked))
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	iconCenter.add_child(badge)
+
 	var icon: TextureRect = TextureRect.new()
 	icon.custom_minimum_size = ICON_SIZE
 	icon.texture = _loadIcon(achievement)
@@ -110,7 +119,7 @@ func _makeTile(achievement_id: String, achievement: Dictionary) -> PanelContaine
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	icon.material = _matUnlocked if unlocked else _matLocked
-	iconCenter.add_child(icon)
+	badge.add_child(icon)
 
 	var nameLabel: Label = Label.new()
 	nameLabel.text = _achievementName(achievement_id, achievement)
@@ -156,6 +165,43 @@ func _makeTileStyle(unlocked: bool) -> StyleBoxFlat:
 		style.bg_color = Color(0.26666668, 0.34509805, 0.43137255, 0.92)
 		style.border_color = Color(0.5803922, 0.6901961, 0.7607843, 1)
 	return style
+
+
+func makeBadgeStyle(achievement: Dictionary, unlocked: bool) -> StyleBoxFlat:
+	var accent: Color = categoryAccent(str(achievement.get("category", "")))
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = Color(0.075, 0.12, 0.17, 1.0)
+	style.border_width_left = 3
+	style.border_width_top = 3
+	style.border_width_right = 3
+	style.border_width_bottom = 3
+	style.corner_radius_top_left = 82
+	style.corner_radius_top_right = 82
+	style.corner_radius_bottom_left = 82
+	style.corner_radius_bottom_right = 82
+	style.content_margin_left = 8.0
+	style.content_margin_top = 8.0
+	style.content_margin_right = 8.0
+	style.content_margin_bottom = 8.0
+	style.border_color = accent if unlocked else Color(0.32, 0.4, 0.46, 1.0)
+	style.shadow_color = Color(accent.r, accent.g, accent.b, 0.28 if unlocked else 0.08)
+	style.shadow_size = 12 if unlocked else 5
+	style.shadow_offset = Vector2(0, 3)
+	return style
+
+
+func categoryAccent(category: String) -> Color:
+	match category:
+		"stage":
+			return Color(0.32, 0.8, 0.84, 1.0)
+		"combat":
+			return Color(0.94, 0.42, 0.31, 1.0)
+		"build":
+			return Color(1.0, 0.72, 0.2, 1.0)
+		"growth":
+			return Color(0.53, 0.82, 0.48, 1.0)
+		_:
+			return Color(0.78, 0.82, 0.85, 1.0)
 
 
 # ---------- 悬停详情 ----------
@@ -209,11 +255,15 @@ func _makeIconMaterials() -> void:
 	_matUnlocked.shader = shader
 	_matUnlocked.set_shader_parameter("desaturate", 0.0)
 	_matUnlocked.set_shader_parameter("dim", 1.0)
+	_matUnlocked.set_shader_parameter("icon_zoom", 1.25)
+	_matUnlocked.set_shader_parameter("outline_color", Color(1.0, 0.78, 0.2, 0.9))
 
 	_matLocked = ShaderMaterial.new()
 	_matLocked.shader = shader
 	_matLocked.set_shader_parameter("desaturate", 1.0)
 	_matLocked.set_shader_parameter("dim", 0.55)
+	_matLocked.set_shader_parameter("icon_zoom", 1.25)
+	_matLocked.set_shader_parameter("outline_color", Color(0.48, 0.6, 0.66, 0.45))
 
 
 func _progressText(achievement_id: String, achievement: Dictionary) -> String:

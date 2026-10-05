@@ -11,7 +11,7 @@ extends PanelContainer
 var locked: bool = false
 
 signal clicked
-signal lockedClicked   # 点了被禁用的塔（用来弹一句提示，而不是静默失败）
+signal lockedClicked # 点了被禁用的塔（用来弹一句提示，而不是静默失败）
 signal infoShown
 
 
@@ -44,6 +44,7 @@ func _on_mouse_exited() -> void:
 
 func _gui_input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("click"):
+		accept_event()
 		if locked:
 			lockedClicked.emit(type)
 			return

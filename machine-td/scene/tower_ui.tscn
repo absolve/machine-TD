@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cw5p1ankmsixl" path="res://script/tower/tower_ui.gd" id="1_yx7l2"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_tg0id"]
 [ext_resource type="PackedScene" uid="uid://b6gjxxdlchyde" path="res://scene/tower_info.tscn" id="3_gwmlu"]
-[ext_resource type="Texture2D" uid="uid://bxxbkvj244l0t" path="res://sprite/icon/ui/toolbox.png" id="4_m5j1v"]
+[ext_resource type="Texture2D" uid="uid://bgu2adwi6y0i7" path="res://sprite/icon/ui/redesigned/toolbox_closed.svg" id="4_m5j1v"]
 [ext_resource type="StyleBox" uid="uid://cr4arrgli0dam" path="res://theme/style/tower_box_style.tres" id="5_m5j1v"]
 
 [sub_resource type="Animation" id="Animation_fbohf"]
@@ -19,18 +19,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [false]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("icon:modulate:a")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1.0]
 }
 
 [sub_resource type="Animation" id="Animation_m5j1v"]
@@ -48,18 +36,6 @@ tracks/0/keys = {
 "update": 0,
 "values": [true, false]
 }
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("icon:modulate:a")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [0.5, 1.0]
-}
 
 [sub_resource type="Animation" id="Animation_vnqy1"]
 resource_name = "show"
@@ -75,18 +51,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [false, true]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("icon:modulate:a")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [1.0, 0.5]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_fbohf"]
@@ -121,7 +85,7 @@ visible = false
 layout_mode = 0
 offset_left = 144.0
 offset_top = 8.0
-offset_right = 1400.0
+offset_right = 1472.0
 offset_bottom = 200.0
 mouse_filter = 0
 mouse_force_pass_scroll_events = false

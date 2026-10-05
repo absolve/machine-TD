@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_x4oq0"]
 [ext_resource type="Script" uid="uid://dnaqsi3rmg555" path="res://script/tower/tesla_coil_tower.gd" id="2_5fmby"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_427bq"]
-[ext_resource type="Texture2D" uid="uid://dr3404ovqlqpl" path="res://sprite/tower/tower_tesla.png" id="99_turret"]
+[ext_resource type="Texture2D" uid="uid://c5cu77rxd8jty" path="res://sprite/tower/tower_tesla.png" id="99_turret"]
 [ext_resource type="Texture2D" uid="uid://d007qyjl2hj8g" path="res://sprite/tower/tower_tesla_f1.png" id="f1"]
 [ext_resource type="Texture2D" uid="uid://d0usqajra2hj7" path="res://sprite/tower/tower_tesla_f2.png" id="f2"]
 [ext_resource type="Texture2D" uid="uid://ohg1jbbdutmx" path="res://sprite/tower/tower_tesla_f3.png" id="f3"]
@@ -27,6 +27,16 @@ animations = []
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3idwy"]
 radius = 500.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m0kww"]
+resource_local_to_scene = true
+shader = ExtResource("3_427bq")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 14.0
+shader_parameter/flash_amplitude = 0.8
+shader_parameter/outline_thickness = 0.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_autotur"]
 animations = [{
@@ -92,6 +102,7 @@ shape = SubResource("CircleShape2D_3idwy")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
 z_index = -1
+material = SubResource("ShaderMaterial_m0kww")
 sprite_frames = SubResource("SpriteFrames_autotur")
 animation = &"idle"
 

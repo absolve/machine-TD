@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dir1trynkle6v"]
+[gd_scene load_steps=9 format=3 uid="uid://dir1trynkle6v"]
 
 [ext_resource type="PackedScene" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" path="res://script/enemy/attackHelicopter.gd" id="2_script"]
 
-[ext_resource type="Texture2D" path="res://sprite/enemy/attack_helicopter_body.png" id="3_body"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/attack_helicopter_body.svg" id="3_body"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/attack_helicopter_rotor.svg" id="4_rotor"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_body"]
 animations = [{
@@ -28,9 +29,14 @@ loop = false
 [node name="Enemy" parent="." instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 9
+muzzleOffset = 26.0
 
 [node name="base" parent="Enemy" index="0"]
 sprite_frames = SubResource("SpriteFrames_body")
+
+[node name="Rotor" type="Sprite2D" parent="Enemy"]
+texture = ExtResource("4_rotor")
+z_index = 0
 
 [node name="shape" parent="Enemy/radar" index="0"]
 shape = SubResource("CircleShape2D_radar")

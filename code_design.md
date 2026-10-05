@@ -457,6 +457,12 @@ func _ready() -> void:
 	collision_layer = 2
 ```
 
+> **⚠️ 场景资源文件里不能写注释。** `.tscn` / `.tres` 是 Godot 的**文本资源格式**，
+> 它**不支持 `#` 注释** —— 写了会让整个资源报 `Parse Error: Parse error.`（带行号），
+> 场景直接加载失败。要给某个属性留说明，写到**脚本的 `##` 文档注释**、
+> `code_design.md` / `feature_design.md`，或提交信息里。
+> 踩过：给 `rocketTower.tscn` 的 `muzzleOffset` 加了两行 `#` 说明，火箭塔场景整个加载不了。
+
 ### 6.4 单例（Autoload）
 
 - 跨场景共享的状态与事件放在 `autoload/`，用 **PascalCase** 命名，全局直接访问（`Game`、`UserData`、`StageData`、`AbilityManager`……）。
@@ -555,3 +561,7 @@ func _ready() -> void:
 - [ ] 无 `get_node()` 出现在 `_process`；无用回调已 `set_process(false)`。
 - [ ] 节点释放 / `await` 之后访问做了有效性判断。
 - [ ] 移动或改名文件后，所有引用（`preload` / `.tscn` / autoload / 图鉴路径）已同步更新。
+- [ ] `.tscn` / `.tres` 里**没有 `#` 注释**（Godot 文本资源不支持注释，会 Parse Error）。
+- [ ] 改过关卡场景后跑 `python3 tools/level_tools/analyze.py -q scene/level/level_N.tscn`，
+      **问题数必须为 0**：路线全程走在车道中心（横向段 y / 纵向段 x ≡ 32）、每格都有带子、
+      带子朝向 = 入口边 + 出口边、起终点在屏幕外。

@@ -20,7 +20,7 @@
 script = ExtResource("1_rgtto")
 
 [node name="CustomCamera" parent="." unique_id=1331816399 instance=ExtResource("5_jp76l")]
-zoomMax = 4.0
+zoomMax = 4.5
 
 [node name="Hud" type="CanvasLayer" parent="." unique_id=487852858]
 

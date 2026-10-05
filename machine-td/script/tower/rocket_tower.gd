@@ -10,6 +10,8 @@ func _ready():
 
 
 func fire(t):
+	if not t is Area2D or not canTarget(t):
+		return
 	if canShot:
 		player.play("fire")
 		# 发射音就在本场景的 shotSound 节点上（AudioStreamPlayer2D，自带 2D 定位，
@@ -18,9 +20,11 @@ func fire(t):
 		shotSound.play()
 		playMuzzleFlash(t.global_position)
 		var temp = bullet.instantiate()
+		temp.targetFlying = (t as Enemy).flying
 		temp.position = getMuzzlePosition()
 		temp.angle = (t.global_position - getMuzzlePosition()).angle()
 		temp.sourceTower = self
+		temp.damage = atk
 		Game.addObj(temp)
 		canShot = false
 		delayTimer.start()

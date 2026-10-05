@@ -1,5 +1,6 @@
 extends PanelContainer
-## 图鉴里的一张单位卡片：上面是图片，下面是名字。
+## 图鉴里的一张单位卡片：**只有一张单位图，不显示名字**，
+## 名字靠悬停提示和下方详情栏看（卡片本身只认条目字典里的 icon）。
 ##
 ## 图片是**可替换的** —— 外部只要调 set_icon() 换一张 Texture2D 就行，
 ## 卡片本身完全不认识「敌人 / 防御塔」的区别。
@@ -12,7 +13,6 @@ signal hovered(entry: Dictionary)  ## 鼠标移入 —— 面板据此临时预�
 signal unhovered                   ## 鼠标移出
 
 @onready var icon: TextureRect = $VBox/Center/icon
-@onready var nameLabel: Label = $VBox/nameLabel
 
 ## 这张卡对应的条目字典（面板在 setup 时塞进来）
 var entry: Dictionary = {}
@@ -39,7 +39,6 @@ func setup(e: Dictionary, sb_normal: StyleBox, sb_hover: StyleBox, sb_active: St
 	_sbNormal = sb_normal
 	_sbHover = sb_hover
 	_sbActive = sb_active
-	nameLabel.text = str(e.get("name", ""))
 	tooltip_text = str(e.get("name", ""))
 	setIcon(e.get("icon"))
 	_apply(false)

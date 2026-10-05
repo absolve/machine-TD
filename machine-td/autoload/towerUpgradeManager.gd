@@ -2,7 +2,7 @@ extends Node
 
 signal towerLeveledUp(tower, level) # 防御塔升级（成就统计用）
 
-const MAX_LEVEL: int = 3  # 最大等级
+const MAX_LEVEL: int = 3 # 最大等级
 
 # ★ 升级数值规范（2026-09-26 第三次调整）：
 #   · **Lv.3 的 atk 也必须 < 100**
@@ -13,26 +13,26 @@ const configs: Dictionary = {
 	Game.towerType.machineGunTower: {
 		"exp2": 8,
 		"exp3": 18,
-		"lv2": {"atk": 22, "reload": 0.36, "scope": 165},
-		"lv3": {"atk": 31, "reload": 0.30, "scope": 185},
+		"lv2": {"atk": 10, "reload": 0.36, "scope": 165},
+		"lv3": {"atk": 14, "reload": 0.30, "scope": 185},
 	},
 	Game.towerType.cannonTower: {
-		"exp2": 12,
-		"exp3": 28,
-		"lv2": {"atk": 44, "reload": 0.45, "scope": 205},
-		"lv3": {"atk": 62, "reload": 0.38, "scope": 235},
+		"exp2": 15,
+		"exp3": 35,
+		"lv2": {"atk": 44, "reload": 0.8, "scope": 205},
+		"lv3": {"atk": 60, "reload": 0.7, "scope": 235},
 	},
 	Game.towerType.rocketTower: {
 		"exp2": 15,
 		"exp3": 32,
-		"lv2": {"atk": 56, "reload": 0.90, "scope": 205},
-		"lv3": {"atk": 78, "reload": 0.75, "scope": 235},
+		"lv2": {"atk": 56, "reload": 0.90, "scope": 210},
+		"lv3": {"atk": 78, "reload": 0.75, "scope": 240},
 	},
 	Game.towerType.droneBase: {
 		"exp2": 18,
 		"exp3": 40,
-		"lv2": {"atk": 10, "reload": 0.18, "scope": 270},
-		"lv3": {"atk": 14, "reload": 0.15, "scope": 300},
+		"lv2": {"atk": 10, "reload": 0.18, },
+		"lv3": {"atk": 14, "reload": 0.15, },
 	},
 	Game.towerType.teslaCoilTower: {
 		"exp2": 20,
@@ -46,12 +46,12 @@ const configs: Dictionary = {
 		"lv2": {"atk": 32, "reload": 0.75, "scope": 270},
 		"lv3": {"atk": 44, "reload": 0.62, "scope": 305},
 	},
-	Game.towerType.EMPTower: {
-		"exp2": 16,
-		"exp3": 36,
-		"lv2": {"atk": 50, "reload": 3.4, "scope": 165},
-		"lv3": {"atk": 70, "reload": 2.8, "scope": 190},
-	},
+	# Game.towerType.EMPTower: {
+	# 	"exp2": 16,
+	# 	"exp3": 36,
+	# 	"lv2": {"atk": 50, "reload": 3.4, "scope": 165},
+	# 	"lv3": {"atk": 70, "reload": 2.8, "scope": 190},
+	# },
 }
 
 # 不参与升级的塔

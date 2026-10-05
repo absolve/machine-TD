@@ -10,7 +10,7 @@ extends Control
 @onready var btnNextLevel:Button=$PanelContainer/VBoxContainer3/MarginContainer2/hbox/btnNextLevel
 @onready var btnMenu:Button=$PanelContainer/VBoxContainer3/MarginContainer2/hbox/btnMenu
 
-@export var isFailed = false  # 是否失败
+@export var isFailed = false # 是否失败
 
 
 func _ready():

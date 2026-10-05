@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://script/level/air_route_hint.gd" id="1_hint"]
+
+[node name="AirRouteHint" type="Node2D"]
+z_index = -1
+script = ExtResource("1_hint")
+dashLength = 26.0
+dashGap = 20.0
+dashWidth = 8.0
+headWidth = 14.0
+headColor = Color(1, 0.98, 0.9, 1)
+litColor = Color(1, 0.776, 0.102, 1)
+unlitColor = Color(1, 0.776, 0.102, 0.22)
+
+[node name="Back" type="Line2D" parent="."]
+width = 14.0
+default_color = Color(0.063, 0.094, 0.133, 0.5)
+begin_cap_mode = 2
+end_cap_mode = 2
+joint_mode = 2

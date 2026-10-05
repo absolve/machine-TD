@@ -2,33 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_qyteg"]
 [ext_resource type="Script" uid="uid://cnmy5uf77qffw" path="res://script/tower/drone_base.gd" id="2_ir8sv"]
-[ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_56bs0"]
-[ext_resource type="Texture2D" uid="uid://b7xctx1wwm2t8" path="res://sprite/tower/base_large.png" id="99_base"]
 [ext_resource type="Texture2D" uid="uid://c5x73fo1dftri" path="res://sprite/tower/tower_drone.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j5ypg"]
 size = Vector2(64, 64)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_och7i"]
-resource_local_to_scene = true
-shader = ExtResource("3_56bs0")
-shader_parameter/enable_flash = false
-shader_parameter/base_brightness = 1.0
-shader_parameter/flash_speed = 14.0
-shader_parameter/flash_amplitude = 0.8
-shader_parameter/outline_thickness = 0.0
-shader_parameter/outline_color = Color(1, 1, 1, 1)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_j5ypg"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("99_base")
-}],
-"loop": 1,
-"name": &"default",
-"speed": 5.0
-}]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_autotur"]
 animations = [{
@@ -47,10 +24,6 @@ type = 1004
 
 [node name="shape" parent="." index="0" unique_id=1958475246]
 shape = SubResource("RectangleShape2D_j5ypg")
-
-[node name="base" parent="." index="1" unique_id=1580788916]
-material = SubResource("ShaderMaterial_och7i")
-sprite_frames = SubResource("SpriteFrames_j5ypg")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
 visible = false

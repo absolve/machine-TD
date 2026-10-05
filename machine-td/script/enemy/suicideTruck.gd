@@ -15,6 +15,7 @@ func triggerSelfExplode() -> void:
 	if dead:
 		return
 	dead = true
+	ExplosionManage.playExplosion(global_position, "heavy")
 	var bomb = bombScene.instantiate()
 	bomb.global_position = global_position
 	bomb.damage = atk if atk > 0 else hp

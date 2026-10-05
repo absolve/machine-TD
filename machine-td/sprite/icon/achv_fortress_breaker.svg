@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" shape-rendering="crispEdges">
+  <!-- 成就图标：要塞终结者（摧毁 30 辆实验坦克）—— 准星环 + 四向黄刻度，中间是"四炮塔要塞" -->
+  <!-- 配色与其它成就图标一致：环 #94b0c2 / 刻度 #ffc61a / 主体 #566c86 + 高光 #94b0c2 / 描边 #1a1c2c -->
+  <circle cx="64" cy="64" r="50" fill="none" stroke="#1a1c2c" stroke-width="15"/>
+  <circle cx="64" cy="64" r="50" fill="none" stroke="#94b0c2" stroke-width="9"/>
+  <g fill="#ffc61a" stroke="#1a1c2c" stroke-width="3">
+    <rect x="59" y="3" width="10" height="24" rx="4"/>
+    <rect x="59" y="101" width="10" height="24" rx="4"/>
+    <rect x="3" y="59" width="24" height="10" rx="4"/>
+    <rect x="101" y="59" width="24" height="10" rx="4"/>
+  </g>
+  <!-- 车体：宽底盘 + 顶部高光 -->
+  <rect x="33" y="43" width="62" height="42" rx="9" fill="#566c86" stroke="#1a1c2c" stroke-width="6"/>
+  <path d="M40 50h48l4 4H36Z" fill="#94b0c2" opacity=".55"/>
+  <!-- 4 座独立炮塔：外圈浅蓝 + 内圈深色，代表要塞型 4 炮塔 -->
+  <g fill="#94b0c2" stroke="#333c57" stroke-width="4">
+    <circle cx="47" cy="57" r="10"/>
+    <circle cx="81" cy="57" r="10"/>
+    <circle cx="47" cy="72" r="10"/>
+    <circle cx="81" cy="72" r="10"/>
+  </g>
+  <g fill="#333c57">
+    <circle cx="47" cy="57" r="4"/>
+    <circle cx="81" cy="57" r="4"/>
+    <circle cx="47" cy="72" r="4"/>
+    <circle cx="81" cy="72" r="4"/>
+  </g>
+</svg>

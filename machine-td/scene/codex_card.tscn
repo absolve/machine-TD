@@ -41,11 +41,3 @@ layout_mode = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
-
-[node name="nameLabel" type="Label" parent="VBox"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_font_sizes/font_size = 20
-text = "-"
-horizontal_alignment = 1
-clip_text = true

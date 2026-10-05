@@ -26,6 +26,7 @@ var _invincibleLeft: float = 0.0
 
 ## 修满血的最高费用占造价的百分比（残血越多越贵，满血时为 0）
 const REPAIR_COST_RATIO := 0.5
+const LOW_HEALTH_RATIO: float = 0.5
 
 ## 修理费用：按“缺失血量比例 × 造价 × REPAIR_COST_RATIO”计算，向上取整。
 ## 满血返回 0（无需修理）。
@@ -56,10 +57,16 @@ var _baseDelay = 0
 ##    只要在编辑器里一保存那个子场景，覆盖就**会被丢掉**（特斯拉那次就丢了，
 ##    表现是"闪电从塔中心发出来"）。写成导出变量，值跟着脚本走，谁也覆盖不掉。
 ##
-## 取值 = 该塔炮塔贴图的炮口到贴图中心的距离（贴图轴心大多就是贴图中心）：
-##   机枪 31 / 加农 47 / 火箭 61 / EMP 0 / 激光 0 / 特斯拉 0 / 无人机 0
+## 取值 = 该塔炮塔贴图的炮口到贴图中心的距离，再补上 `turret.offset.x`
+## （算法：贴图内最右绘制像素 x − 贴图宽/2 + turret.offset.x）：
+##   机枪 31 / 加农 50 / 火箭 46 / EMP 0 / 激光 0 / 特斯拉 0 / 无人机 0
 ## 注意炮塔贴图的 `AnimatedSprite2D.offset` 只是**视觉**平移，不影响子节点，
 ## 所以这里必须显式写，不能指望它把 Marker2D 一起带走。
+##
+## ⚠️ 单位是 **turret 节点的本地坐标**，要乘 `turret.scale` 才是世界距离。
+##    炮口闪光 `spark` 挂在塔根节点下（不受 turret.scale 影响），所以它的
+##    `offset.x` 要写成 `muzzleOffset × turret.scale` 才会正好落在炮口上
+##    （火箭塔 scale=0.6：46 × 0.6 = 28）。
 @export var muzzleOffset: float = 0.0
 
 
@@ -75,6 +82,9 @@ var _baseDelay = 0
 @onready var lifeBar = $LifeBar
 @onready var deploySound = $DeploySound
 @onready var spark = $Spark
+@onready var damageFx: Node2D = $DamageFx
+@onready var flameParticles: CPUParticles2D = $DamageFx/Flames
+@onready var smokeParticles: CPUParticles2D = $DamageFx/Smoke
 # 开火特效播放器：只有配置了炮口闪光的塔才有这个节点，其余塔为 null
 @onready var sparkPlayer = get_node_or_null("SparkPlayer")
 
@@ -159,13 +169,16 @@ func addExp(amount: int) -> void:
 func updateStatusUi() -> void:
 	if maxHp <= 0:
 		maxHp = max(hp, 1)
+	var isLowHealth: bool = float(hp) / float(maxHp) < LOW_HEALTH_RATIO
+	damageFx.visible = isLowHealth
+	flameParticles.emitting = isLowHealth
+	smokeParticles.emitting = isLowHealth
 	if lifeBar:
 		lifeBar.visible = true
 		lifeBar.maxHp = maxHp
 		lifeBar.value = hp
 	# 修理按钮依赖血量状态刷新（右侧信息面板每帧调用 refresh）
 	
-#升级等级
 func levelUp() -> void:
 	level += 1
 	var levelConfig: Dictionary = TowerUpgradeManager.getLevelConfig(type, level)

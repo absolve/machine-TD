@@ -1,829 +1,1157 @@
-[gd_scene load_steps=24 format=4]
+[gd_scene format=4 uid="uid://c4d5y4eesly6q"]
 
 [ext_resource type="PackedScene" uid="uid://3y2m15k6dbu" path="res://scene/level/base_level.tscn" id="1_lv"]
-[ext_resource type="Script" path="res://script/level/level_4.gd" id="2_lv"]
+[ext_resource type="Script" uid="uid://ca5n7s7g47svl" path="res://script/level/level_4.gd" id="2_lv"]
 [ext_resource type="TileSet" uid="uid://dt5a3lb1rlxgu" path="res://scene/level/factory_floor.tres" id="3_floor"]
 [ext_resource type="PackedScene" path="res://scene/belt.tscn" id="4_belt"]
+[ext_resource type="Shader" uid="uid://c73ywkcnnfoh6" path="res://shader/belt_flow.gdshader" id="5_7lajj"]
 [ext_resource type="PackedScene" uid="uid://llvmr0r2odio" path="res://scene/placeable_area.tscn" id="5_slot"]
-[ext_resource type="Texture2D" uid="uid://b88b5nqehl6ul" path="res://sprite/tile/belt_we.png" id="6_belt_we"]
-[ext_resource type="Texture2D" uid="uid://t7gsibgb1jye" path="res://sprite/tile/belt_ew.png" id="6_belt_ew"]
-[ext_resource type="Texture2D" uid="uid://b132qjqie0kty" path="res://sprite/tile/belt_ns.png" id="6_belt_ns"]
-[ext_resource type="Texture2D" uid="uid://h0q6kjoweefa" path="res://sprite/tile/belt_sn.png" id="6_belt_sn"]
-[ext_resource type="Texture2D" uid="uid://2g282126cg58" path="res://sprite/tile/belt_ws.png" id="6_belt_ws"]
-[ext_resource type="Texture2D" uid="uid://cmucwcntmh8l2" path="res://sprite/tile/belt_en.png" id="6_belt_en"]
-[ext_resource type="Texture2D" uid="uid://b61xplb0lwbof" path="res://sprite/tile/belt_sw.png" id="6_belt_sw"]
-[ext_resource type="Texture2D" uid="uid://ck2qyaytbjxa8" path="res://sprite/tile/belt_nw.png" id="6_belt_nw"]
-[ext_resource type="Texture2D" uid="uid://bf2hii7mt1g0r" path="res://sprite/tile/belt_ne.png" id="6_belt_ne"]
-[ext_resource type="PackedScene" path="res://scene/prop/vent_fan.tscn" id="7_prop_vent_fan"]
+[ext_resource type="PackedScene" uid="uid://dfp2syaadtud8" path="res://scene/prop/alarm.tscn" id="7_prop_alarm"]
 [ext_resource type="PackedScene" path="res://scene/prop/steam_vent.tscn" id="7_prop_steam_vent"]
-[ext_resource type="PackedScene" path="res://scene/prop/monitor.tscn" id="7_prop_monitor"]
-[ext_resource type="PackedScene" path="res://scene/prop/alarm.tscn" id="7_prop_alarm"]
+[ext_resource type="PackedScene" path="res://scene/prop/vent_fan.tscn" id="7_prop_vent_fan"]
 [ext_resource type="PackedScene" path="res://scene/prop/ac_unit.tscn" id="8_big_ac_unit"]
-[ext_resource type="PackedScene" path="res://scene/prop/transformer.tscn" id="8_big_transformer"]
 [ext_resource type="PackedScene" path="res://scene/prop/generator.tscn" id="8_big_generator"]
+[ext_resource type="PackedScene" path="res://scene/prop/transformer.tscn" id="8_big_transformer"]
 
 [sub_resource type="Curve2D" id="Curve2D_r1_4"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 960, -80, 0, 0, 0, 0, 960, 384, 0, 0, 0, 0, 448, 384, 0, 0, 0, 0, 448, 128, 0, 0, 0, 0, -80, 128),
-"point_count": 5
+"points": PackedVector2Array(0, 0, 0, 0, 928, -96, 0, 0, 0, 0, 928, 352, 0, 0, 0, 0, 416, 352, 0, 0, 0, 0, 416, 96, 0, 0, 0, 0, -64, 96)
 }
+point_count = 5
 
 [sub_resource type="Curve2D" id="Curve2D_r2_4"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 960, -80, 0, 0, 0, 0, 960, 384, 0, 0, 0, 0, 1504, 384, 0, 0, 0, 0, 1504, 640, 0, 0, 0, 0, 1920, 640),
-"point_count": 5
+"points": PackedVector2Array(0, 0, 0, 0, 992, -96, 0, 0, 0, 0, 992, 416, 0, 0, 0, 0, 1504, 416, 0, 0, 0, 0, 1504, 608, 0, 0, 0, 0, 1984, 608)
 }
+point_count = 5
 
-[node name="level4" instance=ExtResource("1_lv")]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_squpj"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s2tmp"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4r3k3"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f8r7f"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m6fmx"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fxhlr"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_onr37"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oglyp"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uvei1"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6acst"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r3mwn"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ksi85"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rmahc"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8s8ci"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aqtt1"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wjdfw"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hb0e5"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6ev77"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1dmkq"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hcma7"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bq4eo"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7g4jc"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3k02x"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_80yu2"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_63pot"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hbovv"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m4qc1"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4jpuy"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1vqwv"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pdseg"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_da7hk"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ddiov"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5olle"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0p1va"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1a0xr"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ihh54"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cl8f5"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1piq3"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fykdp"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ja4jb"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p13a6"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m2q6k"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2wy73"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4xift"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4tipf"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mlngx"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_he0l3"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_agfup"]
+resource_local_to_scene = true
+shader = ExtResource("5_7lajj")
+shader_parameter/route_phase = 0.0
+shader_parameter/wave_length = 4.0
+shader_parameter/wave_speed = 0.35
+shader_parameter/dim = 0.45
+shader_parameter/lit = 1.45
+shader_parameter/strength = 1.0
+
+[node name="level4" unique_id=311169710 instance=ExtResource("1_lv")]
 script = ExtResource("2_lv")
 levelId = 4
 
-[node name="bg" parent="."]
+[node name="bg" parent="." index="0" unique_id=858766704]
 tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAABAAAAAQAAAAAAAAACAAAAAQAAAAAAAAADAAAAAQAAAAAAAAAEAAAAAQAAAAAAAAAFAAAAAQAAAAAAAAAGAAAAAQAAAAAAAAAHAAAAAQAAAAAAAAAIAAAAAQAAAAAAAAAJAAAAAQAAAAAAAAAKAAAAAQAAAAAAAAALAAAAAQAAAAAAAAAMAAAAAQAAAAAAAAANAAAAAQAAAAAAAAAOAAAAAQAAAAAAAAAPAAAAAQAAAAAAAAAQAAAAAQAAAAAAAAARAAAAAQAAAAAAAAASAAAAAQAAAAAAAAATAAAAAQAAAAAAAAAUAAAAAQAAAAAAAAAVAAAAAQAAAAAAAAAWAAAAAQAAAAAAAAAXAAAAAQAAAAAAAAAYAAAAAQAAAAAAAAAZAAAAAQAAAAAAAAAaAAAAAQAAAAAAAAAbAAAAAQAAAAAAAAAcAAAAAQAAAAAAAAAdAAAAAQAAAAAAAAAAAAEAAAAAAAAAAAABAAEAAAAAAAAAAAACAAEAAAAAAAAAAAADAAEAAAAAAAAAAAAEAAEAAgAAAAAAAAAFAAEAAAAAAAAAAAAGAAEAAAAAAAAAAAAHAAEAAAAAAAAAAAAIAAEAAAAAAAAAAAAJAAEAAAAAAAAAAAAKAAEAAwAAAAAAAAALAAEAAAAAAAAAAAAMAAEAAAAAAAAAAAANAAEAAAAAAAAAAAAOAAEAAAAAAAAAAAAPAAEAAAAAAAAAAAAQAAEABQAAAAAAAAARAAEAAAAAAAAAAAASAAEAAAAAAAAAAAATAAEAAAAAAAAAAAAUAAEAAAAAAAAAAAAVAAEAAAAAAAAAAAAWAAEABwAAAAAAAAAXAAEAAAAAAAAAAAAYAAEAAAAAAAAAAAAZAAEAAAAAAAAAAAAaAAEAAAAAAAAAAAAbAAEAAAAAAAAAAAAcAAEACAAAAAAAAAAdAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAABAAIAAAAAAAAAAAACAAIAAAAAAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAAGAAIAAAAAAAAAAAAHAAIAAAAAAAAAAAAIAAIAAgAAAAAAAAAJAAIAAAAAAAAAAAAKAAIAAAAAAAAAAAALAAIAAAAAAAAAAAAMAAIAAAAAAAAAAAANAAIAAAAAAAAAAAAOAAIAAwAAAAAAAAAPAAIAAAAAAAAAAAAQAAIAAAAAAAAAAAARAAIAAAAAAAAAAAASAAIAAAAAAAAAAAATAAIAAAAAAAAAAAAUAAIABQAAAAAAAAAVAAIAAAAAAAAAAAAWAAIAAAAAAAAAAAAXAAIAAAAAAAAAAAAYAAIAAAAAAAAAAAAZAAIAAAAAAAAAAAAaAAIABwAAAAAAAAAbAAIAAAAAAAAAAAAcAAIAAAAAAAAAAAAdAAIAAAAAAAAAAAAAAAMAAAAAAAAAAAABAAMACQAAAAAAAAACAAMAAAAAAAAAAAADAAMAAAAAAAAAAAAEAAMAAAAAAAAAAAAFAAMAAAAAAAAAAAAGAAMAAAAAAAAAAAAHAAMAAAAAAAAAAAAIAAMAAAAAAAAAAAAJAAMAAAAAAAAAAAAKAAMAAAAAAAAAAAALAAMAAAAAAAAAAAAMAAMAAgAAAAAAAAANAAMAAAAAAAAAAAAOAAMAAAAAAAAAAAAPAAMAAAAAAAAAAAAQAAMAAAAAAAAAAAARAAMAAAAAAAAAAAASAAMAAwAAAAAAAAATAAMAAAAAAAAAAAAUAAMAAAAAAAAAAAAVAAMAAAAAAAAAAAAWAAMAAAAAAAAAAAAXAAMAAAAAAAAAAAAYAAMABQAAAAAAAAAZAAMAAAAAAAAAAAAaAAMAAAAAAAAAAAAbAAMAAAAAAAAAAAAcAAMAAAAAAAAAAAAdAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAABAAQAAAAAAAAAAAACAAQAAAAAAAAAAAADAAQAAAAAAAAAAAAEAAQAAAAAAAAAAAAFAAQACQAAAAAAAAAGAAQAAAAAAAAAAAAHAAQAAAAAAAAAAAAIAAQAAAAAAAAAAAAJAAQAAAAAAAAAAAAKAAQAAAAAAAAAAAALAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAANAAQAAAAAAAAAAAAOAAQAAAAAAAAAAAAPAAQAAAAAAAAAAAAQAAQAAgAAAAAAAAARAAQAAAAAAAAAAAASAAQAAAAAAAAAAAATAAQAAAAAAAAAAAAUAAQAAAAAAAAAAAAVAAQAAAAAAAAAAAAWAAQAAwAAAAAAAAAXAAQAAAAAAAAAAAAYAAQAAAAAAAAAAAAZAAQAAAAAAAAAAAAaAAQAAAAAAAAAAAAbAAQAAAAAAAAAAAAcAAQABQAAAAAAAAAdAAQAAAAAAAAAAAAAAAUAAAAAAAAAAAABAAUAAAAAAAAAAAACAAUAAAAAAAAAAAADAAUACAAAAAAAAAAEAAUAAAAAAAAAAAAFAAUAAAAAAAAAAAAGAAUAAAAAAAAAAAAHAAUAAAAAAAAAAAAIAAUAAAAAAAAAAAAJAAUACQAAAAAAAAAKAAUAAAAAAAAAAAALAAUAAAAAAAAAAAAMAAUAAAAAAAAAAAANAAUAAAAAAAAAAAAOAAUAAAAAAAAAAAAPAAUAAAAAAAAAAAAQAAUAAAAAAAAAAAARAAUAAAAAAAAAAAASAAUAAAAAAAAAAAATAAUAAAAAAAAAAAAUAAUAAgAAAAAAAAAVAAUAAAAAAAAAAAAWAAUAAAAAAAAAAAAXAAUAAAAAAAAAAAAYAAUAAAAAAAAAAAAZAAUAAAAAAAAAAAAaAAUAAwAAAAAAAAAbAAUAAAAAAAAAAAAcAAUAAAAAAAAAAAAdAAUAAAAAAAAAAAAAAAYAAAAAAAAAAAABAAYABwAAAAAAAAACAAYAAAAAAAAAAAADAAYAAAAAAAAAAAAEAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAAGAAYAAAAAAAAAAAAHAAYACAAAAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAMAAYAAAAAAAAAAAANAAYACQAAAAAAAAAOAAYAAAAAAAAAAAAPAAYAAAAAAAAAAAAQAAYAAAAAAAAAAAARAAYAAAAAAAAAAAASAAYAAAAAAAAAAAATAAYAAAAAAAAAAAAUAAYAAAAAAAAAAAAVAAYAAAAAAAAAAAAWAAYAAAAAAAAAAAAXAAYAAAAAAAAAAAAYAAYAAgAAAAAAAAAZAAYAAAAAAAAAAAAaAAYAAAAAAAAAAAAbAAYAAAAAAAAAAAAcAAYAAAAAAAAAAAAdAAYAAAAAAAAAAAAAAAcAAAAAAAAAAAABAAcAAAAAAAAAAAACAAcAAAAAAAAAAAADAAcAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcABwAAAAAAAAAGAAcAAAAAAAAAAAAHAAcAAAAAAAAAAAAIAAcAAAAAAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcACAAAAAAAAAAMAAcAAAAAAAAAAAANAAcAAAAAAAAAAAAOAAcAAAAAAAAAAAAPAAcAAAAAAAAAAAAQAAcAAAAAAAAAAAARAAcACQAAAAAAAAASAAcAAAAAAAAAAAATAAcAAAAAAAAAAAAUAAcAAAAAAAAAAAAVAAcAAAAAAAAAAAAWAAcAAAAAAAAAAAAXAAcAAAAAAAAAAAAYAAcAAAAAAAAAAAAZAAcAAAAAAAAAAAAaAAcAAAAAAAAAAAAbAAcAAAAAAAAAAAAcAAcAAgAAAAAAAAAdAAcAAAAAAAAAAAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgABQAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgABwAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgACAAAAAAAAAAQAAgAAAAAAAAAAAARAAgAAAAAAAAAAAASAAgAAAAAAAAAAAATAAgAAAAAAAAAAAAUAAgAAAAAAAAAAAAVAAgACQAAAAAAAAAWAAgAAAAAAAAAAAAXAAgAAAAAAAAAAAAYAAgAAAAAAAAAAAAZAAgAAAAAAAAAAAAaAAgAAAAAAAAAAAAbAAgAAAAAAAAAAAAcAAgAAAAAAAAAAAAdAAgAAAAAAAAAAAAAAAkAAAAAAAAAAAABAAkAAwAAAAAAAAACAAkAAAAAAAAAAAADAAkAAAAAAAAAAAAEAAkAAAAAAAAAAAAFAAkAAAAAAAAAAAAGAAkAAAAAAAAAAAAHAAkABQAAAAAAAAAIAAkAAAAAAAAAAAAJAAkAAAAAAAAAAAAKAAkAAAAAAAAAAAALAAkAAAAAAAAAAAAMAAkAAAAAAAAAAAANAAkABwAAAAAAAAAOAAkAAAAAAAAAAAAPAAkAAAAAAAAAAAAQAAkAAAAAAAAAAAARAAkAAAAAAAAAAAASAAkAAAAAAAAAAAATAAkACAAAAAAAAAAUAAkAAAAAAAAAAAAVAAkAAAAAAAAAAAAWAAkAAAAAAAAAAAAXAAkAAAAAAAAAAAAYAAkAAAAAAAAAAAAZAAkACQAAAAAAAAAaAAkAAAAAAAAAAAAbAAkAAAAAAAAAAAAcAAkAAAAAAAAAAAAdAAkAAAAAAAAAAAAAAAoAAAAAAAAAAAABAAoAAAAAAAAAAAACAAoAAAAAAAAAAAADAAoAAAAAAAAAAAAEAAoAAAAAAAAAAAAFAAoAAwAAAAAAAAAGAAoAAAAAAAAAAAAHAAoAAAAAAAAAAAAIAAoAAAAAAAAAAAAJAAoAAAAAAAAAAAAKAAoAAAAAAAAAAAALAAoABQAAAAAAAAAMAAoAAAAAAAAAAAANAAoAAAAAAAAAAAAOAAoAAAAAAAAAAAAPAAoAAAAAAAAAAAAQAAoAAAAAAAAAAAARAAoABwAAAAAAAAASAAoAAAAAAAAAAAATAAoAAAAAAAAAAAAUAAoAAAAAAAAAAAAVAAoAAAAAAAAAAAAWAAoAAAAAAAAAAAAXAAoACAAAAAAAAAAYAAoAAAAAAAAAAAAZAAoAAAAAAAAAAAAaAAoAAAAAAAAAAAAbAAoAAAAAAAAAAAAcAAoAAAAAAAAAAAAdAAoACQAAAAAAAAAAAAsAAAAAAAAAAAABAAsAAAAAAAAAAAACAAsAAAAAAAAAAAADAAsAAgAAAAAAAAAEAAsAAAAAAAAAAAAFAAsAAAAAAAAAAAAGAAsAAAAAAAAAAAAHAAsAAAAAAAAAAAAIAAsAAAAAAAAAAAAJAAsAAwAAAAAAAAAKAAsAAAAAAAAAAAALAAsAAAAAAAAAAAAMAAsAAAAAAAAAAAANAAsAAAAAAAAAAAAOAAsAAAAAAAAAAAAPAAsABQAAAAAAAAAQAAsAAAAAAAAAAAARAAsAAAAAAAAAAAASAAsAAAAAAAAAAAATAAsAAAAAAAAAAAAUAAsAAAAAAAAAAAAVAAsABwAAAAAAAAAWAAsAAAAAAAAAAAAXAAsAAAAAAAAAAAAYAAsAAAAAAAAAAAAZAAsAAAAAAAAAAAAaAAsAAAAAAAAAAAAbAAsACAAAAAAAAAAcAAsAAAAAAAAAAAAdAAsAAAAAAAAAAAAAAAwAAAAAAAAAAAABAAwAAAAAAAAAAAACAAwAAAAAAAAAAAADAAwAAAAAAAAAAAAEAAwAAAAAAAAAAAAFAAwAAAAAAAAAAAAGAAwAAAAAAAAAAAAHAAwAAgAAAAAAAAAIAAwAAAAAAAAAAAAJAAwAAAAAAAAAAAAKAAwAAAAAAAAAAAALAAwAAAAAAAAAAAAMAAwAAAAAAAAAAAANAAwAAwAAAAAAAAAOAAwAAAAAAAAAAAAPAAwAAAAAAAAAAAAQAAwAAAAAAAAAAAARAAwAAAAAAAAAAAASAAwAAAAAAAAAAAATAAwABQAAAAAAAAAUAAwAAAAAAAAAAAAVAAwAAAAAAAAAAAAWAAwAAAAAAAAAAAAXAAwAAAAAAAAAAAAYAAwAAAAAAAAAAAAZAAwABwAAAAAAAAAaAAwAAAAAAAAAAAAbAAwAAAAAAAAAAAAcAAwAAAAAAAAAAAAdAAwAAAAAAAAAAAAAAA0ACQAAAAAAAAABAA0AAAAAAAAAAAACAA0AAAAAAAAAAAADAA0AAAAAAAAAAAAEAA0AAAAAAAAAAAAFAA0AAAAAAAAAAAAGAA0AAAAAAAAAAAAHAA0AAAAAAAAAAAAIAA0AAAAAAAAAAAAJAA0AAAAAAAAAAAAKAA0AAAAAAAAAAAALAA0AAgAAAAAAAAAMAA0AAAAAAAAAAAANAA0AAAAAAAAAAAAOAA0AAAAAAAAAAAAPAA0AAAAAAAAAAAAQAA0AAAAAAAAAAAARAA0AAwAAAAAAAAASAA0AAAAAAAAAAAATAA0AAAAAAAAAAAAUAA0AAAAAAAAAAAAVAA0AAAAAAAAAAAAWAA0AAAAAAAAAAAAXAA0ABQAAAAAAAAAYAA0AAAAAAAAAAAAZAA0AAAAAAAAAAAAaAA0AAAAAAAAAAAAbAA0AAAAAAAAAAAAcAA0AAAAAAAAAAAAdAA0ABwAAAAAAAAAAAA4AAAAAAAAAAAABAA4AAAAAAAAAAAACAA4AAAAAAAAAAAADAA4AAAAAAAAAAAAEAA4ACQAAAAAAAAAFAA4AAAAAAAAAAAAGAA4AAAAAAAAAAAAHAA4AAAAAAAAAAAAIAA4AAAAAAAAAAAAJAA4AAAAAAAAAAAAKAA4AAAAAAAAAAAALAA4AAAAAAAAAAAAMAA4AAAAAAAAAAAANAA4AAAAAAAAAAAAOAA4AAAAAAAAAAAAPAA4AAgAAAAAAAAAQAA4AAAAAAAAAAAARAA4AAAAAAAAAAAASAA4AAAAAAAAAAAATAA4AAAAAAAAAAAAUAA4AAAAAAAAAAAAVAA4AAwAAAAAAAAAWAA4AAAAAAAAAAAAXAA4AAAAAAAAAAAAYAA4AAAAAAAAAAAAZAA4AAAAAAAAAAAAaAA4AAAAAAAAAAAAbAA4ABQAAAAAAAAAcAA4AAAAAAAAAAAAdAA4AAAAAAAAAAAAAAA8AAAAAAAAAAAABAA8AAAAAAAAAAAACAA8ACAAAAAAAAAADAA8AAAAAAAAAAAAEAA8AAAAAAAAAAAAFAA8AAAAAAAAAAAAGAA8AAAAAAAAAAAAHAA8AAAAAAAAAAAAIAA8ACQAAAAAAAAAJAA8AAAAAAAAAAAAKAA8AAAAAAAAAAAALAA8AAAAAAAAAAAAMAA8AAAAAAAAAAAANAA8AAAAAAAAAAAAOAA8AAAAAAAAAAAAPAA8AAAAAAAAAAAAQAA8AAAAAAAAAAAARAA8AAAAAAAAAAAASAA8AAAAAAAAAAAATAA8AAgAAAAAAAAAUAA8AAAAAAAAAAAAVAA8AAAAAAAAAAAAWAA8AAAAAAAAAAAAXAA8AAAAAAAAAAAAYAA8AAAAAAAAAAAAZAA8AAwAAAAAAAAAaAA8AAAAAAAAAAAAbAA8AAAAAAAAAAAAcAA8AAAAAAAAAAAAdAA8AAAAAAAAAAAAAABAACgAAAAAAAAABABAACgAAAAAAAAACABAACgAAAAAAAAADABAACgAAAAAAAAAEABAACgAAAAAAAAAFABAACgAAAAAAAAAGABAACgAAAAAAAAAHABAACgAAAAAAAAAIABAACgAAAAAAAAAJABAACgAAAAAAAAAKABAACgAAAAAAAAALABAACgAAAAAAAAAMABAACgAAAAAAAAANABAACgAAAAAAAAAOABAACgAAAAAAAAAPABAACgAAAAAAAAAQABAACgAAAAAAAAARABAACgAAAAAAAAASABAACgAAAAAAAAATABAACgAAAAAAAAAUABAACgAAAAAAAAAVABAACgAAAAAAAAAWABAACgAAAAAAAAAXABAACgAAAAAAAAAYABAACgAAAAAAAAAZABAACgAAAAAAAAAaABAACgAAAAAAAAAbABAACgAAAAAAAAAcABAACgAAAAAAAAAdABAACgAAAAAAAAA=")
 tile_set = ExtResource("3_floor")
+metadata/_edit_lock_ = true
 
-[node name="Path2D" type="Path2D" parent="."]
+[node name="Path2D" type="Path2D" parent="." index="4" unique_id=1451998106]
 curve = SubResource("Curve2D_r1_4")
 
-[node name="Path2D2" type="Path2D" parent="."]
+[node name="Path2D2" type="Path2D" parent="." index="5" unique_id=427048619]
 curve = SubResource("Curve2D_r2_4")
 
-[node name="beltLayer" type="Node2D" parent="."]
+[node name="beltLayer" type="Node2D" parent="." index="6" unique_id=567707939]
 z_index = -1
 
-[node name="belt_14_0" parent="beltLayer" index="0" instance=ExtResource("4_belt")]
+[node name="belt_14_0" parent="beltLayer" index="0" unique_id=1745437371 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_squpj")
 position = Vector2(928, 32)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
+autoplay = "ns"
 routePhase = 1.75
 
-[node name="belt_15_0" parent="beltLayer" index="1" instance=ExtResource("4_belt")]
+[node name="belt_15_0" parent="beltLayer" index="1" unique_id=1879999725 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_s2tmp")
 position = Vector2(992, 32)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
+autoplay = "ns"
 routePhase = 1.75
 
-[node name="belt_0_1" parent="beltLayer" index="2" instance=ExtResource("4_belt")]
+[node name="belt_0_1" parent="beltLayer" index="2" unique_id=652015453 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_4r3k3")
 position = Vector2(32, 96)
-texture = ExtResource("6_belt_ew")
-routePhase = 25.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 24.75
 
-[node name="belt_1_1" parent="beltLayer" index="3" instance=ExtResource("4_belt")]
+[node name="belt_1_1" parent="beltLayer" index="3" unique_id=769460036 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_f8r7f")
 position = Vector2(96, 96)
-texture = ExtResource("6_belt_ew")
-routePhase = 24.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 23.75
 
-[node name="belt_2_1" parent="beltLayer" index="4" instance=ExtResource("4_belt")]
+[node name="belt_2_1" parent="beltLayer" index="4" unique_id=1217758429 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_m6fmx")
 position = Vector2(160, 96)
-texture = ExtResource("6_belt_ew")
-routePhase = 23.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 22.75
 
-[node name="belt_3_1" parent="beltLayer" index="5" instance=ExtResource("4_belt")]
+[node name="belt_3_1" parent="beltLayer" index="5" unique_id=74879042 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_fxhlr")
 position = Vector2(224, 96)
-texture = ExtResource("6_belt_ew")
-routePhase = 22.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 21.75
 
-[node name="belt_4_1" parent="beltLayer" index="6" instance=ExtResource("4_belt")]
+[node name="belt_4_1" parent="beltLayer" index="6" unique_id=585663171 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_onr37")
 position = Vector2(288, 96)
-texture = ExtResource("6_belt_ew")
-routePhase = 21.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 20.75
 
-[node name="belt_5_1" parent="beltLayer" index="7" instance=ExtResource("4_belt")]
+[node name="belt_5_1" parent="beltLayer" index="7" unique_id=1338240947 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_oglyp")
 position = Vector2(352, 96)
-texture = ExtResource("6_belt_ew")
-routePhase = 20.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 19.75
 
-[node name="belt_6_1" parent="beltLayer" index="8" instance=ExtResource("4_belt")]
+[node name="belt_6_1" parent="beltLayer" index="8" unique_id=1463617113 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_uvei1")
 position = Vector2(416, 96)
-texture = ExtResource("6_belt_sw")
-routePhase = 19.75
+animation = &"sw"
+autoplay = "sw"
+routePhase = 18.75
 
-[node name="belt_7_1" parent="beltLayer" index="9" instance=ExtResource("4_belt")]
-position = Vector2(480, 96)
-texture = ExtResource("6_belt_sw")
-routePhase = 19.25
-
-[node name="belt_14_1" parent="beltLayer" index="10" instance=ExtResource("4_belt")]
+[node name="belt_14_1" parent="beltLayer" index="9" unique_id=48702845 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_6acst")
 position = Vector2(928, 96)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
+autoplay = "ns"
 routePhase = 2.75
 
-[node name="belt_15_1" parent="beltLayer" index="11" instance=ExtResource("4_belt")]
+[node name="belt_15_1" parent="beltLayer" index="10" unique_id=1516704170 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_r3mwn")
 position = Vector2(992, 96)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
+autoplay = "ns"
 routePhase = 2.75
 
-[node name="belt_0_2" parent="beltLayer" index="12" instance=ExtResource("4_belt")]
-position = Vector2(32, 160)
-texture = ExtResource("6_belt_ew")
-routePhase = 25.75
-
-[node name="belt_1_2" parent="beltLayer" index="13" instance=ExtResource("4_belt")]
-position = Vector2(96, 160)
-texture = ExtResource("6_belt_ew")
-routePhase = 24.75
-
-[node name="belt_2_2" parent="beltLayer" index="14" instance=ExtResource("4_belt")]
-position = Vector2(160, 160)
-texture = ExtResource("6_belt_ew")
-routePhase = 23.75
-
-[node name="belt_3_2" parent="beltLayer" index="15" instance=ExtResource("4_belt")]
-position = Vector2(224, 160)
-texture = ExtResource("6_belt_ew")
-routePhase = 22.75
-
-[node name="belt_4_2" parent="beltLayer" index="16" instance=ExtResource("4_belt")]
-position = Vector2(288, 160)
-texture = ExtResource("6_belt_ew")
-routePhase = 21.75
-
-[node name="belt_5_2" parent="beltLayer" index="17" instance=ExtResource("4_belt")]
-position = Vector2(352, 160)
-texture = ExtResource("6_belt_ew")
-routePhase = 20.75
-
-[node name="belt_6_2" parent="beltLayer" index="18" instance=ExtResource("4_belt")]
+[node name="belt_6_2" parent="beltLayer" index="11" unique_id=1443021017 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_ksi85")
 position = Vector2(416, 160)
-texture = ExtResource("6_belt_ew")
-routePhase = 18.75
+animation = &"sn"
+autoplay = "sn"
+routePhase = 17.75
 
-[node name="belt_7_2" parent="beltLayer" index="19" instance=ExtResource("4_belt")]
-position = Vector2(480, 160)
-texture = ExtResource("6_belt_sw")
-routePhase = 18.75
-
-[node name="belt_14_2" parent="beltLayer" index="20" instance=ExtResource("4_belt")]
+[node name="belt_14_2" parent="beltLayer" index="12" unique_id=1635636663 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_rmahc")
 position = Vector2(928, 160)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
+autoplay = "ns"
 routePhase = 3.75
 
-[node name="belt_15_2" parent="beltLayer" index="21" instance=ExtResource("4_belt")]
+[node name="belt_15_2" parent="beltLayer" index="13" unique_id=1420955488 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_8s8ci")
 position = Vector2(992, 160)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
+autoplay = "ns"
 routePhase = 3.75
 
-[node name="belt_6_3" parent="beltLayer" index="22" instance=ExtResource("4_belt")]
+[node name="belt_6_3" parent="beltLayer" index="14" unique_id=1125658476 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_aqtt1")
 position = Vector2(416, 224)
-texture = ExtResource("6_belt_sn")
-routePhase = 17.75
+animation = &"sn"
+autoplay = "sn"
+routePhase = 16.75
 
-[node name="belt_7_3" parent="beltLayer" index="23" instance=ExtResource("4_belt")]
-position = Vector2(480, 224)
-texture = ExtResource("6_belt_sn")
-routePhase = 17.75
-
-[node name="belt_14_3" parent="beltLayer" index="24" instance=ExtResource("4_belt")]
+[node name="belt_14_3" parent="beltLayer" index="15" unique_id=22523463 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_wjdfw")
 position = Vector2(928, 224)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
+autoplay = "ns"
 routePhase = 4.75
 
-[node name="belt_15_3" parent="beltLayer" index="25" instance=ExtResource("4_belt")]
+[node name="belt_15_3" parent="beltLayer" index="16" unique_id=2000911773 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_hb0e5")
 position = Vector2(992, 224)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
+autoplay = "ns"
 routePhase = 4.75
 
-[node name="belt_6_4" parent="beltLayer" index="26" instance=ExtResource("4_belt")]
+[node name="belt_6_4" parent="beltLayer" index="17" unique_id=176029284 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_6ev77")
 position = Vector2(416, 288)
-texture = ExtResource("6_belt_sn")
-routePhase = 16.75
+animation = &"sn"
+autoplay = "sn"
+routePhase = 15.75
 
-[node name="belt_7_4" parent="beltLayer" index="27" instance=ExtResource("4_belt")]
-position = Vector2(480, 288)
-texture = ExtResource("6_belt_sn")
-routePhase = 16.75
-
-[node name="belt_14_4" parent="beltLayer" index="28" instance=ExtResource("4_belt")]
+[node name="belt_14_4" parent="beltLayer" index="18" unique_id=1418481425 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_1dmkq")
 position = Vector2(928, 288)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
+autoplay = "ns"
 routePhase = 5.75
 
-[node name="belt_15_4" parent="beltLayer" index="29" instance=ExtResource("4_belt")]
+[node name="belt_15_4" parent="beltLayer" index="19" unique_id=222799581 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_hcma7")
 position = Vector2(992, 288)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
+autoplay = "ns"
 routePhase = 5.75
 
-[node name="belt_6_5" parent="beltLayer" index="30" instance=ExtResource("4_belt")]
+[node name="belt_6_5" parent="beltLayer" index="20" unique_id=1905864837 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_bq4eo")
 position = Vector2(416, 352)
-texture = ExtResource("6_belt_en")
-routePhase = 15.75
+animation = &"en"
+autoplay = "en"
+routePhase = 14.75
 
-[node name="belt_7_5" parent="beltLayer" index="31" instance=ExtResource("4_belt")]
+[node name="belt_7_5" parent="beltLayer" index="21" unique_id=1720000128 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_7g4jc")
 position = Vector2(480, 352)
-texture = ExtResource("6_belt_sn")
-routePhase = 14.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 13.75
 
-[node name="belt_8_5" parent="beltLayer" index="32" instance=ExtResource("4_belt")]
+[node name="belt_8_5" parent="beltLayer" index="22" unique_id=1228984617 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_3k02x")
 position = Vector2(544, 352)
-texture = ExtResource("6_belt_ew")
-routePhase = 13.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 12.75
 
-[node name="belt_9_5" parent="beltLayer" index="33" instance=ExtResource("4_belt")]
+[node name="belt_9_5" parent="beltLayer" index="23" unique_id=393354268 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_80yu2")
 position = Vector2(608, 352)
-texture = ExtResource("6_belt_ew")
-routePhase = 12.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 11.75
 
-[node name="belt_10_5" parent="beltLayer" index="34" instance=ExtResource("4_belt")]
+[node name="belt_10_5" parent="beltLayer" index="24" unique_id=1093299720 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_63pot")
 position = Vector2(672, 352)
-texture = ExtResource("6_belt_ew")
-routePhase = 11.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 10.75
 
-[node name="belt_11_5" parent="beltLayer" index="35" instance=ExtResource("4_belt")]
+[node name="belt_11_5" parent="beltLayer" index="25" unique_id=1531477465 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_hbovv")
 position = Vector2(736, 352)
-texture = ExtResource("6_belt_ew")
-routePhase = 10.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 9.75
 
-[node name="belt_12_5" parent="beltLayer" index="36" instance=ExtResource("4_belt")]
+[node name="belt_12_5" parent="beltLayer" index="26" unique_id=739013218 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_m4qc1")
 position = Vector2(800, 352)
-texture = ExtResource("6_belt_ew")
-routePhase = 9.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 8.75
 
-[node name="belt_13_5" parent="beltLayer" index="37" instance=ExtResource("4_belt")]
+[node name="belt_13_5" parent="beltLayer" index="27" unique_id=616976877 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_4jpuy")
 position = Vector2(864, 352)
-texture = ExtResource("6_belt_ew")
-routePhase = 8.75
+animation = &"ew"
+autoplay = "ew"
+routePhase = 7.75
 
-[node name="belt_14_5" parent="beltLayer" index="38" instance=ExtResource("4_belt")]
+[node name="belt_14_5" parent="beltLayer" index="28" unique_id=290604030 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_1vqwv")
 position = Vector2(928, 352)
-texture = ExtResource("6_belt_nw")
+animation = &"nw"
+autoplay = "nw"
 routePhase = 6.75
 
-[node name="belt_15_5" parent="beltLayer" index="39" instance=ExtResource("4_belt")]
+[node name="belt_15_5" parent="beltLayer" index="29" unique_id=558252625 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_pdseg")
 position = Vector2(992, 352)
-texture = ExtResource("6_belt_ns")
+animation = &"ns"
+autoplay = "ns"
 routePhase = 6.75
 
-[node name="belt_16_5" parent="beltLayer" index="40" instance=ExtResource("4_belt")]
-position = Vector2(1056, 352)
-texture = ExtResource("6_belt_we")
+[node name="belt_15_6" parent="beltLayer" index="30" unique_id=466791707 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_da7hk")
+position = Vector2(992, 416)
+animation = &"ne"
+autoplay = "ne"
+routePhase = 7.75
+
+[node name="belt_16_6" parent="beltLayer" index="31" unique_id=2113663973 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_ddiov")
+position = Vector2(1056, 416)
+autoplay = "we"
 routePhase = 8.75
 
-[node name="belt_17_5" parent="beltLayer" index="41" instance=ExtResource("4_belt")]
-position = Vector2(1120, 352)
-texture = ExtResource("6_belt_we")
+[node name="belt_17_6" parent="beltLayer" index="32" unique_id=2077180536 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_5olle")
+position = Vector2(1120, 416)
+autoplay = "we"
 routePhase = 9.75
 
-[node name="belt_18_5" parent="beltLayer" index="42" instance=ExtResource("4_belt")]
-position = Vector2(1184, 352)
-texture = ExtResource("6_belt_we")
+[node name="belt_18_6" parent="beltLayer" index="33" unique_id=1089858721 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_0p1va")
+position = Vector2(1184, 416)
+autoplay = "we"
 routePhase = 10.75
 
-[node name="belt_19_5" parent="beltLayer" index="43" instance=ExtResource("4_belt")]
-position = Vector2(1248, 352)
-texture = ExtResource("6_belt_we")
+[node name="belt_19_6" parent="beltLayer" index="34" unique_id=1236896912 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_1a0xr")
+position = Vector2(1248, 416)
+autoplay = "we"
 routePhase = 11.75
 
-[node name="belt_20_5" parent="beltLayer" index="44" instance=ExtResource("4_belt")]
-position = Vector2(1312, 352)
-texture = ExtResource("6_belt_we")
+[node name="belt_20_6" parent="beltLayer" index="35" unique_id=900506570 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_ihh54")
+position = Vector2(1312, 416)
+autoplay = "we"
 routePhase = 12.75
 
-[node name="belt_21_5" parent="beltLayer" index="45" instance=ExtResource("4_belt")]
-position = Vector2(1376, 352)
-texture = ExtResource("6_belt_we")
+[node name="belt_21_6" parent="beltLayer" index="36" unique_id=429385914 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_cl8f5")
+position = Vector2(1376, 416)
+autoplay = "we"
 routePhase = 13.75
 
-[node name="belt_22_5" parent="beltLayer" index="46" instance=ExtResource("4_belt")]
-position = Vector2(1440, 352)
-texture = ExtResource("6_belt_we")
+[node name="belt_22_6" parent="beltLayer" index="37" unique_id=250453434 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_1piq3")
+position = Vector2(1440, 416)
+autoplay = "we"
 routePhase = 14.75
 
-[node name="belt_23_5" parent="beltLayer" index="47" instance=ExtResource("4_belt")]
-position = Vector2(1504, 352)
-texture = ExtResource("6_belt_ws")
+[node name="belt_23_6" parent="beltLayer" index="38" unique_id=1336758494 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_fykdp")
+position = Vector2(1504, 416)
+animation = &"ws"
+autoplay = "ws"
 routePhase = 15.75
 
-[node name="belt_6_6" parent="beltLayer" index="48" instance=ExtResource("4_belt")]
-position = Vector2(416, 416)
-texture = ExtResource("6_belt_en")
-routePhase = 15.25
-
-[node name="belt_7_6" parent="beltLayer" index="49" instance=ExtResource("4_belt")]
-position = Vector2(480, 416)
-texture = ExtResource("6_belt_en")
-routePhase = 14.75
-
-[node name="belt_8_6" parent="beltLayer" index="50" instance=ExtResource("4_belt")]
-position = Vector2(544, 416)
-texture = ExtResource("6_belt_ew")
-routePhase = 13.75
-
-[node name="belt_9_6" parent="beltLayer" index="51" instance=ExtResource("4_belt")]
-position = Vector2(608, 416)
-texture = ExtResource("6_belt_ew")
-routePhase = 12.75
-
-[node name="belt_10_6" parent="beltLayer" index="52" instance=ExtResource("4_belt")]
-position = Vector2(672, 416)
-texture = ExtResource("6_belt_ew")
-routePhase = 11.75
-
-[node name="belt_11_6" parent="beltLayer" index="53" instance=ExtResource("4_belt")]
-position = Vector2(736, 416)
-texture = ExtResource("6_belt_ew")
-routePhase = 10.75
-
-[node name="belt_12_6" parent="beltLayer" index="54" instance=ExtResource("4_belt")]
-position = Vector2(800, 416)
-texture = ExtResource("6_belt_ew")
-routePhase = 9.75
-
-[node name="belt_13_6" parent="beltLayer" index="55" instance=ExtResource("4_belt")]
-position = Vector2(864, 416)
-texture = ExtResource("6_belt_ew")
-routePhase = 8.75
-
-[node name="belt_14_6" parent="beltLayer" index="56" instance=ExtResource("4_belt")]
-position = Vector2(928, 416)
-texture = ExtResource("6_belt_ew")
-routePhase = 7.75
-
-[node name="belt_15_6" parent="beltLayer" index="57" instance=ExtResource("4_belt")]
-position = Vector2(992, 416)
-texture = ExtResource("6_belt_ne")
-routePhase = 7.75
-
-[node name="belt_16_6" parent="beltLayer" index="58" instance=ExtResource("4_belt")]
-position = Vector2(1056, 416)
-texture = ExtResource("6_belt_we")
-routePhase = 8.75
-
-[node name="belt_17_6" parent="beltLayer" index="59" instance=ExtResource("4_belt")]
-position = Vector2(1120, 416)
-texture = ExtResource("6_belt_we")
-routePhase = 9.75
-
-[node name="belt_18_6" parent="beltLayer" index="60" instance=ExtResource("4_belt")]
-position = Vector2(1184, 416)
-texture = ExtResource("6_belt_we")
-routePhase = 10.75
-
-[node name="belt_19_6" parent="beltLayer" index="61" instance=ExtResource("4_belt")]
-position = Vector2(1248, 416)
-texture = ExtResource("6_belt_we")
-routePhase = 11.75
-
-[node name="belt_20_6" parent="beltLayer" index="62" instance=ExtResource("4_belt")]
-position = Vector2(1312, 416)
-texture = ExtResource("6_belt_we")
-routePhase = 12.75
-
-[node name="belt_21_6" parent="beltLayer" index="63" instance=ExtResource("4_belt")]
-position = Vector2(1376, 416)
-texture = ExtResource("6_belt_we")
-routePhase = 13.75
-
-[node name="belt_22_6" parent="beltLayer" index="64" instance=ExtResource("4_belt")]
-position = Vector2(1440, 416)
-texture = ExtResource("6_belt_we")
-routePhase = 14.75
-
-[node name="belt_23_6" parent="beltLayer" index="65" instance=ExtResource("4_belt")]
-position = Vector2(1504, 416)
-texture = ExtResource("6_belt_ws")
-routePhase = 16.25
-
-[node name="belt_23_7" parent="beltLayer" index="66" instance=ExtResource("4_belt")]
+[node name="belt_23_7" parent="beltLayer" index="39" unique_id=276081117 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_ja4jb")
 position = Vector2(1504, 480)
-texture = ExtResource("6_belt_ns")
-routePhase = 17.25
+animation = &"ns"
+autoplay = "ns"
+routePhase = 16.75
 
-[node name="belt_23_8" parent="beltLayer" index="67" instance=ExtResource("4_belt")]
+[node name="belt_23_8" parent="beltLayer" index="40" unique_id=1357120644 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_p13a6")
 position = Vector2(1504, 544)
-texture = ExtResource("6_belt_ns")
-routePhase = 18.25
+animation = &"ns"
+autoplay = "ns"
+routePhase = 17.75
 
-[node name="belt_23_9" parent="beltLayer" index="68" instance=ExtResource("4_belt")]
+[node name="belt_23_9" parent="beltLayer" index="41" unique_id=157531815 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_m2q6k")
 position = Vector2(1504, 608)
-texture = ExtResource("6_belt_ns")
-routePhase = 19.25
+animation = &"ne"
+autoplay = "ne"
+routePhase = 18.75
 
-[node name="belt_24_9" parent="beltLayer" index="69" instance=ExtResource("4_belt")]
+[node name="belt_24_9" parent="beltLayer" index="42" unique_id=1498209165 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_2wy73")
 position = Vector2(1568, 608)
-texture = ExtResource("6_belt_we")
-routePhase = 20.75
-
-[node name="belt_25_9" parent="beltLayer" index="70" instance=ExtResource("4_belt")]
-position = Vector2(1632, 608)
-texture = ExtResource("6_belt_we")
-routePhase = 21.75
-
-[node name="belt_26_9" parent="beltLayer" index="71" instance=ExtResource("4_belt")]
-position = Vector2(1696, 608)
-texture = ExtResource("6_belt_we")
-routePhase = 22.75
-
-[node name="belt_27_9" parent="beltLayer" index="72" instance=ExtResource("4_belt")]
-position = Vector2(1760, 608)
-texture = ExtResource("6_belt_we")
-routePhase = 23.75
-
-[node name="belt_28_9" parent="beltLayer" index="73" instance=ExtResource("4_belt")]
-position = Vector2(1824, 608)
-texture = ExtResource("6_belt_we")
-routePhase = 24.75
-
-[node name="belt_29_9" parent="beltLayer" index="74" instance=ExtResource("4_belt")]
-position = Vector2(1888, 608)
-texture = ExtResource("6_belt_we")
-routePhase = 25.75
-
-[node name="belt_23_10" parent="beltLayer" index="75" instance=ExtResource("4_belt")]
-position = Vector2(1504, 672)
-texture = ExtResource("6_belt_ne")
+autoplay = "we"
 routePhase = 19.75
 
-[node name="belt_24_10" parent="beltLayer" index="76" instance=ExtResource("4_belt")]
-position = Vector2(1568, 672)
-texture = ExtResource("6_belt_we")
+[node name="belt_25_9" parent="beltLayer" index="43" unique_id=249215305 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_4xift")
+position = Vector2(1632, 608)
+autoplay = "we"
 routePhase = 20.75
 
-[node name="belt_25_10" parent="beltLayer" index="77" instance=ExtResource("4_belt")]
-position = Vector2(1632, 672)
-texture = ExtResource("6_belt_we")
+[node name="belt_26_9" parent="beltLayer" index="44" unique_id=1793151995 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_4tipf")
+position = Vector2(1696, 608)
+autoplay = "we"
 routePhase = 21.75
 
-[node name="belt_26_10" parent="beltLayer" index="78" instance=ExtResource("4_belt")]
-position = Vector2(1696, 672)
-texture = ExtResource("6_belt_we")
+[node name="belt_27_9" parent="beltLayer" index="45" unique_id=1005188472 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_mlngx")
+position = Vector2(1760, 608)
+autoplay = "we"
 routePhase = 22.75
 
-[node name="belt_27_10" parent="beltLayer" index="79" instance=ExtResource("4_belt")]
-position = Vector2(1760, 672)
-texture = ExtResource("6_belt_we")
+[node name="belt_28_9" parent="beltLayer" index="46" unique_id=255563201 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_he0l3")
+position = Vector2(1824, 608)
+autoplay = "we"
 routePhase = 23.75
 
-[node name="belt_28_10" parent="beltLayer" index="80" instance=ExtResource("4_belt")]
-position = Vector2(1824, 672)
-texture = ExtResource("6_belt_we")
+[node name="belt_29_9" parent="beltLayer" index="47" unique_id=691238911 instance=ExtResource("4_belt")]
+material = SubResource("ShaderMaterial_agfup")
+position = Vector2(1888, 608)
+autoplay = "we"
 routePhase = 24.75
 
-[node name="belt_29_10" parent="beltLayer" index="81" instance=ExtResource("4_belt")]
-position = Vector2(1888, 672)
-texture = ExtResource("6_belt_we")
-routePhase = 25.75
-
-[node name="placeableLayer" type="Node2D" parent="."]
+[node name="placeableLayer" type="Node2D" parent="." index="7" unique_id=1090390598]
 z_index = -1
 
-[node name="slot_2_0" parent="placeableLayer" index="0" instance=ExtResource("5_slot")]
+[node name="slot_2_0" parent="placeableLayer" index="0" unique_id=886078187 instance=ExtResource("5_slot")]
 position = Vector2(160, 32)
 
-[node name="slot_3_0" parent="placeableLayer" index="1" instance=ExtResource("5_slot")]
+[node name="slot_3_0" parent="placeableLayer" index="1" unique_id=351745737 instance=ExtResource("5_slot")]
 position = Vector2(224, 32)
 
-[node name="slot_4_0" parent="placeableLayer" index="2" instance=ExtResource("5_slot")]
+[node name="slot_4_0" parent="placeableLayer" index="2" unique_id=1874522739 instance=ExtResource("5_slot")]
 position = Vector2(288, 32)
 
-[node name="slot_5_0" parent="placeableLayer" index="3" instance=ExtResource("5_slot")]
+[node name="slot_5_0" parent="placeableLayer" index="3" unique_id=284351132 instance=ExtResource("5_slot")]
 position = Vector2(352, 32)
 
-[node name="slot_6_0" parent="placeableLayer" index="4" instance=ExtResource("5_slot")]
+[node name="slot_6_0" parent="placeableLayer" index="4" unique_id=54547630 instance=ExtResource("5_slot")]
 position = Vector2(416, 32)
 
-[node name="slot_7_0" parent="placeableLayer" index="5" instance=ExtResource("5_slot")]
+[node name="slot_7_0" parent="placeableLayer" index="5" unique_id=922649199 instance=ExtResource("5_slot")]
 position = Vector2(480, 32)
 
-[node name="slot_8_0" parent="placeableLayer" index="6" instance=ExtResource("5_slot")]
+[node name="slot_8_0" parent="placeableLayer" index="6" unique_id=454368620 instance=ExtResource("5_slot")]
 position = Vector2(544, 32)
 
-[node name="slot_9_0" parent="placeableLayer" index="7" instance=ExtResource("5_slot")]
+[node name="slot_9_0" parent="placeableLayer" index="7" unique_id=1682025237 instance=ExtResource("5_slot")]
 position = Vector2(608, 32)
 
-[node name="slot_12_0" parent="placeableLayer" index="8" instance=ExtResource("5_slot")]
+[node name="slot_12_0" parent="placeableLayer" index="8" unique_id=759141403 instance=ExtResource("5_slot")]
 position = Vector2(800, 32)
 
-[node name="slot_13_0" parent="placeableLayer" index="9" instance=ExtResource("5_slot")]
+[node name="slot_13_0" parent="placeableLayer" index="9" unique_id=457290488 instance=ExtResource("5_slot")]
 position = Vector2(864, 32)
 
-[node name="slot_16_0" parent="placeableLayer" index="10" instance=ExtResource("5_slot")]
+[node name="slot_16_0" parent="placeableLayer" index="10" unique_id=1916702759 instance=ExtResource("5_slot")]
 position = Vector2(1056, 32)
 
-[node name="slot_17_0" parent="placeableLayer" index="11" instance=ExtResource("5_slot")]
+[node name="slot_17_0" parent="placeableLayer" index="11" unique_id=1136461917 instance=ExtResource("5_slot")]
 position = Vector2(1120, 32)
 
-[node name="slot_8_1" parent="placeableLayer" index="12" instance=ExtResource("5_slot")]
+[node name="slot_8_1" parent="placeableLayer" index="12" unique_id=1204351669 instance=ExtResource("5_slot")]
 position = Vector2(544, 96)
 
-[node name="slot_9_1" parent="placeableLayer" index="13" instance=ExtResource("5_slot")]
+[node name="slot_9_1" parent="placeableLayer" index="13" unique_id=191143147 instance=ExtResource("5_slot")]
 position = Vector2(608, 96)
 
-[node name="slot_12_1" parent="placeableLayer" index="14" instance=ExtResource("5_slot")]
+[node name="slot_12_1" parent="placeableLayer" index="14" unique_id=1652121008 instance=ExtResource("5_slot")]
 position = Vector2(800, 96)
 
-[node name="slot_13_1" parent="placeableLayer" index="15" instance=ExtResource("5_slot")]
+[node name="slot_13_1" parent="placeableLayer" index="15" unique_id=158704295 instance=ExtResource("5_slot")]
 position = Vector2(864, 96)
 
-[node name="slot_16_1" parent="placeableLayer" index="16" instance=ExtResource("5_slot")]
+[node name="slot_16_1" parent="placeableLayer" index="16" unique_id=1477393915 instance=ExtResource("5_slot")]
 position = Vector2(1056, 96)
 
-[node name="slot_17_1" parent="placeableLayer" index="17" instance=ExtResource("5_slot")]
+[node name="slot_17_1" parent="placeableLayer" index="17" unique_id=2023013157 instance=ExtResource("5_slot")]
 position = Vector2(1120, 96)
 
-[node name="slot_8_2" parent="placeableLayer" index="18" instance=ExtResource("5_slot")]
+[node name="slot_8_2" parent="placeableLayer" index="18" unique_id=1359591171 instance=ExtResource("5_slot")]
 position = Vector2(544, 160)
 
-[node name="slot_9_2" parent="placeableLayer" index="19" instance=ExtResource("5_slot")]
+[node name="slot_9_2" parent="placeableLayer" index="19" unique_id=183259371 instance=ExtResource("5_slot")]
 position = Vector2(608, 160)
 
-[node name="slot_12_2" parent="placeableLayer" index="20" instance=ExtResource("5_slot")]
+[node name="slot_12_2" parent="placeableLayer" index="20" unique_id=1781047304 instance=ExtResource("5_slot")]
 position = Vector2(800, 160)
 
-[node name="slot_13_2" parent="placeableLayer" index="21" instance=ExtResource("5_slot")]
+[node name="slot_13_2" parent="placeableLayer" index="21" unique_id=1577628339 instance=ExtResource("5_slot")]
 position = Vector2(864, 160)
 
-[node name="slot_16_2" parent="placeableLayer" index="22" instance=ExtResource("5_slot")]
+[node name="slot_16_2" parent="placeableLayer" index="22" unique_id=1172469395 instance=ExtResource("5_slot")]
 position = Vector2(1056, 160)
 
-[node name="slot_17_2" parent="placeableLayer" index="23" instance=ExtResource("5_slot")]
+[node name="slot_17_2" parent="placeableLayer" index="23" unique_id=723229981 instance=ExtResource("5_slot")]
 position = Vector2(1120, 160)
 
-[node name="slot_2_3" parent="placeableLayer" index="24" instance=ExtResource("5_slot")]
+[node name="slot_2_3" parent="placeableLayer" index="24" unique_id=212299572 instance=ExtResource("5_slot")]
 position = Vector2(160, 224)
 
-[node name="slot_3_3" parent="placeableLayer" index="25" instance=ExtResource("5_slot")]
+[node name="slot_3_3" parent="placeableLayer" index="25" unique_id=1916447357 instance=ExtResource("5_slot")]
 position = Vector2(224, 224)
 
-[node name="slot_4_3" parent="placeableLayer" index="26" instance=ExtResource("5_slot")]
+[node name="slot_4_3" parent="placeableLayer" index="26" unique_id=1658308939 instance=ExtResource("5_slot")]
 position = Vector2(288, 224)
 
-[node name="slot_5_3" parent="placeableLayer" index="27" instance=ExtResource("5_slot")]
+[node name="slot_5_3" parent="placeableLayer" index="27" unique_id=1062538827 instance=ExtResource("5_slot")]
 position = Vector2(352, 224)
 
-[node name="slot_8_3" parent="placeableLayer" index="28" instance=ExtResource("5_slot")]
+[node name="slot_8_3" parent="placeableLayer" index="28" unique_id=917083377 instance=ExtResource("5_slot")]
 position = Vector2(544, 224)
 
-[node name="slot_12_3" parent="placeableLayer" index="29" instance=ExtResource("5_slot")]
+[node name="slot_12_3" parent="placeableLayer" index="29" unique_id=28499632 instance=ExtResource("5_slot")]
 position = Vector2(800, 224)
 
-[node name="slot_13_3" parent="placeableLayer" index="30" instance=ExtResource("5_slot")]
+[node name="slot_13_3" parent="placeableLayer" index="30" unique_id=842507545 instance=ExtResource("5_slot")]
 position = Vector2(864, 224)
 
-[node name="slot_16_3" parent="placeableLayer" index="31" instance=ExtResource("5_slot")]
+[node name="slot_16_3" parent="placeableLayer" index="31" unique_id=57866663 instance=ExtResource("5_slot")]
 position = Vector2(1056, 224)
 
-[node name="slot_17_3" parent="placeableLayer" index="32" instance=ExtResource("5_slot")]
+[node name="slot_17_3" parent="placeableLayer" index="32" unique_id=555954490 instance=ExtResource("5_slot")]
 position = Vector2(1120, 224)
 
-[node name="slot_2_4" parent="placeableLayer" index="33" instance=ExtResource("5_slot")]
+[node name="slot_2_4" parent="placeableLayer" index="33" unique_id=1500058544 instance=ExtResource("5_slot")]
 position = Vector2(160, 288)
 
-[node name="slot_3_4" parent="placeableLayer" index="34" instance=ExtResource("5_slot")]
+[node name="slot_3_4" parent="placeableLayer" index="34" unique_id=1443392307 instance=ExtResource("5_slot")]
 position = Vector2(224, 288)
 
-[node name="slot_4_4" parent="placeableLayer" index="35" instance=ExtResource("5_slot")]
+[node name="slot_4_4" parent="placeableLayer" index="35" unique_id=862984566 instance=ExtResource("5_slot")]
 position = Vector2(288, 288)
 
-[node name="slot_5_4" parent="placeableLayer" index="36" instance=ExtResource("5_slot")]
+[node name="slot_5_4" parent="placeableLayer" index="36" unique_id=84975481 instance=ExtResource("5_slot")]
 position = Vector2(352, 288)
 
-[node name="slot_13_4" parent="placeableLayer" index="37" instance=ExtResource("5_slot")]
+[node name="slot_13_4" parent="placeableLayer" index="37" unique_id=1022785248 instance=ExtResource("5_slot")]
 position = Vector2(864, 288)
 
-[node name="slot_16_4" parent="placeableLayer" index="38" instance=ExtResource("5_slot")]
+[node name="slot_16_4" parent="placeableLayer" index="38" unique_id=1895084258 instance=ExtResource("5_slot")]
 position = Vector2(1056, 288)
 
-[node name="slot_24_6" parent="placeableLayer" index="39" instance=ExtResource("5_slot")]
+[node name="slot_24_6" parent="placeableLayer" index="39" unique_id=1859546085 instance=ExtResource("5_slot")]
 position = Vector2(1568, 416)
 
-[node name="slot_25_6" parent="placeableLayer" index="40" instance=ExtResource("5_slot")]
+[node name="slot_25_6" parent="placeableLayer" index="40" unique_id=332716985 instance=ExtResource("5_slot")]
 position = Vector2(1632, 416)
 
-[node name="slot_14_7" parent="placeableLayer" index="41" instance=ExtResource("5_slot")]
+[node name="slot_14_7" parent="placeableLayer" index="41" unique_id=342750391 instance=ExtResource("5_slot")]
 position = Vector2(928, 480)
 
-[node name="slot_15_7" parent="placeableLayer" index="42" instance=ExtResource("5_slot")]
+[node name="slot_15_7" parent="placeableLayer" index="42" unique_id=1317228107 instance=ExtResource("5_slot")]
 position = Vector2(992, 480)
 
-[node name="slot_22_7" parent="placeableLayer" index="43" instance=ExtResource("5_slot")]
+[node name="slot_22_7" parent="placeableLayer" index="43" unique_id=1960820830 instance=ExtResource("5_slot")]
 position = Vector2(1440, 480)
 
-[node name="slot_24_7" parent="placeableLayer" index="44" instance=ExtResource("5_slot")]
+[node name="slot_24_7" parent="placeableLayer" index="44" unique_id=249099911 instance=ExtResource("5_slot")]
 position = Vector2(1568, 480)
 
-[node name="slot_25_7" parent="placeableLayer" index="45" instance=ExtResource("5_slot")]
+[node name="slot_25_7" parent="placeableLayer" index="45" unique_id=603863390 instance=ExtResource("5_slot")]
 position = Vector2(1632, 480)
 
-[node name="slot_26_7" parent="placeableLayer" index="46" instance=ExtResource("5_slot")]
+[node name="slot_26_7" parent="placeableLayer" index="46" unique_id=1150876402 instance=ExtResource("5_slot")]
 position = Vector2(1696, 480)
 
-[node name="slot_27_7" parent="placeableLayer" index="47" instance=ExtResource("5_slot")]
+[node name="slot_27_7" parent="placeableLayer" index="47" unique_id=1356835528 instance=ExtResource("5_slot")]
 position = Vector2(1760, 480)
 
-[node name="slot_14_8" parent="placeableLayer" index="48" instance=ExtResource("5_slot")]
+[node name="slot_14_8" parent="placeableLayer" index="48" unique_id=1545310163 instance=ExtResource("5_slot")]
 position = Vector2(928, 544)
 
-[node name="slot_15_8" parent="placeableLayer" index="49" instance=ExtResource("5_slot")]
+[node name="slot_15_8" parent="placeableLayer" index="49" unique_id=464279544 instance=ExtResource("5_slot")]
 position = Vector2(992, 544)
 
-[node name="slot_21_8" parent="placeableLayer" index="50" instance=ExtResource("5_slot")]
+[node name="slot_21_8" parent="placeableLayer" index="50" unique_id=1234663164 instance=ExtResource("5_slot")]
 position = Vector2(1376, 544)
 
-[node name="slot_22_8" parent="placeableLayer" index="51" instance=ExtResource("5_slot")]
+[node name="slot_22_8" parent="placeableLayer" index="51" unique_id=1789238945 instance=ExtResource("5_slot")]
 position = Vector2(1440, 544)
 
-[node name="slot_24_8" parent="placeableLayer" index="52" instance=ExtResource("5_slot")]
+[node name="slot_24_8" parent="placeableLayer" index="52" unique_id=1880227875 instance=ExtResource("5_slot")]
 position = Vector2(1568, 544)
 
-[node name="slot_25_8" parent="placeableLayer" index="53" instance=ExtResource("5_slot")]
+[node name="slot_25_8" parent="placeableLayer" index="53" unique_id=1436811433 instance=ExtResource("5_slot")]
 position = Vector2(1632, 544)
 
-[node name="slot_26_8" parent="placeableLayer" index="54" instance=ExtResource("5_slot")]
+[node name="slot_26_8" parent="placeableLayer" index="54" unique_id=905972384 instance=ExtResource("5_slot")]
 position = Vector2(1696, 544)
 
-[node name="slot_27_8" parent="placeableLayer" index="55" instance=ExtResource("5_slot")]
+[node name="slot_27_8" parent="placeableLayer" index="55" unique_id=1962361462 instance=ExtResource("5_slot")]
 position = Vector2(1760, 544)
 
-[node name="slot_21_9" parent="placeableLayer" index="56" instance=ExtResource("5_slot")]
+[node name="slot_21_9" parent="placeableLayer" index="56" unique_id=1232552649 instance=ExtResource("5_slot")]
 position = Vector2(1376, 608)
 
-[node name="slot_22_9" parent="placeableLayer" index="57" instance=ExtResource("5_slot")]
+[node name="slot_22_9" parent="placeableLayer" index="57" unique_id=320463121 instance=ExtResource("5_slot")]
 position = Vector2(1440, 608)
 
-[node name="slot_21_10" parent="placeableLayer" index="58" instance=ExtResource("5_slot")]
+[node name="slot_21_10" parent="placeableLayer" index="58" unique_id=947924627 instance=ExtResource("5_slot")]
 position = Vector2(1376, 672)
 
-[node name="slot_22_10" parent="placeableLayer" index="59" instance=ExtResource("5_slot")]
+[node name="slot_22_10" parent="placeableLayer" index="59" unique_id=465813860 instance=ExtResource("5_slot")]
 position = Vector2(1440, 672)
 
-[node name="slot_21_11" parent="placeableLayer" index="60" instance=ExtResource("5_slot")]
+[node name="slot_21_11" parent="placeableLayer" index="60" unique_id=1822037106 instance=ExtResource("5_slot")]
 position = Vector2(1376, 736)
 
-[node name="slot_22_11" parent="placeableLayer" index="61" instance=ExtResource("5_slot")]
+[node name="slot_22_11" parent="placeableLayer" index="61" unique_id=1155942722 instance=ExtResource("5_slot")]
 position = Vector2(1440, 736)
 
-[node name="slot_23_11" parent="placeableLayer" index="62" instance=ExtResource("5_slot")]
+[node name="slot_23_11" parent="placeableLayer" index="62" unique_id=986259366 instance=ExtResource("5_slot")]
 position = Vector2(1504, 736)
 
-[node name="slot_24_11" parent="placeableLayer" index="63" instance=ExtResource("5_slot")]
+[node name="slot_24_11" parent="placeableLayer" index="63" unique_id=1337097382 instance=ExtResource("5_slot")]
 position = Vector2(1568, 736)
 
-[node name="slot_25_11" parent="placeableLayer" index="64" instance=ExtResource("5_slot")]
+[node name="slot_25_11" parent="placeableLayer" index="64" unique_id=122955496 instance=ExtResource("5_slot")]
 position = Vector2(1632, 736)
 
-[node name="slot_26_11" parent="placeableLayer" index="65" instance=ExtResource("5_slot")]
+[node name="slot_26_11" parent="placeableLayer" index="65" unique_id=935653776 instance=ExtResource("5_slot")]
 position = Vector2(1696, 736)
 
-[node name="slot_27_11" parent="placeableLayer" index="66" instance=ExtResource("5_slot")]
+[node name="slot_27_11" parent="placeableLayer" index="66" unique_id=1702624518 instance=ExtResource("5_slot")]
 position = Vector2(1760, 736)
 
-[node name="slot_22_12" parent="placeableLayer" index="67" instance=ExtResource("5_slot")]
+[node name="slot_22_12" parent="placeableLayer" index="67" unique_id=627225772 instance=ExtResource("5_slot")]
 position = Vector2(1440, 800)
 
-[node name="slot_23_12" parent="placeableLayer" index="68" instance=ExtResource("5_slot")]
+[node name="slot_23_12" parent="placeableLayer" index="68" unique_id=76101056 instance=ExtResource("5_slot")]
 position = Vector2(1504, 800)
 
-[node name="slot_24_12" parent="placeableLayer" index="69" instance=ExtResource("5_slot")]
+[node name="slot_24_12" parent="placeableLayer" index="69" unique_id=1599068381 instance=ExtResource("5_slot")]
 position = Vector2(1568, 800)
 
-[node name="slot_25_12" parent="placeableLayer" index="70" instance=ExtResource("5_slot")]
+[node name="slot_25_12" parent="placeableLayer" index="70" unique_id=475654811 instance=ExtResource("5_slot")]
 position = Vector2(1632, 800)
 
-[node name="slot_26_12" parent="placeableLayer" index="71" instance=ExtResource("5_slot")]
+[node name="slot_26_12" parent="placeableLayer" index="71" unique_id=844307438 instance=ExtResource("5_slot")]
 position = Vector2(1696, 800)
 
-[node name="slot_27_12" parent="placeableLayer" index="72" instance=ExtResource("5_slot")]
+[node name="slot_27_12" parent="placeableLayer" index="72" unique_id=499127418 instance=ExtResource("5_slot")]
 position = Vector2(1760, 800)
 
-[node name="propLayer" type="Node2D" parent="."]
+[node name="propLayer" type="Node2D" parent="." index="8" unique_id=1209351067]
 
-[node name="transformer_20_7" parent="propLayer" index="0" instance=ExtResource("8_big_transformer")]
+[node name="transformer_20_7" parent="propLayer" index="0" unique_id=2034794875 instance=ExtResource("8_big_transformer")]
 position = Vector2(1344, 480)
 
-[node name="generator_21_4" parent="propLayer" index="1" instance=ExtResource("8_big_generator")]
+[node name="generator_21_4" parent="propLayer" index="1" unique_id=1668259426 instance=ExtResource("8_big_generator")]
 position = Vector2(1408, 288)
 
-[node name="ac_unit_19_2" parent="propLayer" index="2" instance=ExtResource("8_big_ac_unit")]
+[node name="ac_unit_19_2" parent="propLayer" index="2" unique_id=603290272 instance=ExtResource("8_big_ac_unit")]
 position = Vector2(1280, 192)
 
-[node name="monitor_11_1" parent="propLayer" index="3" instance=ExtResource("7_prop_monitor")]
-position = Vector2(736, 96)
-
-[node name="monitor_21_1" parent="propLayer" index="4" instance=ExtResource("7_prop_monitor")]
-position = Vector2(1376, 96)
-
-[node name="steam_vent_27_1" parent="propLayer" index="5" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_27_1" parent="propLayer" index="3" unique_id=522199543 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(1760, 96)
 
-[node name="steam_vent_9_3" parent="propLayer" index="6" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_9_3" parent="propLayer" index="4" unique_id=1791814325 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(608, 224)
 
-[node name="vent_fan_21_3" parent="propLayer" index="7" instance=ExtResource("7_prop_vent_fan")]
-position = Vector2(1376, 224)
-
-[node name="steam_vent_29_3" parent="propLayer" index="8" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_29_3" parent="propLayer" index="5" unique_id=1276134316 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(1888, 224)
 
-[node name="monitor_10_4" parent="propLayer" index="9" instance=ExtResource("7_prop_monitor")]
-position = Vector2(672, 288)
-
-[node name="vent_fan_20_4" parent="propLayer" index="10" instance=ExtResource("7_prop_vent_fan")]
-position = Vector2(1312, 288)
-
-[node name="vent_fan_26_4" parent="propLayer" index="11" instance=ExtResource("7_prop_vent_fan")]
+[node name="vent_fan_26_4" parent="propLayer" index="6" unique_id=1263989608 instance=ExtResource("7_prop_vent_fan")]
 position = Vector2(1696, 288)
 
-[node name="monitor_25_5" parent="propLayer" index="12" instance=ExtResource("7_prop_monitor")]
-position = Vector2(1632, 352)
-
-[node name="steam_vent_1_6" parent="propLayer" index="13" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_1_6" parent="propLayer" index="7" unique_id=1332527624 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(96, 416)
 
-[node name="monitor_8_7" parent="propLayer" index="14" instance=ExtResource("7_prop_monitor")]
-position = Vector2(544, 480)
-
-[node name="steam_vent_16_7" parent="propLayer" index="15" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_16_7" parent="propLayer" index="8" unique_id=1884010012 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(1056, 480)
 
-[node name="vent_fan_0_8" parent="propLayer" index="16" instance=ExtResource("7_prop_vent_fan")]
+[node name="vent_fan_0_8" parent="propLayer" index="9" unique_id=584261580 instance=ExtResource("7_prop_vent_fan")]
 position = Vector2(32, 544)
 
-[node name="vent_fan_11_8" parent="propLayer" index="17" instance=ExtResource("7_prop_vent_fan")]
+[node name="vent_fan_11_8" parent="propLayer" index="10" unique_id=682558151 instance=ExtResource("7_prop_vent_fan")]
 position = Vector2(736, 544)
 
-[node name="vent_fan_12_8" parent="propLayer" index="18" instance=ExtResource("7_prop_vent_fan")]
+[node name="vent_fan_12_8" parent="propLayer" index="11" unique_id=756700901 instance=ExtResource("7_prop_vent_fan")]
 position = Vector2(800, 544)
 
-[node name="steam_vent_16_8" parent="propLayer" index="19" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_16_8" parent="propLayer" index="12" unique_id=2059866533 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(1056, 544)
 
-[node name="steam_vent_20_8" parent="propLayer" index="20" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_20_8" parent="propLayer" index="13" unique_id=824953476 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(1312, 544)
 
-[node name="steam_vent_29_8" parent="propLayer" index="21" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_29_8" parent="propLayer" index="14" unique_id=1255221045 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(1888, 544)
 
-[node name="vent_fan_3_9" parent="propLayer" index="22" instance=ExtResource("7_prop_vent_fan")]
-position = Vector2(224, 608)
-
-[node name="monitor_6_9" parent="propLayer" index="23" instance=ExtResource("7_prop_monitor")]
-position = Vector2(416, 608)
-
-[node name="steam_vent_17_9" parent="propLayer" index="24" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_17_9" parent="propLayer" index="15" unique_id=789424355 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(1120, 608)
 
-[node name="monitor_18_10" parent="propLayer" index="25" instance=ExtResource("7_prop_monitor")]
-position = Vector2(1184, 672)
-
-[node name="monitor_1_11" parent="propLayer" index="26" instance=ExtResource("7_prop_monitor")]
-position = Vector2(96, 736)
-
-[node name="vent_fan_3_11" parent="propLayer" index="27" instance=ExtResource("7_prop_vent_fan")]
-position = Vector2(224, 736)
-
-[node name="monitor_2_12" parent="propLayer" index="28" instance=ExtResource("7_prop_monitor")]
-position = Vector2(160, 800)
-
-[node name="steam_vent_9_12" parent="propLayer" index="29" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_9_12" parent="propLayer" index="16" unique_id=1182120466 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(608, 800)
 
-[node name="steam_vent_4_13" parent="propLayer" index="30" instance=ExtResource("7_prop_steam_vent")]
-position = Vector2(288, 864)
-
-[node name="vent_fan_8_13" parent="propLayer" index="31" instance=ExtResource("7_prop_vent_fan")]
-position = Vector2(544, 864)
-
-[node name="vent_fan_19_13" parent="propLayer" index="32" instance=ExtResource("7_prop_vent_fan")]
-position = Vector2(1248, 864)
-
-[node name="vent_fan_20_13" parent="propLayer" index="33" instance=ExtResource("7_prop_vent_fan")]
+[node name="vent_fan_20_13" parent="propLayer" index="17" unique_id=1649218692 instance=ExtResource("7_prop_vent_fan")]
 position = Vector2(1312, 864)
 
-[node name="vent_fan_22_13" parent="propLayer" index="34" instance=ExtResource("7_prop_vent_fan")]
+[node name="vent_fan_22_13" parent="propLayer" index="18" unique_id=360073521 instance=ExtResource("7_prop_vent_fan")]
 position = Vector2(1440, 864)
 
-[node name="steam_vent_3_14" parent="propLayer" index="35" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_3_14" parent="propLayer" index="19" unique_id=1064719704 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(224, 928)
 
-[node name="vent_fan_5_14" parent="propLayer" index="36" instance=ExtResource("7_prop_vent_fan")]
+[node name="vent_fan_5_14" parent="propLayer" index="20" unique_id=28894881 instance=ExtResource("7_prop_vent_fan")]
 position = Vector2(352, 928)
 
-[node name="vent_fan_8_14" parent="propLayer" index="37" instance=ExtResource("7_prop_vent_fan")]
-position = Vector2(544, 928)
-
-[node name="steam_vent_21_14" parent="propLayer" index="38" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_21_14" parent="propLayer" index="21" unique_id=1922028458 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(1376, 928)
 
-[node name="monitor_27_14" parent="propLayer" index="39" instance=ExtResource("7_prop_monitor")]
-position = Vector2(1760, 928)
-
-[node name="vent_fan_29_14" parent="propLayer" index="40" instance=ExtResource("7_prop_vent_fan")]
+[node name="vent_fan_29_14" parent="propLayer" index="22" unique_id=1144102689 instance=ExtResource("7_prop_vent_fan")]
 position = Vector2(1888, 928)
 
-[node name="steam_vent_8_15" parent="propLayer" index="41" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_8_15" parent="propLayer" index="23" unique_id=772908596 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(544, 992)
 
-[node name="steam_vent_9_15" parent="propLayer" index="42" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_9_15" parent="propLayer" index="24" unique_id=81324666 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(608, 992)
 
-[node name="steam_vent_12_15" parent="propLayer" index="43" instance=ExtResource("7_prop_steam_vent")]
+[node name="steam_vent_12_15" parent="propLayer" index="25" unique_id=1703211418 instance=ExtResource("7_prop_steam_vent")]
 position = Vector2(800, 992)
 
-[node name="monitor_27_15" parent="propLayer" index="44" instance=ExtResource("7_prop_monitor")]
-position = Vector2(1760, 992)
+[node name="alarm_1_3" parent="propLayer" index="26" unique_id=964843038 instance=ExtResource("7_prop_alarm")]
+position = Vector2(34, 162)
 
-[node name="alarm_1_3" parent="propLayer" index="45" instance=ExtResource("7_prop_alarm")]
-position = Vector2(96, 224)
-
-[node name="alarm_28_8" parent="propLayer" index="46" instance=ExtResource("7_prop_alarm")]
+[node name="alarm_28_8" parent="propLayer" index="27" unique_id=377199779 instance=ExtResource("7_prop_alarm")]
 position = Vector2(1824, 544)
 
 [connection signal="timeout" from="WaveTimer" to="." method="_onWaveTimerTimeout"]

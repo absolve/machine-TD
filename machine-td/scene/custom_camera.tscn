@@ -5,3 +5,6 @@
 [node name="CustomCamera" type="Camera2D" unique_id=1331816399]
 anchor_mode = 0
 script = ExtResource("1_r38ya")
+
+[node name="AudioListener2D" type="AudioListener2D" parent="." groups=["audio_listener"]]
+current = true

@@ -12,7 +12,7 @@ extends "res://script/tower/tower.gd"
 ## 无人机自己不做任何侦测/选目标，只执行 assign() 收到的任务（见 drone.gd）。
 
 const DRONE_SCENE := preload("res://scene/drone.tscn")
-const DRONE_COUNT := 3          # 无人机数量
+const DRONE_COUNT := 3 # 无人机数量
 ## 同一个目标最多派几架去包围（多了也没用，还会互相挡）
 const MAX_DRONES_PER_TARGET := 3
 ## 重新分配目标的间隔（秒）。每帧分配会让无人机一直改主意，反而抖
@@ -40,7 +40,7 @@ func init():
 
 
 func _spawnDrones() -> void:
-	_recycleDrones()   # 防止重复 init 时生成两批
+	_recycleDrones() # 防止重复 init 时生成两批
 	for i in range(DRONE_COUNT):
 		var d = DRONE_SCENE.instantiate()
 		d.setupDrone(self, i, DRONE_COUNT)

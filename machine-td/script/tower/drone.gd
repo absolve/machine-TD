@@ -31,9 +31,9 @@ extends "res://script/tower/aircraft.gd"
 enum State { IDLE, SORTIE, ATTACK, RETURN }
 
 ## ── 转向参数（对应 demo 里的 linear_speed_max / linear_accel_max）──
-const SPEED_MAX := 260.0        # 最大速度
-const ACCEL_MAX := 900.0        # 最大加速度
-const turnSpeed := 12.0        # 机身转向速度（弧度/秒）
+const SPEED_MAX := 260.0 # 最大速度
+const ACCEL_MAX := 900.0 # 最大加速度
+const turnSpeed := 12.0 # 机身转向速度（弧度/秒）
 
 ## ── 基地轨道：按防御塔雷达范围分层，每架一条，天然不重叠 ──
 const ORBIT_RADIUS_RATIO := 0.40
@@ -41,7 +41,7 @@ const ORBIT_STEP_RATIO := 0.10
 const ORBIT_MIN_STEP := 14.0
 const ORBIT_FALLBACK_RADIUS := 90.0
 const ORBIT_ANGULAR_SPEED := 1.15
-const ORBIT_ARRIVE_DIST := 26.0   # 离轨道点这么近就算归位
+const ORBIT_ARRIVE_DIST := 26.0 # 离轨道点这么近就算归位
 
 ## ── 交战：绕敌人盘旋 ──
 ## 这里直接把**加速度**算出来交给 _apply（不是"期望速度" —— 绕圈必须显式算向心加速度）：
@@ -51,14 +51,14 @@ const ORBIT_ARRIVE_DIST := 26.0   # 离轨道点这么近就算归位
 ##
 ## ★ 半径**和**绕圈速度都按编队序号错开：几架一起上是一圈套一圈、快慢也有别，
 ##   不会出现"几架贴着同一条轨迹飞"的情况（调下面两个 STEP 就能调开）。
-const ENGAGE_RADIUS := 70.0        # 0 号无人机的盘旋半径（离敌人中心）
-const ENGAGE_RADIUS_STEP := 50.0   # 每往后一号往外错开的量（0/1/2 → 70/120/170）
-const ENGAGE_SPEED_BASE := 0.78    # 0 号无人机的绕圈速度（× SPEED_MAX）—— 圈越小要飞得越慢，才转得过来
-const ENGAGE_SPEED_STEP := 0.11    # 每往后一号快一点（0/1/2 → 78%/89%/100%）
-const ENGAGE_RADIAL_GAIN := 12.0   # 半径误差 → 径向加速度（1/s²）；要大于（绕圈角速度）² 才不会摆
+const ENGAGE_RADIUS := 70.0 # 0 号无人机的盘旋半径（离敌人中心）
+const ENGAGE_RADIUS_STEP := 50.0 # 每往后一号往外错开的量（0/1/2 → 70/120/170）
+const ENGAGE_SPEED_BASE := 0.78 # 0 号无人机的绕圈速度（× SPEED_MAX）—— 圈越小要飞得越慢，才转得过来
+const ENGAGE_SPEED_STEP := 0.11 # 每往后一号快一点（0/1/2 → 78%/89%/100%）
+const ENGAGE_RADIAL_GAIN := 12.0 # 半径误差 → 径向加速度（1/s²）；要大于（绕圈角速度）² 才不会摆
 const ENGAGE_RADIAL_DAMPING := 4.5 # 径向速度阻尼（1/s）
-const ENGAGE_TANGENT_GAIN := 3.0   # 切向速度误差 → 切向加速度（1/s）
-const ENGAGE_PANIC_DIST := 34.0    # 贴得比这还近 → 直接 flee 推开，防止从敌人身上穿过去
+const ENGAGE_TANGENT_GAIN := 3.0 # 切向速度误差 → 切向加速度（1/s）
+const ENGAGE_PANIC_DIST := 34.0 # 贴得比这还近 → 直接 flee 推开，防止从敌人身上穿过去
 ## 统一绕行方向（取反就整体换方向）
 const ORBIT_SIGN := 1.0
 ## 出击→攻击 的切换距离
@@ -177,7 +177,7 @@ func _doAttack(delta: float) -> void:
 		_apply(_flee(), delta)
 		return
 
-	var dir: Vector2 = toTarget / maxf(dist, 0.001)           # 指向敌人（= 向心的方向）
+	var dir: Vector2 = toTarget / maxf(dist, 0.001) # 指向敌人（= 向心的方向）
 	var tangent: Vector2 = Vector2(-dir.y, dir.x) * ORBIT_SIGN # 绕行方向
 	var orbitSpeed: float = _orbitSpeed()
 

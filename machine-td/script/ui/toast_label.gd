@@ -50,11 +50,11 @@ func init():
 	
 	# 创建补间动画
 	var tween = create_tween()
-	tween.tween_property(self, "modulate:a", 0, 0)           # 初始透明
-	tween.tween_property(self, "modulate:a", 1, 0.5)         # 0.5秒淡入
-	tween.tween_interval(displayTime)                        # 保持显示
-	tween.tween_property(self, "modulate:a", 0, 1)           # 1秒淡出
-	tween.tween_callback(removeLabel)                        # 销毁
+	tween.tween_property(self, "modulate:a", 0, 0) # 初始透明
+	tween.tween_property(self, "modulate:a", 1, 0.5) # 0.5秒淡入
+	tween.tween_interval(displayTime) # 保持显示
+	tween.tween_property(self, "modulate:a", 0, 1) # 1秒淡出
+	tween.tween_callback(removeLabel) # 销毁
 
 
 ## 移动位置

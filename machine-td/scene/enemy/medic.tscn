@@ -2,7 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://nlpg2kpom2rd" path="res://script/enemy/medic.gd" id="2_script"]
-[ext_resource type="Texture2D" uid="uid://t0e6ut75spas" path="res://sprite/enemy/medic_body.png" id="3_body"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_body.svg" id="3_body"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_body_4.svg" id="3_body4"]
 [ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_gtpx3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0roa5"]
@@ -16,10 +19,19 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("3_body")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_body2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_body3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_body4")
 }],
 "loop": 1,
 "name": &"default",
-"speed": 5.0
+"speed": 16.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_radar"]
@@ -34,6 +46,7 @@ loop = false
 [node name="Enemy" parent="." unique_id=1335051026 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 5
+muzzleOffset = 24.0
 
 [node name="base" parent="Enemy" index="0" unique_id=1108324432]
 material = SubResource("ShaderMaterial_0roa5")

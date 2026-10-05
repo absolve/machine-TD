@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://d2uty4uy1sr2" path="res://script/bullet/bullet.gd" id="1_qwydi"]
 
 [node name="bullet" type="Area2D" unique_id=802852217]
-z_index = 1
+z_index = 5
 script = ExtResource("1_qwydi")
 
 [node name="shape" type="CollisionShape2D" parent="." unique_id=1677876286]

@@ -14,7 +14,11 @@ enum enemyType {
 	# 对抗型（地面）
 	missileTruck,
 	# 空中单位
-	scoutDrone, attackHelicopter
+	scoutDrone, attackHelicopter,
+	# 重装堡垒型（多炮塔地面单位）
+	experimentalTank,
+	# 飞越地图的空中骚扰单位（单独路线，逃脱不扣血）
+	battlePlane
 }
 
 # 塔类型
@@ -22,6 +26,14 @@ enum towerType {
 	machineGunTower = 1000, cannonTower, rocketTower, EMPTower,
 	droneBase, teslaCoilTower, laserTower, ironBox
 }
+
+## ── 无尽模式（设计见 endless_mode_design.md）──
+## 模式开关：欢迎界面点「无尽模式」时置 true，回主菜单时复位。
+## map.gd 据此跳过 allStage 查表、直接加载 scene/level/endless.tscn。
+var endlessMode: bool = false
+## 难度缩放（敌人 hp / atk 的乘数）：普通关卡恒为 1.0，无尽按波次设置。
+var enemyScale: float = 1.0
+var enemyAtkScale: float = 1.0
 
 # 塔信息
 #
@@ -33,13 +45,13 @@ enum towerType {
 const towerInfo = {
 	towerType.machineGunTower: {
 	"name": "_TowerName_machineGun",
-	"atk": 14, # DPS 35（scope 只有 140，覆盖窗口短，DPS 不能再压）
+	"atk": 8, # DPS 35（scope 只有 140，覆盖窗口短，DPS 不能再压）
 	"cost": 20,
 	"reload": 0.4,
 	"scope": 140,
-	"hp": 120,
-	"maxHp": 120,
-	"initTime": 0.6,
+	"hp": 200,
+	"maxHp": 200,
+	"initTime": 0.5,
 	"desc": "_machineGunTowerDesc",
 	"gridSize": Vector2i(1, 1)
 	},
@@ -47,10 +59,10 @@ const towerInfo = {
 	"name": "_TowerName_cannon",
 	"atk": 30, # DPS 60（单发高、打得慢）
 	"cost": 35,
-	"reload": 0.5,
-	"scope": 180,
-	"hp": 180,
-	"maxHp": 180,
+	"reload": 1.0,
+	"scope": 200,
+	"hp": 240,
+	"maxHp": 240,
 	"initTime": 0.9,
 	"desc": "_cannonTowerDesc",
 	"gridSize": Vector2i(1, 1)
@@ -60,9 +72,9 @@ const towerInfo = {
 	"atk": 40, # DPS 40，范围伤害
 	"cost": 50,
 	"reload": 1.0,
-	"scope": 180,
-	"hp": 220,
-	"maxHp": 220,
+	"scope": 200,
+	"hp": 240,
+	"maxHp": 240,
 	"initTime": 1.2,
 	"desc": "_rocketTowerDesc",
 	"gridSize": Vector2i(1, 1)
@@ -84,7 +96,7 @@ const towerInfo = {
 	"atk": 6, # DPS 30，靠多架同时输出
 	"cost": 65,
 	"reload": 0.2,
-	"scope": 240,
+	"scope": 300,
 	"hp": 200,
 	"maxHp": 200,
 	"initTime": 1.3,
@@ -97,8 +109,8 @@ const towerInfo = {
 	"cost": 65,
 	"reload": 0.85,
 	"scope": 240,
-	"hp": 240,
-	"maxHp": 240,
+	"hp": 220,
+	"maxHp": 220,
 	"initTime": 1.4,
 	"desc": "_teslaCoilTowerDesc",
 	"gridSize": Vector2i(2, 2)
@@ -136,7 +148,9 @@ const towerInfo = {
 #   armor 物理伤害减免(0~1,能量伤害无视) / flying 空中单位(仅无人机/激光塔可命中)
 #   atk 单次攻击伤害(对抗型才有值，推进型为0) / shootDelay 开火间隔秒(对抗型才有值)
 #   scope 雷达半径(像素)：对抗/支援型的攻击或支援范围，推进型为0(不参战，雷达不侦测)
-#   role 行为定位（用于信息面板标签）：pusher 推进型 / attacker 对抗型 / support 支援型 / bomber 自爆型 / siege 远程打击型 / air 空中单位
+#   gemRewardChance 掉落概率(0~1)：**不写 = 1.0（必掉）**；写 0.5 就是"约一半才掉"
+#   role 行为定位（用于信息面板标签）：pusher 推进型 / attacker 对抗型 / support 支援型 / bomber 自爆型 / siege 远程打击型 / air 空中单位 / fortress 要塞型
+#   gemReward 击败掉落的**宝石**数量：0 = 不掉（普通敌人）/ 1 / 2 —— 只有"特殊敌人"才写非 0
 #
 # ★ 数值规范（2026-09-26 全表重做）：
 #   1. **基础移速 speed = 50**。快慢只允许在这条基准上小幅浮动：
@@ -151,62 +165,104 @@ const enemyInfo = {
 	enemyType.miniTank: {
 		"name": "_EnemyName_miniTank",
 		"hp": 150, "speed": 50, "reward": 5, "lossPoints": 1, "rewardExp": 2,
-		"armor": 0.05, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_pusher"
+		"armor": 0.05, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_pusher",
+		"gemReward": 0
 	},
 	enemyType.mediumTank: {
 		"name": "_EnemyName_mediumTank",
 		"hp": 300, "speed": 45, "reward": 8, "lossPoints": 2, "rewardExp": 4,
-		"armor": 0.15, "flying": false, "atk": 15, "shootDelay": 0.9, "scope": 240, "role": "_EnemyRole_attacker"
+		"armor": 0.25, "flying": false, "atk": 15, "shootDelay": 0.9, "scope": 240, "role": "_EnemyRole_attacker",
+		"gemReward": 0
 	},
 	enemyType.heavyTank: {
 		"name": "_EnemyName_heavyTank",
 		"hp": 600, "speed": 30, "reward": 20, "lossPoints": 3, "rewardExp": 10,
-		"armor": 0.4, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_pusher"
+		"armor": 0.5, "flying": false, "atk": 25,
+		"shootDelay": 1.8, "scope": 260, "role": "_EnemyRole_attacker",
+		"gemReward": 0
 	},
 	enemyType.armoredTank: {
 		"name": "_EnemyName_armoredTank",
-		"hp": 360, "speed": 35, "reward": 15, "lossPoints": 2, "rewardExp": 8,
-		"armor": 0.6, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_pusher"
+		"hp": 500, "speed": 35, "reward": 15, "lossPoints": 2, "rewardExp": 8,
+		"armor": 0.6, "flying": false, "atk": 18,
+		"shootDelay": 1.5, "scope": 220, "role": "_EnemyRole_attacker",
+		"gemReward": 0
 	},
 	enemyType.assaultBuggy: {
 		"name": "_EnemyName_assaultBuggy",
-		"hp": 120, "speed": 115, "reward": 4, "lossPoints": 1, "rewardExp": 2,
-		"armor": 0.1, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_pusher"
+		"hp": 140, "speed": 115, "reward": 4, "lossPoints": 1, "rewardExp": 2,
+		"armor": 0.1, "flying": false, "atk": 6,
+		"shootDelay": 0.6, "scope": 180, "role": "_EnemyRole_attacker",
+		"gemReward": 0
 	},
 	enemyType.medic: {
 		"name": "_EnemyName_medic",
-		"hp": 180, "speed": 50, "reward": 10, "lossPoints": 1, "rewardExp": 5,
-		"armor": 0.1, "flying": false, "atk": 20, "shootDelay": 3.0, "scope": 180, "role": "_EnemyRole_support"
+		"hp": 200, "speed": 50, "reward": 10, "lossPoints": 1, "rewardExp": 5,
+		"armor": 0.1, "flying": false, "atk": 20, "shootDelay": 3.0, "scope": 180, "role": "_EnemyRole_support",
+		"gemReward": 0
 	},
 	enemyType.suicideTruck: {
 		"name": "_EnemyName_suicideTruck",
-		"hp": 90, "speed": 90, "reward": 3, "lossPoints": 1, "rewardExp": 2,
-		"armor": 0.0, "flying": false, "atk": 90, "shootDelay": 0.0, "scope": 150, "role": "_EnemyRole_bomber"
+		"hp": 120, "speed": 90, "reward": 3, "lossPoints": 1, "rewardExp": 2,
+		"armor": 0.0, "flying": false, "atk": 80, "shootDelay": 0.0, "scope": 150, "role": "_EnemyRole_bomber",
+		"gemReward": 0
 	},
 	enemyType.missileTruck: {
 		"name": "_EnemyName_missileTruck",
 		"hp": 260, "speed": 40, "reward": 12, "lossPoints": 2, "rewardExp": 6,
-		"armor": 0.25, "flying": false, "atk": 35, "shootDelay": 1.8, "scope": 700, "role": "_EnemyRole_siege"
+		"armor": 0.25, "flying": false, "atk": 35, "shootDelay": 1.8, "scope": 700, "role": "_EnemyRole_siege",
+		"gemReward": 0
 	},
 	enemyType.scoutDrone: {
 		"name": "_EnemyName_scoutDrone",
-		"hp": 45, "speed": 130, "reward": 3, "lossPoints": 1, "rewardExp": 2,
-		"armor": 0.0, "flying": true, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_air"
+		"hp": 100, "speed": 130, "reward": 3, "lossPoints": 1, "rewardExp": 2,
+		"armor": 0.0, "flying": true, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_air",
+		"gemReward": 0
 	},
 	enemyType.attackHelicopter: {
 		"name": "_EnemyName_attackHelicopter",
 		"hp": 380, "speed": 80, "reward": 15, "lossPoints": 2, "rewardExp": 8,
-		"armor": 0.2, "flying": true, "atk": 5, "shootDelay": 0.25, "scope": 300, "role": "_EnemyRole_air"
+		"armor": 0.2, "flying": true, "atk": 5, "shootDelay": 0.25, "scope": 300, "role": "_EnemyRole_air",
+		"gemReward": 0
+	},
+	# 实验坦克：4 座独立炮塔（scene/enemy/experimental_tank.tscn，炮塔用 BaseTurret）。
+	#
+	# ★ atk / shootDelay / scope 描述的都是**单座炮塔**的数值，整车火力是它的 4 倍；
+	#   4 座炮塔的实际数值在场景 Inspector 里设置（与这里保持一致）。
+	# ★ gemReward = 2：要塞型特殊敌人，击败必掉 2 颗宝石（战斗飞机则是 50% 掉 1 颗）。
+	#   想改掉落数量 / 给别的精英也加掉落，只改这一行或对应条目的 "gemReward" 即可。
+	enemyType.experimentalTank: {
+		"name": "_EnemyName_experimentalTank",
+		"hp": 1000, "speed": 28, "reward": 40, "lossPoints": 5, "rewardExp": 25,
+		"armor": 0.5, "flying": false, "atk": 16, "shootDelay": 0.8, "scope": 300,
+		"role": "_EnemyRole_fortress",
+		"gemReward": 2
+	},
+	# 战斗飞机：**飞越地图**的空中骚扰单位，走关卡里单独摆的那条横跨全图的路线。
+	# ★ lossPoints = 0：飞到终点直接离场，不扣基地血（battlePlane.gd 覆写了 _physics_process，
+	#   连"漏怪"提示锣都不会播）。
+	# ★ gemReward = 1 + gemRewardChance = 0.5：**不是每架都掉**，击落时约一半概率掉 1 颗。
+	enemyType.battlePlane: {
+		"name": "_EnemyName_battlePlane",
+		"hp": 240, "speed": 130, "reward": 12, "lossPoints": 0, "rewardExp": 6,
+		"armor": 0.1, "flying": true, "atk": 12, "shootDelay": 0.5, "scope": 320,
+		"role": "_EnemyRole_air",
+		"gemReward": 1, "gemRewardChance": 0.5
 	},
 }
 
-#支持的语言
+# 支持的界面语言。
 const language = [ {'text': 'English', 'code': 'en', 'id': 0},
  {'text': '简体中文', 'code': 'zh', 'id': 1}]
 	
 
 @warning_ignore("unused_signal")
 signal enemyRewarded # 击败敌人
+## 击败"特殊敌人"掉落宝石时发出，参数是掉落数量（1 或 2）。
+## 数量来自 `enemyInfo` 的 `gemReward` 字段，普通敌人为 0（不发这个信号）。
+## 由 map 接收 → UserData.addGem() 入账并落盘 → 刷新顶栏。
+@warning_ignore("unused_signal")
+signal gemRewarded(amount: int)
 @warning_ignore("unused_signal")
 signal enemyEscaped # 敌人逃脱
 @warning_ignore("unused_signal")

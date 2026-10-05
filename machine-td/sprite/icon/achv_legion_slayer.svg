@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" shape-rendering="crispEdges">
+  <!-- 成就图标：千军之敌（消灭 3000 个敌人）—— 准星环 + 四向黄刻度，中间是一整片敌群 -->
+  <!-- 配色与其它成就图标一致：环 #94b0c2 / 刻度 #ffc61a / 主体 #566c86 + 炮塔 #94b0c2 / 描边 #1a1c2c -->
+  <circle cx="64" cy="64" r="50" fill="none" stroke="#1a1c2c" stroke-width="15"/>
+  <circle cx="64" cy="64" r="50" fill="none" stroke="#94b0c2" stroke-width="9"/>
+  <g fill="#ffc61a" stroke="#1a1c2c" stroke-width="3">
+    <rect x="59" y="3" width="10" height="24" rx="4"/>
+    <rect x="59" y="101" width="10" height="24" rx="4"/>
+    <rect x="3" y="59" width="24" height="10" rx="4"/>
+    <rect x="101" y="59" width="24" height="10" rx="4"/>
+  </g>
+  <!-- 3×2 的敌军阵列：同款小车各一辆，表达"数量" -->
+  <g fill="#566c86" stroke="#1a1c2c" stroke-width="4">
+    <rect x="30" y="44" width="22" height="14" rx="4"/>
+    <rect x="53" y="44" width="22" height="14" rx="4"/>
+    <rect x="76" y="44" width="22" height="14" rx="4"/>
+    <rect x="30" y="70" width="22" height="14" rx="4"/>
+    <rect x="53" y="70" width="22" height="14" rx="4"/>
+    <rect x="76" y="70" width="22" height="14" rx="4"/>
+  </g>
+  <g fill="#94b0c2" stroke="#1a1c2c" stroke-width="2.5">
+    <circle cx="41" cy="51" r="5"/>
+    <circle cx="64" cy="51" r="5"/>
+    <circle cx="87" cy="51" r="5"/>
+    <circle cx="41" cy="77" r="5"/>
+    <circle cx="64" cy="77" r="5"/>
+    <circle cx="87" cy="77" r="5"/>
+  </g>
+</svg>

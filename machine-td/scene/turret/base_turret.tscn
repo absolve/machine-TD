@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://script/turret/base_turret.gd" id="1_script"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_radar"]
+radius = 240.0
+
+[node name="BaseTurret" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Turret" type="AnimatedSprite2D" parent="."]
+
+[node name="Muzzle" type="Marker2D" parent="Turret"]
+
+[node name="Radar" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Radar"]
+shape = SubResource("CircleShape2D_radar")
+
+[node name="Delay" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="area_entered" from="Radar" to="." method="onRadarAreaEntered"]
+[connection signal="area_exited" from="Radar" to="." method="onRadarAreaExited"]
+[connection signal="timeout" from="Delay" to="." method="onDelayTimeout"]

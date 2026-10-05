@@ -1,20 +1,38 @@
-[gd_scene load_steps=9 format=3 uid="uid://nflp3q287fc3"]
+[gd_scene format=3 uid="uid://nflp3q287fc3"]
 
-[ext_resource type="PackedScene" path="res://scene/enemy/enemy.tscn" id="1_base"]
-[ext_resource type="Script" path="res://script/enemy/heavyTank.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://diw3xtwr1wxoy" path="res://script/enemy/heavyTank.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://mjrgif58hwh6" path="res://sprite/enemy/redesigned/heavy_tank_body.svg" id="3_body"]
+[ext_resource type="Texture2D" uid="uid://clk55jst2t08x" path="res://sprite/enemy/redesigned/heavy_tank_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D" uid="uid://oi62suysdjl" path="res://sprite/enemy/redesigned/heavy_tank_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D" uid="uid://cqu08oecxio3w" path="res://sprite/enemy/redesigned/heavy_tank_body_4.svg" id="3_body4"]
+[ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_fwmxp"]
+[ext_resource type="Texture2D" uid="uid://3kl2w1qwgr4y" path="res://sprite/enemy/redesigned/heavy_tank_turret.svg" id="4_turret"]
 
-[ext_resource type="Texture2D" path="res://sprite/enemy/heavy_tank_body.png" id="3_body"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/heavy_tank_turret.png" id="4_turret"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n66hx"]
+resource_local_to_scene = true
+shader = ExtResource("3_fwmxp")
+shader_parameter/flash = 0.0
+shader_parameter/brighten = 0.85
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_body"]
 animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("3_body")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_body2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_body3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_body4")
 }],
 "loop": 1,
 "name": &"default",
-"speed": 5.0
+"speed": 16.0
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_turret"]
@@ -31,21 +49,24 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(44, 32)
 
-[node name="heavy_tank" type="PathFollow2D"]
+[node name="heavy_tank" type="PathFollow2D" unique_id=1089777153]
 loop = false
 
-[node name="Enemy" parent="." instance=ExtResource("1_base")]
+[node name="Enemy" parent="." unique_id=800665831 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 2
+muzzleOffset = 33.0
 
-[node name="base" parent="Enemy" index="0"]
+[node name="base" parent="Enemy" index="0" unique_id=1108324432]
+material = SubResource("ShaderMaterial_n66hx")
 sprite_frames = SubResource("SpriteFrames_body")
 
-[node name="turret" parent="Enemy" index="2"]
+[node name="turret" parent="Enemy" index="2" unique_id=108539921]
+material = SubResource("ShaderMaterial_n66hx")
 sprite_frames = SubResource("SpriteFrames_turret")
-offset = Vector2(15, 0)
+offset = Vector2(7, 0)
 
-[node name="shape" parent="Enemy" index="3"]
+[node name="shape" parent="Enemy" index="3" unique_id=359688443]
 shape = SubResource("RectangleShape2D_body")
 
-[editable path="enemy"]
+[editable path="Enemy"]

@@ -57,6 +57,29 @@ func showLevel(stage_data: Dictionary) -> void:
 	show()
 
 
+## 无尽模式的介绍页：**复用同一个面板**，但内容是"规则 + 最高记录"，
+## 不读 stageData（无尽没有关卡数据）。外观、"点开始关闭"的流程与普通关卡一致。
+func showEndless(bestWave: int) -> void:
+	titleLabel.text = Game.t("_Endless", "Endless Mode")
+	subtitleLabel.text = Game.t("_EndlessIntroHint", "No finish line — hold the base "
+		+ "and see how many waves you can take.")
+	_clearChildren(infoBox)
+	_addChip(Game.t("_BaseHealth", "Base HP"), "10", Color(0.75, 0.95, 1.0, 1.0))
+	_addChip(Game.t("_EndlessCrowd", "On Screen"), "90", Color(1.0, 0.85, 0.6, 1.0))
+	_addChip(Game.t("_EndlessBest", "Best Record"), str(bestWave), Color(1.0, 0.78, 0.72, 1.0))
+	# 规则用几行纯文本代替"敌人清单"，比逐条列兵种好读
+	intelTitle.text = Game.t("_EndlessRules", "Rules")
+	_clearChildren(enemyList)
+	for key in ["_EndlessRule1", "_EndlessRule2", "_EndlessRule3"]:
+		var line: Label = Label.new()
+		line.text = tr(key)
+		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		line.add_theme_font_size_override("font_size", 28)
+		line.add_theme_color_override("font_color", COLOR_TEXT)
+		enemyList.add_child(line)
+	show()
+
+
 func _fillHeader(stage_data: Dictionary) -> void:
 	var levelName: String = str(stage_data.get("name", ""))
 	if levelName.is_valid_int():
@@ -65,11 +88,16 @@ func _fillHeader(stage_data: Dictionary) -> void:
 		# 教程等具名关卡：优先取同名翻译键（如 _Tutorial）
 		titleLabel.text = Game.t("_" + levelName, levelName)
 
-	var category: String = str(stage_data.get("category", ""))
-	var description: String = str(stage_data.get("description", ""))
-	if category.is_empty():
+	var categoryKey: String = str(stage_data.get("category", ""))
+	var descriptionKey: String = str(stage_data.get("description", ""))
+	# ⚠️ stageData 里这两个字段存的是**翻译键**（_Level1Category / _Level1Description …），
+	#    必须过 Game.t —— 以前直接把原文塞进 label，切英文后副标题还是中文。
+	#    判空用 key（空串时 Game.t 会原样返回空串，不影响 "只有副标题" 的写法）。
+	var category: String = Game.t(categoryKey, categoryKey)
+	var description: String = Game.t(descriptionKey, descriptionKey)
+	if categoryKey.is_empty():
 		subtitleLabel.text = description
-	elif description.is_empty():
+	elif descriptionKey.is_empty():
 		subtitleLabel.text = category
 	else:
 		subtitleLabel.text = "%s  ·  %s" % [category, description]
@@ -175,7 +203,7 @@ func _addRow(
 		enemyList.add_child(HSeparator.new())
 
 
-func _makeCell(text: String, width: int, align: int, color: Color, font_size: int) -> Label:
+func _makeCell(text: String, width: int, align: HorizontalAlignment, color: Color, font_size: int) -> Label:
 	var cell: Label = Label.new()
 	cell.text = text
 	cell.horizontal_alignment = align
@@ -192,11 +220,11 @@ func _addChip(title: String, value: String, color: Color) -> void:
 	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	chip.alignment = BoxContainer.ALIGNMENT_CENTER
 
-	var titleLabel: Label = Label.new()
-	titleLabel.text = title
-	titleLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	titleLabel.add_theme_font_size_override("font_size", 24)
-	titleLabel.add_theme_color_override("font_color", COLOR_HEADER)
+	var chipTitle: Label = Label.new()
+	chipTitle.text = title
+	chipTitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	chipTitle.add_theme_font_size_override("font_size", 24)
+	chipTitle.add_theme_color_override("font_color", COLOR_HEADER)
 
 	var valueLabel: Label = Label.new()
 	valueLabel.text = value
@@ -204,7 +232,7 @@ func _addChip(title: String, value: String, color: Color) -> void:
 	valueLabel.add_theme_font_size_override("font_size", 40)
 	valueLabel.add_theme_color_override("font_color", color)
 
-	chip.add_child(titleLabel)
+	chip.add_child(chipTitle)
 	chip.add_child(valueLabel)
 	infoBox.add_child(chip)
 

@@ -20,8 +20,8 @@ signal gemChanged(gem: int)
 
 # 技能的目标类型
 enum TargetType {
-	NONE,      # 无需选择目标，点击立即生效
-	POSITION,  # 需要点击地图上的一个位置（范围类技能都用这个）
+	NONE, # 无需选择目标，点击立即生效
+	POSITION, # 需要点击地图上的一个位置（范围类技能都用这个）
 }
 
 ## 技能定义表（新增技能只改这里）
@@ -50,7 +50,7 @@ const ABILITIES: Dictionary = {
 		"target_type": TargetType.POSITION,
 		"gem_cost": 1,
 		"cooldown": 8.0,
-		"effect": {"type": "tower_invincible", "radius": 120.0, "duration": 8.0},
+		"effect": {"type": "tower_invincible", "radius": 80.0, "duration": 8.0},
 	},
 }
 

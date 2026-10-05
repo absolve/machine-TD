@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://clmx8ett0xjc4"]
+[gd_scene load_steps=8 format=3 uid="uid://clmx8ett0xjc4"]
 
 [ext_resource type="PackedScene" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" path="res://script/enemy/scoutDrone.gd" id="2_script"]
 
-[ext_resource type="Texture2D" path="res://sprite/enemy/scout_drone_body.png" id="3_body"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/scout_drone_body.svg" id="3_body"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/scout_drone_rotor.svg" id="4_rotor"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_body"]
 animations = [{
@@ -25,8 +26,10 @@ loop = false
 [node name="Enemy" parent="." instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 8
+muzzleOffset = 15.0
 
 [node name="base" parent="Enemy" index="0"]
+scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="turret" parent="Enemy" index="2"]
@@ -34,5 +37,25 @@ visible = false
 
 [node name="shape" parent="Enemy" index="3"]
 shape = SubResource("RectangleShape2D_body")
+
+[node name="RotorFL" type="Sprite2D" parent="Enemy"]
+texture = ExtResource("4_rotor")
+position = Vector2(-14.4, -14.4)
+scale = Vector2(0.8, 0.8)
+
+[node name="RotorFR" type="Sprite2D" parent="Enemy"]
+texture = ExtResource("4_rotor")
+position = Vector2(14.4, -14.4)
+scale = Vector2(0.8, 0.8)
+
+[node name="RotorBL" type="Sprite2D" parent="Enemy"]
+texture = ExtResource("4_rotor")
+position = Vector2(-14.4, 14.4)
+scale = Vector2(0.8, 0.8)
+
+[node name="RotorBR" type="Sprite2D" parent="Enemy"]
+texture = ExtResource("4_rotor")
+position = Vector2(14.4, 14.4)
+scale = Vector2(0.8, 0.8)
 
 [editable path="enemy"]

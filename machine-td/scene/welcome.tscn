@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bsksv4xqp8slm" path="res://sprite/play-circle.png" id="7_vvofi"]
 [ext_resource type="Texture2D" uid="uid://dpriqv5u7rxvo" path="res://sprite/settings.png" id="8_vn0ct"]
 [ext_resource type="Texture2D" uid="uid://jssxjig1588u" path="res://sprite/interrogation.png" id="9_vkhmq"]
-[ext_resource type="Texture2D" uid="uid://c5cb022ih5jj3" path="res://sprite/achievement_3d.png" id="9_vn0ct"]
+[ext_resource type="Texture2D" uid="uid://ck56kksv5uah7" path="res://sprite/achievement_3d.png" id="9_vn0ct"]
 [ext_resource type="PackedScene" uid="uid://cmoo2h1nvyyws" path="res://scene/setting.tscn" id="9_vvofi"]
 [ext_resource type="Shader" uid="uid://ch8wag47374oa" path="res://shader/achievement_glow.gdshader" id="10_glow"]
 [ext_resource type="PackedScene" uid="uid://cq5ajf7h5g7lc" path="res://scene/achievement_panel.tscn" id="11_achv"]
@@ -76,9 +76,9 @@ metadata/_edit_lock_ = true
 [node name="titleFrame" type="Panel" parent="Ui" unique_id=600953032]
 layout_mode = 0
 offset_left = 280.0
-offset_top = 88.0
+offset_top = 37.0
 offset_right = 1640.0
-offset_bottom = 468.0
+offset_bottom = 417.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("TitleFrame_box")
 
@@ -86,35 +86,34 @@ theme_override_styles/panel = SubResource("TitleFrame_box")
 material = SubResource("ShaderMaterial_lswc2")
 layout_mode = 0
 offset_left = 160.0
-offset_top = 55.0
+offset_top = 21.0
 offset_right = 1760.0
-offset_bottom = 505.0
+offset_bottom = 471.0
 
 [node name="hazardTop" parent="Ui" unique_id=944989092 instance=ExtResource("13_hazard")]
 material = SubResource("ShaderMaterial_k3eee")
 layout_mode = 0
 offset_left = 280.0
-offset_top = 88.0
+offset_top = 37.0
 offset_right = 1640.0
-offset_bottom = 110.0
+offset_bottom = 59.0
 
 [node name="hazardBottom" parent="Ui" unique_id=1211075920 instance=ExtResource("13_hazard")]
 material = SubResource("ShaderMaterial_vvs3e")
 layout_mode = 0
 offset_left = 280.0
-offset_top = 446.0
+offset_top = 395.0
 offset_right = 1640.0
-offset_bottom = 468.0
+offset_bottom = 417.0
 
 [node name="HBoxContainer" type="VBoxContainer" parent="Ui" unique_id=442101509]
 layout_mode = 0
 offset_left = 792.0
-offset_top = 510.0
-offset_right = 1128.0
-offset_bottom = 956.0
+offset_top = 453.0
+offset_right = 1148.0
+offset_bottom = 1057.0
 theme_override_constants/separation = 20
 alignment = 1
-metadata/_edit_lock_ = true
 
 [node name="UIButton" parent="Ui/HBoxContainer" unique_id=226549016 instance=ExtResource("5_si833")]
 layout_mode = 2
@@ -133,6 +132,15 @@ theme_override_colors/icon_pressed_color = Color(0.7882353, 0.5921569, 0, 1)
 theme_override_colors/icon_hover_color = Color(1, 0.8509804, 0.39215687, 1)
 text = "_Start_game"
 icon = ExtResource("7_vvofi")
+
+[node name="btnEndless" parent="Ui/HBoxContainer" unique_id=1900000001 instance=ExtResource("5_si833")]
+layout_mode = 2
+theme_override_colors/icon_normal_color = Color(0.6, 0.86, 1, 1)
+theme_override_colors/icon_focus_color = Color(0.6, 0.86, 1, 1)
+theme_override_colors/icon_pressed_color = Color(0.44, 0.68, 0.85, 1)
+theme_override_colors/icon_hover_color = Color(0.78, 0.94, 1, 1)
+text = "_Endless"
+icon = ExtResource("6_xdjj8")
 
 [node name="setting" parent="Ui/HBoxContainer" unique_id=1284130239 instance=ExtResource("5_si833")]
 layout_mode = 2
@@ -172,8 +180,6 @@ scale = Vector2(0.6, 0.6)
 texture_normal = ExtResource("9_vn0ct")
 
 [node name="AboutPanel" parent="." unique_id=968769467 instance=ExtResource("3_0h2lm")]
-layout_mode = 3
-anchors_preset = 0
 
 [node name="setting" parent="." unique_id=762839594 instance=ExtResource("9_vvofi")]
 layout_mode = 3
@@ -186,6 +192,7 @@ visible = false
 
 [connection signal="pressed" from="Ui/HBoxContainer/UIButton" to="." method="_onTutorialPressed"]
 [connection signal="pressed" from="Ui/HBoxContainer/btnStart" to="." method="_onBtnSStartPressed"]
+[connection signal="pressed" from="Ui/HBoxContainer/btnEndless" to="." method="_onEndlessPressed"]
 [connection signal="pressed" from="Ui/HBoxContainer/setting" to="." method="_onSettingPressed"]
 [connection signal="pressed" from="Ui/HBoxContainer/btnCodex" to="." method="_onCodexPressed"]
 [connection signal="pressed" from="Ui/HBoxContainer/btnAbout" to="." method="_onButton3Pressed"]

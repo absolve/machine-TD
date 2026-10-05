@@ -86,7 +86,7 @@ theme_override_constants/v_separation = 14
 columns = 6
 
 [node name="DetailBox" type="PanelContainer" parent="Frame/PanelContainer/VBox" unique_id=134651597]
-custom_minimum_size = Vector2(0, 216)
+custom_minimum_size = Vector2(0, 282)
 layout_mode = 2
 size_flags_vertical = 4
 
@@ -99,11 +99,11 @@ layout_mode = 2
 theme_override_constants/separation = 22
 
 [node name="IconCenter" type="CenterContainer" parent="Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop" unique_id=1119266907]
-custom_minimum_size = Vector2(104, 104)
+custom_minimum_size = Vector2(168, 168)
 layout_mode = 2
 
 [node name="detailIcon" type="TextureRect" parent="Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop/IconCenter" unique_id=2074881076]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5

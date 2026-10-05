@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">
+  <!-- 平涂配色（与防御塔一致，不用渐变）：主装甲 #566c86 -->
+  <path d="M8 33h36l14 3-14 3H8Z" fill="#111820" opacity=".5"/>
+  <path d="M36 27 22 6l-8 5 12 18Z" fill="#566c86" stroke="#1a1c2c" stroke-width="1.6"/>
+  <path d="M36 37 22 58l-8-5 12-18Z" fill="#566c86" stroke="#1a1c2c" stroke-width="1.6"/>
+  <path d="M18 28 10 19l-4 4 8 8Z" fill="#566c86" stroke="#1a1c2c" stroke-width="1.4"/>
+  <path d="M18 36 10 45l-4-4 8-8Z" fill="#566c86" stroke="#1a1c2c" stroke-width="1.4"/>
+  <path d="M6 28h36l16 4-16 4H6Z" fill="#566c86" stroke="#1a1c2c" stroke-width="1.6"/>
+  <path d="M38 29h9l2 3-2 3h-9Z" fill="#dceaf2" stroke="#1a1c2c" stroke-width="1.2"/>
+  <path d="M10 30h18v4H10Z" fill="#e05252"/>
+  <path d="M20 12l6 3-4 2Z" fill="#e05252"/>
+  <path d="M20 52l6-3-4-2Z" fill="#e05252"/>
+  <path d="M12 31h30" stroke="#f4f4f4" stroke-width="1.2" opacity=".7"/>
+  <rect x="3" y="28" width="5" height="8" rx="1" fill="#e08a2e"/>
+</svg>

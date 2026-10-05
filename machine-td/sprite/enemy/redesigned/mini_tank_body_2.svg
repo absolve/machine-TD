@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">
+  <!-- 平涂配色（与防御塔一致，不用渐变）：主装甲 #566c86 / 履带 #333c57 -->
+  <path d="M8 19 54 18 59 25 58 43 52 49 10 47 5 40 5 27Z" fill="#111820" opacity=".65"/>
+  <g stroke="#101820" stroke-width="1.5">
+    <rect x="7" y="11" width="50" height="13" rx="5" fill="#333c57"/>
+    <rect x="7" y="40" width="50" height="13" rx="5" fill="#333c57"/>
+  </g>
+  <g fill="#94b0c2" opacity=".95">
+    <path d="M15 13h2v9h-2zm8 0h2v9h-2zm8 0h2v9h-2zm8 0h2v9h-2zm8 0h2v9h-2z"/>
+    <path d="M15 42h2v9h-2zm8 0h2v9h-2zm8 0h2v9h-2zm8 0h2v9h-2zm8 0h2v9h-2z"/>
+  </g>
+  <path d="M12 25 18 21 45 21 52 26 55 32 51 39 45 43 17 43 10 38 8 32Z" fill="#566c86" stroke="#17251f" stroke-width="2"/>
+  <path d="M17 25h24l5 3H15Z" fill="#dceaf2" opacity=".8"/>
+  <path d="M13 35h8v5h-5zm33 0h6l-3 5h-5Z" fill="#e08a2e"/>
+  <path d="M18 29h8v2h-8zm0 5h7v2h-7zm20-5h8v2h-8Z" fill="#333c57"/>
+  <circle cx="31" cy="32" r="9" fill="#1a1c2c" stroke="#94b0c2" stroke-width="2"/>
+  <circle cx="31" cy="32" r="5" fill="#566c86" stroke="#333c57" stroke-width="1.5"/>
+  <path d="m12 27 3-3m33 15 3-4" stroke="#f4f4f4" stroke-width="1.5"/>
+</svg>

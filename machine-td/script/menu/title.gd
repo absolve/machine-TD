@@ -38,14 +38,22 @@ var hp = 0:
 var currentWave: int = 0:
 	set(value):
 		currentWave = value
-		waveLabel.text = str(currentWave) + "/" + str(wave)
+		_refreshWaveLabel()
 		
 		
 var wave = 1:
 	set(value):
 		wave = value
-		waveLabel.text = str(currentWave) + "/" + str(wave)
+		_refreshWaveLabel()
 		
+## 波次文本：普通关卡 "3/8"；无尽模式没有总波数，总波数显示成 "-"。
+func _refreshWaveLabel() -> void:
+	if Game.endlessMode:
+		waveLabel.text = str(currentWave) + "/-"
+	else:
+		waveLabel.text = str(currentWave) + "/" + str(wave)
+
+
 var money = 0:
 	set(value):
 		money = value

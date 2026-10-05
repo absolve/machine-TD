@@ -75,14 +75,41 @@ const ACHIEVEMENTS: Dictionary = {
 		"reward_gem": 30,
 		"reward_title": ""
 	},
-	"route_master": {
-		"name": "_Achv_route_master_name",
-		"category": "stage",
-		"description": "_Achv_route_master_desc",
-		"icon": "res://sprite/icon/achv_route_master.png",
-		"target": 1,
-		"reward_gem": 30,
-		"reward_title": "路线掌控者"
+	"fortress_breaker": {
+		"name": "_Achv_fortress_breaker_name",
+		"category": "combat",
+		"description": "_Achv_fortress_breaker_desc",
+		"icon": "res://sprite/icon/achv_fortress_breaker.svg",
+		"target": 30,
+		"reward_gem": 40,
+		"reward_title": "要塞终结者"
+	},
+	"endless_10": {
+		"name": "_Achv_endless_10_name",
+		"category": "combat",
+		"description": "_Achv_endless_10_desc",
+		"icon": "res://sprite/icon/achv_endless_10.svg",
+		"target": 10,
+		"reward_gem": 20,
+		"reward_title": ""
+	},
+	"endless_30": {
+		"name": "_Achv_endless_30_name",
+		"category": "combat",
+		"description": "_Achv_endless_30_desc",
+		"icon": "res://sprite/icon/achv_endless_30.svg",
+		"target": 30,
+		"reward_gem": 50,
+		"reward_title": "无尽行者"
+	},
+	"legion_slayer": {
+		"name": "_Achv_legion_slayer_name",
+		"category": "combat",
+		"description": "_Achv_legion_slayer_desc",
+		"icon": "res://sprite/icon/achv_legion_slayer.svg",
+		"target": 3000,
+		"reward_gem": 50,
+		"reward_title": "千军之敌"
 	}
 }
 

@@ -23,6 +23,7 @@ _LevelCompleted,Level Completed,过关
 _GemReward,Gems earned: +%d,获得宝石：+%d
 _GemRewardNone,No gems (already cleared),本次无宝石（已通关过）
 _GemRewardAlready,Already earned this stage,本关宝石已领取过
+_GemPicked,Gem +%d,宝石 +%d
 _SelectLevel,Select Level,选择关卡
 _Wave,Wave,波数
 _machineGunTowerDesc,"Quick Fire,Effectively combat the enemy","快速射击,有效打击敌人"
@@ -75,12 +76,15 @@ _EnemyName_suicideTruck,Suicide Truck,自爆车
 _EnemyName_missileTruck,Missile Truck,导弹车
 _EnemyName_scoutDrone,Scout Drone,侦察无人机
 _EnemyName_attackHelicopter,Attack Helicopter,攻击直升机
+_EnemyName_experimentalTank,Experimental Tank,实验坦克
+_EnemyName_battlePlane,Battle Plane,战斗飞机
 _EnemyRole_pusher,Pusher,推进型
 _EnemyRole_attacker,Attacker,对抗型
 _EnemyRole_support,Support,支援型
 _EnemyRole_bomber,Suicide Bomber,自爆型
 _EnemyRole_siege,Siege,远程打击型
 _EnemyRole_air,Air Unit,空中单位
+_EnemyRole_fortress,Fortress,要塞型
 _LevelTitleFmt,Level %s,第 %s 关
 _LevelIntel,Level Briefing,关卡情报
 _ability_bombard_name,Airstrike,区域轰炸
@@ -132,8 +136,29 @@ _Achv_veteran_tower_name,Veteran Tower,老兵塔
 _Achv_veteran_tower_desc,Level any tower up to level 3,任意一座塔升至 3 级
 _Achv_perfect_base_name,Perfect Base,零损防线
 _Achv_perfect_base_desc,Complete any level without losing base HP,不损失基地生命完成任意关卡
-_Achv_route_master_name,Route Master,路线掌控者
-_Achv_route_master_desc,Win a multi-route level with no enemies escaping,在多路线关卡中胜利且没有敌人逃脱
+_Achv_fortress_breaker_name,"Fortress Breaker","要塞终结者"
+_Achv_fortress_breaker_desc,"Destroy 30 experimental tanks","摧毁 30 辆实验坦克"
+_Achv_legion_slayer_name,"Legion Slayer","千军之敌"
+_Achv_legion_slayer_desc,"Destroy 3000 enemies in total","累计消灭 3000 个敌人"
+_Endless,"Endless Mode","无尽模式"
+_EndlessBestFmt,"Best: Wave %s","最高记录：第 %s 波"
+_EndlessResult,"You survived %s waves","你撑到了第 %s 波"
+_EndlessKills,"Total Kills","击杀总数"
+_EndlessTime,"Time","用时"
+_EndlessNewRecord,"New Record!","新纪录！"
+_EndlessGiveUp,"End Run","结束本局"
+_EndlessRetry,"Run Again","再来一局"
+_Achv_endless_10_name,"Wave Rider","波次行者"
+_Achv_endless_10_desc,"Reach wave 10 in Endless Mode","无尽模式到达第 10 波"
+_Achv_endless_30_name,"Endless Veteran","无尽老兵"
+_Achv_endless_30_desc,"Reach wave 30 in Endless Mode","无尽模式到达第 30 波"
+_EndlessIntroHint,"No finish line — hold the base and see how many waves you can take.","没有终点 —— 守住基地，看你能撑到第几波"
+_EndlessCrowd,"On Screen","同屏上限"
+_EndlessBest,"Best Record","最高记录"
+_EndlessRules,"Rules","规则"
+_EndlessRule1,"The base has only 10 HP — 10 leaks and the run ends.","基地只有 10 点血，漏 10 个敌人本局结束"
+_EndlessRule2,"The next wave only starts after the current one is wiped out; late waves can fill the screen with 90 enemies.","当前一波清空后才会来下一波；后期同屏最多 90 个敌人"
+_EndlessRule3,"Enemies get tougher every wave — every 10 waves you receive bonus gems.","敌人每波都在变强；每 10 波额外奖励宝石"
 _Score,Score:,得分:
 _Pause,Pause,暂停
 _LevelLocked,LOCKED,未解锁
@@ -150,5 +175,38 @@ _EnemyDesc_support,Support - repairs nearby damaged enemies,支援型 - 为附�
 _EnemyDesc_bomber,Suicide Bomber - charges a tower and blows itself up,自爆型 - 冲撞防御塔并自爆
 _EnemyDesc_siege,Siege - bombards your towers from long range,远程打击型 - 从超远距离轰炸防御塔
 _EnemyDesc_air,Air Unit - towers without anti-air cannot hit it,空中单位 - 不具备防空能力的塔无法命中
+_EnemyDesc_fortress,Fortress - mounts 4 independent turrets that shell your towers,要塞型 - 搭载 4 座独立炮塔，持续炮击防御塔
 _BattleStart,Battle Start,游戏开始
 _EnemiesIncoming,Enemies incoming,敌人即将到来
+_TutorialCategory,"Factory Forecourt","厂前空地"
+_TutorialDescription,"Factory forecourt. Tutorial level, a straight single lane — meet each kind of enemy and its threat one at a time.","厂前空地。教程关卡，单向直线，逐一认识各类敌人的威胁与节奏"
+_Level1Category,"Factory Gate","厂区大门"
+_Level1Description,"Enemies pour in through the main gate on open lanes, good for getting used to the defense rhythm; medium tanks make their debut from wave 2 and will shoot back at your towers.","敌人从厂区正门涌入，路线开阔，适合熟悉防守节奏；第 2 波起中型坦克首次登场，会向防御塔开火"
+_Level2Category,"Gatehouse & Loading Bay","门岗与装卸区"
+_Level2Description,"The loading bay widens and enemies start pushing in from the main gate in groups.","装卸区通道变宽，敌人开始成群从正门压上"
+_Level3Category,"Material Yard","原料堆场"
+_Level3Description,"The material yard narrows down, and heavy targets show up for the first time.","原料堆场道路收窄，第一次出现重型目标"
+_Level4Category,"Conveyor No.1","一号传送带"
+_Level4Description,"Defend along Conveyor No.1 — more corners to cover, and suicide trucks start appearing.","沿一号传送带布防，转角增多，自爆车开始出现"
+_Level5Category,"Assembly Workshop","装配车间"
+_Level5Description,"Into the assembly workshop with longer corridors; missile trucks debut, and experimental tanks plus battle planes (on their own air route) appear for the first time.","进入装配车间，夹道更长；导弹车首次登场，实验坦克与战斗飞机（独立空中航线）首次亮相"
+_Level6Category,"Welding Workshop","焊接车间"
+_Level6Description,"Criss-crossing lanes inside the welding workshop, with air and ground units attacking together.","焊接车间内通道交错，空中与地面单位混合来袭"
+_Level7Category,"Painting Workshop","喷涂车间"
+_Level7Description,"The painting workshop runs deeper, and enemy density rises noticeably.","喷涂车间纵深更长，敌人密度明显提升"
+_Level8Category,"Inspection Line","质检线"
+_Level8Description,"The inspection line is narrower, with denser long-range and air units.","质检线道路更窄，远程与空中单位密度提高"
+_Level9Category,"Finished Goods Warehouse","成品仓库"
+_Level9Description,"Huge enemy groups press in on the finished goods warehouse — your line has to keep suppressing them.","成品仓库高数量敌群压境，防线需要持续压制"
+_Level10Category,"Central Control Room","中央控制室"
+_Level10Description,"On the way to the central control room, testing ground, air and long-range defense together.","通往中央控制室，综合考验地面、空中与远程防守"
+_Level11Category,"Underground Utility Tunnel","地下管廊"
+_Level11Description,"Into the underground utility tunnel, where dense heavy units keep coming.","转入地下管廊，高密度重型单位连续出现"
+_Level12Category,"Power Room","动力机房"
+_Level12Description,"Mixed waves of many unit types keep rolling through the power room.","动力机房内多类型复合波次持续不断"
+_Level13Category,"Automated Warehouse","自动化仓储"
+_Level13Description,"In the automated warehouse, long-range firepower and heavy units both scale up.","自动化仓储，远程火力与重型单位同步增强"
+_Level14Category,"Core Assembly Line","核心装配线"
+_Level14Description,"The core assembly line: high numbers and high intensity in one sustained defense.","核心装配线，高数量、高强度的综合防守"
+_Level15Category,"Factory Core","工厂核心"
+_Level15Description,"The factory core — the final level, facing the largest enemy force.","工厂核心，最终关卡，迎接最大规模的敌群"

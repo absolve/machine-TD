@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" shape-rendering="crispEdges">
+  <g stroke="#1A1C2C" stroke-linejoin="miter">
+    <circle cx="64" cy="64" r="60" fill="#1A1C2C" stroke-width="4"/>
+    <circle cx="64" cy="64" r="56" fill="#5E7A8C" stroke-width="2"/>
+    <circle cx="64" cy="64" r="51" fill="#94B0C2" stroke-width="2"/>
+    <circle cx="64" cy="64" r="46" fill="#566C86" stroke-width="2"/>
+    <circle cx="64" cy="64" r="41" fill="#333C57" stroke-width="2"/>
+    <circle cx="64" cy="64" r="35" fill="#5E7A8C" stroke-width="2"/>
+    <circle cx="64" cy="64" r="29" fill="#7590A4" stroke-width="2"/>
+
+    <g stroke-width="2">
+      <path d="M59 48H69V18L73 14H55L59 18Z" fill="#333C57"/>
+      <path d="M110 59V69H80L76 73V55L80 59Z" fill="#333C57"/>
+      <path d="M69 110H59V80L55 76H73L69 80Z" fill="#333C57"/>
+      <path d="M18 69V59H48L52 55V73L48 69Z" fill="#333C57"/>
+      <path d="M52 52L59 45L80 66L73 73Z" fill="#333C57"/>
+      <path d="M76 52L83 59L62 80L55 73Z" fill="#333C57"/>
+      <path d="M76 76L83 69L48 34L41 41Z" fill="#333C57"/>
+      <path d="M52 76L45 69L80 34L87 41Z" fill="#333C57"/>
+    </g>
+
+    <g stroke-width="2">
+      <path d="M54 13H74L78 17V27L74 31H54L50 27V17Z" fill="#94B0C2"/>
+      <path d="M97 54H111L115 58V70L111 74H97L93 70V58Z" fill="#94B0C2"/>
+      <path d="M54 97H74L78 101V111L74 115H54L50 111V101Z" fill="#94B0C2"/>
+      <path d="M13 54H31L35 58V70L31 74H13L9 70V58Z" fill="#94B0C2"/>
+      <path d="M84 22L92 14L101 23L94 32Z" fill="#94B0C2"/>
+      <path d="M96 84L105 93L96 102L87 94Z" fill="#94B0C2"/>
+      <path d="M22 84L32 94L23 103L14 94Z" fill="#94B0C2"/>
+      <path d="M24 22L33 14L42 23L33 32Z" fill="#94B0C2"/>
+    </g>
+    <g stroke-width="1.5">
+      <path d="M57 17H71V23H57Z" fill="#FFC61A"/>
+      <path d="M101 58H109V70H101Z" fill="#FFC61A"/>
+      <path d="M57 105H71V111H57Z" fill="#FFC61A"/>
+      <path d="M17 58H27V70H17Z" fill="#FFC61A"/>
+      <path d="M87 23L92 18L97 23L92 28Z" fill="#FFC61A"/>
+      <path d="M96 88L101 93L96 98L91 93Z" fill="#FFC61A"/>
+      <path d="M23 88L28 93L23 98L18 93Z" fill="#FFC61A"/>
+      <path d="M32 23L37 18L42 23L37 28Z" fill="#FFC61A"/>
+    </g>
+
+    <circle cx="64" cy="64" r="20" fill="#1A1C2C" stroke-width="2.5"/>
+    <circle cx="64" cy="64" r="16" fill="#94B0C2" stroke-width="2"/>
+    <circle cx="64" cy="64" r="11" fill="#FFD964" stroke-width="1.5"/>
+    <circle cx="64" cy="64" r="6" fill="#F8FBFD" stroke-width="1"/>
+  </g>
+</svg>

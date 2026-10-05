@@ -5,7 +5,8 @@ extends Node
 ## 成就的目标值、解锁判定和存档都由 AchievementManager / UserData 负责，这里不重复实现。
 ##
 ## 成就分成两类处理：
-##   累计型（ground_breaker 地面清扫者 / iron_hunter 重装猎手 / sky_guardian 天空守卫）
+##   累计型（ground_breaker 地面清扫者 / iron_hunter 重装猎手 / sky_guardian 天空守卫 /
+##           fortress_breaker 要塞终结者 / legion_slayer 千军之敌）
 ##       每次击杀直接累加，跨关卡一直累积。
 ##   单局型（full_armory 全域火力 / chain_reaction 连锁反应）
 ##       只统计本局进度，用"和历史最好成绩比大小"的方式提交，避免下一局的低分把记录覆盖掉。
@@ -40,6 +41,13 @@ func _onEnemyDefeated(enemy, source) -> void:
 	if enemy.enemyType == Game.enemyType.heavyTank or enemy.enemyType == Game.enemyType.armoredTank:
 		AchievementManager.addProgress("iron_hunter", 1, false)
 
+	# 千军之敌：不分地面/空中，所有击杀都算
+	AchievementManager.addProgress("legion_slayer", 1, false)
+
+	# 要塞终结者：实验坦克（4 座炮塔的要塞型）
+	if enemy.enemyType == Game.enemyType.experimentalTank:
+		AchievementManager.addProgress("fortress_breaker", 1, false)
+
 	# 连锁反应：本局内由特斯拉线圈塔或火箭塔造成的击杀
 	if !is_instance_valid(source)||source==null:
 		return
@@ -69,14 +77,12 @@ func _onTowerLeveledUp(_tower, level: int) -> void:
 
 # 由 map.finish() 在通关时调用
 # flawless: 基地全程没掉血（等价于没有任何敌人逃脱）
-# multi_route: 该关卡是多路线关卡（存在多条 Path2D）
-func recordStageCleared(stageId: int, flawless: bool, multi_route: bool) -> void:
+# _multi_route: 保留参数以兼容调用方（原先的 route_master 成就已删除，不再读它）
+func recordStageCleared(stageId: int, flawless: bool, _multi_route: bool) -> void:
 	if stageId == 1:
 		AchievementManager.setProgress("first_defense", 1, false)
 	if flawless:
 		AchievementManager.setProgress("perfect_base", 1, false)
-		if multi_route:
-			AchievementManager.setProgress("route_master", 1, false)
 	flush()
 
 

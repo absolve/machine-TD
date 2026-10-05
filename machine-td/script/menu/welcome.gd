@@ -10,6 +10,8 @@ var _glowTween: Tween
 
 
 func _ready() -> void:
+	# 回到主菜单＝已经离开无尽模式（从无尽里点返回也走这条路）
+	Game.endlessMode = false
 	var sfxBus: int = AudioServer.get_bus_index("Sfx")
 	if sfxBus >= 0:
 		AudioServer.set_bus_mute(sfxBus, UserData.sfxMuted)
@@ -37,6 +39,13 @@ func _onCodexPressed() -> void:
 func _onTutorialPressed() -> void:
 	StageData.currentStageId = 0
 	SceneTransition.changeScene("res://scene/map.tscn")
+
+# 无尽模式：置标记后直接进 map 外壳，由它加载 scene/level/endless.tscn
+# （不经过关卡选择，也不读 allStage）
+func _onEndlessPressed() -> void:
+	Game.endlessMode = true
+	SceneTransition.changeScene("res://scene/map.tscn")
+
 
 
 func _onBtnSStartPressed() -> void:

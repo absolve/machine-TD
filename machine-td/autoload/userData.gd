@@ -18,6 +18,11 @@ var unlockedStages: Array[int] = [1] # 已解锁关卡，第一关默认解锁
 var stageRatings: Dictionary = {} # 各关卡最高评分
 var unlockedAchievements: Array[String] = [] # 已解锁成就
 var achievementProgress: Dictionary = {} # 成就进度
+
+## ── 无尽模式记录 ──
+var endlessBestWave: int = 0 # 历史最高波数
+var endlessBestKills: int = 0 # 对应那局的击杀数（M3 补）
+var endlessRuns: int = 0 # 无尽累计游玩次数
 #############
 
 const SETTINGS_FILE_NAME := "user_settings.cfg"
@@ -52,11 +57,11 @@ func getSettingsPath() -> String:
 func getPlayerDataPath() -> String:
 	return getFilePath(PLAYER_DATA_FILE_NAME)
 
-#获取文件路径
+## 返回 user:// 下指定文件的路径，集中封装存档目录前缀。
 func getFilePath(file_name: String) -> String:
 	return "user://" + file_name
 
-#获取设置
+## 读取设置并兼容旧版语言配置，避免升级后覆盖玩家的系统语言选择。
 func loadSettings() -> void:
 	var config: ConfigFile = ConfigFile.new()
 	if config.load(settingsPath) != OK:
@@ -108,6 +113,11 @@ func loadPlayerData() -> void:
 	var savedProgress = config.get_value("achievements", "progress", {})
 	if savedProgress is Dictionary:
 		achievementProgress = savedProgress
+	# 无尽记录：老存档没有这三项，缺了就用默认值（0），不能报错
+
+	endlessBestWave = int(config.get_value("endless", "bestWave", endlessBestWave))
+	endlessBestKills = int(config.get_value("endless", "bestKills", endlessBestKills))
+	endlessRuns = int(config.get_value("endless", "runs", endlessRuns))
 
 func savePlayerData() -> void:
 	var config: ConfigFile = ConfigFile.new()
@@ -117,9 +127,27 @@ func savePlayerData() -> void:
 	config.set_value("player", "stageRatings", stageRatings)
 	config.set_value("achievements", "unlocked", unlockedAchievements)
 	config.set_value("achievements", "progress", achievementProgress)
+	config.set_value("endless", "bestWave", endlessBestWave)
+	config.set_value("endless", "bestKills", endlessBestKills)
+	config.set_value("endless", "runs", endlessRuns)
 	var error: int = config.save(playerDataPath)
 	if error != OK:
 		push_error("无法保存玩家进度: %s (%s)" % [playerDataPath, error])
+
+
+## 发放宝石并**立刻落盘**。
+##
+## 关卡中途掉落的宝石（击败特殊敌人）必须马上存：玩家可能在结算前退出/重开，
+## 若拖到 `recordStageCompletion()` 才写盘，这部分奖励就丢了。
+## 掉落是低频事件（只有特殊敌人），一次写盘的开销可以接受。
+##
+## ⚠️ 这里只负责数值与存档；顶栏刷新由调用方发 `AbilityManager.gemChanged` 通知
+##   （map 已接在该信号上），不要在数据层直接摸 UI。
+func addGem(amount: int) -> void:
+	if amount <= 0:
+		return
+	gem += amount
+	savePlayerData()
 
 func isStageUnlocked(stageId: int) -> bool:
 	return stageId == 1 or stageId in unlockedStages

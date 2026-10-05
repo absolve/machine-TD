@@ -37,8 +37,8 @@ const BOOM_RANDOM_POOL: Array[String] = ["fire", "fire", "heavy", "spark"]
 
 ## ── 爆炸动画帧序列（AnimatedSprite2D + scene/explosion/explosion*.tscn）──
 const BOOM_ANIMS: Array[String] = [
-	"res://scene/explosion/explosion.tscn",        # 基场景（big_hit_1..11，大）
-	"res://scene/explosion/explosion_small.tscn",  # 派生（boom_1..6，小）
+	"res://scene/explosion/explosion.tscn", # 基场景（big_hit_1..11，大）
+	"res://scene/explosion/explosion_small.tscn", # 派生（boom_1..6，小）
 ]
 ## 每种爆炸变体配哪套动画。想让某变体换帧序，改这里。
 const VARIANT_ANIM := {
@@ -57,10 +57,10 @@ const EXPLO_SOUND := "explode_small"
 ## 不同的击中效果就是不同的**场景**（都是 scene/fx/hit.tscn 继承出来的）。
 ## 想加一种：新建继承场景改导出变量，然后把路径加到这里。
 const HIT_VARIANTS := {
-	"default": "res://scene/fx/hit.tscn",         # 通用：暖白火花
-	"metal":   "res://scene/fx/hit_metal.tscn",   # 打金属：冷白
-	"flesh":   "res://scene/fx/hit_flesh.tscn",   # 打血肉：橙红，更大
-	"blast":   "res://scene/fx/hit_blast.tscn",   # 爆炸型火花：火团贴图，最大最亮
+	"default": "res://scene/fx/hit.tscn", # 通用：暖白火花
+	"metal":   "res://scene/fx/hit_metal.tscn", # 打金属：冷白
+	"flesh":   "res://scene/fx/hit_flesh.tscn", # 打血肉：橙红，更大
+	"blast":   "res://scene/fx/hit_blast.tscn", # 爆炸型火花：火团贴图，最大最亮
 }
 ## 每种变体各有一个池子（路径 -> Array）
 var _hitPools: Dictionary = {}

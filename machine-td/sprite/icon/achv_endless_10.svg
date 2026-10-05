@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" shape-rendering="crispEdges">
+  <!-- 成就图标：波次行者（无尽模式到达第 10 波）—— 准星环 + 四向黄刻度，中间是三层递进的推进箭头 -->
+  <circle cx="64" cy="64" r="50" fill="none" stroke="#1a1c2c" stroke-width="15"/>
+  <circle cx="64" cy="64" r="50" fill="none" stroke="#94b0c2" stroke-width="9"/>
+  <g fill="#ffc61a" stroke="#1a1c2c" stroke-width="3">
+    <rect x="59" y="3" width="10" height="24" rx="4"/>
+    <rect x="59" y="101" width="10" height="24" rx="4"/>
+    <rect x="3" y="59" width="24" height="10" rx="4"/>
+    <rect x="101" y="59" width="24" height="10" rx="4"/>
+  </g>
+  <!-- 三层向右推进的箭头，越往后越亮 = 一波接一波 -->
+  <g stroke="#1a1c2c" stroke-width="5" fill="none" stroke-linejoin="round">
+    <path d="M28 44l16 20-16 20"/>
+    <path d="M50 44l16 20-16 20"/>
+  </g>
+  <path d="M72 44l16 20-16 20" stroke="#ffc61a" stroke-width="7" fill="none" stroke-linejoin="round"/>
+  <path d="M72 44l16 20-16 20" stroke="#ffc61a" stroke-width="7" fill="none" stroke-linejoin="round"/>
+</svg>

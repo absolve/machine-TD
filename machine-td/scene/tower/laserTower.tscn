@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dl20d3cxbv5dp" path="res://sprite/fx/fx_spark.png" id="90_spark"]
 [ext_resource type="Texture2D" uid="uid://cpy1fdfwdx3em" path="res://sprite/fx/p_star.png" id="91_star"]
 [ext_resource type="Texture2D" uid="uid://dhnkampji1cw2" path="res://sprite/tower/base_laser_round.png" id="99_base"]
-[ext_resource type="Texture2D" uid="uid://namm2gbd0cfh" path="res://sprite/tower/tower_laser.png" id="99_turret"]
+[ext_resource type="Texture2D" uid="uid://ckv2oxyjy00d0" path="res://sprite/tower/tower_laser.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_axgl3"]
 size = Vector2(64, 64)
@@ -34,6 +34,16 @@ animations = [{
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0llar"]
 radius = 128.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mopmr"]
+resource_local_to_scene = true
+shader = ExtResource("3_wfuso")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 14.0
+shader_parameter/flash_amplitude = 0.8
+shader_parameter/outline_thickness = 0.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_autotur"]
 animations = [{
@@ -75,6 +85,8 @@ shape = SubResource("CircleShape2D_0llar")
 
 [node name="turret" parent="." index="3" unique_id=1212426607]
 z_index = -1
+material = SubResource("ShaderMaterial_mopmr")
+scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_autotur")
 
 [node name="MuzzleFx" type="CPUParticles2D" parent="." index="11" unique_id=1166174513]

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" shape-rendering="crispEdges">
+  <!-- 成就图标：无尽老兵（无尽模式到达第 30 波）—— 准星环 + 四向黄刻度，中间是"撑得久"的钟 -->
+  <circle cx="64" cy="64" r="50" fill="none" stroke="#1a1c2c" stroke-width="15"/>
+  <circle cx="64" cy="64" r="50" fill="none" stroke="#94b0c2" stroke-width="9"/>
+  <g fill="#ffc61a" stroke="#1a1c2c" stroke-width="3">
+    <rect x="59" y="3" width="10" height="24" rx="4"/>
+    <rect x="59" y="101" width="10" height="24" rx="4"/>
+    <rect x="3" y="59" width="24" height="10" rx="4"/>
+    <rect x="101" y="59" width="24" height="10" rx="4"/>
+  </g>
+  <!-- 钟面 + 指针：指示"活得更久" -->
+  <circle cx="64" cy="64" r="30" fill="#566c86" stroke="#1a1c2c" stroke-width="6"/>
+  <circle cx="64" cy="64" r="22" fill="#94b0c2" stroke="#333c57" stroke-width="3"/>
+  <path d="M64 46v18l14 10" stroke="#1a1c2c" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M64 50v14l11 8" stroke="#e08a2e" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <g fill="#333c57">
+    <rect x="61" y="34" width="6" height="8" rx="2"/>
+    <rect x="61" y="86" width="6" height="8" rx="2"/>
+    <rect x="34" y="61" width="8" height="6" rx="2"/>
+    <rect x="86" y="61" width="8" height="6" rx="2"/>
+  </g>
+</svg>

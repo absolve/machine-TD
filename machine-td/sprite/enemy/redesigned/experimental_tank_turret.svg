@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="24" viewBox="0 0 48 24" shape-rendering="crispEdges">
+  <!-- 平涂配色（与防御塔一致，不用渐变） -->
+  <rect x="6" y="8" width="8" height="8" rx="2" fill="#566c86" stroke="#1a1c2c" stroke-width="1.4"/>
+  <path d="M22 9h14v6H22Z" fill="#333c57" stroke="#1a1c2c" stroke-width="1.6"/>
+  <path d="M24 10h10v3H24Z" fill="#94b0c2"/>
+  <rect x="34" y="8" width="8" height="8" rx="1" fill="#e08a2e" stroke="#1a1c2c"/>
+  <circle cx="18" cy="12" r="8" fill="#1a1c2c"/>
+  <circle cx="18" cy="12" r="7" fill="#94b0c2" stroke="#94b0c2" stroke-width="1.2"/>
+  <path d="M13 8h9l3 4H10Z" fill="#f4f4f4" opacity=".75"/>
+  <path d="M15 12h6v5h-6Z" fill="#e08a2e"/>
+  <path d="M13 18h10" stroke="#1a1c2c" stroke-width="2"/>
+</svg>

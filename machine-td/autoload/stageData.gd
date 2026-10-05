@@ -23,6 +23,7 @@ const ENEMY_SPAWN_DELAY := {
 	Game.enemyType.miniTank: 1.6,
 	Game.enemyType.assaultBuggy: 1.6,
 	Game.enemyType.scoutDrone: 1.6,
+	Game.enemyType.battlePlane: 1.6,
 	# ── 中型：2.2（+0.6）──
 	Game.enemyType.mediumTank: 2.2,
 	Game.enemyType.medic: 2.2,
@@ -32,6 +33,8 @@ const ENEMY_SPAWN_DELAY := {
 	Game.enemyType.armoredTank: 2.8,
 	Game.enemyType.missileTruck: 2.8,
 	Game.enemyType.attackHelicopter: 2.8,
+	# ── 堡垒：3.4（+0.6，实验坦克 4 炮塔，单独再慢一档）──
+	Game.enemyType.experimentalTank: 3.4,
 }
 
 ## 取某个敌人类型的生成间隔。表里没配就回落到 1.6（最小值），
@@ -107,12 +110,21 @@ func getRouteCount(stageId: int) -> int:
 	return 1
 
 
-#关卡的数据
+## 某关卡需要"航线提示"的路线号（1 开始）。空数组 = 本关都不提示。
+## 只有场景里看不见的航线才需要列进来（地面路线铺了传送带，玩家看得出走向）。
+func getHintRoutes(stageId: int) -> Array:
+	for s in allStage:
+		if int(s.get("id", -1)) == stageId:
+			return s.get("hintRoutes", [])
+	return []
+
+
+# 关卡数据配置。
 #
 # enemySpawner 里每一条的写法：
 #     {'time': 波次, 'type': 敌人类型, 'number': 数量}
-#     {'time': 波次, 'type': 敌人类型, 'number': 数量, 'route': 路线号}   # 可选
-#     {'time': 波次, 'type': 敌人类型, 'number': 数量, 'offset': 出发偏移}  # 可选，可与 route 同写
+#     {'time': 波次, 'type': 敌人类型, 'number': 数量, 'route': 路线号} # 可选
+#     {'time': 波次, 'type': 敌人类型, 'number': 数量, 'offset': 出发偏移} # 可选，可与 route 同写
 #
 # 'route' 不写 = 从**路线1**出发；写 2、3 …… 就从对应路线出发。
 # 路线号从 1 开始，对应关卡场景里 Path2D 的摆放顺序（第 1 个 Path2D 就是路线1）。
@@ -129,37 +141,51 @@ func getRouteCount(stageId: int) -> int:
 # 生成器会一次只放一个敌人，放完按"下一个敌人的兵种"查表排下一拍，
 # 所以同一时刻写再多记录也不会叠在一帧刷出来。
 # 本关想整体放慢/加快，用 'spawnInterval'（只对表里没配的兵种生效）。
+#
+# 'hintRoutes' 不写 = 本关没有任何路线需要提示。
+# 列在这里的**路线号**（1 开始，和 'route' 同一套编号）会在**该路线第一次刷出敌人时**
+# 给玩家画一次航线提示（见 scene/level/air_route_hint.tscn），然后自己消失。
+# 专门给"场景里看不见的航线"用：地面路线都铺了传送带、玩家一眼看得出走向，
+# 而战斗飞机的空中航线在场景里什么都没铺，不提示就只是"天上突然冒出飞机"。
+# 每波最多提示一次。
 var allStage = [
 	{
 		'name': 'Tutorial',
 		"id": 0,
-		'routes': 1,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 2, # 路线1 = 传送带地面路线；路线2 = 战斗飞机飞越全图的空中航线
+		'hintRoutes': [2], # 空中航线（场景里没有任何贴图）需要画一次航线提示
 		"gemReward": 3,
 		'selectable': false,
 		'type': '工厂',
-		'category': '厂前空地',
-		'description': '厂前空地。教程关卡，单向直线，逐一认识各类敌人的威胁与节奏',
+		'category': '_TutorialCategory',
+		'description': '_TutorialDescription',
 		'wave': 10,
 		'health': 25,
 		'money': 1200,
-		'spawnInterval': 1.0,   # 兜底间隔(秒)：只对 ENEMY_SPAWN_DELAY 表里没配的兵种生效
+		'spawnInterval': 1.0, # 兜底间隔(秒)：只对 ENEMY_SPAWN_DELAY 表里没配的兵种生效
 		'scene': 'res://scene/level/level_tutorial.tscn',
 		# ★ 2026-09-26 改成"大量敌人"压力测试场：
 		#   原来每波只有 1 个敌人（全关共 10 个），根本测不出满屏敌人的表现。
-		#   现在全关约 247 个敌人，逐波加压：前几波铺基础兵，中段上重甲/支援，
-		#   后段把快兵（突击车/自爆车/侦察无人机）和空军（直升机）混编一起冲。
+		#   现在全关约 261 个敌人，逐波加压：前几波铺基础兵，中段上重甲/支援，
+		#   后段把快兵（突击车/自爆车/侦察无人机）和空军（直升机）混编一起冲，
+		#   收尾放"实验坦克"（要塞型，4 座炮塔，每波最多 4 辆）与"战斗飞机"：
+		#   实验坦克 8 波 1 辆 → 9 波 2 辆 → 10 波 4 辆；战斗飞机走路线2（第 4/7/10 波 2/2/3 架，不扣血、击落 50% 掉 1 宝石）。
 		#   生成间隔由 ENEMY_SPAWN_DELAY 表按兵种决定（轻型 1.0 / 中型 1.4 / 重型 1.8），
 		#   这里不用逐条写 delay。
 		"enemySpawner": [
 			# ── 第 1 波：迷你坦克铺路 ──
 			{'time': 1, 'type': Game.enemyType.miniTank, 'number': 12},
 			# ── 第 2 波：加入突击车（快兵，考验射程覆盖）──
+			# {'time': 1, 'type': Game.enemyType.experimentalTank, 'number': 1},
 			{'time': 2, 'type': Game.enemyType.miniTank, 'number': 12},
 			{'time': 2, 'type': Game.enemyType.assaultBuggy, 'number': 8},
 			# ── 第 3 波：中型坦克开始还击 ──
 			{'time': 3, 'type': Game.enemyType.miniTank, 'number': 10},
 			{'time': 3, 'type': Game.enemyType.mediumTank, 'number': 8},
 			# ── 第 4 波：首台重甲，检测单体高血量 ──
+			# 战斗飞机走路线2（横跨全图的航线）—— 不写 'route' 就默认走路线1，
+			# 飞机会沿地面传送带飞，看不到“独立航线”的效果
+			{'time': 4, 'type': Game.enemyType.battlePlane, 'number': 2, 'route': 2},
 			{'time': 4, 'type': Game.enemyType.mediumTank, 'number': 10},
 			{'time': 4, 'type': Game.enemyType.heavyTank, 'number': 5},
 			# ── 第 5 波：维修车登场（会奶自己人）──
@@ -171,18 +197,23 @@ var allStage = [
 			{'time': 6, 'type': Game.enemyType.mediumTank, 'number': 10},
 			{'time': 6, 'type': Game.enemyType.suicideTruck, 'number': 6},
 			# ── 第 7 波：自爆车集群冲击 ──
+			{'time': 7, 'type': Game.enemyType.battlePlane, 'number': 5, 'route': 2},
 			{'time': 7, 'type': Game.enemyType.suicideTruck, 'number': 14},
 			{'time': 7, 'type': Game.enemyType.miniTank, 'number': 12},
 			{'time': 7, 'type': Game.enemyType.assaultBuggy, 'number': 8},
-			# ── 第 8 波：首次出现空军 ──
+			# ── 第 8 波：实验坦克首次登场（1 辆，4 炮塔会打塔）+ 首次出现空军 ──
+			{'time': 8, 'type': Game.enemyType.experimentalTank, 'number': 1},
 			{'time': 8, 'type': Game.enemyType.scoutDrone, 'number': 10},
 			{'time': 8, 'type': Game.enemyType.attackHelicopter, 'number': 5},
 			{'time': 8, 'type': Game.enemyType.heavyTank, 'number': 5},
-			# ── 第 9 波：导弹车远程压制 ──
+			# ── 第 9 波：导弹车远程压制 + 实验坦克增至 2 辆 ──
+			{'time': 9, 'type': Game.enemyType.experimentalTank, 'number': 2},
 			{'time': 9, 'type': Game.enemyType.missileTruck, 'number': 12},
 			{'time': 9, 'type': Game.enemyType.mediumTank, 'number': 12},
 			{'time': 9, 'type': Game.enemyType.medic, 'number': 5},
-			# ── 第 10 波：总攻，所有兵种混编一起上 ──
+			# ── 第 10 波：总攻，所有兵种混编一起上（实验坦克 4 辆封顶）──
+			{'time': 10, 'type': Game.enemyType.battlePlane, 'number': 7, 'route': 2},
+			{'time': 10, 'type': Game.enemyType.experimentalTank, 'number': 4},
 			{'time': 10, 'type': Game.enemyType.heavyTank, 'number': 8},
 			{'time': 10, 'type': Game.enemyType.armoredTank, 'number': 8},
 			{'time': 10, 'type': Game.enemyType.attackHelicopter, 'number': 5},
@@ -194,32 +225,37 @@ var allStage = [
 	{
 		'name': '1',
 		"id": 1,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
-		"gemReward": 5,
+		'routes': 2, # 本关路线数（和场景里 Path2D 的数量对应）
+		"gemReward": 8,
 		'type': '工厂',
-		'category': '厂区大门',
-		'description': '敌人从厂区正门涌入，路线开阔，适合熟悉防守节奏',
+		'category': '_Level1Category',
+		'description': '_Level1Description',
 		'wave': 3,
 		'health': 20,
 		'money': 150,
 		'scene': 'res://scene/level/level_1.tscn',
 		"enemySpawner": [
-			{'time': 1, 'type': Game.enemyType.miniTank, 'number': 6, 'route': 1},
-			{'time': 1, 'type': Game.enemyType.miniTank, 'number': 7, 'route': 2},
-			{'time': 2, 'type': Game.enemyType.miniTank, 'number': 18, 'route': 1},
-			{'time': 2, 'type': Game.enemyType.miniTank, 'number': 8, 'route': 2},
-			{'time': 3, 'type': Game.enemyType.miniTank, 'number': 20, 'route': 1},
-			{'time': 3, 'type': Game.enemyType.miniTank, 'number': 21, 'route': 2}
+			{'time': 1, 'type': Game.enemyType.miniTank, 'number': 8, 'route': 1},
+			{'time': 1, 'type': Game.enemyType.miniTank, 'number': 8, 'route': 2},
+			{'time': 2, 'type': Game.enemyType.miniTank, 'number': 20, 'route': 1},
+			{'time': 2, 'type': Game.enemyType.miniTank, 'number': 12, 'route': 2},
+			# ── 第 2 波：中型坦克首秀，两条带子各 1 辆（会还击，逼玩家把塔往后放）──
+			{'time': 2, 'type': Game.enemyType.mediumTank, 'number': 1, 'route': 1},
+			{'time': 2, 'type': Game.enemyType.mediumTank, 'number': 1, 'route': 2},
+			{'time': 3, 'type': Game.enemyType.miniTank, 'number': 22, 'route': 1},
+			{'time': 3, 'type': Game.enemyType.miniTank, 'number': 24, 'route': 2},
+			{'time': 3, 'type': Game.enemyType.mediumTank, 'number': 2, 'route': 1},
+			{'time': 3, 'type': Game.enemyType.mediumTank, 'number': 1, 'route': 2}
 		]
 	},
 	{
 		'name': '2',
 		"id": 2,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
-		"gemReward": 6,
+		'routes': 2, # 本关路线数（和场景里 Path2D 的数量对应）
+		"gemReward": 8,
 		'type': '工厂',
-		'category': '门岗与装卸区',
-		'description': '装卸区通道变宽，敌人开始成群从正门压上',
+		'category': '_Level2Category',
+		'description': '_Level2Description',
 		'wave': 5,
 		'health': 18,
 		'money': 200,
@@ -247,11 +283,11 @@ var allStage = [
 	{
 		'name': '3',
 		"id": 3,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
-		"gemReward": 7,
+		'routes': 2, # 本关路线数（和场景里 Path2D 的数量对应）
+		"gemReward": 8,
 		'type': '工厂',
-		'category': '原料堆场',
-		'description': '原料堆场道路收窄，第一次出现重型目标',
+		'category': '_Level3Category',
+		'description': '_Level3Description',
 		'wave': 5,
 		'health': 18,
 		'money': 220,
@@ -275,11 +311,11 @@ var allStage = [
 	{
 		'name': '4',
 		"id": 4,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 2, # 本关路线数（和场景里 Path2D 的数量对应）
 		"gemReward": 8,
 		'type': '工厂',
-		'category': '一号传送带',
-		'description': '沿一号传送带布防，转角增多，自爆车开始出现',
+		'category': '_Level4Category',
+		'description': '_Level4Description',
 		'wave': 7,
 		'health': 16,
 		'money': 190,
@@ -316,11 +352,12 @@ var allStage = [
 	{
 		'name': '5',
 		"id": 5,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 3, # 本关路线数（和场景里 Path2D 的数量对应）
+		'hintRoutes': [3], # 路线3 = 战斗飞机的空中航线，场景里没有贴图，要提示一次
 		"gemReward": 9,
 		'type': '工厂',
-		'category': '装配车间',
-		'description': '进入装配车间，夹道更长，导弹车首次登场',
+		'category': '_Level5Category',
+		'description': '_Level5Description',
 		'wave': 8,
 		'health': 14,
 		'money': 230,
@@ -353,17 +390,21 @@ var allStage = [
 			{'time': 8, 'type': Game.enemyType.missileTruck, 'number': 2, 'route': 1},
 			{'time': 8, 'type': Game.enemyType.missileTruck, 'number': 2, 'route': 2},
 			{'time': 8, 'type': Game.enemyType.heavyTank, 'number': 4, 'route': 1},
-			{'time': 8, 'type': Game.enemyType.heavyTank, 'number': 2, 'route': 2}
+			{'time': 8, 'type': Game.enemyType.heavyTank, 'number': 2, 'route': 2},
+			# ── 第 8 波：实验坦克 + 战斗飞机 ──
+			{'time': 8, 'type': Game.enemyType.battlePlane, 'number': 2, 'route': 3},
+			{'time': 8, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
 		]
 	},
 	{
 		'name': '6',
 		"id": 6,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 3, # 本关路线数（和场景里 Path2D 的数量对应）
+		'hintRoutes': [3], # 路线3 = 战斗飞机的空中航线，场景里没有贴图，要提示一次
 		"gemReward": 10,
 		'type': '工厂',
-		'category': '焊接车间',
-		'description': '焊接车间内通道交错，空中与地面单位混合来袭',
+		'category': '_Level6Category',
+		'description': '_Level6Description',
 		'wave': 9,
 		'health': 12,
 		'money': 280,
@@ -402,17 +443,21 @@ var allStage = [
 			{'time': 9, 'type': Game.enemyType.missileTruck, 'number': 3, 'route': 1},
 			{'time': 9, 'type': Game.enemyType.missileTruck, 'number': 2, 'route': 2},
 			{'time': 9, 'type': Game.enemyType.heavyTank, 'number': 3, 'route': 1},
-			{'time': 9, 'type': Game.enemyType.heavyTank, 'number': 3, 'route': 2}
+			{'time': 9, 'type': Game.enemyType.heavyTank, 'number': 3, 'route': 2},
+			# ── 第 9 波：实验坦克 + 战斗飞机 ──
+			{'time': 9, 'type': Game.enemyType.battlePlane, 'number': 2, 'route': 3},
+			{'time': 9, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
 		]
 	},
 	{
 		'name': '7',
 		"id": 7,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 3, # 本关路线数（和场景里 Path2D 的数量对应）
+		'hintRoutes': [3], # 路线3 = 战斗飞机的空中航线，场景里没有贴图，要提示一次
 		"gemReward": 11,
 		'type': '工厂',
-		'category': '喷涂车间',
-		'description': '喷涂车间纵深更长，敌人密度明显提升',
+		'category': '_Level7Category',
+		'description': '_Level7Description',
 		'wave': 10,
 		'health': 12,
 		'money': 320,
@@ -451,17 +496,22 @@ var allStage = [
 			{'time': 9, 'type': Game.enemyType.attackHelicopter, 'number': 1, 'route': 1},
 			{'time': 9, 'type': Game.enemyType.attackHelicopter, 'number': 1, 'route': 2},
 			{'time': 10, 'type': Game.enemyType.missileTruck, 'number': 3, 'route': 1},
-			{'time': 10, 'type': Game.enemyType.missileTruck, 'number': 1, 'route': 2}
+			{'time': 10, 'type': Game.enemyType.missileTruck, 'number': 1, 'route': 2},
+			# ── 第 10 波：实验坦克 + 战斗飞机 ──
+			{'time': 10, 'type': Game.enemyType.battlePlane, 'number': 3, 'route': 3},
+			{'time': 10, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			{'time': 10, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
 		]
 	},
 	{
 		'name': '8',
 		"id": 8,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 3, # 本关路线数（和场景里 Path2D 的数量对应）
+		'hintRoutes': [3], # 路线3 = 战斗飞机的空中航线，场景里没有贴图，要提示一次
 		"gemReward": 12,
 		'type': '工厂',
-		'category': '质检线',
-		'description': '质检线道路更窄，远程与空中单位密度提高',
+		'category': '_Level8Category',
+		'description': '_Level8Description',
 		'wave': 11,
 		'health': 11,
 		'money': 360,
@@ -504,17 +554,24 @@ var allStage = [
 			{'time': 10, 'type': Game.enemyType.suicideTruck, 'number': 2, 'route': 1},
 			{'time': 10, 'type': Game.enemyType.suicideTruck, 'number': 1, 'route': 2},
 			{'time': 11, 'type': Game.enemyType.missileTruck, 'number': 2, 'route': 1},
-			{'time': 11, 'type': Game.enemyType.missileTruck, 'number': 1, 'route': 2}
+			{'time': 11, 'type': Game.enemyType.missileTruck, 'number': 1, 'route': 2},
+			# ── 第 10 波：战斗飞机 ──
+			{'time': 10, 'type': Game.enemyType.battlePlane, 'number': 3, 'route': 3},
+			# ── 第 11 波：实验坦克 + 战斗飞机 ──
+			{'time': 11, 'type': Game.enemyType.battlePlane, 'number': 3, 'route': 3},
+			{'time': 11, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			{'time': 11, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
 		]
 	},
 	{
 		'name': '9',
 		"id": 9,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 3, # 本关路线数（和场景里 Path2D 的数量对应）
+		'hintRoutes': [3], # 路线3 = 战斗飞机的空中航线，场景里没有贴图，要提示一次
 		"gemReward": 13,
 		'type': '工厂',
-		'category': '成品仓库',
-		'description': '成品仓库高数量敌群压境，防线需要持续压制',
+		'category': '_Level9Category',
+		'description': '_Level9Description',
 		'wave': 12,
 		'health': 11,
 		'money': 400,
@@ -559,17 +616,25 @@ var allStage = [
 			{'time': 11, 'type': Game.enemyType.heavyTank, 'number': 3, 'route': 1},
 			{'time': 11, 'type': Game.enemyType.heavyTank, 'number': 2, 'route': 2},
 			{'time': 12, 'type': Game.enemyType.attackHelicopter, 'number': 2, 'route': 1},
-			{'time': 12, 'type': Game.enemyType.attackHelicopter, 'number': 2, 'route': 2}
+			{'time': 12, 'type': Game.enemyType.attackHelicopter, 'number': 2, 'route': 2},
+			# ── 第 11 波：实验坦克 + 战斗飞机 ──
+			{'time': 11, 'type': Game.enemyType.battlePlane, 'number': 4, 'route': 3},
+			{'time': 11, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			# ── 第 12 波：实验坦克 + 战斗飞机 ──
+			{'time': 12, 'type': Game.enemyType.battlePlane, 'number': 4, 'route': 3},
+			{'time': 12, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			{'time': 12, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
 		]
 	},
 	{
 		'name': '10',
 		"id": 10,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 3, # 本关路线数（和场景里 Path2D 的数量对应）
+		'hintRoutes': [3], # 路线3 = 战斗飞机的空中航线，场景里没有贴图，要提示一次
 		"gemReward": 14,
 		'type': '工厂',
-		'category': '中央控制室',
-		'description': '通往中央控制室，综合考验地面、空中与远程防守',
+		'category': '_Level10Category',
+		'description': '_Level10Description',
 		'wave': 13,
 		'health': 10,
 		'money': 450,
@@ -616,17 +681,25 @@ var allStage = [
 			{'time': 12, 'type': Game.enemyType.mediumTank, 'number': 4, 'route': 1},
 			{'time': 12, 'type': Game.enemyType.mediumTank, 'number': 4, 'route': 2},
 			{'time': 13, 'type': Game.enemyType.missileTruck, 'number': 2, 'route': 1},
-			{'time': 13, 'type': Game.enemyType.missileTruck, 'number': 2, 'route': 2}
+			{'time': 13, 'type': Game.enemyType.missileTruck, 'number': 2, 'route': 2},
+			# ── 第 12 波：实验坦克 + 战斗飞机 ──
+			{'time': 12, 'type': Game.enemyType.battlePlane, 'number': 4, 'route': 3},
+			{'time': 12, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
+			# ── 第 13 波：实验坦克 + 战斗飞机 ──
+			{'time': 13, 'type': Game.enemyType.battlePlane, 'number': 4, 'route': 3},
+			{'time': 13, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			{'time': 13, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
 		]
 	},
 	{
 		'name': '11',
 		"id": 11,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 3, # 本关路线数（和场景里 Path2D 的数量对应）
+		'hintRoutes': [3], # 路线3 = 战斗飞机的空中航线，场景里没有贴图，要提示一次
 		"gemReward": 15,
 		'type': '工厂',
-		'category': '地下管廊',
-		'description': '转入地下管廊，高密度重型单位连续出现',
+		'category': '_Level11Category',
+		'description': '_Level11Description',
 		'wave': 14,
 		'health': 10,
 		'money': 500,
@@ -675,17 +748,26 @@ var allStage = [
 			{'time': 13, 'type': Game.enemyType.heavyTank, 'number': 4, 'route': 1},
 			{'time': 13, 'type': Game.enemyType.heavyTank, 'number': 3, 'route': 2},
 			{'time': 14, 'type': Game.enemyType.attackHelicopter, 'number': 3, 'route': 1},
-			{'time': 14, 'type': Game.enemyType.attackHelicopter, 'number': 2, 'route': 2}
+			{'time': 14, 'type': Game.enemyType.attackHelicopter, 'number': 2, 'route': 2},
+			# ── 第 13 波：实验坦克 + 战斗飞机 ──
+			{'time': 13, 'type': Game.enemyType.battlePlane, 'number': 6, 'route': 3},
+			{'time': 13, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			{'time': 13, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
+			# ── 第 14 波：实验坦克 + 战斗飞机 ──
+			{'time': 14, 'type': Game.enemyType.battlePlane, 'number': 6, 'route': 3},
+			{'time': 14, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			{'time': 14, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
 		]
 	},
 	{
 		'name': '12',
 		"id": 12,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 3, # 本关路线数（和场景里 Path2D 的数量对应）
+		'hintRoutes': [3], # 路线3 = 战斗飞机的空中航线，场景里没有贴图，要提示一次
 		"gemReward": 16,
 		'type': '工厂',
-		'category': '动力机房',
-		'description': '动力机房内多类型复合波次持续不断',
+		'category': '_Level12Category',
+		'description': '_Level12Description',
 		'wave': 15,
 		'health': 9,
 		'money': 550,
@@ -736,17 +818,28 @@ var allStage = [
 			{'time': 14, 'type': Game.enemyType.missileTruck, 'number': 3, 'route': 1},
 			{'time': 14, 'type': Game.enemyType.missileTruck, 'number': 3, 'route': 2},
 			{'time': 15, 'type': Game.enemyType.attackHelicopter, 'number': 3, 'route': 1},
-			{'time': 15, 'type': Game.enemyType.attackHelicopter, 'number': 3, 'route': 2}
+			{'time': 15, 'type': Game.enemyType.attackHelicopter, 'number': 3, 'route': 2},
+			# ── 第 13 波：战斗飞机 ──
+			{'time': 13, 'type': Game.enemyType.battlePlane, 'number': 5, 'route': 3},
+			# ── 第 14 波：实验坦克 + 战斗飞机 ──
+			{'time': 14, 'type': Game.enemyType.battlePlane, 'number': 5, 'route': 3},
+			{'time': 14, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			{'time': 14, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
+			# ── 第 15 波：实验坦克 + 战斗飞机 ──
+			{'time': 15, 'type': Game.enemyType.battlePlane, 'number': 5, 'route': 3},
+			{'time': 15, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			{'time': 15, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
 		]
 	},
 	{
 		'name': '13',
 		"id": 13,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 3, # 本关路线数（和场景里 Path2D 的数量对应）
+		'hintRoutes': [3], # 路线3 = 战斗飞机的空中航线，场景里没有贴图，要提示一次
 		"gemReward": 17,
 		'type': '工厂',
-		'category': '自动化仓储',
-		'description': '自动化仓储，远程火力与重型单位同步增强',
+		'category': '_Level13Category',
+		'description': '_Level13Description',
 		'wave': 16,
 		'health': 9,
 		'money': 600,
@@ -799,17 +892,28 @@ var allStage = [
 			{'time': 15, 'type': Game.enemyType.mediumTank, 'number': 6, 'route': 1},
 			{'time': 15, 'type': Game.enemyType.mediumTank, 'number': 6, 'route': 2},
 			{'time': 16, 'type': Game.enemyType.missileTruck, 'number': 4, 'route': 1},
-			{'time': 16, 'type': Game.enemyType.missileTruck, 'number': 4, 'route': 2}
+			{'time': 16, 'type': Game.enemyType.missileTruck, 'number': 4, 'route': 2},
+			# ── 第 14 波：战斗飞机 ──
+			{'time': 14, 'type': Game.enemyType.battlePlane, 'number': 6, 'route': 3},
+			# ── 第 15 波：实验坦克 + 战斗飞机 ──
+			{'time': 15, 'type': Game.enemyType.battlePlane, 'number': 6, 'route': 3},
+			{'time': 15, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			{'time': 15, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
+			# ── 第 16 波：实验坦克 + 战斗飞机 ──
+			{'time': 16, 'type': Game.enemyType.battlePlane, 'number': 6, 'route': 3},
+			{'time': 16, 'type': Game.enemyType.experimentalTank, 'number': 2, 'route': 1},
+			{'time': 16, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
 		]
 	},
 	{
 		'name': '14',
 		"id": 14,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 3, # 本关路线数（和场景里 Path2D 的数量对应）
+		'hintRoutes': [3], # 路线3 = 战斗飞机的空中航线，场景里没有贴图，要提示一次
 		"gemReward": 18,
 		'type': '工厂',
-		'category': '核心装配线',
-		'description': '核心装配线，高数量、高强度的综合防守',
+		'category': '_Level14Category',
+		'description': '_Level14Description',
 		'wave': 17,
 		'health': 8,
 		'money': 650,
@@ -864,17 +968,28 @@ var allStage = [
 			{'time': 16, 'type': Game.enemyType.missileTruck, 'number': 5, 'route': 1},
 			{'time': 16, 'type': Game.enemyType.missileTruck, 'number': 4, 'route': 2},
 			{'time': 17, 'type': Game.enemyType.heavyTank, 'number': 6, 'route': 1},
-			{'time': 17, 'type': Game.enemyType.heavyTank, 'number': 5, 'route': 2}
+			{'time': 17, 'type': Game.enemyType.heavyTank, 'number': 5, 'route': 2},
+			# ── 第 15 波：战斗飞机 ──
+			{'time': 15, 'type': Game.enemyType.battlePlane, 'number': 6, 'route': 3},
+			# ── 第 16 波：实验坦克 + 战斗飞机 ──
+			{'time': 16, 'type': Game.enemyType.battlePlane, 'number': 6, 'route': 3},
+			{'time': 16, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			{'time': 16, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
+			# ── 第 17 波：实验坦克 + 战斗飞机 ──
+			{'time': 17, 'type': Game.enemyType.battlePlane, 'number': 6, 'route': 3},
+			{'time': 17, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			{'time': 17, 'type': Game.enemyType.experimentalTank, 'number': 2, 'route': 2},
 		]
 	},
 	{
 		'name': '15',
 		"id": 15,
-		'routes': 2,   # 本关路线数（和场景里 Path2D 的数量对应）
+		'routes': 3, # 本关路线数（和场景里 Path2D 的数量对应）
+		'hintRoutes': [3], # 路线3 = 战斗飞机的空中航线，场景里没有贴图，要提示一次
 		"gemReward": 20,
 		'type': '工厂',
-		'category': '工厂核心',
-		'description': '工厂核心，最终关卡，迎接最大规模的敌群',
+		'category': '_Level15Category',
+		'description': '_Level15Description',
 		'wave': 18,
 		'health': 8,
 		'money': 720,
@@ -931,7 +1046,17 @@ var allStage = [
 			{'time': 17, 'type': Game.enemyType.suicideTruck, 'number': 6, 'route': 1},
 			{'time': 17, 'type': Game.enemyType.suicideTruck, 'number': 6, 'route': 2},
 			{'time': 18, 'type': Game.enemyType.heavyTank, 'number': 7, 'route': 1},
-			{'time': 18, 'type': Game.enemyType.heavyTank, 'number': 7, 'route': 2}
+			{'time': 18, 'type': Game.enemyType.heavyTank, 'number': 7, 'route': 2},
+			# ── 第 16 波：战斗飞机 ──
+			{'time': 16, 'type': Game.enemyType.battlePlane, 'number': 7, 'route': 3},
+			# ── 第 17 波：实验坦克 + 战斗飞机 ──
+			{'time': 17, 'type': Game.enemyType.battlePlane, 'number': 7, 'route': 3},
+			{'time': 17, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 1},
+			{'time': 17, 'type': Game.enemyType.experimentalTank, 'number': 1, 'route': 2},
+			# ── 第 18 波：实验坦克 + 战斗飞机 ──
+			{'time': 18, 'type': Game.enemyType.battlePlane, 'number': 7, 'route': 3},
+			{'time': 18, 'type': Game.enemyType.experimentalTank, 'number': 2, 'route': 1},
+			{'time': 18, 'type': Game.enemyType.experimentalTank, 'number': 2, 'route': 2},
 		]
 	},
 ]
@@ -946,5 +1071,7 @@ var enemyScenes = {
 	Game.enemyType.suicideTruck: preload("res://scene/enemy/suicide_truck.tscn"),
 	Game.enemyType.missileTruck: preload("res://scene/enemy/missile_truck.tscn"),
 	Game.enemyType.scoutDrone: preload("res://scene/enemy/scout_drone.tscn"),
-	Game.enemyType.attackHelicopter: preload("res://scene/enemy/attack_helicopter.tscn")
+	Game.enemyType.attackHelicopter: preload("res://scene/enemy/attack_helicopter.tscn"),
+	Game.enemyType.battlePlane: preload("res://scene/enemy/battle_plane.tscn"),
+	Game.enemyType.experimentalTank: preload("res://scene/enemy/experimental_tank.tscn")
 }

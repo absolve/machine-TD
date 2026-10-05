@@ -1,16 +1,17 @@
 [gd_scene format=3 uid="uid://dev1wi4vmspkd"]
 
 [ext_resource type="Script" uid="uid://bhicoyhuywngs" path="res://script/ui/battle_start_banner.gd" id="1_banner"]
+[ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_iwtix"]
 [ext_resource type="PackedScene" path="res://scene/ui/hazard_strip.tscn" id="2_hazard"]
 [ext_resource type="Shader" uid="uid://uedb3knxh6uv" path="res://shader/hazard_scroll.gdshader" id="3_xtggc"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_iwtix"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xtggc"]
 resource_local_to_scene = true
 shader = ExtResource("3_xtggc")
 shader_parameter/speed = 0.12
 shader_parameter/alpha = 1.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_eiy48"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iwtix"]
 resource_local_to_scene = true
 shader = ExtResource("3_xtggc")
 shader_parameter/speed = 0.12
@@ -26,6 +27,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = ExtResource("1_iwtix")
 script = ExtResource("1_banner")
 
 [node name="center" type="CenterContainer" parent="." unique_id=513900205]
@@ -53,7 +55,7 @@ mouse_filter = 2
 color = Color(0.05882353, 0.07450981, 0.101960786, 0.86)
 
 [node name="hazardTop" parent="center/band" unique_id=2145099868 instance=ExtResource("2_hazard")]
-material = SubResource("ShaderMaterial_iwtix")
+material = SubResource("ShaderMaterial_xtggc")
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -62,7 +64,7 @@ offset_bottom = 20.0
 grow_horizontal = 2
 
 [node name="hazardBottom" parent="center/band" unique_id=831463168 instance=ExtResource("2_hazard")]
-material = SubResource("ShaderMaterial_eiy48")
+material = SubResource("ShaderMaterial_iwtix")
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -104,6 +106,4 @@ theme_override_colors/font_color = Color(0.8980392, 0.92941177, 0.9607843, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 36
-text = "Enemies incoming"
 horizontal_alignment = 1

@@ -17,6 +17,7 @@ collision_mask = 4
 script = ExtResource("1_h08p8")
 
 [node name="base" type="AnimatedSprite2D" parent="." unique_id=1108324432]
+autoplay = "default"
 material = SubResource("ShaderMaterial_hitflash")
 z_index = -1
 
@@ -28,6 +29,8 @@ collision_layer = 0
 [node name="turret" type="AnimatedSprite2D" parent="." unique_id=108539921]
 material = SubResource("ShaderMaterial_hitflash")
 z_index = -1
+
+[node name="Muzzle" type="Marker2D" parent="turret"]
 
 [node name="shape" type="CollisionShape2D" parent="." unique_id=359688443]
 

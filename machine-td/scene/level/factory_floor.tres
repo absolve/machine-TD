@@ -1,7 +1,7 @@
 [gd_resource type="TileSet" format=3 uid="uid://dt5a3lb1rlxgu"]
 
 [ext_resource type="Texture2D" uid="uid://4qs2xu0gaptj" path="res://sprite/tile/floor_base.png" id="1_floor_base"]
-[ext_resource type="Texture2D" uid="uid://pm0p2gq0jjc6" path="res://sprite/tile/floor_vent.png" id="2_floor_vent"]
+[ext_resource type="Texture2D" uid="uid://bwjxipbn0k5bx" path="res://sprite/tile/floor_vent.png" id="2_floor_vent"]
 [ext_resource type="Texture2D" uid="uid://gbc4ciypk51b" path="res://sprite/tile/floor_drain.png" id="3_floor_drain"]
 [ext_resource type="Texture2D" uid="uid://dubymobw4ku6h" path="res://sprite/tile/floor_bolt.png" id="4_floor_bolt"]
 [ext_resource type="Texture2D" uid="uid://c7n5of77b34fn" path="res://sprite/tile/floor_tread.png" id="5_floor_tread"]
@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://b5fts72tay0kn" path="res://sprite/tile/floor_stain.png" id="9_floor_stain"]
 [ext_resource type="Texture2D" uid="uid://b00lwwk1g4odc" path="res://sprite/tile/floor_crack.png" id="10_floor_crack"]
 [ext_resource type="Texture2D" uid="uid://bhuc1eggg1obc" path="res://sprite/tile/floor_hazard.png" id="11_floor_hazard"]
-[ext_resource type="Texture2D" uid="uid://utaru6ia0wse" path="res://sprite/tile/floor_slot.png" id="12_floor_slot"]
+[ext_resource type="Texture2D" uid="uid://bvafk3y1nb0p1" path="res://sprite/tile/floor_slot.png" id="12_floor_slot"]
 [ext_resource type="Texture2D" uid="uid://b88b5nqehl6ul" path="res://sprite/tile/belt_we.png" id="13_belt_we"]
 [ext_resource type="Texture2D" uid="uid://t7gsibgb1jye" path="res://sprite/tile/belt_ew.png" id="14_belt_ew"]
 [ext_resource type="Texture2D" uid="uid://b132qjqie0kty" path="res://sprite/tile/belt_ns.png" id="15_belt_ns"]

@@ -59,6 +59,7 @@ script = ExtResource("2_tc0i1")
 type = 1003
 
 [node name="shape" parent="." index="0" unique_id=1958475246]
+visible = false
 shape = SubResource("RectangleShape2D_3c4u4")
 
 [node name="base" parent="." index="1" unique_id=1580788916]

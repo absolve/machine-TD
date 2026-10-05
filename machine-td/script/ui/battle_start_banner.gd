@@ -2,8 +2,8 @@ extends Control
 ## 战斗开始横幅：关卡初次开打时闪一下「游戏开始 / 敌人即将到来」，然后自己消失。
 ##
 ## 独立场景，不依赖 map —— 谁想用就 `play()` 一下：
-##     banner.play()                       # 用默认文案
-##     banner.play("Game Start", "3 秒后开战")   # 或自己给文字
+##     banner.play() # 用默认文案
+##     banner.play("Game Start", "3 秒后开战") # 或自己给文字
 ##
 ## 动画分三段：淡入 + 从 0.86 放大到 1 → 停住 → 淡出 + 上移。放完自动 hide 并发 finished。
 ##

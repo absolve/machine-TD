@@ -70,3 +70,9 @@ custom_minimum_size = Vector2(220, 54)
 layout_mode = 2
 text = "_Main_Menu"
 click_sound = 1
+
+[node name="btnGiveUp" parent="PanelContainer/VBoxContainer/buttons" unique_id=1242211186 instance=ExtResource("3_button")]
+custom_minimum_size = Vector2(220, 54)
+layout_mode = 2
+text = "_EndlessGiveUp"
+click_sound = 1

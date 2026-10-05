@@ -3,6 +3,9 @@ extends "res://script/enemy/enemy.gd"
 # 攻击直升机：空中对抗型敌人
 
 var bullet: PackedScene = preload("res://scene/bullet/enemy_bullet.tscn")
+const ROTOR_SPIN_SPEED: float = 18.0
+
+@onready var rotor: Sprite2D = $Rotor
 
 
 func _ready() -> void:
@@ -10,8 +13,8 @@ func _ready() -> void:
 	setupEnemyInfo()
 
 
-func fire(target: Node2D) -> void:
-	if not is_instance_valid(target):
+func fire(towerTarget: Node2D) -> void:
+	if not is_instance_valid(towerTarget):
 		return
 	if canShot:
 		canShot = false
@@ -21,9 +24,9 @@ func fire(target: Node2D) -> void:
 		var muzzle: Vector2 = getMuzzlePosition()
 		b.global_position = muzzle
 		# 瞄着目标发射，而不是顺着炮塔当时的朝向（炮塔没转到位时那会打偏）
-		b.angle = (target.global_position - muzzle).angle()
+		b.angle = (towerTarget.global_position - muzzle).angle()
 		b.damage = atk
-		b.target = target
+		b.target = towerTarget
 		Game.addObj(b)
 		# 开火音：每个敌人一种，带音高抖动，连射时不会听着像复读
 		SoundManage.playAt("mg_fire_b", muzzle, -8.0, randf_range(0.94, 1.08))
@@ -42,3 +45,7 @@ func _physics_process(delta: float) -> void:
 	var temp = pickTarget()
 	if temp != null and aimAt(temp, delta):
 		fire(temp)
+
+
+func _process(delta: float) -> void:
+	rotor.rotation = wrapf(rotor.rotation + ROTOR_SPIN_SPEED * delta, 0.0, TAU)

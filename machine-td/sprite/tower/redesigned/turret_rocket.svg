@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="64" viewBox="0 0 80 64" shape-rendering="crispEdges">
+  <g stroke="#1A1C2C" stroke-linejoin="miter">
+    <path d="M13 15H68L77 22V42L68 49H13L9 45V19Z" fill="#1A1C2C" stroke-width="2"/>
+    <path d="M15 18H67L73 23V41L67 46H15L12 43V21Z" fill="#5E7A8C" stroke-width="1.5"/>
+    <path d="M17 19H65L70 23V25H17Z" fill="#A8C0CE" stroke-width="1"/>
+    <path d="M17 39H70V41L65 45H17Z" fill="#566C86" stroke-width="1"/>
+
+    <path d="M20 24H68V40H20Z" fill="#1A1C2C" stroke-width="1.5"/>
+    <path d="M22 26H64V28H22Z" fill="#A8C0CE" stroke="none"/>
+    <path d="M22 29H64V35H22Z" fill="#333C57" stroke="none"/>
+    <path d="M22 36H64V38H22Z" fill="#5E7A8C" stroke="none"/>
+    <path d="M65 23H73V41H65Z" fill="#333C57" stroke-width="1.2"/>
+    <path d="M68 27H73V37H68Z" fill="#1A1C2C" stroke="none"/>
+    <path d="M69 28H72V36H69Z" fill="#7590A4" stroke="none"/>
+
+    <path d="M16 22H20V29H16ZM16 35H20V42H16Z" fill="#333C57" stroke-width="0.8"/>
+    <path d="M17 23H19V28H17ZM17 36H19V41H17Z" fill="#FFC61A" stroke="none"/>
+    <path d="M25 19H34V21H25ZM55 43H64V45H55Z" fill="#DCEAF2" stroke="none"/>
+    <path d="M24 17H31V19H24ZM58 45H65V47H58Z" fill="#DCEAF2" stroke="none"/>
+    <path d="M12 27H15V37H12Z" fill="#94B0C2" stroke-width="0.8"/>
+    <path d="M11 28H13V36H11Z" fill="#FFC61A" stroke="none"/>
+  </g>
+</svg>
