@@ -3,6 +3,11 @@ extends Node2D
 ## 无尽模式的关卡场景（与 15 个关卡平级，见 endless_mode_design.md）
 const ENDLESS_LEVEL_SCENE := "res://scene/level/endless.tscn"
 
+## 教程关的关卡 id（StageData.allStage 里 'id': 0 那条）
+const TUTORIAL_STAGE_ID := 0
+## 教程关的新手引导（**只有教程关**会实例化它，见 _setupTutorialGuide）
+const TUTORIAL_GUIDE_SCENE := "res://scene/tutorial_guide.tscn"
+
 ## 无尽结算要写进结算面板的那行文字（普通关卡用不到，一直是空串）
 var _endlessStatsText: String = ""
 
@@ -24,6 +29,9 @@ var _endlessStatsText: String = ""
 @onready var achievementTracker = $AchievementTracker
 @onready var abilityBar = $Hud/abilityBar
 @onready var customCamera = $CustomCamera
+
+## 教程关的新手引导实例（非教程关一直是 null）
+var tutorialGuide: Node = null
 
 var level
 var gunTower = preload("res://scene/tower/machineGunTower.tscn")
@@ -113,6 +121,8 @@ func _ready():
 	showLevelIntro()
 	# 按关卡配置启用能力技能
 	setupAbilities()
+	# 教程关的新手引导（单独场景，只有教程关会实例化；情报弹窗关掉后才现身）
+	_setupTutorialGuide()
 
 ## 本关是否已经开打过。只有第一次点开始才闪横幅，暂停后继续不闪
 var _battleStarted: bool = false
@@ -127,6 +137,55 @@ func setupAbilities() -> void:
 	AbilityManager.beginBattle(abilityIds)
 	if abilityBar:
 		abilityBar.setup(abilityIds)
+
+
+## ── 教程关的新手引导 ──
+## 单独一个场景（scene/tutorial_guide.tscn），**只有教程关**会实例化它：
+## 其它关卡连这个场景都不会被加载，所以普通关卡的逻辑一行都不用改。
+##
+## ⚠️ 必须在 setupAbilities() **之后**调用 —— 引导要检查技能条里有没有技能槽
+##   （宝石不够时它会自动省掉“放技能”那一步，免得玩家卡在一个做不完的任务上）。
+func _setupTutorialGuide() -> void:
+	if Game.endlessMode or int(stageData.get("id", -1)) != TUTORIAL_STAGE_ID:
+		return
+	var scene: PackedScene = load(TUTORIAL_GUIDE_SCENE)
+	if scene == null:
+		push_error("加载教程引导失败: " + TUTORIAL_GUIDE_SCENE)
+		return
+	var layer: Node = scene.instantiate()
+	add_child(layer)
+	# ⚠️ 引导场景的根是 **CanvasLayer**（它负责“永远画在相机之上、不吃相机变换”），
+	#    脚本挂在它里面那层 Root 控件上 —— CanvasLayer 既没有 size 也没有 _draw，
+	#    遮罩必须由 Control 来画。所以这里要往里找一层，**不能**对着根节点调 setup()。
+	tutorialGuide = _find_guide_root(layer)
+	if tutorialGuide == null:
+		push_error("教程引导场景结构不对：找不到带 setup() 的节点")
+		return
+	tutorialGuide.setup(self)
+	# 关卡情报弹窗还开着就先等它关（_onIntroClosed 会接力 start()）；
+	# 没有弹窗的关卡（理论上教程有，但别赌）就直接开始。
+	if levelIntroPanel == null or not levelIntroPanel.visible:
+		_startTutorialGuide()
+
+
+## 找到引导场景里“带脚本的那一层”（根自己带脚本就返回根；否则找第一层子节点）。
+## 不写死节点名，改名也不会悄悄坏掉 —— 找不到才报错。
+func _find_guide_root(node: Node) -> Node:
+	if node == null:
+		return null
+	if node.has_method("setup"):
+		return node
+	for child in node.get_children():
+		if child.has_method("setup"):
+			return child
+	return null
+
+
+## 开始（或接力开始）教程引导。重复调用是安全的 —— 引导自己会去重。
+func _startTutorialGuide() -> void:
+	if tutorialGuide != null:
+		tutorialGuide.start()
+
 
 func showLevelIntro() -> void:
 	# 无尽模式：用同一个情报面板，但内容是"规则 + 最高记录"（不读关卡数据）
@@ -146,6 +205,8 @@ func showLevelIntro() -> void:
 # 情报关闭后提示玩家开战，避免首屏直接进入战斗。
 func _onIntroClosed() -> void:
 	titleNode.promptStart()
+	# 教程关：情报读完就该现身了（此刻地图已经建好、技能条也已就位）
+	_startTutorialGuide()
 	
 func loadLevel():
 	# 无尽模式：不走 allStage 查表，直接加载独立关卡场景

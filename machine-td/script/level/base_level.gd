@@ -94,6 +94,14 @@ var _spawnLane: Dictionary = {}
 
 func _ready() -> void:
 	Game.selectTower.connect(selectTower)
+	# ⚠️ 两个 Timer 的 timeout **是在关卡场景里连的**（base_level.tscn 里没有连接）。
+	#    场景漏连的表现是：`waveTimer.start()` 之后没有任何回调 —— 进关后**一个敌人都不出**，
+	#    也不报错、不卡顿，非常难查（无尽模式的 endless.tscn 就漏了这两行）。
+	#    这里补一道代码兜底：没连就自己连上；15 个关卡场景已经连过，is_connected 会跳过。
+	if not waveTimer.timeout.is_connected(_onWaveTimerTimeout):
+		waveTimer.timeout.connect(_onWaveTimerTimeout)
+	if not spawnerTimer.timeout.is_connected(_onSpawnerTimerTimeout):
+		spawnerTimer.timeout.connect(_onSpawnerTimerTimeout)
 	_collectRoutes()
 	for i in StageData.allStage:
 		if levelId == i.get("id"):

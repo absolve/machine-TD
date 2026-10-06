@@ -31,6 +31,9 @@ const DELAY_SCALE_STEP: float = 0.015 # 每波出怪间隔 ×(1-1.5%)
 const DELAY_SCALE_MIN: float = 0.45 # 出怪间隔缩放下限
 const BOSS_INTERVAL: int = 5 # 每 5 波一个"高潮波"（数量 ×1.2）
 const AIR_ROUTE: int = 3 # 空中航线 = 路线3
+## 地图上应有的路线条数（路线1/2＝两条并排地面带子，路线3＝空中航线）。
+## 摆缺了的话 getRoute() 会「回落到最后一条」，敌人全挤在一条路上 —— 见 _ready 的警告。
+const ROUTE_TOTAL: int = 3
 
 ## 兵种解锁波次（设计文档 §5.1）
 const UNLOCK: Array = [
@@ -102,6 +105,12 @@ func _ready() -> void:
 	money = ENDLESS_MONEY
 	# 空中航线也要提示（地面两条都铺了带子，玩家一眼看得出走向）
 	hintRoutes = [AIR_ROUTE]
+	# 路线摆缺了要立刻看得见：getRoute() 越界时会回落到最后一条路线，
+	# 于是「三条路线的编制」全挤在一条路上出（表现＝只有一条路线出兵），
+	# 而且不报错。这里直接吼一声，别再靠猜。
+	if get_route_count() < ROUTE_TOTAL:
+		push_warning("无尽地图只摆了 %d 条路线（应有 %d 条：2 条地面带子 + 1 条空中航线），敌人会挤在同一条路上"
+			% [get_route_count(), ROUTE_TOTAL])
 	# 地图上还没有 placeableArea 实例时，先用代码给出可建造格，
 	# 免得"进得去但没地方建塔"。M2 摆好真实塔位后这段自动不生效。
 	if allowArea.is_empty():
@@ -193,20 +202,77 @@ func _build_wave_spawner(waveNo: int) -> Array:
 		if not progressed:
 			break
 
-	# 生成记录：地面兵种**两条带子各一半**（保证两条路都不断人），空中兵种走路线3
-	var rows: Array = []
+	# ── 生成记录：**每条路线同时出兵** ──
+	## 分兵规则：地面兵种两条带子各一半（奇数余 1 个给路线1），空中兵种走路线3。
+	##
+	## ⚠️ 上一版是"先把路线1的兵全部排完，再排路线2" —— 而生成队列是**先进先出、
+	##    一次只放队首那一个**（见 base_level.gd::_onSpawnerTimerTimeout），
+	##    结果整波的前半段只有路线1出兵、后半段只有路线2，玩家看到的是
+	##    "一次只出一条路线的敌人"（"两条带子始终都有敌人"的设计意图没落地）。
+	##    现在改成：先把每个兵种拆进各条路线的队列，再**按比例交织**成一条队列，
+	##    几条路线从第一秒起就同时进人。
+	var lanes: Dictionary = {}
+	lanes[1] = []
+	lanes[2] = []
+	lanes[AIR_ROUTE] = []
 	for t in active:
 		var count: int = int(counts[t])
 		if count <= 0:
 			continue
 		if t in AIR_TYPES:
-			rows.append({"time": waveNo, "type": t, "number": count, "route": AIR_ROUTE})
+			for _i in count:
+				lanes[AIR_ROUTE].append(t)
 			continue
-		var half: int = int(floor(float(count) / 2.0))
-		if half > 0:
-			rows.append({"time": waveNo, "type": t, "number": half, "route": 1})
-		if count - half > 0:
-			rows.append({"time": waveNo, "type": t, "number": count - half, "route": 2})
+		# 奇数余 1 个给路线1（与 endless_mode_design.md §5.2 的写法一致）
+		var half: int = int(ceil(float(count) / 2.0))
+		for _i in half:
+			lanes[1].append(t)
+		for _i in count - half:
+			lanes[2].append(t)
+
+	# 交织：每一拍挑**进度最落后**的那条路线（进度 = 该路线已出场数 / 该路线总数）。
+	# 这是按比例合并多路流水的标准做法：
+	#   · 两条带子数量相等 → 严格 1、2、1、2 交替，两列纵队同时推进；
+	#   · 数量悬殊（比如 16 : 2）→ 小股的那条也会被均匀撒在整波里，
+	#     而不是"挤在某一段"或"末尾才出现"。
+	# 空中航线同样按这个比例插进去，所以飞机是穿插登场、不是最后一波全上。
+	var laneList: Array = []
+	for routeNo in [1, 2, AIR_ROUTE]:
+		var items: Array = lanes[routeNo]
+		if not items.is_empty():
+			laneList.append({"route": int(routeNo), "items": items, "i": 0})
+
+	var totalSpawn: int = 0
+	for lane in laneList:
+		totalSpawn += (lane["items"] as Array).size()
+
+	var rows: Array = []
+	for _k in totalSpawn:
+		var best: Dictionary = {}
+		var bestProgress: float = 2.0
+		for lane in laneList:
+			var items: Array = lane["items"]
+			var idx: int = int(lane["i"])
+			if idx >= items.size():
+				continue
+			var progress: float = float(idx) / float(items.size())
+			if progress < bestProgress - 0.000001:
+				bestProgress = progress
+				best = lane
+		if best.is_empty():
+			break
+		var spawnType = (best["items"] as Array)[int(best["i"])]
+		best["i"] = int(best["i"]) + 1
+		# 相邻的"同路线 + 同兵种"合并成一条记录（出怪间隔查表按兵种走，行为完全一致）
+		var appended: bool = false
+		if not rows.is_empty():
+			var last: Dictionary = rows[rows.size() - 1]
+			if int(last.get("route", 0)) == int(best["route"]) and last.get("type") == spawnType:
+				last["number"] = int(last["number"]) + 1
+				appended = true
+		if not appended:
+			rows.append({"time": waveNo, "type": spawnType, "number": 1,
+				"route": int(best["route"])})
 	return rows
 
 

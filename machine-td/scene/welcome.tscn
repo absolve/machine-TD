@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://cmoo2h1nvyyws" path="res://scene/setting.tscn" id="9_vvofi"]
 [ext_resource type="Shader" uid="uid://ch8wag47374oa" path="res://shader/achievement_glow.gdshader" id="10_glow"]
 [ext_resource type="PackedScene" uid="uid://cq5ajf7h5g7lc" path="res://scene/achievement_panel.tscn" id="11_achv"]
+[ext_resource type="Texture2D" uid="uid://daemu480mter0" path="res://sprite/target-inverted.png" id="11_k3eee"]
 [ext_resource type="PackedScene" path="res://scene/ui/title_logo.tscn" id="12_title"]
 [ext_resource type="Texture2D" uid="uid://cyiyyjhafyov3" path="res://sprite/image.png" id="12_vvs3e"]
 [ext_resource type="PackedScene" path="res://scene/ui/hazard_strip.tscn" id="13_hazard"]
@@ -140,7 +141,7 @@ theme_override_colors/icon_focus_color = Color(0.6, 0.86, 1, 1)
 theme_override_colors/icon_pressed_color = Color(0.44, 0.68, 0.85, 1)
 theme_override_colors/icon_hover_color = Color(0.78, 0.94, 1, 1)
 text = "_Endless"
-icon = ExtResource("6_xdjj8")
+icon = ExtResource("11_k3eee")
 
 [node name="setting" parent="Ui/HBoxContainer" unique_id=1284130239 instance=ExtResource("5_si833")]
 layout_mode = 2

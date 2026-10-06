@@ -18,7 +18,7 @@ const CROP := Rect2i(160, 315, 1600, 450)
 # ---- 危险条纹带（独立资源，供滚动着色器用）----
 # 条纹周期 = 2 * STRIPE_W，所以宽度取它的整数倍就横向无缝
 const STRIPE_W := 34.0
-const STRIP_W := 272          # = 8 * STRIPE_W
+const STRIP_W := 272 # = 8 * STRIPE_W
 const STRIP_H := 22
 
 # ---- 备选：整张卡片 ----

@@ -133,8 +133,8 @@ const towerInfo = {
 	"cost": 30,
 	"reload": 1.0,
 	"scope": 0,
-	"hp": 400,
-	"maxHp": 400,
+	"hp": 500,
+	"maxHp": 500,
 	"initTime": 1.0,
 	"desc": "_ironBoxDesc",
 	"gridSize": Vector2i(1, 1)
