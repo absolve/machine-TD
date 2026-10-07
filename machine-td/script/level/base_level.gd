@@ -310,26 +310,40 @@ func _spawnEnemy(spawnInfo: Dictionary):
 	if scene == null:
 		push_error("未配置敌人场景: type=" + str(spawnInfo.get("type")))
 		return
-	var enemyInstance = scene.instantiate()
-	route.add_child(enemyInstance)
+
+	# ── 两层结构：外层 PathFollow2D 走路线，内层敌人场景管自身表现 ──
+	#
+	# ★ 为什么包裹层放在这里建、而不是写进每个敌人场景：
+	#   以前每个敌人场景的根是一个 PathFollow2D，里面再嵌一个 enemy.tscn 实例，
+	#   敌人的贴图/炮塔位置靠**覆写嵌套实例的子节点**来配。这种"嵌套场景覆写"
+	#   在导出成 .pck 后会被 Godot 丢掉 —— 导出版里 AnimatedSprite2D.sprite_frames
+	#   全变成 null，敌人就整个看不见了。
+	#   现在敌人场景直接以 enemy.tscn 为根（覆写自己的一级子节点，导出正常），
+	#   包裹用的 PathFollow2D 改由这里在运行时创建。
+	#   顺带好处：敌人场景之间结构完全一致，不用再各自写一遍包裹层。
+	#
+	# 各敌人脚本里 `parent = get_parent()` 拿到的仍然是这个 PathFollow2D
+	# （敌人实例就是它的直接子节点），推进 progress 的逻辑一行都不用改。
+	var follower: PathFollow2D = PathFollow2D.new()
+	follower.loop = false
 	# 偏移：让同一路线上的敌人散开、不叠在一起（详见 _resolve_offset）。
 	# 用 PathFollow2D 的 v_offset 实现，所以它是**固定侧向位移**、跟着曲线拐弯，
 	# 不是随机抖动。必须在 add_child 之后设 —— PathFollow2D 要拿到父级 Path2D
 	# 才会重算位置。
-	# 方向约定：正 = 行进方向的右侧，靠敌人根节点 rotates = true（默认）得来；
-	# 以后若把某个敌人的 PathFollow2D 改成 rotates = false，h/v_offset 会退化成
-	# 世界坐标偏移，那时得改用别的做法。
-	var offset: float = _resolveOffset(spawnInfo)
-	var follower: PathFollow2D = enemyInstance as PathFollow2D
-	if follower != null:
-		follower.v_offset = offset
-	elif not is_zero_approx(offset):
-		push_warning("敌人场景根节点不是 PathFollow2D，'offset' 无法生效: " + str(scene.resource_path))
-	var enemyNode = enemyInstance.get_node_or_null("Enemy")
+	# 方向约定：正 = 行进方向的右侧，靠 PathFollow2D.rotates = true（默认）得来；
+	# 以后若把这里改成 rotates = false，h/v_offset 会退化成世界坐标偏移，
+	# 那时得改用别的做法。
+	follower.v_offset = _resolveOffset(spawnInfo)
+	route.add_child(follower)
+
+	var enemyNode = scene.instantiate()
 	if enemyNode == null:
-		push_error("敌人场景缺少 enemy 节点: " + str(scene.resource_path))
-		enemyInstance.queue_free()
+		push_error("敌人场景实例化失败: " + str(scene.resource_path))
+		follower.queue_free()
 		return
+	follower.add_child(enemyNode)
+
+	# 路径点交给敌人自身（用于瞄准/朝向；移动仍由上面的 follower 驱动）
 	enemyNode.points = route.curve.get_baked_points()
 	# 走的是数据里标了"需要提示"的航线（空中航线，场景里看不见）→ 先画一遍提醒玩家
 	var routeNo: int = routes.find(route) + 1

@@ -28,8 +28,8 @@ _data = {
 [sub_resource type="Curve2D" id="Curve2D_r3_13"]
 _data = {
 "points": PackedVector2Array(0, 0, 296, 176, -64, -64, -296, -176, 224, 128, 1120, 640, -224, -128, 0, 0, 2016, 1152),
-}
 "point_count": 3
+}
 
 [node name="level13" instance=ExtResource("1_lv")]
 script = ExtResource("2_lv")

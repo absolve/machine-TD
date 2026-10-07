@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bf8vkrw335d0"]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://de1xh8lbgnoye" path="res://script/enemy/mini_tank.gd" id="2_script"]
@@ -52,30 +52,27 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(36, 26)
 
-[node name="miniTank" type="PathFollow2D" unique_id=246373235]
-loop = false
+[node name="miniTank" instance=ExtResource("1_base")]
 
-[node name="Enemy" parent="." unique_id=815407966 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 muzzleOffset = 26.0
 
-[node name="base" parent="Enemy" index="0" unique_id=1108324432]
+[node name="base" parent="." index="0" unique_id=1108324432]
 material = SubResource("ShaderMaterial_evx06")
 sprite_frames = SubResource("SpriteFrames_body")
 
-[node name="radar" parent="Enemy" index="1" unique_id=1066952876]
+[node name="radar" parent="." index="1" unique_id=1066952876]
 visible = false
 
-[node name="shape" parent="Enemy/radar" index="0" unique_id=1238677921]
+[node name="shape" parent="radar" index="0" unique_id=1238677921]
 shape = SubResource("CircleShape2D_radar")
 
-[node name="turret" parent="Enemy" index="2" unique_id=108539921]
+[node name="turret" parent="." index="2" unique_id=108539921]
 material = SubResource("ShaderMaterial_evx06")
 sprite_frames = SubResource("SpriteFrames_turret")
 offset = Vector2(6, 0)
 
-[node name="shape" parent="Enemy" index="3" unique_id=359688443]
+[node name="shape" parent="." index="3" unique_id=359688443]
 visible = false
 shape = SubResource("RectangleShape2D_body")
 
-[editable path="enemy"]

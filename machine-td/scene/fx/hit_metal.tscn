@@ -1,9 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://vq2j32a2k5h"]
 
-[ext_resource type="PackedScene" path="res://scene/fx/hit.tscn" id="1_base"]
+[ext_resource type="PackedScene" uid="uid://byg0x37n22hqm" path="res://scene/fx/hit.tscn" id="1_base"]
 
-[node name="hit_metal" instance=ExtResource("1_base")]
+[node name="hit_metal" unique_id=176674683 instance=ExtResource("1_base")]
 hitColor = Color(0.92, 0.98, 1, 1)
 hitAmount = 11
 hitScale = 0.74
-hitDuration = 0.5

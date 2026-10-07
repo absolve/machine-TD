@@ -124,6 +124,7 @@ func _ready():
 	# 教程关的新手引导（单独场景，只有教程关会实例化；情报弹窗关掉后才现身）
 	_setupTutorialGuide()
 
+
 ## 本关是否已经开打过。只有第一次点开始才闪横幅，暂停后继续不闪
 var _battleStarted: bool = false
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cl81ctkd5r2ko"]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="PackedScene" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" path="res://script/enemy/mediumTank.gd" id="2_script"]
@@ -46,25 +46,22 @@ radius = 240
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(40, 30)
 
-[node name="medium_tank" type="PathFollow2D"]
-loop = false
+[node name="medium_tank" instance=ExtResource("1_base")]
 
-[node name="Enemy" parent="." instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 1
 muzzleOffset = 29.0
 
-[node name="base" parent="Enemy" index="0"]
+[node name="base" parent="." index="0"]
 sprite_frames = SubResource("SpriteFrames_body")
 
-[node name="shape" parent="Enemy/radar" index="0"]
+[node name="shape" parent="radar" index="0"]
 shape = SubResource("CircleShape2D_radar")
 
-[node name="turret" parent="Enemy" index="2"]
+[node name="turret" parent="." index="2"]
 sprite_frames = SubResource("SpriteFrames_turret")
 offset = Vector2(6, 0)
 
-[node name="shape" parent="Enemy" index="3"]
+[node name="shape" parent="." index="3"]
 shape = SubResource("RectangleShape2D_body")
 
-[editable path="enemy"]

@@ -21,7 +21,7 @@ var tower4 = preload("res://sprite/tower/turret_emp.png")
 var tower5 = preload("res://sprite/tower/tower_tesla.png")
 var tower6 = preload("res://sprite/tower/tower_laser.png")
 var tower7 = preload("res://sprite/tower/tower_drone.png")
-var tower8 = preload("res://sprite/tower/turret_ironBox.png")
+var tower8 = preload("res://sprite/tower/turret_ironbox.png")
 
 var towerIcon = preload("res://scene/tower_icon.tscn")
 

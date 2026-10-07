@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://d26lygqytd0pn"]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://nlpg2kpom2rd" path="res://script/enemy/medic.gd" id="2_script"]
@@ -40,29 +40,26 @@ radius = 180.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(35, 28)
 
-[node name="medic" type="PathFollow2D" unique_id=769110715]
-loop = false
+[node name="medic" instance=ExtResource("1_base")]
 
-[node name="Enemy" parent="." unique_id=1335051026 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 5
 muzzleOffset = 24.0
 
-[node name="base" parent="Enemy" index="0" unique_id=1108324432]
+[node name="base" parent="." index="0" unique_id=1108324432]
 material = SubResource("ShaderMaterial_0roa5")
 sprite_frames = SubResource("SpriteFrames_body")
 
-[node name="radar" parent="Enemy" index="1" unique_id=1066952876]
+[node name="radar" parent="." index="1" unique_id=1066952876]
 collision_mask = 2
 
-[node name="shape" parent="Enemy/radar" index="0" unique_id=1238677921]
+[node name="shape" parent="radar" index="0" unique_id=1238677921]
 shape = SubResource("CircleShape2D_radar")
 
-[node name="turret" parent="Enemy" index="2" unique_id=108539921]
+[node name="turret" parent="." index="2" unique_id=108539921]
 visible = false
 material = SubResource("ShaderMaterial_0roa5")
 
-[node name="shape" parent="Enemy" index="3" unique_id=359688443]
+[node name="shape" parent="." index="3" unique_id=359688443]
 shape = SubResource("RectangleShape2D_body")
 
-[editable path="enemy"]

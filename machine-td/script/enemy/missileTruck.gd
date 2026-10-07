@@ -5,7 +5,7 @@ var bulletScene: PackedScene = preload("res://scene/bullet/enemy_missile.tscn")
 
 
 func _ready() -> void:
-	parent = get_parent()
+	parent = get_parent() as PathFollow2D
 	setupEnemyInfo()
 
 
@@ -35,7 +35,7 @@ func _physics_process(delta: float) -> void:
 	parent.progress += speed * delta
 	if parent.progress_ratio >= 1:
 		Game.enemyEscaped.emit(lossPoints)
-		owner.queue_free()
+		_freeSelf()
 	var temp = pickTarget()
 	if temp != null and aimAt(temp, delta):
 		fire(temp)

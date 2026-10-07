@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://nflp3q287fc3"]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://diw3xtwr1wxoy" path="res://script/enemy/heavyTank.gd" id="2_script"]
@@ -49,24 +49,21 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(44, 32)
 
-[node name="heavy_tank" type="PathFollow2D" unique_id=1089777153]
-loop = false
+[node name="heavy_tank" instance=ExtResource("1_base")]
 
-[node name="Enemy" parent="." unique_id=800665831 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 2
 muzzleOffset = 33.0
 
-[node name="base" parent="Enemy" index="0" unique_id=1108324432]
+[node name="base" parent="." index="0" unique_id=1108324432]
 material = SubResource("ShaderMaterial_n66hx")
 sprite_frames = SubResource("SpriteFrames_body")
 
-[node name="turret" parent="Enemy" index="2" unique_id=108539921]
+[node name="turret" parent="." index="2" unique_id=108539921]
 material = SubResource("ShaderMaterial_n66hx")
 sprite_frames = SubResource("SpriteFrames_turret")
 offset = Vector2(7, 0)
 
-[node name="shape" parent="Enemy" index="3" unique_id=359688443]
+[node name="shape" parent="." index="3" unique_id=359688443]
 shape = SubResource("RectangleShape2D_body")
 
-[editable path="Enemy"]

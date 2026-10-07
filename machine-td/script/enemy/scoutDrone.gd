@@ -9,7 +9,7 @@ const ROTOR_SPIN_SPEED: float = 22.0
 
 
 func _ready() -> void:
-	parent = get_parent()
+	parent = get_parent() as PathFollow2D
 	setupEnemyInfo()
 
 

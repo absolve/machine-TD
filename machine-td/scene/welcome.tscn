@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bsksv4xqp8slm" path="res://sprite/play-circle.png" id="7_vvofi"]
 [ext_resource type="Texture2D" uid="uid://dpriqv5u7rxvo" path="res://sprite/settings.png" id="8_vn0ct"]
 [ext_resource type="Texture2D" uid="uid://jssxjig1588u" path="res://sprite/interrogation.png" id="9_vkhmq"]
-[ext_resource type="Texture2D" uid="uid://ck56kksv5uah7" path="res://sprite/achievement_3d.png" id="9_vn0ct"]
+[ext_resource type="Texture2D" uid="uid://c5cb022ih5jj3" path="res://sprite/achievement_3d.png" id="9_vn0ct"]
 [ext_resource type="PackedScene" uid="uid://cmoo2h1nvyyws" path="res://scene/setting.tscn" id="9_vvofi"]
 [ext_resource type="Shader" uid="uid://ch8wag47374oa" path="res://shader/achievement_glow.gdshader" id="10_glow"]
 [ext_resource type="PackedScene" uid="uid://cq5ajf7h5g7lc" path="res://scene/achievement_panel.tscn" id="11_achv"]
@@ -33,20 +33,20 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lswc2"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k3eee"]
 resource_local_to_scene = true
 shader = ExtResource("5_lswc2")
 shader_parameter/shine_color = Color(1, 1, 1, 0.45)
 shader_parameter/shine_speed = 1.0
 shader_parameter/shine_size = 0.02
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_k3eee"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vvs3e"]
 resource_local_to_scene = true
 shader = ExtResource("7_k3eee")
 shader_parameter/speed = 0.12
 shader_parameter/alpha = 1.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_vvs3e"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_36tqo"]
 resource_local_to_scene = true
 shader = ExtResource("7_k3eee")
 shader_parameter/speed = 0.12
@@ -84,7 +84,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("TitleFrame_box")
 
 [node name="titleLogo" parent="Ui" unique_id=888230550 instance=ExtResource("12_title")]
-material = SubResource("ShaderMaterial_lswc2")
+material = SubResource("ShaderMaterial_k3eee")
 layout_mode = 0
 offset_left = 160.0
 offset_top = 21.0
@@ -92,7 +92,7 @@ offset_right = 1760.0
 offset_bottom = 471.0
 
 [node name="hazardTop" parent="Ui" unique_id=944989092 instance=ExtResource("13_hazard")]
-material = SubResource("ShaderMaterial_k3eee")
+material = SubResource("ShaderMaterial_vvs3e")
 layout_mode = 0
 offset_left = 280.0
 offset_top = 37.0
@@ -100,7 +100,7 @@ offset_right = 1640.0
 offset_bottom = 59.0
 
 [node name="hazardBottom" parent="Ui" unique_id=1211075920 instance=ExtResource("13_hazard")]
-material = SubResource("ShaderMaterial_vvs3e")
+material = SubResource("ShaderMaterial_36tqo")
 layout_mode = 0
 offset_left = 280.0
 offset_top = 395.0

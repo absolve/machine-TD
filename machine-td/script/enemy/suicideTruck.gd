@@ -8,7 +8,7 @@ var bombScene: PackedScene = preload("res://scene/explosion/bomb.tscn")
 
 
 func _ready() -> void:
-	parent = get_parent()
+	parent = get_parent() as PathFollow2D
 	setupEnemyInfo()
 
 func triggerSelfExplode() -> void:
@@ -25,10 +25,7 @@ func triggerSelfExplode() -> void:
 	bomb.damageType = "physical"
 	bomb.targetMask = 1 << 0 # 只命中塔 layer 1
 	Game.addObj(bomb)
-	if is_instance_valid(owner):
-		owner.queue_free()
-	else:
-		queue_free()
+	_freeSelf()
 
 func _physics_process(delta: float) -> void:
 	if points.size() == 0:

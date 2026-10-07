@@ -10,5 +10,5 @@ extends "res://script/enemy/enemy.gd"
 
 
 func _ready() -> void:
-	parent = get_parent()
+	parent = get_parent() as PathFollow2D
 	setupEnemyInfo()

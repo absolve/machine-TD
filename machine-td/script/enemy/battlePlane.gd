@@ -18,7 +18,7 @@ var bullet: PackedScene = preload("res://scene/bullet/enemy_missile.tscn")
 
 
 func _ready() -> void:
-	parent = get_parent()
+	parent = get_parent() as PathFollow2D
 	setupEnemyInfo()
 
 
@@ -45,7 +45,7 @@ func _physics_process(delta: float) -> void:
 	parent.progress += speed * delta
 	if parent.progress_ratio >= 1:
 		# 飞越结束：静静离场，**不发 enemyEscaped**（详见类文档 ②）
-		owner.queue_free()
+		_freeSelf()
 		return
 	# 取最近的**有效**目标，把炮塔转过去；到位了才开火
 	var temp = pickTarget()

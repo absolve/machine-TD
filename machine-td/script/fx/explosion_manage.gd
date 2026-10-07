@@ -73,19 +73,25 @@ const _debug_hit_pos := false
 func playHit(pos: Vector2, variant: String = "default") -> void:
 	if not HIT_VARIANTS.has(variant):
 		variant = "default"
-	var fx: Node2D = _acquireHit(variant)
+	var fx: Node2D = _acquireHit(variant, pos)
 	if fx == null:
 		return
 	if _debug_hit_pos:
 		print("[playHit] variant=%s 传入=%s 当前=%s busy=%s" % [
 			variant, str(pos), str(fx.global_position), str(fx.busy)])
-	fx.position = pos
-	fx.global_position = pos
+	# 定位**只**交给 playAt()，这里不要再单独写 fx.position / fx.global_position。
+	# 同一帧里把节点坐标改两次，中间态就可能被画出来。
 	fx.playAt(pos)
 
 
-## 取一个空闲的命中特效；池子满了就抢最早那个（永不新建超过上限）
-func _acquireHit(variant: String) -> Node2D:
+## 取一个空闲的命中特效；池子满了就抢最早那个（永不新建超过上限）。
+##
+## ★ `play_pos` 必须在新建节点**入树之前**就传进来。
+##   玩家实测的 bug（"亮色小火花往左上角飞"）只在**池子还是空的、第一次初始化**时出现：
+##   冷启动新建的节点出生在 (0,0)，如果先 `add_child()` 再定位，它就有机会在**地图原点**
+##   ——也就是画面左上方向——被画出来一次；池子里有节点之后直接复用，就不再发生。
+##   把定位提前到入树之前，新建的节点**从一开始就在命中点**，这一帧中间态根本不存在。
+func _acquireHit(variant: String, play_pos: Vector2) -> Node2D:
 	var path: String = HIT_VARIANTS[variant]
 	if not _hitPools.has(variant):
 		_hitPools[variant] = []
@@ -99,6 +105,9 @@ func _acquireHit(variant: String) -> Node2D:
 		if is_instance_valid(stolen):
 			stolen.free()
 	var fresh: Node = (load(path) as PackedScene).instantiate()
+	# 入树前先摆好位置：节点从没在 (0,0) 存在过，也就没机会被画在那
+	(fresh as Node2D).position = play_pos
+	(fresh as Node2D).global_position = play_pos
 	add_child(fresh)
 	pool.append(fresh)
 	return fresh

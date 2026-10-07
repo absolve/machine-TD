@@ -256,6 +256,14 @@ func aimAt(t, delta: float) -> bool:
 	return absf(wrapf(turret.rotation - want, -PI, PI)) < 0.10
 
 func hurt(_num: int, _source = null, _damage_type: String = "physical"):
+	# 已经死了就不再结算。
+	# ★ 为什么需要这道闸：`queue_free()` 只是**排队**释放，节点要到本帧结束才真的
+	#   消失。同一帧里若有多发子弹/炸弹同时命中（霰弹、连锁闪电、爆炸同时扫到多枚），
+	#   后续命中会在节点还活着时再次进来 —— 于是 enemyRewarded / enemyDefeated
+	#   被重复发出，成就里的击杀数会多算。
+	#   dead 标志本来就有（见文件顶部），这里只是真正用起来。
+	if dead:
+		return
 	var actualDamage: float = float(_num)
 	if _damage_type == "physical":
 		actualDamage *= max(0.0, 1.0 - armor)
@@ -271,6 +279,9 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 		lifeBar.visible = true
 		lifeBar.value = hp
 	if hp <= 0:
+		# 先立旗再发奖励：奖励信号与 queue_free() 之外还有别的监听者，
+		# 万一其中有人回调 hurt()，dead 已经为 true 就不会二次结算。
+		dead = true
 		ExplosionManage.playExplosion(global_position)
 		Game.enemyRewarded.emit(reward)
 		# 特殊敌人额外掉宝石（数量来自 enemyInfo.gemReward，普通敌人是 0 就不发）
@@ -279,9 +290,31 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 			Game.gemRewarded.emit(gemReward)
 		# 成就统计需要知道敌人类型和击杀来源，必须在节点释放之前发出
 		Game.enemyDefeated.emit(self, _source)
-		owner.queue_free()
+		_freeSelf()
 		if _source != null && _source is Tower:
 			_source.addExp(rewardExp)
+
+## 敌人退场统一入口：把自己和承载自己的 PathFollow2D 一起释放。
+##
+## ★ 为什么必须连包裹层一起删：
+##   旧场景结构里敌人是 PathFollow2D 里的**嵌套节点**，它的 `owner` 就是这个包裹层，
+##   所以当年的 `owner.queue_free()` 会"包裹层 + 敌人"一起删掉。
+##   现在敌人自己就是场景根，而包裹层是 base_level._spawnEnemy() 运行时建的
+##   （见那里的注释：包裹层放代码里建，是为了避开"嵌套场景覆写"在导出后丢资源的坑）。
+##   如果这里只 `queue_free()` 自己，包裹层会永远留在路线下 —— 实测杀光 4 个敌人后
+##   路线的子节点数一个都没少，整关每刷一个敌人就漏一个节点。
+##
+##   所以这里补回旧行为：先删承载自己的包裹层（连自己一起走），
+##   没有包裹层时（例如单独放进场景测试）就退化成只删自己。
+func _freeSelf() -> void:
+	var wrapper: Node = get_parent()
+	if wrapper != null and wrapper is PathFollow2D:
+		# 先删包裹层：它连同子节点（自己）一起被释放，
+		# 不会出现"自己已释放、包裹层成孤儿"的中间态。
+		wrapper.queue_free()
+		return
+	queue_free()
+
 
 ## ── 被击中的"变亮"反馈 ──
 ## 材质挂在 scene/enemy/enemy.tscn 的 base / turret 上，所有敌人共用（派生场景继承得到）。
@@ -353,4 +386,4 @@ func _physics_process(_delta):
 	parent.progress += speed * _delta
 	if parent.progress_ratio >= 1:
 		Game.enemyEscaped.emit(lossPoints)
-		owner.queue_free()
+		_freeSelf()

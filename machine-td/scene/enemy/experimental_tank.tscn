@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bx7tk2mvq4nae"]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="PackedScene" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" path="res://script/enemy/experimentalTank.gd" id="2_script"]
@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/experimental_tank_body_3.svg" id="3_body3"]
 [ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/experimental_tank_body_4.svg" id="3_body4"]
 [ext_resource type="PackedScene" path="res://scene/turret/base_turret.tscn" id="4_turret"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/experimental_tank_turret.svg" id="5_turret_tex"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_body"]
 animations = [{
@@ -30,38 +29,26 @@ animations = [{
 "speed": 16.0
 }]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_turret"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("5_turret_tex")
-}],
-"loop": 1,
-"name": &"default",
-"speed": 5.0
-}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(80, 40)
 
-[node name="experimental_tank" type="PathFollow2D"]
-loop = false
+[node name="experimental_tank" instance=ExtResource("1_base")]
 
-[node name="Enemy" parent="." instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 10
 muzzleOffset = 46.0
 
-[node name="base" parent="Enemy" index="0"]
+[node name="base" parent="." index="0"]
 sprite_frames = SubResource("SpriteFrames_body")
 
-[node name="turret" parent="Enemy" index="2"]
+[node name="turret" parent="." index="2"]
 visible = false
 
-[node name="shape" parent="Enemy" index="3"]
+[node name="shape" parent="." index="3"]
 shape = SubResource("RectangleShape2D_body")
 
-[node name="TurretFL" parent="Enemy" instance=ExtResource("4_turret")]
+[node name="TurretFL" parent="." instance=ExtResource("4_turret")]
 position = Vector2(-20, -10)
 z_index = -1
 atk = 16
@@ -70,11 +57,7 @@ radarScope = 300.0
 rotationSpeed = 8.0
 muzzleOffset = 24.0
 
-[node name="Turret" parent="Enemy/TurretFL" index="0"]
-sprite_frames = SubResource("SpriteFrames_turret")
-offset = Vector2(6, 0)
-
-[node name="TurretFR" parent="Enemy" instance=ExtResource("4_turret")]
+[node name="TurretFR" parent="." instance=ExtResource("4_turret")]
 position = Vector2(20, -10)
 z_index = -1
 atk = 16
@@ -83,11 +66,7 @@ radarScope = 300.0
 rotationSpeed = 8.0
 muzzleOffset = 24.0
 
-[node name="Turret" parent="Enemy/TurretFR" index="0"]
-sprite_frames = SubResource("SpriteFrames_turret")
-offset = Vector2(6, 0)
-
-[node name="TurretBL" parent="Enemy" instance=ExtResource("4_turret")]
+[node name="TurretBL" parent="." instance=ExtResource("4_turret")]
 position = Vector2(-20, 10)
 z_index = -1
 atk = 16
@@ -96,11 +75,7 @@ radarScope = 300.0
 rotationSpeed = 8.0
 muzzleOffset = 24.0
 
-[node name="Turret" parent="Enemy/TurretBL" index="0"]
-sprite_frames = SubResource("SpriteFrames_turret")
-offset = Vector2(6, 0)
-
-[node name="TurretBR" parent="Enemy" instance=ExtResource("4_turret")]
+[node name="TurretBR" parent="." instance=ExtResource("4_turret")]
 position = Vector2(20, 10)
 z_index = -1
 atk = 16
@@ -109,6 +84,3 @@ radarScope = 300.0
 rotationSpeed = 8.0
 muzzleOffset = 24.0
 
-[node name="Turret" parent="Enemy/TurretBR" index="0"]
-sprite_frames = SubResource("SpriteFrames_turret")
-offset = Vector2(6, 0)

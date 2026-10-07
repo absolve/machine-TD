@@ -3,7 +3,7 @@ extends "res://script/enemy/enemy.gd"
 
 
 func _ready() -> void:
-	parent = get_parent()
+	parent = get_parent() as PathFollow2D
 	setupEnemyInfo()
 
 	
@@ -13,7 +13,6 @@ func _ready() -> void:
 	#if hp < 0:
 		#ExplosionManage.playExplosion(global_position)
 		#Game.enemyRewarded.emit(reward)
-		#owner.queue_free()
 
 #func _physics_process(_delta):
 	#if points.size() == 0:
@@ -21,4 +20,3 @@ func _ready() -> void:
 	#parent.progress += speed * _delta
 	#if parent.progress_ratio >= 1:
 		#Game.enemyEscaped.emit(lossPoints)
-		#owner.queue_free()

@@ -73,6 +73,8 @@ var _pulse: float = 0.0
 var _sawSelect: bool = false
 var _sawPlace: bool = false
 var _sawAbility: bool = false
+## 塔信息面板被打开过（升级那一步的完成条件）
+var _sawTowerPanel: bool = false
 
 var _styleHole: StyleBoxFlat
 var _styleRing: StyleBoxFlat
@@ -137,8 +139,20 @@ func _process(delta: float) -> void:
 	_place_bubble()
 	queue_redraw()
 
+	_track_tower_panel()
 	if _step_done():
 		_goto_step(_index + 1)
+
+
+## 塔信息面板是不是被打开了？
+## 面板是 map 自己的 @onready 字段，引导拿不到它的子节点变化信号，
+## 所以每帧查一次 visible —— 和本文件其它步骤一样，只查状态、不截点击。
+func _track_tower_panel() -> void:
+	if _sawTowerPanel:
+		return
+	var p = _tower_detail_panel()
+	if p != null and is_instance_valid(p) and bool(p.visible):
+		_sawTowerPanel = true
 
 
 # ===== 步骤表 =====
@@ -165,6 +179,28 @@ func _build_steps() -> void:
 			"text": Game.t("_TutorialGuide3",
 				"Now tap the highlighted cell to build it there."),
 		},
+		# ── 升级教学：**建完塔紧接着**教，因为塔就在眼前、点一下就开面板 ──
+		# 这两个目标只有在这一步才解析：塔没建起来之前根本没有可点的塔。
+		{
+			"id": "tower_panel",
+			"target": "tower_panel",
+			"text": Game.t("_TutorialGuide6",
+				"Tap your new tower to open its info panel."),
+		},
+		{
+			"id": "upgrade",
+			"target": "tower_detail",
+			"info": true,
+			"text": Game.t("_TutorialGuide7",
+				"Towers level up by KILLING. Every kill fills the EXP bar; when it fills, the tower upgrades itself to Lv.2, then Lv.3 — higher damage, faster fire, longer range."),
+		},
+		{
+			"id": "spread",
+			"target": "tower_detail",
+			"info": true,
+			"text": Game.t("_TutorialGuide8",
+				"So spread towers along the lane and let them keep killing. Lv.3 is the max."),
+		},
 		{
 			"id": "start",
 			"target": "btn_start",
@@ -185,7 +221,7 @@ func _build_steps() -> void:
 		"id": "done",
 		"target": "",
 		"last": true,
-		"text": Game.t("_TutorialGuide6",
+		"text": Game.t("_TutorialGuideFinish",
 			"That's the whole loop — survive all %d waves!") % _wave_count(),
 	})
 
@@ -198,13 +234,23 @@ func _goto_step(i: int) -> void:
 	_sawSelect = false
 	_sawPlace = false
 	_sawAbility = false
+	_sawTowerPanel = false
 	_buildCell = Vector2i(-1, -1)
 	var step: Dictionary = _steps[_index]
 	stepLabel.text = "%d / %d" % [_index + 1, _steps.size()]
 	textLabel.text = str(step.get("text", ""))
 	_centered = bool(step.get("last", false))
-	actionBtn.text = Game.t("_TutorialGuideOk", "Got it") if _centered \
-		else Game.t("_TutorialGuideSkip", "Skip guide")
+	# 「知道了」有两种含义：
+	#   · 最后一步：收工回家
+	#   · 中间的纯说明步骤（升级那两步）：继续往下走
+	# 中间步骤必须自己带一个推进按钮，否则玩家会卡死在那里 ——
+	# 那两步讲的是"靠击杀升级"，而此刻战斗还没开始，塔一点经验都没有，
+	# 没有任何可以轮询的状态能让它们自动完成。
+	var info: bool = bool(step.get("info", false))
+	if _centered or info:
+		actionBtn.text = Game.t("_TutorialGuideOk", "Got it")
+	else:
+		actionBtn.text = Game.t("_TutorialGuideSkip", "Skip guide")
 	# 文案换行数变了 → 气泡高度也变，重新量一次再摆
 	bubble.reset_size()
 	_refresh_hole()
@@ -224,12 +270,16 @@ func _step_done() -> bool:
 			return _sawSelect
 		"place":
 			return _sawPlace
+		"tower_panel":
+			# 点塔 -> map._onTowerClicked -> towerDetailPanel.showTower()，面板变可见
+			return _sawTowerPanel
 		"start":
 			var t = _title()
 			# 顶栏 ▶/⏸ 是 toggle：button_pressed = true 就代表"正在打"
 			return t != null and t.btnStart != null and bool(t.btnStart.button_pressed)
 		"ability":
 			return _sawAbility
+	# upgrade / spread 是纯说明步骤：`info = true`，由 _on_action_pressed 推进
 	return false
 
 
@@ -242,7 +292,11 @@ func _finish() -> void:
 
 
 func _on_action_pressed() -> void:
-	# 中途是「跳过引导」，最后一步是「知道了」—— 两者都是收工
+	# 中间的纯说明步骤：按钮是「知道了」，点它继续下一步，不结束引导
+	if _index >= 0 and _index < _steps.size() and bool(_steps[_index].get("info", false)):
+		_goto_step(_index + 1)
+		return
+	# 其余情况：中途是「跳过引导」，最后一步是「知道了」—— 两者都是收工
 	_finish()
 
 
@@ -331,6 +385,13 @@ func _target_rect(id: String) -> Rect2:
 			return _control_rect(_highlight_tower_card())
 		"build_cell":
 			return _cell_rect(_pick_build_cell())
+		"tower_panel":
+			# 高亮"刚建好的那座塔"。地图节点是 Node2D 不是 Control，
+			# 所以走 _unit_rect（自己按相机变换算屏幕矩形），不能走 _control_rect。
+			return _unit_rect(_guided_tower())
+		"tower_detail":
+			# 高亮右侧信息面板 —— 升级那两步就是让玩家看这块面板
+			return _control_rect(_tower_detail_panel())
 		"btn_start":
 			var t = _title()
 			if t != null:
@@ -338,6 +399,19 @@ func _target_rect(id: String) -> Rect2:
 		"ability_slot":
 			return _control_rect(_first_ability_slot())
 	return Rect2()
+
+
+## Node2D（地图上的单位）的屏幕矩形。
+## Control 用 get_global_transform_with_canvas()，Node2D 没有那个方法，
+## 但它同样继承 CanvasItem，所以这个方法对两者都成立 —— 统一走这里也行。
+func _unit_rect(node) -> Rect2:
+	if node == null or not is_instance_valid(node) or not (node is Node2D):
+		return Rect2()
+	var n2: Node2D = node
+	var xf: Transform2D = n2.get_global_transform_with_canvas()
+	# 塔的贴图最大 128x128，绕中心取一个固定方块当高亮框，别去猜贴图实际尺寸
+	var side: float = 76.0 * xf.get_scale().x
+	return Rect2(xf.origin - Vector2(side, side) * 0.5, Vector2(side, side))
 
 
 ## 控件的屏幕矩形。
@@ -461,6 +535,40 @@ func _title():
 
 func _tower_ui():
 	return map.towerUINode if map != null else null
+
+
+## 右侧塔信息面板（升级那两步要指着它）
+func _tower_detail_panel():
+	return map.towerDetailPanel if map != null else null
+
+
+## 引导里"要玩家点的塔"：优先用地图当前选中的那座；
+## 没选中就找离高亮格最近的那座 —— 也就是玩家刚刚建起来的那一座。
+##
+## ⚠️ 塔是挂在 **map** 下面的（map.gd::placeTower 里 `add_child(temp)`），
+##    不是挂在 level 下面。去 level 的 children 里找永远是空的。
+func _guided_tower():
+	if map == null:
+		return null
+	var sel = map.get("selectedTower")
+	if sel != null and is_instance_valid(sel):
+		return sel
+	var target_cell: Vector2i = _pick_build_cell()
+	var best = null
+	var best_d: float = INF
+	for c in map.get_children():
+		if not (c is Tower):
+			continue
+		var cover = c.get("coverGrid")
+		if cover is Array and not (cover as Array).is_empty():
+			var cell: Vector2i = (cover as Array)[0]
+			var d: float = Vector2(cell - target_cell).length()
+			if d < best_d:
+				best_d = d
+				best = c
+		elif best == null:
+			best = c   # 兜底：没有 coverGrid 信息就用第一个
+	return best
 
 
 func _ability_bar():

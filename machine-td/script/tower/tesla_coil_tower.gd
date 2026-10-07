@@ -93,12 +93,16 @@ func _applyChainDamage() -> void:
 	
 ## 这个"目标"能不能当 Area2D 用。
 ##
-## ★ 为什么需要这道闸：敌人场景（如 miniTank.tscn）的**根节点是 PathFollow2D**，
-## 真正的 Area2D 是它的子节点 `enemy`。跑关卡时路径根节点有机会混进 `target` 列表，
-## 而基类签名是 `can_target(area: Area2D)` —— 直接把 PathFollow2D 传进去，
-## GDScript 会**抛类型错**（不是返回 false），整条链就废了：
-## 闪电画不出来、命中弧线一个都生不出来。
-## 加一道类型闸，凡是进不了 can_target 的东西直接当"不是目标"跳过。
+## ★ 为什么需要这道闸：雷达扫到的目标是**任意 Area2D**，而基类签名是
+##   `can_target(area: Area2D)` —— 直接把非 Area2D 的东西传进去，
+##   GDScript 会**抛类型错**（不是返回 false），整条链就废了：
+##   闪电画不出来、命中弧线一个都生不出来。
+##   加一道类型闸，凡是进不了 can_target 的东西直接当"不是目标"跳过。
+##
+##   （历史：以前敌人场景的根是 PathFollow2D、真正的 Area2D 是子节点 "Enemy"，
+##    所以路径根节点会混进 target 列表。现在敌人场景根就是 Area2D
+##    —— 见 base_level._spawnEnemy —— 但雷达仍可能收到别的 Area2D，
+##    这道闸继续留着，成本为零。）
 func _isAreaTarget(t) -> bool:
 	return t is Area2D
 
