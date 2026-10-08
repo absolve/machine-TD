@@ -47,6 +47,9 @@ var isLastWave = false # 最后一波
 ## 结算复查开关：lastWave() 打开，finish() 复查到"敌人全清"后关闭并弹结算。
 ## 没有它的话，暂停/失败后 Timer 仍会周期性回调 finish()，可能重复结算。
 var _finishChecking: bool = false
+## 结算完成标记：真正弹过一次结算后置 true，之后 finish() / lastWaveStarted 一律短路。
+## 兜底防止"重复的 lastWaveStarted"把宝石行从 "+N" 覆盖成"已领取"，并重复累加通关分数。
+var _settled: bool = false
 var cellSize = 64
 var debug = false
 var font
@@ -517,6 +520,9 @@ func _onTowerRepaired(cost: int, tower: Node) -> void:
 ## 这里只负责把结算复查器打开 —— 真正的结束判定在 finish() 里反复复查，
 ## 直到「生产列表空 + 场上无敌人」才弹结算。
 func _onLastWaveStarted():
+	# 已经结算过就不再重新开启复查（重复的 lastWaveStarted 会让结算面板反复弹）
+	if _settled:
+		return
 	isLastWave = true
 	_finishChecking = true
 	finishTimer.start()
@@ -544,6 +550,12 @@ func finish():
 	# 到这里才算真的"全部清空"，停止复查
 	_finishChecking = false
 	finishTimer.stop()
+
+	# 结算只做一次：重复触发时第二次起直接返回，
+	# 否则宝石行会被 0 覆盖、通关分数与成就被重复累加。
+	if _settled:
+		return
+	_settled = true
 
 	# 记录最高评分、奖励和下一关解锁状态
 	var rating = calculateStars()

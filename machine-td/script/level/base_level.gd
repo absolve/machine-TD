@@ -228,6 +228,12 @@ func _onWaveTimerTimeout():
 		spawnerTimer.wait_time = _nextSpawnDelay()
 		spawnerTimer.start()
 	if currWave >= wave:
+		# ★ 最后一波已排上：**必须停掉波次计时器**。
+		#   WaveTimer 是重复型（one_shot = false），不停的话它会每隔 wait_time 再触发，
+		#   每次 currWave 都 > wave、_build_wave_spawner 又返回空 → 反复发 lastWaveStarted，
+		#   结算面板被反复弹出、宝石/分数被重复结算（症状：通关先显示 +N 宝石，
+		#   一秒后又变成"本次无宝石"）。
+		waveTimer.stop()
 		Game.lastWaveStarted.emit()
 		return
 	waveTimer.start()
