@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet/bullet.tscn" id="1_bullet"]
 [ext_resource type="Script" uid="uid://b4n0gn6e1wxel" path="res://script/bullet/gun_bullet.gd" id="2_script"]
-[ext_resource type="Texture2D" path="res://sprite/bullet/redesigned/gun_bullet.svg" id="3_tex"]
+[ext_resource type="Texture2D" uid="uid://bu55gmgvgrhmy" path="res://sprite/bullet/redesigned/gun_bullet.svg" id="3_tex"]
 
 [sub_resource type="CircleShape2D" id="Shape"]
 radius = 5.0

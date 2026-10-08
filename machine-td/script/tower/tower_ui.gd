@@ -116,6 +116,47 @@ func _onIconGuiInput(_event):
 		if isOpen:
 			SoundManage.play("toolbox_click")
 			player.play("show")
+			# 玩家已经知道工具箱在哪了，新手提示可以收了
+			stopToolboxPrompt()
 		else:
 			SoundManage.play("toolbox_take", 0.0, 0.92)
 			player.play("hide")
+
+
+## ── 工具箱的呼吸提示 ──
+## 给「没玩教程关就直接进第 1 关」的玩家指路：让左上角工具箱图标一闪一闪，
+## 直到他点开工具箱为止（见 map.gd::_startToolboxHint）。
+##
+## 手法和 title.gd::promptStart() 完全一致，包括下面那条 parallel() 的坑：
+##   ⚠️ 只能用 parallel() 让「紧跟的那一条」并行。若写成 set_parallel(true)，
+##      后面所有 tweener 都会并行 —— 变亮/变暗、放大/缩小同时跑，互相抵消，
+##      scale 会永远停在 1.0（title.gd 那里已经踩过一次）。
+var _toolboxPromptTween: Tween
+
+
+func promptToolbox() -> void:
+	stopToolboxPrompt()
+	if toolboxIcon == null:
+		return
+	# 已经开着就不用提示了
+	if isOpen:
+		return
+	toolboxIcon.pivot_offset = toolboxIcon.size * 0.5
+	_toolboxPromptTween = create_tween().set_loops()
+	_toolboxPromptTween.tween_property(toolboxIcon, "modulate",
+		Color(1.9, 1.8, 1.25), 0.45).set_trans(Tween.TRANS_SINE)
+	_toolboxPromptTween.parallel().tween_property(toolboxIcon, "scale",
+		Vector2(1.18, 1.18), 0.45).set_trans(Tween.TRANS_SINE)
+	_toolboxPromptTween.tween_property(toolboxIcon, "modulate",
+		Color.WHITE, 0.45).set_trans(Tween.TRANS_SINE)
+	_toolboxPromptTween.parallel().tween_property(toolboxIcon, "scale",
+		Vector2.ONE, 0.45).set_trans(Tween.TRANS_SINE)
+
+
+func stopToolboxPrompt() -> void:
+	if _toolboxPromptTween != null and _toolboxPromptTween.is_valid():
+		_toolboxPromptTween.kill()
+	_toolboxPromptTween = null
+	if toolboxIcon != null:
+		toolboxIcon.modulate = Color.WHITE
+		toolboxIcon.scale = Vector2.ONE

@@ -40,7 +40,8 @@ const ENEMY_BULLET: PackedScene = preload("res://scene/bullet/enemy_bullet.tscn"
 ## ⚠️ 成员名不叫 `muzzle`：attackTower() 和几个子类里都有 `var muzzle: Vector2` 这个
 ##    局部变量，重名会触发 SHADOWED_VARIABLE 警告。
 @onready var muzzleMarker: Marker2D = get_node_or_null("turret/Muzzle")
-@onready var lifeBar = $LifeBar
+## 血条。**必须是敌人的子节点**（见 _processLifeBar 的注释：放 CanvasLayer 下会跑到屏幕外）。
+@onready var lifeBar = get_node_or_null("LifeBar")
 @onready var delayTimer = $Delay
 @onready var radar = $radar
 @onready var radarShape = $radar/shape
@@ -63,7 +64,7 @@ const ENEMY_BULLET: PackedScene = preload("res://scene/bullet/enemy_bullet.tscn"
 ## 想让某个敌人后坐更猛/更轻，在它的场景里覆盖这个值就行（远程导弹车之类的可以调大）。
 ## 详见 [method playTurretRecoil]。
 @export var turretRecoil: float = 5.0
-
+const LIFE_BAR_OFFSET := Vector2(0.0, -50.0)
 
 ## ── 开火后坐（炮塔贴图往后一顿再弹回）──
 ## 防御塔是在 player 的 "fire" 动画里把 `turret:offset` 从 (0,0) 推到 (-5,0) 再弹回、
@@ -387,3 +388,6 @@ func _physics_process(_delta):
 	if parent.progress_ratio >= 1:
 		Game.enemyEscaped.emit(lossPoints)
 		_freeSelf()
+	if lifeBar == null or not is_instance_valid(lifeBar):
+		return
+	lifeBar.global_position =parent.global_position+LIFE_BAR_OFFSET

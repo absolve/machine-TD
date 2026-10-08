@@ -191,6 +191,46 @@ func _startTutorialGuide() -> void:
 		tutorialGuide.start()
 
 
+## ── 第 1 关的「工具箱在哪」提示 ──
+##
+## 为什么需要：教程引导只有教程关会走（map.gd::_setupTutorialGuide 里判 stage id），
+## 而**很多人根本不玩教程关**，直接点「开始游戏」进第 1 关 —— 于是不知道左上角那个
+## 工具箱图标要点开才能建塔。这里在第 1 关给一个和「▶ 呼吸提示」同款的闪烁，指着工具箱。
+##
+## 只在第 1 关、且**玩家还没打通第 1 关**时出现：
+##   · 老玩家（第 1 关已有星级记录）不再被打扰
+##   · 无尽模式不提示（那一关的规则不一样，也没有关卡 id）
+## 玩家点开工具箱后提示自己消失（见 tower_ui.gd::_onIconGuiInput）。
+##
+## `_pendingToolboxHint` 的作用：`showLevelIntro()` 里弹窗一开就调用了本函数，
+## 但那时玩家正在看情报弹窗，两处一起闪会分散注意力。所以先记一笔，
+## 等弹窗关掉（_onIntroClosed）再真正亮起来。
+## 没有情报弹窗的关卡则在 showLevelIntro() 里直接亮。
+var _pendingToolboxHint: bool = false
+
+
+## 记录"本关该不该给工具箱提示"。真正的闪烁交给 _startToolboxHintNow()。
+func _startToolboxHint() -> void:
+	if Game.endlessMode:
+		return
+	# 只提示第 1 关；教程关有自己的引导，其它关卡玩家早已上手
+	if int(stageData.get("id", -1)) != 1:
+		return
+	# 已经打通第 1 关的老玩家：他显然知道工具箱在哪，别打扰
+	if UserData.getStageRating(1) > 0:
+		return
+	_pendingToolboxHint = true
+
+
+## 真正亮起工具箱提示（情报弹窗关掉之后，或本来就没有弹窗时）。
+func _startToolboxHintNow() -> void:
+	if not _pendingToolboxHint:
+		return
+	_pendingToolboxHint = false
+	if towerUINode != null and towerUINode.has_method("promptToolbox"):
+		towerUINode.promptToolbox()
+
+
 func showLevelIntro() -> void:
 	# 无尽模式：用同一个情报面板，但内容是"规则 + 最高记录"（不读关卡数据）
 	if Game.endlessMode:
@@ -202,8 +242,14 @@ func showLevelIntro() -> void:
 	if levelIntroPanel == null:
 		# 没有弹窗的关卡（比如教程）直接就开始提示玩家点开始
 		titleNode.promptStart()
+		# 没有情报弹窗挡着，工具箱提示可以立刻亮起来
+		_startToolboxHintNow()
 		return
 	levelIntroPanel.showLevel(stageData)
+	# ⚠️ 这里**不要**再写 `_pendingToolboxHint = true`。
+	#    该不该提示已经由 loadLevel() -> _startToolboxHint() 判过了（只在第 1 关、
+	#    且玩家还没打通时才会置位）。早先这里多了一句无条件赋值，把关卡判断整个
+	#    覆盖掉，导致**每一关**都在闪工具箱 —— 探针抓到的就是这个。
 
 
 # 情报关闭后提示玩家开战，避免首屏直接进入战斗。
@@ -211,6 +257,8 @@ func _onIntroClosed() -> void:
 	titleNode.promptStart()
 	# 教程关：情报读完就该现身了（此刻地图已经建好、技能条也已就位）
 	_startTutorialGuide()
+	# 第 1 关：顺手给没玩过教程的玩家指一下工具箱在哪
+	_startToolboxHintNow()
 	
 func loadLevel():
 	# 无尽模式：不走 allStage 查表，直接加载独立关卡场景
@@ -240,6 +288,7 @@ func loadLevel():
 	# syncWaveProgressBar()
 	# 复位相机：回到「整关刚好铺满」，避免上一关放大/拖动后带过来
 	customCamera.resetView()
+	_startToolboxHint()
 
 ## 无尽模式：加载独立关卡场景（设计见 endless_mode_design.md）。
 ## 数值由关卡脚本自己定（10 血 / 400 金），所以 levelId 传 -1 ——
@@ -828,3 +877,21 @@ func _draw() -> void:
 			var circleColor: Color = Color(1.0, 0.776, 0.102, 1.0)
 			draw_circle(mousePos, radius, Color(circleColor.r, circleColor.g, circleColor.b, 0.16))
 			draw_arc(mousePos, radius, 0.0, TAU, 64, Color(circleColor.r, circleColor.g, circleColor.b, 0.9), 3.0)
+
+
+## 离开战斗场景时停掉背景音乐。
+##
+## ★ 为什么必须在这里停：SoundManage 是 **autoload**（跨场景常驻），
+##   它持有的 Bgm 播放器不会因为地图场景被释放而停止。而开战时
+##   `startGame()` 会 `playBgm("bgm_07_heaven_pad")`，全项目**没有任何地方**
+##   调用 `stopBgm()` —— 于是从战斗返回欢迎界面 / 结算返回主菜单之后，
+##   战斗 BGM 会一直响下去。
+##
+##   放在 `_exit_tree()` 而不是各个返回按钮里：返回主菜单 / 下一关 / 重开本关
+##   都走 `SceneTransition.changeScene()`，地图场景都会被释放，这一个钩子
+##   就能覆盖全部出口，不用在每个按钮回调里重复写一遍、也不会漏。
+func _exit_tree() -> void:
+	SoundManage.stopBgm()
+	# 工具箱提示的 tween 挂在 tower_ui 上，场景一起走，这里不必额外清理；
+	# 但把待办标记复位，避免同一实例被复用（reload_current_scene）时残留。
+	_pendingToolboxHint = false
