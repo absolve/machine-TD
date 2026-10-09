@@ -15,14 +15,14 @@ func _ready() -> void:
 	if _btn == null:
 		return
 	if _btn.toggle_mode:
-		_btn.toggled.connect(_on_toggled)
+		_btn.toggled.connect(onToggled)
 	else:
-		_btn.pressed.connect(_on_pressed)
+		_btn.pressed.connect(onPressed)
 
 
-func _on_toggled(_pressed: bool) -> void:
+func onToggled(pressed: bool) -> void:
 	SoundManage.playConfirm()
 
 
-func _on_pressed() -> void:
+func onPressed() -> void:
 	SoundManage.playConfirm()

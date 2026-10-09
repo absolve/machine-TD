@@ -17,9 +17,9 @@ extends "res://script/level/prop.gd"
 @export var releaseDelay: float = 1.2
 
 ## 当前圈里有几个敌人
-var _inside: int = 0
+var inside: int = 0
 ## 还要维持报警多久
-var _hot: float = 0.0
+var hot: float = 0.0
 
 @onready var detect: Area2D = get_node_or_null("Detect")
 
@@ -27,13 +27,13 @@ var _hot: float = 0.0
 func _ready() -> void:
 	super._ready()
 	if detect != null:
-		_applyRadius()
-		detect.area_entered.connect(_onEntered)
-		detect.area_exited.connect(_onExited)
-	_play("idle")
+		applyRadius()
+		detect.area_entered.connect(onEntered)
+		detect.area_exited.connect(onExited)
+	play("idle")
 
 
-func _applyRadius() -> void:
+func applyRadius() -> void:
 	var cs: CollisionShape2D = detect.get_node_or_null("shape") as CollisionShape2D
 	if cs == null:
 		return
@@ -47,18 +47,18 @@ func _applyRadius() -> void:
 	cs.shape = c
 
 
-func _onEntered(a: Area2D) -> void:
+func onEntered(a: Area2D) -> void:
 	if a != null and a.is_in_group("enemy"):
-		_inside += 1
+		inside += 1
 
 
-func _onExited(a: Area2D) -> void:
+func onExited(a: Area2D) -> void:
 	if a != null and a.is_in_group("enemy"):
-		_inside = maxi(0, _inside - 1)
+		inside = maxi(0, inside - 1)
 
 
 # ⚠️ 参数别叫 name —— Node 自己就有 name 属性，会被遮蔽
-func _play(anim_name: String) -> void:
+func play(anim_name: String) -> void:
 	if anim == null or anim.sprite_frames == null:
 		return
 	if not anim.sprite_frames.has_animation(anim_name):
@@ -67,13 +67,13 @@ func _play(anim_name: String) -> void:
 
 
 func _process(delta: float) -> void:
-	if _inside > 0:
-		_hot = releaseDelay
-	elif _hot > 0.0:
-		_hot = maxf(0.0, _hot - delta)
-	var want: String = "alarm" if _hot > 0.0 else "idle"
+	if inside > 0:
+		hot = releaseDelay
+	elif hot > 0.0:
+		hot = maxf(0.0, hot - delta)
+	var want: String = "alarm" if hot > 0.0 else "idle"
 	if anim != null and anim.animation != want:
-		_play(want)
+		play(want)
 
 
 ## 把 export 的半径同步到 CollisionShape2D —— 改半径不用去动场景

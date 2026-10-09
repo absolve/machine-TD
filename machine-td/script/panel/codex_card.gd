@@ -17,66 +17,66 @@ signal unhovered                   ## 鼠标移出
 ## 这张卡对应的条目字典（面板在 setup 时塞进来）
 var entry: Dictionary = {}
 
-var _sbNormal: StyleBox
-var _sbHover: StyleBox
-var _sbActive: StyleBox
+var sbNormal: StyleBox
+var sbHover: StyleBox
+var sbActive: StyleBox
 var _selected: bool = false
-var _pendingIcon: Texture2D ## setup() 可能早于入树，这时 @onready 还没生效，先记下来
+var pendingIcon: Texture2D ## setup() 可能早于入树，这时 @onready 还没生效，先记下来
 
 
 func _ready() -> void:
-	mouse_entered.connect(_onEnter)
-	mouse_exited.connect(_onExit)
-	gui_input.connect(_onInput)
+	mouse_entered.connect(onEnter)
+	mouse_exited.connect(onExit)
+	gui_input.connect(onInput)
 	# 入树后把之前塞进来的图补上
-	if _pendingIcon != null and icon != null:
-		icon.texture = _pendingIcon
+	if pendingIcon != null and icon != null:
+		icon.texture = pendingIcon
 
 
 ## 由面板调用：绑定条目 + 三种状态的样式
 func setup(e: Dictionary, sb_normal: StyleBox, sb_hover: StyleBox, sb_active: StyleBox) -> void:
 	entry = e
-	_sbNormal = sb_normal
-	_sbHover = sb_hover
-	_sbActive = sb_active
+	sbNormal = sb_normal
+	sbHover = sb_hover
+	sbActive = sb_active
 	tooltip_text = str(e.get("name", ""))
 	setIcon(e.get("icon"))
-	_apply(false)
+	apply(false)
 
 
 ## ★ 换图就这一行 —— 想替换卡面上的图片直接调它
 func setIcon(texture: Texture2D) -> void:
-	_pendingIcon = texture
+	pendingIcon = texture
 	if icon != null:
 		icon.texture = texture
 
 
 func setSelected(value: bool) -> void:
 	_selected = value
-	_apply(false)
+	apply(false)
 
 
 func isSelected() -> bool:
 	return _selected
 
 
-func _onEnter() -> void:
-	_apply(true)
+func onEnter() -> void:
+	apply(true)
 	hovered.emit(entry)
 
 
-func _onExit() -> void:
-	_apply(false)
+func onExit() -> void:
+	apply(false)
 	unhovered.emit()
 
 
-func _onInput(event: InputEvent) -> void:
+func onInput(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		picked.emit(entry)
 		accept_event()
 
 
-func _apply(hover: bool) -> void:
-	var sb: StyleBox = _sbActive if _selected else (_sbHover if hover else _sbNormal)
+func apply(hover: bool) -> void:
+	var sb: StyleBox = sbActive if _selected else (sbHover if hover else sbNormal)
 	if sb != null:
 		add_theme_stylebox_override("panel", sb)

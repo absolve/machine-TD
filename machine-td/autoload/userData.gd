@@ -31,7 +31,7 @@ const PLAYER_DATA_FILE_NAME := "player_data.cfg"
 var settingsPath: String
 var playerDataPath: String
 # 旧 schema 的设置被迁移过，需要回写一次（否则每次启动都要重新判定语言）
-var _needsSettingsSave: bool = false
+var needsSettingsSave: bool = false
 
 func _ready() -> void:
 	settingsPath = getSettingsPath()
@@ -49,9 +49,9 @@ func _ready() -> void:
 
 	# ★ 首次运行 / 加载失败 → 立刻生成一份默认文件落盘。
 	#   这样玩家的存档目录从第一次启动就是完整可读的，也便于直接改 cfg。
-	if not settingsLoaded or _needsSettingsSave:
+	if not settingsLoaded or needsSettingsSave:
 		var settingsResult: int = saveSettings()
-		_needsSettingsSave = false
+		needsSettingsSave = false
 		if settingsResult == OK:
 			print("[UserData] 生成默认设置: ", settingsPath)
 		else:
@@ -110,7 +110,7 @@ func loadSettings() -> bool:
 	if schema < SETTINGS_SCHEMA and language == "en" and OS.get_locale().begins_with("zh"):
 		language = "zh"
 	if schema < SETTINGS_SCHEMA:
-		_needsSettingsSave = true
+		needsSettingsSave = true
 	masterVolume = clampi(int(config.get_value("volume", "master", masterVolume)), 0, 100)
 	musicVolume = clampi(int(config.get_value("volume", "music", musicVolume)), 0, 100)
 	sfxVolume = clampi(int(config.get_value("volume", "sfx", sfxVolume)), 0, 100)

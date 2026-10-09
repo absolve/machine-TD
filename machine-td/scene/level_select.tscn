@@ -60,4 +60,4 @@ anchor_bottom = 4.0
 offset_right = -2108.0
 offset_bottom = -1200.0
 
-[connection signal="pressed" from="Ui/HBoxContainer/UIButton" to="." method="_onUiButtonPressed"]
+[connection signal="pressed" from="Ui/HBoxContainer/UIButton" to="." method="onUiButtonPressed"]

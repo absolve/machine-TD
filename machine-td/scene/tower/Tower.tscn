@@ -93,5 +93,5 @@ stream = ExtResource("7_m2v4c")
 z_index = 1
 position = Vector2(0, -8)
 
-[connection signal="input_event" from="." to="." method="_onInputEvent"]
-[connection signal="timeout" from="Delay" to="." method="_onDelayTimeout"]
+[connection signal="input_event" from="." to="." method="onInputEvent"]
+[connection signal="timeout" from="Delay" to="." method="onDelayTimeout"]

@@ -39,8 +39,8 @@ const BASE_RADIUS := 100.0
 ## 播一次轰炸演出。radius = 技能半径，用来自动缩放整套演出的规模。
 func play(radius: float) -> void:
 	var k: float = clampf(radius / BASE_RADIUS, 0.8, 2.2)
-	_spawnCenter(k)
-	_spawnSmokeRing(k)
+	spawnCenter(k)
+	spawnSmokeRing(k)
 	SoundManage.playAt(STRIKE_SOUND, global_position, soundDb)
 	# 演出播完自己消失（粒子/帧动画到这时也已经播完或淡尽）
 	var life: Tween = create_tween()
@@ -49,7 +49,7 @@ func play(radius: float) -> void:
 
 
 ## 中心：大号爆炸帧 + 火/火花/余烬齐射
-func _spawnCenter(k: float) -> void:
+func spawnCenter(k: float) -> void:
 	var boom: Node2D = (load(BOOM_ANIM) as PackedScene).instantiate()
 	boom.scale = Vector2.ONE * boomScale * k
 	add_child(boom)
@@ -62,7 +62,7 @@ func _spawnCenter(k: float) -> void:
 
 
 ## 一圈烟从中心往外扩散：边飞边放大，做冲击波
-func _spawnSmokeRing(k: float) -> void:
+func spawnSmokeRing(k: float) -> void:
 	if not ResourceLoader.exists(P_SMOKE) or smokePuffs <= 0:
 		return
 	for i in smokePuffs:

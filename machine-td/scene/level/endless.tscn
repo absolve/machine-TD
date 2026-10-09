@@ -2708,5 +2708,5 @@ position = Vector2(992, 992)
 [node name="storage_tank_24_15" parent="propLayer" index="17" unique_id=1717925542 instance=ExtResource("8_big_storage_tank")]
 position = Vector2(1601, 957)
 
-[connection signal="timeout" from="WaveTimer" to="." method="_onWaveTimerTimeout"]
-[connection signal="timeout" from="SpawnerTimer" to="." method="_onSpawnerTimerTimeout"]
+[connection signal="timeout" from="WaveTimer" to="." method="onWaveTimerTimeout"]
+[connection signal="timeout" from="SpawnerTimer" to="." method="onSpawnerTimerTimeout"]

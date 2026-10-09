@@ -23,8 +23,8 @@ extends PanelContainer
 
 var tower: Node = null # 当前选中的塔
 # 缓存按钮文案，避免每帧刷新时反复触发布局重算
-var _lastRepairText: String = ""
-var _lastSellText: String = ""
+var lastRepairText: String = ""
+var lastSellText: String = ""
 
 
 func _ready() -> void:
@@ -36,13 +36,13 @@ func _ready() -> void:
 	scopeTitle.text = Game.t("_Range", "Range")
 	costTitle.text = Game.t("_Cost", "Cost")
 	hintLabel.text = Game.t("_PanelHint", "Click the tower again or empty ground to deselect.")
-	btnRepair.pressed.connect(_onRepairPressed)
-	btnSell.pressed.connect(_onSellPressed)
-	_refreshActionText()
+	btnRepair.pressed.connect(onRepairPressed)
+	btnSell.pressed.connect(onSellPressed)
+	refreshActionText()
 
 
 # 修理按钮文案：满血时提示无需修理，否则显示“修理 + 费用”
-func _refreshActionText() -> void:
+func refreshActionText() -> void:
 	var repairText: String = Game.t("_RepairFull", "HP Full")
 	var sellText: String = Game.t("_Sell", "Sell")
 	if is_instance_valid(tower):
@@ -51,22 +51,22 @@ func _refreshActionText() -> void:
 			if t.repairCost > 0:
 				repairText = "%s %d" % [Game.t("_Repair", "Repair"), t.repairCost]
 			sellText = "%s %d" % [Game.t("_Sell", "Sell"), int(t.sellingPrice)]
-	if repairText != _lastRepairText:
-		_lastRepairText = repairText
+	if repairText != lastRepairText:
+		lastRepairText = repairText
 		btnRepair.text = repairText
-	if sellText != _lastSellText:
-		_lastSellText = sellText
+	if sellText != lastSellText:
+		lastSellText = sellText
 		btnSell.text = sellText
 
 
-func _onRepairPressed() -> void:
+func onRepairPressed() -> void:
 	var t: Tower = tower as Tower
 	if t == null or not is_instance_valid(t):
 		return
 	t.requestRepair()
 
 
-func _onSellPressed() -> void:
+func onSellPressed() -> void:
 	var t: Tower = tower as Tower
 	if t == null or not is_instance_valid(t):
 		return
@@ -118,7 +118,7 @@ func refresh() -> void:
 
 	# 属性与价格
 	atkValueLabel.text = str(t.atk)
-	reloadValueLabel.text = _fmtFireRate(t.delay)
+	reloadValueLabel.text = fmtFireRate(t.delay)
 	scopeValueLabel.text = str(t.radarScope)
 	costValueLabel.text = str(t.money)
 
@@ -126,11 +126,11 @@ func refresh() -> void:
 	var repairCost: int = t.repairCost
 	btnRepair.disabled = repairCost <= 0
 	btnSell.disabled = false
-	_refreshActionText()
+	refreshActionText()
 
 
 # reload 为开火间隔(秒)，换算成每秒攻击次数展示
-func _fmtFireRate(reload_s: float) -> String:
+func fmtFireRate(reload_s: float) -> String:
 	if reload_s <= 0.0:
 		return "--"
 	return "%.1f/s" % (1.0 / reload_s)

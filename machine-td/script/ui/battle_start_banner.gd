@@ -27,7 +27,7 @@ signal finished ## 播放结束（已经自动 hide）
 @onready var titleLabel: Label = $center/band/content/VBox/titleLabel
 @onready var subLabel: Label = $center/band/content/VBox/subLabel
 
-var _tween: Tween
+var tween: Tween
 
 
 func _ready() -> void:
@@ -47,8 +47,8 @@ func play(title: String = "", sub: String = "", hold_override: float = -1.0) -> 
 		subLabel.text = sub
 	var hold: float = holdSec if hold_override < 0.0 else hold_override
 	print(hold)
-	if _tween != null and _tween.is_valid():
-		_tween.kill()
+	if tween != null and tween.is_valid():
+		tween.kill()
 
 	visible = true
 	modulate.a = 0.0
@@ -57,28 +57,28 @@ func play(title: String = "", sub: String = "", hold_override: float = -1.0) -> 
 	# pivot 取中心，缩放才是"从中间长出来"而不是从左上角
 	band.pivot_offset = band.size * 0.5
 
-	_tween = create_tween()
-	#_tween.set_parallel(true)
+	tween = create_tween()
+	#tween.set_parallel(true)
 	# 第一段：淡入 + 放大
-	_tween.tween_property(self, "modulate:a", 1.0, fadeInSec)
-	_tween.tween_property(band, "scale", Vector2.ONE, fadeInSec).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "modulate:a", 1.0, fadeInSec)
+	tween.tween_property(band, "scale", Vector2.ONE, fadeInSec).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	# 第二段：停住
-	_tween.chain().tween_interval(hold)
+	tween.chain().tween_interval(hold)
 	# 第三段：淡出 + 上移
-	#_tween.chain().set_parallel(true)
-	_tween.tween_property(self, "modulate:a", 0.0, fadeOutSec)
-	_tween.tween_property(band, "position:y", outOffsetY, fadeOutSec).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	_tween.chain().tween_callback(_onDone)
-	await  _tween.finished
+	#tween.chain().set_parallel(true)
+	tween.tween_property(self, "modulate:a", 0.0, fadeOutSec)
+	tween.tween_property(band, "position:y", outOffsetY, fadeOutSec).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	tween.chain().tween_callback(onDone)
+	await  tween.finished
 
-func _onDone() -> void:
+func onDone() -> void:
 	visible = false
 	finished.emit()
 
 
 ## 想立刻收掉（比如玩家手快直接点了开始）
 func skip() -> void:
-	if _tween != null and _tween.is_valid():
-		_tween.kill()
+	if tween != null and tween.is_valid():
+		tween.kill()
 	if visible:
-		_onDone()
+		onDone()

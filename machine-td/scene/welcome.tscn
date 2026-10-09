@@ -191,10 +191,10 @@ anchors_preset = 0
 [node name="CodexPanel" parent="." unique_id=205813787 instance=ExtResource("15_codexpanel")]
 visible = false
 
-[connection signal="pressed" from="Ui/HBoxContainer/UIButton" to="." method="_onTutorialPressed"]
-[connection signal="pressed" from="Ui/HBoxContainer/btnStart" to="." method="_onBtnSStartPressed"]
-[connection signal="pressed" from="Ui/HBoxContainer/btnEndless" to="." method="_onEndlessPressed"]
-[connection signal="pressed" from="Ui/HBoxContainer/setting" to="." method="_onSettingPressed"]
-[connection signal="pressed" from="Ui/HBoxContainer/btnCodex" to="." method="_onCodexPressed"]
-[connection signal="pressed" from="Ui/HBoxContainer/btnAbout" to="." method="_onButton3Pressed"]
-[connection signal="closed" from="setting" to="." method="_onSettingClose"]
+[connection signal="pressed" from="Ui/HBoxContainer/UIButton" to="." method="onTutorialPressed"]
+[connection signal="pressed" from="Ui/HBoxContainer/btnStart" to="." method="onBtnSStartPressed"]
+[connection signal="pressed" from="Ui/HBoxContainer/btnEndless" to="." method="onEndlessPressed"]
+[connection signal="pressed" from="Ui/HBoxContainer/setting" to="." method="onSettingPressed"]
+[connection signal="pressed" from="Ui/HBoxContainer/btnCodex" to="." method="onCodexPressed"]
+[connection signal="pressed" from="Ui/HBoxContainer/btnAbout" to="." method="onButton3Pressed"]
+[connection signal="closed" from="setting" to="." method="onSettingClose"]

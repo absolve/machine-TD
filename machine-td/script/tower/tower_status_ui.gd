@@ -35,12 +35,12 @@ func refresh() -> void:
 			expLabel.text = "%d/%d" % [currExp, expNeeded]
 	visible = selected
 
-func setStatus(_hp: int, _max_hp: int, _currExp: int, _exp_needed: int, _selected: bool = false, _tower_name: String = "Tower") -> void:
+func setStatus(_hp: int, _max_hp: int, _currExp: int, _exp_needed: int, selected: bool = false, _tower_name: String = "Tower") -> void:
 	hp = _hp
 	maxHp = max(1, _max_hp)
 	currExp = _currExp
 	expNeeded = max(1, _exp_needed)
-	selected = _selected
+	selected = selected
 	towerName = _tower_name
 	refresh()
 

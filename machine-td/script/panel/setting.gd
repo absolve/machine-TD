@@ -33,14 +33,14 @@ func _ready() -> void:
 	master.setVolume(UserData.masterVolume)
 	bg.setVolume(UserData.musicVolume)
 	sfx.setVolume(UserData.sfxVolume)
-	master.slider.value_changed.connect(_onMasterValueChanged)
-	bg.slider.value_changed.connect(_onBgValueChanged)
-	sfx.slider.value_changed.connect(_onSfxValueChanged)
+	master.slider.value_changed.connect(onMasterValueChanged)
+	bg.slider.value_changed.connect(onBgValueChanged)
+	sfx.slider.value_changed.connect(onSfxValueChanged)
 	# 背景音/音效显示静音开关，并同步上次保存的静音状态
 	bg.muted = UserData.musicMuted
 	sfx.muted = UserData.sfxMuted
-	bg.muteToggled.connect(_onBgMuteToggled)
-	sfx.muteToggled.connect(_onSfxMuteToggled)
+	bg.muteToggled.connect(onBgMuteToggled)
+	sfx.muteToggled.connect(onSfxMuteToggled)
 	TranslationServer.set_locale(UserData.language)
 
 func getLanguageCode(language_value: String) -> String:
@@ -49,41 +49,41 @@ func getLanguageCode(language_value: String) -> String:
 			return language_info.get('code', 'en')
 	return Game.language[0].get('code', 'en') if not Game.language.is_empty() else 'en'
 
-func _onMasterValueChanged(value: float):
+func onMasterValueChanged(value: float):
 	UserData.masterVolume = int(value)
 	UserData.saveSettings()
 	master.volume = value / 100
 	master.playSound()
 
-func _onBgValueChanged(value: float):
+func onBgValueChanged(value: float):
 	UserData.musicVolume = int(value)
 	UserData.saveSettings()
 	bg.volume = value / 100
 	bg.playSound()
 
 	
-func _onSfxValueChanged(value: float):
+func onSfxValueChanged(value: float):
 	UserData.sfxVolume = int(value)
 	UserData.saveSettings()
 	sfx.volume = value / 100
 	sfx.playSound()
 
 
-func _onOptionButtonItemSelected(index: int) -> void:
+func onOptionButtonItemSelected(index: int) -> void:
 	UserData.language = str(language.get_item_metadata(index))
 	UserData.saveSettings()
 	UserData.applyLanguage()
 
 
-func _onBgMuteToggled(muted: bool) -> void:
+func onBgMuteToggled(muted: bool) -> void:
 	UserData.musicMuted = muted
 	UserData.saveSettings()
 
 
-func _onSfxMuteToggled(muted: bool) -> void:
+func onSfxMuteToggled(muted: bool) -> void:
 	UserData.sfxMuted = muted
 	UserData.saveSettings()
 
 
-func _onBtnClosePressed() -> void:
+func onBtnClosePressed() -> void:
 	closed.emit()

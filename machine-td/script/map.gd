@@ -5,11 +5,11 @@ const ENDLESS_LEVEL_SCENE := "res://scene/level/endless.tscn"
 
 ## 教程关的关卡 id（StageData.allStage 里 'id': 0 那条）
 const TUTORIAL_STAGE_ID := 0
-## 教程关的新手引导（**只有教程关**会实例化它，见 _setupTutorialGuide）
+## 教程关的新手引导（**只有教程关**会实例化它，见 setupTutorialGuide）
 const TUTORIAL_GUIDE_SCENE := "res://scene/tutorial_guide.tscn"
 
 ## 无尽结算要写进结算面板的那行文字（普通关卡用不到，一直是空串）
-var _endlessStatsText: String = ""
+var endlessStatsText: String = ""
 
 @onready var hud = $Hud
 #@onready var towerShadow = $TowerShadow
@@ -46,17 +46,17 @@ var ironBox = preload("res://scene/tower/ironBox.tscn")
 var isLastWave = false # 最后一波
 ## 结算复查开关：lastWave() 打开，finish() 复查到"敌人全清"后关闭并弹结算。
 ## 没有它的话，暂停/失败后 Timer 仍会周期性回调 finish()，可能重复结算。
-var _finishChecking: bool = false
+var finishChecking: bool = false
 ## 结算完成标记：真正弹过一次结算后置 true，之后 finish() / lastWaveStarted 一律短路。
 ## 兜底防止"重复的 lastWaveStarted"把宝石行从 "+N" 覆盖成"已领取"，并重复累加通关分数。
-var _settled: bool = false
+var settled: bool = false
 var cellSize = 64
 var debug = false
 var font
 var selectedTower = null # 选中的塔
 var stageData: Dictionary = {} # 当前关卡配置（用于关卡情报弹窗）
 # 最近一次“选中敌人”的时刻(毫秒)：用于避免同一击又被 _unhandled_input 当成点空地而立刻取消
-var _enemyClickMsec: int = -1000
+var enemyClickMsec: int = -1000
 
 
 func _ready():
@@ -65,23 +65,23 @@ func _ready():
 	#Game.selectTower.connect(selectTower)
 	Game.towerPlaced.connect(placeTower)
 	Game.dataRefreshed.connect(refreshData)
-	Game.enemyRewarded.connect(_onEnemyDefeated)
-	Game.gemRewarded.connect(_onGemRewarded)
-	Game.enemyEscaped.connect(_onEnemyEscaped)
-	Game.towerSold.connect(_onTowerSold)
+	Game.enemyRewarded.connect(onEnemyDefeated)
+	Game.gemRewarded.connect(onGemRewarded)
+	Game.enemyEscaped.connect(onEnemyEscaped)
+	Game.towerSold.connect(onTowerSold)
 	# 塔被打爆时也要归还格子（出售那条路已经在 sellTower 里还款+归还了）
-	Game.towerGridReleased.connect(_onTowerGridReleased)
-	Game.towerRepaired.connect(_onTowerRepaired)
-	Game.lastWaveStarted.connect(_onLastWaveStarted)
-	Game.towerClicked.connect(_onTowerClicked)
-	Game.enemyClicked.connect(_onEnemyClicked)
+	Game.towerGridReleased.connect(onTowerGridReleased)
+	Game.towerRepaired.connect(onTowerRepaired)
+	Game.lastWaveStarted.connect(onLastWaveStarted)
+	Game.towerClicked.connect(onTowerClicked)
+	Game.enemyClicked.connect(onEnemyClicked)
 	Game.towerLocked.connect(onTowerLocked)
 	# 技能选中的范围预览圈由 map 的 _draw 画；取消时也必须重绘，否则圈会残留
-	AbilityManager.selectionStarted.connect(_onAbilitySelectionChanged)
-	AbilityManager.selectionEnded.connect(_onAbilitySelectionChanged)
+	AbilityManager.selectionStarted.connect(onAbilitySelectionChanged)
+	AbilityManager.selectionEnded.connect(onAbilitySelectionChanged)
 	# 技能花掉宝石后刷新顶栏数字
-	AbilityManager.gemChanged.connect(_onGemChanged)
-	AbilityManager.abilityFailed.connect(_onAbilityFailed)
+	AbilityManager.gemChanged.connect(onGemChanged)
+	AbilityManager.abilityFailed.connect(onAbilityFailed)
 	
 	resultScreen.btnRestart.pressed.connect(restart)
 	resultScreen.btnNextLevel.pressed.connect(nextLevel)
@@ -90,7 +90,7 @@ func _ready():
 	pauseMenu.restartPressed.connect(restart)
 	pauseMenu.menuPressed.connect(returnHome)
 	# 无尽模式：暂停里允许主动结束本局（普通关卡该按钮隐藏）
-	pauseMenu.giveUpPressed.connect(_onEndlessGiveUp)
+	pauseMenu.giveUpPressed.connect(onEndlessGiveUp)
 		
 	loadLevel()
 	AudioServer.set_bus_mute(AudioServer.get_bus_index("Sfx"), UserData.sfxMuted)
@@ -107,29 +107,29 @@ func _ready():
 	#titleNode.score=level.score
 	titleNode.started.connect(startGame)
 	titleNode.paused.connect(pauseGame)
-	titleNode.soundOnPressed.connect(_onSoundOnPressed)
-	titleNode.soundOffPressed.connect(_onSoundOffPressed)
-	titleNode.musicOnPressed.connect(_onMusicOnPressed)
-	titleNode.musicOffPressed.connect(_onMusicOffPressed)
-	titleNode.homePressed.connect(_onHomePressed)
-	titleNode.speedOnPressed.connect(_onSpeedOnPressed)
-	titleNode.speedOffPressed.connect(_onSpeedOffPressed)
+	titleNode.soundOnPressed.connect(onSoundOnPressed)
+	titleNode.soundOffPressed.connect(onSoundOffPressed)
+	titleNode.musicOnPressed.connect(onMusicOnPressed)
+	titleNode.musicOffPressed.connect(onMusicOffPressed)
+	titleNode.homePressed.connect(onHomePressed)
+	titleNode.speedOnPressed.connect(onSpeedOnPressed)
+	titleNode.speedOffPressed.connect(onSpeedOffPressed)
 	#queue_redraw()
 	# print(int(1920.0 / cellSize))
 	font = ThemeDB.fallback_font
 	# 情报弹窗一关，就提示玩家去点顶栏的开始按钮
 	if levelIntroPanel != null:
-		levelIntroPanel.closed.connect(_onIntroClosed)
+		levelIntroPanel.closed.connect(onIntroClosed)
 	# 地图加载完成后弹出关卡情报，方便玩家查看本关敌人类型
 	showLevelIntro()
 	# 按关卡配置启用能力技能
 	setupAbilities()
 	# 教程关的新手引导（单独场景，只有教程关会实例化；情报弹窗关掉后才现身）
-	_setupTutorialGuide()
+	setupTutorialGuide()
 
 
 ## 本关是否已经开打过。只有第一次点开始才闪横幅，暂停后继续不闪
-var _battleStarted: bool = false
+var battleStarted: bool = false
 
 
 ## 未配置技能的关卡不创建技能条，避免显示空控件。
@@ -149,7 +149,7 @@ func setupAbilities() -> void:
 ##
 ## ⚠️ 必须在 setupAbilities() **之后**调用 —— 引导要检查技能条里有没有技能槽
 ##   （宝石不够时它会自动省掉“放技能”那一步，免得玩家卡在一个做不完的任务上）。
-func _setupTutorialGuide() -> void:
+func setupTutorialGuide() -> void:
 	if Game.endlessMode or int(stageData.get("id", -1)) != TUTORIAL_STAGE_ID:
 		return
 	var scene: PackedScene = load(TUTORIAL_GUIDE_SCENE)
@@ -161,20 +161,20 @@ func _setupTutorialGuide() -> void:
 	# ⚠️ 引导场景的根是 **CanvasLayer**（它负责“永远画在相机之上、不吃相机变换”），
 	#    脚本挂在它里面那层 Root 控件上 —— CanvasLayer 既没有 size 也没有 _draw，
 	#    遮罩必须由 Control 来画。所以这里要往里找一层，**不能**对着根节点调 setup()。
-	tutorialGuide = _find_guide_root(layer)
+	tutorialGuide = findGuideRoot(layer)
 	if tutorialGuide == null:
 		push_error("教程引导场景结构不对：找不到带 setup() 的节点")
 		return
 	tutorialGuide.setup(self)
-	# 关卡情报弹窗还开着就先等它关（_onIntroClosed 会接力 start()）；
+	# 关卡情报弹窗还开着就先等它关（onIntroClosed 会接力 start()）；
 	# 没有弹窗的关卡（理论上教程有，但别赌）就直接开始。
 	if levelIntroPanel == null or not levelIntroPanel.visible:
-		_startTutorialGuide()
+		startTutorialGuide()
 
 
 ## 找到引导场景里“带脚本的那一层”（根自己带脚本就返回根；否则找第一层子节点）。
 ## 不写死节点名，改名也不会悄悄坏掉 —— 找不到才报错。
-func _find_guide_root(node: Node) -> Node:
+func findGuideRoot(node: Node) -> Node:
 	if node == null:
 		return null
 	if node.has_method("setup"):
@@ -186,31 +186,31 @@ func _find_guide_root(node: Node) -> Node:
 
 
 ## 开始（或接力开始）教程引导。重复调用是安全的 —— 引导自己会去重。
-func _startTutorialGuide() -> void:
+func startTutorialGuide() -> void:
 	if tutorialGuide != null:
 		tutorialGuide.start()
 
 
 ## ── 第 1 关的「工具箱在哪」提示 ──
 ##
-## 为什么需要：教程引导只有教程关会走（map.gd::_setupTutorialGuide 里判 stage id），
+## 为什么需要：教程引导只有教程关会走（map.gd::setupTutorialGuide 里判 stage id），
 ## 而**很多人根本不玩教程关**，直接点「开始游戏」进第 1 关 —— 于是不知道左上角那个
 ## 工具箱图标要点开才能建塔。这里在第 1 关给一个和「▶ 呼吸提示」同款的闪烁，指着工具箱。
 ##
 ## 只在第 1 关、且**玩家还没打通第 1 关**时出现：
 ##   · 老玩家（第 1 关已有星级记录）不再被打扰
 ##   · 无尽模式不提示（那一关的规则不一样，也没有关卡 id）
-## 玩家点开工具箱后提示自己消失（见 tower_ui.gd::_onIconGuiInput）。
+## 玩家点开工具箱后提示自己消失（见 tower_ui.gd::onIconGuiInput）。
 ##
-## `_pendingToolboxHint` 的作用：`showLevelIntro()` 里弹窗一开就调用了本函数，
+## `pendingToolboxHint` 的作用：`showLevelIntro()` 里弹窗一开就调用了本函数，
 ## 但那时玩家正在看情报弹窗，两处一起闪会分散注意力。所以先记一笔，
-## 等弹窗关掉（_onIntroClosed）再真正亮起来。
+## 等弹窗关掉（onIntroClosed）再真正亮起来。
 ## 没有情报弹窗的关卡则在 showLevelIntro() 里直接亮。
-var _pendingToolboxHint: bool = false
+var pendingToolboxHint: bool = false
 
 
-## 记录"本关该不该给工具箱提示"。真正的闪烁交给 _startToolboxHintNow()。
-func _startToolboxHint() -> void:
+## 记录"本关该不该给工具箱提示"。真正的闪烁交给 startToolboxHintNow()。
+func startToolboxHint() -> void:
 	if Game.endlessMode:
 		return
 	# 只提示第 1 关；教程关有自己的引导，其它关卡玩家早已上手
@@ -219,14 +219,14 @@ func _startToolboxHint() -> void:
 	# 已经打通第 1 关的老玩家：他显然知道工具箱在哪，别打扰
 	if UserData.getStageRating(1) > 0:
 		return
-	_pendingToolboxHint = true
+	pendingToolboxHint = true
 
 
 ## 真正亮起工具箱提示（情报弹窗关掉之后，或本来就没有弹窗时）。
-func _startToolboxHintNow() -> void:
-	if not _pendingToolboxHint:
+func startToolboxHintNow() -> void:
+	if not pendingToolboxHint:
 		return
-	_pendingToolboxHint = false
+	pendingToolboxHint = false
 	if towerUINode != null and towerUINode.has_method("promptToolbox"):
 		towerUINode.promptToolbox()
 
@@ -243,27 +243,27 @@ func showLevelIntro() -> void:
 		# 没有弹窗的关卡（比如教程）直接就开始提示玩家点开始
 		titleNode.promptStart()
 		# 没有情报弹窗挡着，工具箱提示可以立刻亮起来
-		_startToolboxHintNow()
+		startToolboxHintNow()
 		return
 	levelIntroPanel.showLevel(stageData)
-	# ⚠️ 这里**不要**再写 `_pendingToolboxHint = true`。
-	#    该不该提示已经由 loadLevel() -> _startToolboxHint() 判过了（只在第 1 关、
+	# ⚠️ 这里**不要**再写 `pendingToolboxHint = true`。
+	#    该不该提示已经由 loadLevel() -> startToolboxHint() 判过了（只在第 1 关、
 	#    且玩家还没打通时才会置位）。早先这里多了一句无条件赋值，把关卡判断整个
 	#    覆盖掉，导致**每一关**都在闪工具箱 —— 探针抓到的就是这个。
 
 
 # 情报关闭后提示玩家开战，避免首屏直接进入战斗。
-func _onIntroClosed() -> void:
+func onIntroClosed() -> void:
 	titleNode.promptStart()
 	# 教程关：情报读完就该现身了（此刻地图已经建好、技能条也已就位）
-	_startTutorialGuide()
+	startTutorialGuide()
 	# 第 1 关：顺手给没玩过教程的玩家指一下工具箱在哪
-	_startToolboxHintNow()
+	startToolboxHintNow()
 	
 func loadLevel():
 	# 无尽模式：不走 allStage 查表，直接加载独立关卡场景
 	if Game.endlessMode:
-		_loadEndlessLevel()
+		loadEndlessLevel()
 		return
 	var stageId = StageData.currentStageId
 	var stage_data: Dictionary = {}
@@ -288,12 +288,12 @@ func loadLevel():
 	# syncWaveProgressBar()
 	# 复位相机：回到「整关刚好铺满」，避免上一关放大/拖动后带过来
 	customCamera.resetView()
-	_startToolboxHint()
+	startToolboxHint()
 
 ## 无尽模式：加载独立关卡场景（设计见 endless_mode_design.md）。
 ## 数值由关卡脚本自己定（10 血 / 400 金），所以 levelId 传 -1 ——
 ## base_level._ready() 在 allStage 里匹配不到 -1，就不会覆盖脚本里的值。
-func _loadEndlessLevel() -> void:
+func loadEndlessLevel() -> void:
 	var levelScene: PackedScene = load(ENDLESS_LEVEL_SCENE)
 	if levelScene == null:
 		push_error("加载无尽关卡失败: " + ENDLESS_LEVEL_SCENE)
@@ -317,7 +317,7 @@ func _loadEndlessLevel() -> void:
 #	waveProgressBar.maxProgress = totalWave
 #	waveProgressBar.setProgress(currentWave)
 
-# 旧选塔逻辑已迁移到 _onTowerClicked，保留此段仅供对照。
+# 旧选塔逻辑已迁移到 onTowerClicked，保留此段仅供对照。
 #func selectTower(item):
 	#print(item)
 	#var temp = Game.towerInfo.get(item)
@@ -401,20 +401,20 @@ func refreshData(dict):
 		titleNode.score = dict.score
 	# syncWaveProgressBar()
 
-func _onEnemyDefeated(point):
+func onEnemyDefeated(point):
 	titleNode.money += point
 
 
 ## 击败特殊敌人掉落宝石：入账 + 立刻落盘，再复用"宝石变化"那条现成链路
-## （AbilityManager.gemChanged → _onGemChanged）刷新顶栏数字与技能条可购买状态。
+## （AbilityManager.gemChanged → onGemChanged）刷新顶栏数字与技能条可购买状态。
 ## 掉落数量由 enemyInfo.gemReward 决定（1 或 2），普通敌人根本不发这个信号。
-func _onGemRewarded(amount: int) -> void:
+func onGemRewarded(amount: int) -> void:
 	UserData.addGem(amount)
 	AbilityManager.gemChanged.emit(UserData.gem)
 	# 青色提示，和关卡情报里的"宝石奖励"用同一个色，玩家一眼能认出是宝石
 	addNotice(tr("_GemPicked") % amount, Color(0.4, 0.9, 1.0))
 
-func _onEnemyEscaped(point):
+func onEnemyEscaped(point):
 	# 逃脱敲钟：一声低沉的锣，提示玩家漏怪了。
 	# 放在这里而不是各个敌人脚本里 —— 所有敌人（敌坦/直升机/维修车/导弹车…）
 	# 都是发 Game.enemyEscape 信号，map 是唯一接收方，改一处就全覆盖。
@@ -424,11 +424,11 @@ func _onEnemyEscaped(point):
 	# 先扣血再判定：hp 归零（而不是变成负数）就算基地被打爆
 	titleNode.hp = maxi(0, titleNode.hp - point)
 	if titleNode.hp <= 0:
-		_onDefenseFailed()
+		onDefenseFailed()
 
 ## 无尽结算：记录最高波数（击杀数 / 用时留到 M3 补）。
 ## ⚠️ 这里**不**碰 stageRatings / 关卡解锁 / 关卡通关成就 —— 无尽与关卡系统解耦。
-func _recordEndlessResult() -> void:
+func recordEndlessResult() -> void:
 	var reached: int = int(level.currWave) if level != null else 0
 	var kills: int = int(level.kills) if level != null and "kills" in level else 0
 	var seconds: int = int(level.elapsedSeconds()) if level != null and level.has_method("elapsedSeconds") else 0
@@ -442,27 +442,27 @@ func _recordEndlessResult() -> void:
 	AchievementManager.setProgress("endless_30", reached, false)
 	AchievementManager.savePlayerAchievements()
 	var minutes: int = int(floor(float(seconds) / 60.0))
-	_endlessStatsText = "%s · %s %d · %s %d:%02d" % [tr("_EndlessResult") % reached,
+	endlessStatsText = "%s · %s %d · %s %d:%02d" % [tr("_EndlessResult") % reached,
 		tr("_EndlessKills"), kills, tr("_EndlessTime"), minutes, seconds % 60]
-	addNotice(_endlessStatsText, Color(1.0, 0.85, 0.4))
+	addNotice(endlessStatsText, Color(1.0, 0.85, 0.4))
 
 
 # 基地被打爆：直接进入失败结算
 # 这里刻意不调用 pauseGame()，否则暂停菜单会和结算窗叠在一起
-func _onDefenseFailed() -> void:
+func onDefenseFailed() -> void:
 	if resultScreen.visible:
 		return
 	get_tree().paused = true
 	# 失败结算不会再走 finish()，把复查器关掉，避免它继续空转
-	_finishChecking = false
+	finishChecking = false
 	finishTimer.stop()
 	# 无尽模式：结算前把最高记录落盘（无尽没有"通关"，只有活到第几波）
 	if Game.endlessMode:
-		_recordEndlessResult()
+		recordEndlessResult()
 	resultScreen.setResult(true)
 	# ⚠️ 必须在 setResult() 之后：它自己也会写 waveLabel
-	if Game.endlessMode and not _endlessStatsText.is_empty():
-		resultScreen.waveLabel.text = _endlessStatsText
+	if Game.endlessMode and not endlessStatsText.is_empty():
+		resultScreen.waveLabel.text = endlessStatsText
 	resultScreen.levelRating.rating = 0
 	# ★ 这里**不要**再调 setGemReward —— setResult(true) 已经把宝石行隐藏了，
 	#   而现在 setGemReward 是"通关时始终显示"，再调一次会把整行又亮出来。
@@ -475,8 +475,8 @@ func startGame():
 	# 玩家已经开打了，闪烁提示可以收了
 	titleNode.stopPrompt()
 	# 只有「本关第一次开打」才闪横幅；暂停后继续不再闪
-	if not _battleStarted:
-		_battleStarted = true
+	if not battleStarted:
+		battleStarted = true
 		# 玩家第一次点「开始」时起背景音乐。之后暂停再继续不会重头开始
 		# （play_bgm 内部按曲名去重，同一首已在播就直接返回）。
 		# ★ 08（bgm_08_lunar_amb）先不播，留着备用。
@@ -490,10 +490,10 @@ func startGame():
 
 ## 无尽模式的「结束本局」：主动认输，走和基地被打爆**完全一样**的结算
 ## （包括最高记录落盘与无尽成就），只是不用等基地真的没血。
-func _onEndlessGiveUp() -> void:
+func onEndlessGiveUp() -> void:
 	pauseMenu.hide()
 	get_tree().paused = false
-	_onDefenseFailed()
+	onDefenseFailed()
 
 
 func pauseGame():
@@ -509,37 +509,37 @@ func resumeGame():
 	get_tree().paused = false
 	titleNode.setPlaying(true)
 
-func _onSoundOnPressed():
+func onSoundOnPressed():
 	AudioServer.set_bus_mute(AudioServer.get_bus_index("Sfx"), false)
 	UserData.sfxMuted = false
 	UserData.saveSettings()
 	
-func _onSoundOffPressed():
+func onSoundOffPressed():
 	AudioServer.set_bus_mute(AudioServer.get_bus_index("Sfx"), true)
 	UserData.sfxMuted = true
 	UserData.saveSettings()
 	
-func _onMusicOnPressed():
+func onMusicOnPressed():
 	AudioServer.set_bus_mute(AudioServer.get_bus_index("Bg"), false)
 	UserData.musicMuted = false
 	UserData.saveSettings()
 	
-func _onMusicOffPressed():
+func onMusicOffPressed():
 	AudioServer.set_bus_mute(AudioServer.get_bus_index("Bg"), true)
 	UserData.musicMuted = true
 	UserData.saveSettings()
 
-func _onHomePressed():
+func onHomePressed():
 	pauseGame()
 
-func _onSpeedOnPressed():
+func onSpeedOnPressed():
 	pass
 	
-func _onSpeedOffPressed():
+func onSpeedOffPressed():
 	pass
 
 # 出售防御塔
-func _onTowerSold(money, coverGrid: Array[Vector2i]):
+func onTowerSold(money, coverGrid: Array[Vector2i]):
 	level.removeOccupiedArea(coverGrid)
 	titleNode.money += money
 
@@ -547,14 +547,14 @@ func _onTowerSold(money, coverGrid: Array[Vector2i]):
 ## 塔被打爆：只归还格子，**不给钱**（给钱是"出售"才有的收益）。
 ## 顺便把右侧信息面板收起来 —— 用 clear() 而不是 hide()，它还会把 tower 引用置空，
 ## 免得面板继续指着一座已经被 free 的塔。
-func _onTowerGridReleased(coverGrid: Array[Vector2i]) -> void:
+func onTowerGridReleased(coverGrid: Array[Vector2i]) -> void:
 	if level != null:
 		level.removeOccupiedArea(coverGrid)
 	if towerDetailPanel != null:
 		towerDetailPanel.clear()
 
 # 修理防御塔：扣费成功后把血量回满
-func _onTowerRepaired(cost: int, tower: Node) -> void:
+func onTowerRepaired(cost: int, tower: Node) -> void:
 	if not is_instance_valid(tower):
 		return
 	if titleNode.money < cost:
@@ -568,12 +568,12 @@ func _onTowerRepaired(cost: int, tower: Node) -> void:
 ## 最后一波**开始生成**时触发（注意：不是"打完了"）。
 ## 这里只负责把结算复查器打开 —— 真正的结束判定在 finish() 里反复复查，
 ## 直到「生产列表空 + 场上无敌人」才弹结算。
-func _onLastWaveStarted():
+func onLastWaveStarted():
 	# 已经结算过就不再重新开启复查（重复的 lastWaveStarted 会让结算面板反复弹）
-	if _settled:
+	if settled:
 		return
 	isLastWave = true
-	_finishChecking = true
+	finishChecking = true
 	finishTimer.start()
 
 ## 结算复查（周期触发，见 map.tscn 的 Timer：wait_time=0.5, one_shot=false）
@@ -585,7 +585,7 @@ func _onLastWaveStarted():
 ##      只靠一次判定很容易在敌人全灭前/后错拍。
 ## 现在改成 0.5 秒复查一次，条件满足才结算，满足后停表。
 func finish():
-	if not _finishChecking:
+	if not finishChecking:
 		return
 	if level == null:
 		return
@@ -597,14 +597,14 @@ func finish():
 		return
 
 	# 到这里才算真的"全部清空"，停止复查
-	_finishChecking = false
+	finishChecking = false
 	finishTimer.stop()
 
 	# 结算只做一次：重复触发时第二次起直接返回，
 	# 否则宝石行会被 0 覆盖、通关分数与成就被重复累加。
-	if _settled:
+	if settled:
 		return
-	_settled = true
+	settled = true
 
 	# 记录最高评分、奖励和下一关解锁状态
 	var rating = calculateStars()
@@ -638,10 +638,10 @@ func recordAchievements(rating: int) -> void:
 		return
 	# 基地全程没掉血 <=> 没有任何敌人逃脱
 	var flawless: bool = titleNode.hp >= level.health
-	achievementTracker.recordStageCleared(StageData.currentStageId, flawless, _isMultiRouteLevel())
+	achievementTracker.recordStageCleared(StageData.currentStageId, flawless, isMultiRouteLevel())
 
 # 关卡是否有多条行军路线（存在多条 Path2D）
-func _isMultiRouteLevel() -> bool:
+func isMultiRouteLevel() -> bool:
 	if level == null:
 		return false
 	var pathCount: int = 0
@@ -661,7 +661,7 @@ func onTowerLocked() -> void:
 	addNotice(tr("_TowerLockedInStage"))
 
 ## 塔与敌人共用右侧详情栏，因此这里负责保持单选并更新面板。
-func _onTowerClicked(item, selected):
+func onTowerClicked(item, selected):
 	# 点地图上已放置的塔：给一声"选中"反馈。
 	# 和工具箱里点塔卡片用的是同一个音，但音高略低一点，
 	# 耳朵能分出是"在地图上选的"还是"在工具箱里选的"。
@@ -684,15 +684,15 @@ func _onTowerClicked(item, selected):
 			towerDetailPanel.clear()
 
 ## 敌人与塔共用右侧详情栏，选中敌人前必须先取消塔的选择状态。
-func _onEnemyClicked(enemy):
+func onEnemyClicked(enemy):
 	if enemy == null or not is_instance_valid(enemy):
 		return
-	_enemyClickMsec = Time.get_ticks_msec()
+	enemyClickMsec = Time.get_ticks_msec()
 	# 再次点击同一个敌人 -> 取消选中
 	if enemyDetailPanel and enemyDetailPanel.visible and enemyDetailPanel.enemy == enemy:
 		enemyDetailPanel.clear()
 		return
-	_deselectTower()
+	deselectTower()
 	if enemyDetailPanel:
 		enemyDetailPanel.showEnemy(enemy)
 
@@ -702,7 +702,7 @@ func clearEnemyDetail():
 		enemyDetailPanel.clear()
 
 # 取消当前选中的塔（不递归触发敌人选中）
-func _deselectTower():
+func deselectTower():
 	if selectedTower != null and is_instance_valid(selectedTower):
 		var oldTower = selectedTower
 		selectedTower = null # 先清空，避免 hideSelect 触发的回调把状态弄乱
@@ -721,12 +721,12 @@ func returnHome():
 	get_tree().paused = false
 	SceneTransition.changeScene("res://scene/welcome.tscn")
 
-func _onAbilitySelectionChanged(_ability_id: String) -> void:
+func onAbilitySelectionChanged(_ability_id: String) -> void:
 	queue_redraw()
 
 
 ## 技能花掉宝石：把顶栏的宝石数字同步成最新值。
-func _onGemChanged(_gem: int) -> void:
+func onGemChanged(_gem: int) -> void:
 	if titleNode != null:
 		titleNode.gem = UserData.gem
 	# 宝石数变了，技能槽可不可用也可能变，让技能条刷新一次
@@ -735,17 +735,17 @@ func _onGemChanged(_gem: int) -> void:
 
 
 ## 技能没放出来。目前只有"宝石不够"这一种需要提示玩家。
-func _onAbilityFailed(_ability_id: String, reason: String) -> void:
+func onAbilityFailed(_ability_id: String, reason: String) -> void:
 	if reason == "no_gem":
 		addNotice(tr("_NotEnoughGem"))
 	
 
-func _confirmAbilityTarget() -> void:
+func confirmAbilityTarget() -> void:
 	AbilityManager.confirmTarget(get_global_mouse_position())
 
 
 # 收集范围内自己的防御塔（塔直接挂在 map 下）
-func _getTowersInRadius(center: Vector2, radius: float) -> Array[Tower]:
+func getTowersInRadius(center: Vector2, radius: float) -> Array[Tower]:
 	var result: Array[Tower] = []
 	for child in get_children():
 		if not (child is Tower) or not is_instance_valid(child):
@@ -773,7 +773,7 @@ func areaDamage(center: Vector2, radius: float, damage: int) -> bool:
 			enemy.hurt(damage, null, "energy")
 			hitCount += 1
 	ExplosionManage.playExplosion(center)
-	_playBombardStrike(center, radius)
+	playBombardStrike(center, radius)
 	if hitCount > 0:
 		addNotice(Game.t("_ability_bombard_hit", "Airstrike hit %d enemies") % hitCount, Color(1.0, 0.776, 0.102))
 		return true
@@ -785,7 +785,7 @@ func areaDamage(center: Vector2, radius: float, damage: int) -> bool:
 
 ## 轰炸技能的专属爆炸演出（比普通爆炸大一圈 + 带一圈往外扩散的烟）。
 ## 普通的子弹/塔爆炸仍然走 ExplosionManage，这里只给技能用。
-func _playBombardStrike(center: Vector2, radius: float) -> void:
+func playBombardStrike(center: Vector2, radius: float) -> void:
 	var strike: Node2D = BOMBARD_STRIKE.instantiate()
 	strike.position = center
 	add_child(strike)
@@ -796,7 +796,7 @@ func _playBombardStrike(center: Vector2, radius: float) -> void:
 func areaInvincible(center: Vector2, radius: float, duration: float) -> bool:
 	if radius <= 0.0 or duration <= 0.0:
 		return false
-	var towers: Array[Tower] = _getTowersInRadius(center, radius)
+	var towers: Array[Tower] = getTowersInRadius(center, radius)
 	for tower in towers:
 		tower.setInvincible(duration)
 	if towers.is_empty():
@@ -807,7 +807,7 @@ func areaInvincible(center: Vector2, radius: float, duration: float) -> bool:
 	return true
 
 
-func _onButtonPressed():
+func onButtonPressed():
 	# 地图内按钮用 ui_confirm（区别于菜单里的 coin）
 	SoundManage.playConfirm()
 	resultScreen.show()
@@ -830,7 +830,7 @@ func _unhandled_input(_event):
 	# 正在等待技能目标时，这一击只用于确认/取消技能，不再走原来的取消逻辑
 	if AbilityManager.isSelecting():
 		if _event.is_action_pressed("click"):
-			_confirmAbilityTarget()
+			confirmAbilityTarget()
 			return
 		if _event.is_action_pressed("selectCancel"):
 			AbilityManager.cancelSelecting()
@@ -841,7 +841,7 @@ func _unhandled_input(_event):
 		#towerShadow.setInactive()
 	if _event.is_action_pressed("click"):
 		# 这一击若刚选中了敌人，就不要再当成“点空地”把面板取消掉
-		if Time.get_ticks_msec() - _enemyClickMsec > 150:
+		if Time.get_ticks_msec() - enemyClickMsec > 150:
 			clearEnemyDetail()
 		if selectedTower and is_instance_valid(selectedTower):
 			selectedTower.hideSelect()
@@ -894,4 +894,4 @@ func _exit_tree() -> void:
 	SoundManage.stopBgm()
 	# 工具箱提示的 tween 挂在 tower_ui 上，场景一起走，这里不必额外清理；
 	# 但把待办标记复位，避免同一实例被复用（reload_current_scene）时残留。
-	_pendingToolboxHint = false
+	pendingToolboxHint = false

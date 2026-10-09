@@ -31,14 +31,14 @@ func setLocked(value: bool) -> void:
 		selected.visible = false
 
 
-func _on_mouse_entered() -> void:
+func onMouseEntered() -> void:
 	if locked:
 		return
 	selected.visible = true
 	infoShown.emit(type)
 
 
-func _on_mouse_exited() -> void:
+func onMouseExited() -> void:
 	selected.visible = false
 
 

@@ -50,31 +50,31 @@ var litCount: int = 0
 func play(points: PackedVector2Array) -> void:
 	routePoints = points
 	backLine.points = routePoints
-	_buildDashes()
+	buildDashes()
 	litCount = 0
 	queue_redraw()
-	_run()
+	run()
 
 
 ## 把折线按弧长切成"长 dashLength、隔 dashGap"的虚线
-func _buildDashes() -> void:
+func buildDashes() -> void:
 	dashPoints = PackedVector2Array()
 	dashCount = 0
 	if routePoints.size() < 2 or dashLength <= 0.0:
 		return
-	var total: float = _routeLength()
+	var total: float = routeLength()
 	var period: float = dashLength + dashGap
 	var at: float = 0.0
 	while at < total:
-		dashPoints.append(_pointAt(at))
-		dashPoints.append(_pointAt(minf(at + dashLength, total)))
+		dashPoints.append(pointAt(at))
+		dashPoints.append(pointAt(minf(at + dashLength, total)))
 		at += period
 	@warning_ignore("integer_division")
 	dashCount = dashPoints.size() / 2
 
 
 ## 整条航线的弧长
-func _routeLength() -> float:
+func routeLength() -> float:
 	var total: float = 0.0
 	for i in routePoints.size() - 1:
 		total += routePoints[i].distance_to(routePoints[i + 1])
@@ -82,7 +82,7 @@ func _routeLength() -> float:
 
 
 ## 取航线上弧长 atLen 处的点（折线内线性插值）
-func _pointAt(atLen: float) -> Vector2:
+func pointAt(atLen: float) -> Vector2:
 	var acc: float = 0.0
 	for i in routePoints.size() - 1:
 		var seg: float = routePoints[i].distance_to(routePoints[i + 1])
@@ -94,19 +94,19 @@ func _pointAt(atLen: float) -> Vector2:
 
 
 ## 底衬淡入 → 逐段点亮 → 停留 → 淡出，最后自己销毁
-func _run() -> void:
+func run() -> void:
 	modulate.a = 1.0
 	backLine.default_color.a = 0.0
 	var tween: Tween = create_tween()
 	tween.tween_property(backLine, "default_color:a", BACK_ALPHA, FADE_IN_TIME)
-	tween.tween_method(_setLitProgress, 0.0, 1.0, FILL_TIME)
+	tween.tween_method(setLitProgress, 0.0, 1.0, FILL_TIME)
 	tween.tween_interval(HOLD_TIME)
 	tween.tween_property(self, "modulate:a", 0.0, FADE_TIME)
 	tween.tween_callback(queue_free)
 
 
 ## 点亮进度 0 → 1：只有"又亮了一截"时才重绘，不用每帧重画
-func _setLitProgress(progress: float) -> void:
+func setLitProgress(progress: float) -> void:
 	var n: int = int(round(progress * float(dashCount)))
 	if n == litCount:
 		return

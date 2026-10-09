@@ -13,7 +13,7 @@ func _physics_process(delta: float) -> void:
 	parent.progress += speed * delta
 	if parent.progress_ratio >= 1:
 		Game.enemyEscaped.emit(lossPoints)
-		_freeSelf()
+		freeSelf()
 		return
 	var tower: Tower = pickTowerTarget()
 	if tower != null:

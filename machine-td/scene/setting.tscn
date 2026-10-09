@@ -110,8 +110,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "_Close"
 
-[connection signal="item_selected" from="Box/VBoxContainer/languageBox/HBoxContainer/language" to="." method="_onOptionButtonItemSelected"]
-[connection signal="pressed" from="Box/VBoxContainer/btnClose" to="." method="_onBtnClosePressed"]
+[connection signal="item_selected" from="Box/VBoxContainer/languageBox/HBoxContainer/language" to="." method="onOptionButtonItemSelected"]
+[connection signal="pressed" from="Box/VBoxContainer/btnClose" to="." method="onBtnClosePressed"]
 
 [editable path="box/VBoxContainer/volumeBox/VBoxContainer/master"]
 [editable path="box/VBoxContainer/volumeBox/VBoxContainer/bg"]

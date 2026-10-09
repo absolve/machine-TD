@@ -16,34 +16,34 @@ const TOOLTIP_OFFSET_X := 18.0 # 说明面板与技能槽的间距
 @onready var infoLabel: Label = $TooltipPanel/margin/vbox/infoLabel
 
 # ability_id -> 技能槽节点（ability_slot.tscn 实例）
-var _slots: Dictionary = {}
+var slotNodes: Dictionary = {}
 
 
 func _ready() -> void:
 	tooltipPanel.visible = false
-	AbilityManager.selectionStarted.connect(_onSelectionChanged)
-	AbilityManager.selectionEnded.connect(_onSelectionChanged)
-	AbilityManager.abilityActivated.connect(_onAbilityActivated)
+	AbilityManager.selectionStarted.connect(onSelectionChanged)
+	AbilityManager.selectionEnded.connect(onSelectionChanged)
+	AbilityManager.abilityActivated.connect(onAbilityActivated)
 
 
 # 由 map 调用：按本关配置重建技能槽
 func setup(abilityIds: Array) -> void:
-	_clearSlots()
+	clearSlots()
 	for id in abilityIds:
 		var key: String = str(id)
 		var slot: Node = SLOT_SCENE.instantiate()
 		slots.add_child(slot)
 		slot.setup(key)
-		slot.slotClicked.connect(_onSlotClicked)
-		slot.slotHovered.connect(_onSlotHovered)
-		slot.slotUnhovered.connect(_onSlotUnhovered)
-		_slots[key] = slot
-	visible = not _slots.is_empty()
+		slot.slotClicked.connect(onSlotClicked)
+		slot.slotHovered.connect(onSlotHovered)
+		slot.slotUnhovered.connect(onSlotUnhovered)
+		slotNodes[key] = slot
+	visible = not slotNodes.is_empty()
 
 
 # ===== 技能槽交互 =====
-func _onSlotClicked(abilityId: String) -> void:
-	var slot: Control = _slots.get(abilityId)
+func onSlotClicked(abilityId: String) -> void:
+	var slot: Control = slotNodes.get(abilityId)
 	# 冷却中直接拦下（冷却时间以技能槽内的 Timer 为准）
 	if slot and slot.isCooling():
 		return
@@ -57,32 +57,32 @@ func _onSlotClicked(abilityId: String) -> void:
 ## 宝石数量变化后刷新所有槽的"买不买得起"状态。
 ## 由 map 接 AbilityManager.gem_changed 时调用。
 func refreshAffordable() -> void:
-	for id in _slots.keys():
-		var slot: Control = _slots[id]
+	for id in slotNodes.keys():
+		var slot: Control = slotNodes[id]
 		if slot.has_method("refreshAffordable"):
 			slot.refreshAffordable()
 
 
-func _onSlotHovered(abilityId: String, slot: Control) -> void:
-	_showTooltip(abilityId, slot)
+func onSlotHovered(abilityId: String, slot: Control) -> void:
+	showTooltip(abilityId, slot)
 
 
-func _onSlotUnhovered() -> void:
+func onSlotUnhovered() -> void:
 	tooltipPanel.visible = false
 
 
 # ===== 与技能管理器联动 =====
 # 技能确认生效后，让对应的技能槽开始冷却
-func _onAbilityActivated(abilityId: String, _target) -> void:
-	var slot: Control = _slots.get(abilityId)
+func onAbilityActivated(abilityId: String, _target) -> void:
+	var slot: Control = slotNodes.get(abilityId)
 	if slot:
 		slot.startCooldown()
 
 
-func _onSelectionChanged(_ability_id: String) -> void:
+func onSelectionChanged(_ability_id: String) -> void:
 	var selecting: String = AbilityManager.getSelectingId()
-	for id in _slots.keys():
-		var slot: Control = _slots[id]
+	for id in slotNodes.keys():
+		var slot: Control = slotNodes[id]
 		slot.setHighlighted(id == selecting)
 	# 选择目标时收起说明，避免挡住地图
 	if not selecting.is_empty():
@@ -94,7 +94,7 @@ func _onSelectionChanged(_ability_id: String) -> void:
 
 
 # ===== 悬停说明 =====
-func _showTooltip(abilityId: String, slot: Control) -> void:
+func showTooltip(abilityId: String, slot: Control) -> void:
 	nameLabel.text = AbilityManager.getDisplayName(abilityId)
 	descLabel.text = AbilityManager.getDescription(abilityId)
 
@@ -123,9 +123,9 @@ func _showTooltip(abilityId: String, slot: Control) -> void:
 
 
 # ===== 清理 =====
-func _clearSlots() -> void:
+func clearSlots() -> void:
 	for child in slots.get_children():
 		slots.remove_child(child)
 		child.queue_free()
-	_slots.clear()
+	slotNodes.clear()
 	tooltipPanel.visible = false

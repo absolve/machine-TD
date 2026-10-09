@@ -27,8 +27,8 @@ extends Area2D
 
 func _ready() -> void:
 	if snapToGrid:
-		_snapToCell()
-	_playSlot()
+		snapToCell()
+	playSlot()
 	set_process(dotPulse)
 
 
@@ -43,7 +43,7 @@ func setDotPulse(on: bool) -> void:
 
 ## 帧动画不会自己跑（AnimatedSprite2D 的 autoplay 留空），这里替它起跑；
 ## 动画名对不上时静默跳过，避免 play() 报错刷屏
-func _playSlot() -> void:
+func playSlot() -> void:
 	if slot == null or slot.sprite_frames == null:
 		return
 	if slot.sprite_frames.has_animation(slot.animation):
@@ -56,7 +56,7 @@ func getGrid() -> Vector2i:
 	return Vector2i(floori(position.x / t), floori(position.y / t))
 
 
-func _snapToCell() -> void:
+func snapToCell() -> void:
 	var t: int = StageData.TileSize
 	position = Vector2(getGrid() * t) + Vector2(t, t) * 0.5
 

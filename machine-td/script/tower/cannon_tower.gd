@@ -26,11 +26,11 @@ func fire(t):
 		delayTimer.start()
 
 
-func _onRadarAreaEntered(area):
+func onRadarAreaEntered(area):
 	addTarget(area)
 
 
-func _onRadarAreaExited(area):
+func onRadarAreaExited(area):
 	target.erase(area)
 
 

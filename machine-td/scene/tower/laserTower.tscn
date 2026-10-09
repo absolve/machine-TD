@@ -175,5 +175,5 @@ scale_amount_min = 0.45
 scale_amount_curve = SubResource("Curve_laserhit")
 color_ramp = SubResource("Grad_laserhit")
 
-[connection signal="area_entered" from="radar" to="." method="_onRadarAreaEntered"]
-[connection signal="area_exited" from="radar" to="." method="_onRadarAreaExited"]
+[connection signal="area_entered" from="radar" to="." method="onRadarAreaEntered"]
+[connection signal="area_exited" from="radar" to="." method="onRadarAreaExited"]

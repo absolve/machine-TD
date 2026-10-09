@@ -148,10 +148,10 @@ layout_mode = 2
 [node name="btnStart" parent="PanelContainer/hbox/HBoxContainer3/btnHome/MarginContainer" parent_id_path=PackedInt32Array(1747648329, 1490485672) index="0" unique_id=2058281700]
 texture_normal = ExtResource("10_5tkpx")
 
-[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnStart/MarginContainer/btnStart" to="." method="_onTextureButtonToggled"]
-[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnMusic/MarginContainer/btnStart" to="." method="_onBtnMusicToggled"]
-[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnSfx/MarginContainer/btnStart" to="." method="_onBtnSoundToggled"]
-[connection signal="pressed" from="PanelContainer/hbox/HBoxContainer3/btnHome/MarginContainer/btnStart" to="." method="_onBtnHomePressed"]
+[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnStart/MarginContainer/btnStart" to="." method="onTextureButtonToggled"]
+[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnMusic/MarginContainer/btnStart" to="." method="onBtnMusicToggled"]
+[connection signal="toggled" from="PanelContainer/hbox/HBoxContainer3/btnSfx/MarginContainer/btnStart" to="." method="onBtnSoundToggled"]
+[connection signal="pressed" from="PanelContainer/hbox/HBoxContainer3/btnHome/MarginContainer/btnStart" to="." method="onBtnHomePressed"]
 
 [editable path="PanelContainer/hbox/HBoxContainer3/btnStart"]
 [editable path="PanelContainer/hbox/HBoxContainer3/btnMusic"]

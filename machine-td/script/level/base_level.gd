@@ -14,7 +14,7 @@ const DEFAULT_SPAWN_INTERVAL := 1.0
 const MIN_SPAWN_DELAY := 0.05
 
 ## 本关的兜底生成间隔（_ready 时从关卡配置读入）
-var _spawnInterval: float = DEFAULT_SPAWN_INTERVAL
+var spawnInterval: float = DEFAULT_SPAWN_INTERVAL
 
 ## 出怪间隔的整体缩放：无尽模式按波次把节奏调快（普通关卡恒为 1.0）。
 var spawnDelayScale: float = 1.0
@@ -33,7 +33,7 @@ var routes: Array[Path2D] = []
 ## 敌人生成时如果走的是这几条之一，就先画一次航线提示。
 var hintRoutes: Array[int] = []
 ## 本波是否已经画过航线提示。同一波可能连着刷好几架飞机，提醒一次就够。
-var _hintShownInWave: bool = false
+var hintShownInWave: bool = false
 
 
 var currWave = 0  #当前波次
@@ -90,7 +90,7 @@ const OFFSET_HALF_DEFAULT := 4.0
 const AIR_ROUTE_HINT := preload("res://scene/level/air_route_hint.tscn")
 
 ## 同一兵种内的交替计数器：类型 -> 已经刷了几个
-var _spawnLane: Dictionary = {}
+var spawnLane: Dictionary = {}
 
 func _ready() -> void:
 	Game.selectTower.connect(selectTower)
@@ -98,11 +98,11 @@ func _ready() -> void:
 	#    场景漏连的表现是：`waveTimer.start()` 之后没有任何回调 —— 进关后**一个敌人都不出**，
 	#    也不报错、不卡顿，非常难查（无尽模式的 endless.tscn 就漏了这两行）。
 	#    这里补一道代码兜底：没连就自己连上；15 个关卡场景已经连过，is_connected 会跳过。
-	if not waveTimer.timeout.is_connected(_onWaveTimerTimeout):
-		waveTimer.timeout.connect(_onWaveTimerTimeout)
-	if not spawnerTimer.timeout.is_connected(_onSpawnerTimerTimeout):
-		spawnerTimer.timeout.connect(_onSpawnerTimerTimeout)
-	_collectRoutes()
+	if not waveTimer.timeout.is_connected(onWaveTimerTimeout):
+		waveTimer.timeout.connect(onWaveTimerTimeout)
+	if not spawnerTimer.timeout.is_connected(onSpawnerTimerTimeout):
+		spawnerTimer.timeout.connect(onSpawnerTimerTimeout)
+	collectRoutes()
 	for i in StageData.allStage:
 		if levelId == i.get("id"):
 			wave = i.get("wave")
@@ -112,7 +112,7 @@ func _ready() -> void:
 			# 生成间隔：关卡配置可覆盖（教程关要放大量敌人，必须调快）
 			var interval: float = float(i.get("spawnInterval", DEFAULT_SPAWN_INTERVAL))
 			if interval > 0.0:
-				_spawnInterval = interval
+				spawnInterval = interval
 				spawnerTimer.wait_time = interval
 			# 配置里声明的路线数和场景里实际摆的 Path2D 数量应当一致，不一致给个提示
 			var declared: int = int(i.get("routes", 1))
@@ -120,14 +120,14 @@ func _ready() -> void:
 				push_warning("关卡 %d 声明 %d 条路线，场景里实际摆了 %d 个 Path2D" % [levelId, declared, routes.size()])
 			break
 	# 可建造区：关卡里摆的 placeableArea 实例（子节点 _ready 已先跑完，位置对齐过了）
-	_collectAllowArea()
+	collectAllowArea()
 	# 需要提示的航线由关卡数据声明（地面路线有传送带，玩家看得出走向，不用提示）
 	for routeNo in StageData.getHintRoutes(levelId):
 		hintRoutes.append(int(routeNo))
 
 # 收集本关所有路线：场景里的 Path2D 子节点，按摆放顺序。
 # 约定第 1 个就是「路线1」—— 所以关卡配置里不写 route 的敌人默认走它。
-func _collectRoutes() -> void:
+func collectRoutes() -> void:
 	routes.clear()
 	for child in get_children():
 		if child is Path2D:
@@ -135,10 +135,10 @@ func _collectRoutes() -> void:
 
 
 ## 把这条航线的走向画一遍给玩家看（画完自己消失）。每波最多提醒一次。
-func _showRouteHint(route: Path2D) -> void:
+func showRouteHint(route: Path2D) -> void:
 	if route.curve == null:
 		return
-	_hintShownInWave = true
+	hintShownInWave = true
 	# 局部变量不写类型：AirRouteHint 是刚加的 class_name，工程要重新扫描一次才认，
 	# 这里走动态调用就不依赖扫描时机了
 	var hint = AIR_ROUTE_HINT.instantiate()
@@ -156,12 +156,12 @@ func getRoute(route_no: int) -> Path2D:
 		return null
 	return routes[clampi(route_no - 1, 0, routes.size() - 1)]
 
-func get_route_count() -> int:
+func getRouteCount() -> int:
 	return routes.size()
 
 # 把关卡里所有 placeableArea 实例换算成格子坐标填进 allowArea。
 # 老关卡仍可在自己脚本里手写 allowArea，两者会合并。
-func _collectAllowArea() -> void:
+func collectAllowArea() -> void:
 	for node in get_tree().get_nodes_in_group("placeableArea"):
 		if not node.has_method("getGrid"):
 			continue
@@ -201,7 +201,7 @@ func start():
 
 ## 取第 waveNo 波的生成记录。默认＝从关卡数据里筛 time == waveNo；
 ## 无尽模式覆写这里，按波次**现场生成**编制（见 script/level/endless_level.gd）。
-func _build_wave_spawner(waveNo: int) -> Array:
+func buildWaveSpawner(waveNo: int) -> Array:
 	var rows: Array = []
 	for spawnInfo in enemyList:
 		if int(spawnInfo.get("time", 0)) == waveNo:
@@ -209,7 +209,7 @@ func _build_wave_spawner(waveNo: int) -> Array:
 	return rows
 
 
-func _onWaveTimerTimeout():
+func onWaveTimerTimeout():
 	if currentSpawner.size() > 0:
 		waveTimer.start()
 		return
@@ -220,17 +220,17 @@ func _onWaveTimerTimeout():
 	currWave += 1
 	Game.dataRefreshed.emit({'wave': currWave})
 	# 新的一波：航线提示可以再提醒一次（同一波内只提示一次，避免连着刷）
-	_hintShownInWave = false
-	currentSpawner.append_array(_build_wave_spawner(currWave))
+	hintShownInWave = false
+	currentSpawner.append_array(buildWaveSpawner(currWave))
 
 	if currentSpawner.size() > 0:
 		# 本波第一拍也要按队首记录的 delay 走，不能沿用上一波残留的 wait_time
-		spawnerTimer.wait_time = _nextSpawnDelay()
+		spawnerTimer.wait_time = nextSpawnDelay()
 		spawnerTimer.start()
 	if currWave >= wave:
 		# ★ 最后一波已排上：**必须停掉波次计时器**。
 		#   WaveTimer 是重复型（one_shot = false），不停的话它会每隔 wait_time 再触发，
-		#   每次 currWave 都 > wave、_build_wave_spawner 又返回空 → 反复发 lastWaveStarted，
+		#   每次 currWave 都 > wave、buildWaveSpawner 又返回空 → 反复发 lastWaveStarted，
 		#   结算面板被反复弹出、宝石/分数被重复结算（症状：通关先显示 +N 宝石，
 		#   一秒后又变成"本次无宝石"）。
 		waveTimer.stop()
@@ -251,7 +251,7 @@ func _onWaveTimerTimeout():
 ## 间隔统一从那张表拿，所以关卡配置里**不用再逐条写 delay** ——
 ## 全工程 16 个关卡、五百多条记录自动一致。
 ## 关卡想整体放慢/加快，用 'spawnInterval'（表里没配的兵种才会用到它）。
-func _onSpawnerTimerTimeout():
+func onSpawnerTimerTimeout():
 	# 清掉已经生成完的记录
 	while currentSpawner.size() > 0 and int(currentSpawner[0].get("number", 0)) <= 0:
 		currentSpawner.pop_front()
@@ -260,7 +260,7 @@ func _onSpawnerTimerTimeout():
 		return
 
 	var spawnInfo: Dictionary = currentSpawner[0]
-	_spawnEnemy(spawnInfo)
+	spawnEnemy(spawnInfo)
 	spawnInfo["number"] = int(spawnInfo.get("number", 0)) - 1
 	if int(spawnInfo["number"]) <= 0:
 		currentSpawner.pop_front()
@@ -268,7 +268,7 @@ func _onSpawnerTimerTimeout():
 	# 还有下一个就排下一拍；间隔按"下一个敌人所属记录"的 delay 走
 	if currentSpawner.is_empty():
 		return
-	spawnerTimer.wait_time = _nextSpawnDelay()
+	spawnerTimer.wait_time = nextSpawnDelay()
 	spawnerTimer.start()
 
 
@@ -276,12 +276,12 @@ func _onSpawnerTimerTimeout():
 ##
 ## 查表拿不到的类型，回落到本关兜底间隔 _spawn_interval（教程关 1.0，
 ## 其它关卡走 DEFAULT_SPAWN_INTERVAL）—— 保证永远不会出现"漏配 → 瞬间刷一堆"。
-func _nextSpawnDelay() -> float:
+func nextSpawnDelay() -> float:
 	if currentSpawner.is_empty():
-		return _spawnInterval
+		return spawnInterval
 	var enemyType = currentSpawner[0].get("type", null)
 	if enemyType == null:
-		return maxf(_spawnInterval * spawnDelayScale, MIN_SPAWN_DELAY)
+		return maxf(spawnInterval * spawnDelayScale, MIN_SPAWN_DELAY)
 	return maxf(StageData.getSpawnDelay(enemyType) * spawnDelayScale, MIN_SPAWN_DELAY)
 
 
@@ -289,7 +289,7 @@ func _nextSpawnDelay() -> float:
 
 ## 算这次生成该给多大偏移。
 ## 返回 0 表示贴中线（理论上不会 —— 只要配了分道幅度就一定有侧向位移）。
-func _resolveOffset(spawnInfo: Dictionary) -> float:
+func resolveOffset(spawnInfo: Dictionary) -> float:
 	# 手写 offset 优先
 	if spawnInfo.has("offset"):
 		return float(spawnInfo.get("offset", 0.0))
@@ -298,15 +298,15 @@ func _resolveOffset(spawnInfo: Dictionary) -> float:
 		return 0.0
 	var half: float = float(OFFSET_HALF_WIDTH.get(t, OFFSET_HALF_DEFAULT))
 	# 同一兵种内交替左右；不同兵种的主方向由类型序号决定，避免同刻叠一起
-	var n: int = int(_spawnLane.get(t, 0))
-	_spawnLane[t] = n + 1
+	var n: int = int(spawnLane.get(t, 0))
+	spawnLane[t] = n + 1
 	var side: float = AUTO_OFFSET_LANES[n % AUTO_OFFSET_LANES.size()]
 	# 再叠一个"兵种序号"的奇偶，让不同兵种主方向错开
 	var typeParity: float = 1.0 if (int(t) % 2) == 0 else -1.0
 	return half * side * typeParity
 
 
-func _spawnEnemy(spawnInfo: Dictionary):
+func spawnEnemy(spawnInfo: Dictionary):
 	# 'route' 不写就是路线1；写 2、3 …… 就从别的路线出发
 	var route: Path2D = getRoute(int(spawnInfo.get("route", 1)))
 	if route == null or route.curve == null:
@@ -339,7 +339,7 @@ func _spawnEnemy(spawnInfo: Dictionary):
 	# 方向约定：正 = 行进方向的右侧，靠 PathFollow2D.rotates = true（默认）得来；
 	# 以后若把这里改成 rotates = false，h/v_offset 会退化成世界坐标偏移，
 	# 那时得改用别的做法。
-	follower.v_offset = _resolveOffset(spawnInfo)
+	follower.v_offset = resolveOffset(spawnInfo)
 	route.add_child(follower)
 
 	var enemyNode = scene.instantiate()
@@ -353,8 +353,8 @@ func _spawnEnemy(spawnInfo: Dictionary):
 	enemyNode.points = route.curve.get_baked_points()
 	# 走的是数据里标了"需要提示"的航线（空中航线，场景里看不见）→ 先画一遍提醒玩家
 	var routeNo: int = routes.find(route) + 1
-	if routeNo > 0 and routeNo in hintRoutes and not _hintShownInWave:
-		_showRouteHint(route)
+	if routeNo > 0 and routeNo in hintRoutes and not hintShownInWave:
+		showRouteHint(route)
 
 # 获取塔占用的网格
 func getTowerCoverGrid(center_grid: Vector2i, tower_size: Vector2i) -> Array[Vector2i]:

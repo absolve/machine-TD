@@ -21,13 +21,13 @@ const SPIN_SMOOTH := 5.0
 ## 因为激光能同时锁 3 个目标，所以场景里摆了 3 组（hitFx0/1/2），一个目标一组；
 ## 目标少于 3 个时多出来的那组直接关掉 emitting，不浪费。
 ## 这里按名字前缀自动收集，以后要改同时攻击的目标数，只要在场景里增删 hitFx* 就行。
-@onready var _hitFx: Array = _collectHitFx()
+@onready var _hitFx: Array = collectHitFx()
 
 var laserTargets: Array = [] # 当前激光锁定的敌人
 ## 持续攻击音的开关状态（有目标就循环响，没目标就停）
-var _laserLoopOn: bool = false
+var laserLoopOn: bool = false
 ## 当前自转速度（弧度/秒）。用平滑器跟着目标数走，避免锁定数一变就"一顿"。
-var _spinSpeed: float = 0.0
+var spinSpeed: float = 0.0
 ## 部署动画（initTime 那 1.6 秒）放完了没有。
 ## 基类 _ready 里 `set_physics_process(false)`，要等 init() 才打开；
 ## 但这里还是再立一个自己的标志，免得依赖基类的时序。
@@ -52,7 +52,7 @@ func init() -> void:
 	deployed = true
 
 func fireLasers():
-	_playMuzzleFx(getMuzzlePosition())
+	playMuzzleFx(getMuzzlePosition())
 	for enemy in laserTargets:
 		if is_instance_valid(enemy) and enemy.has_method("hurt"):
 			enemy.hurt(atk,self)
@@ -68,7 +68,7 @@ func fireLasers():
 # 炮口粒子：粒子就在**本场景里**（muzzleFx），直接挪到炮口重播即可。
 # 不再 instantiate 单独的场景 —— 一秒钟要放好几次，反复新建销毁很浪费；
 # 而且粒子是塔的一部分，塔被卖掉时会跟着一起销毁，不会残留。
-func _playMuzzleFx(pos: Vector2) -> void:
+func playMuzzleFx(pos: Vector2) -> void:
 	if muzzleFx == null:
 		return
 	muzzleFx.global_position = pos
@@ -77,7 +77,7 @@ func _playMuzzleFx(pos: Vector2) -> void:
 
 
 # 收集最多MAX_TARGETS个有效目标
-func _collectTargets() -> Array:
+func collectTargets() -> Array:
 	var result: Array = []
 	for t in target:
 		if is_instance_valid(t):
@@ -88,7 +88,7 @@ func _collectTargets() -> Array:
 
 
 # 把场景里所有叫 hitFx* 的粒子收进来（按场景顺序 = hitFx0, hitFx1, hitFx2 ...）
-func _collectHitFx() -> Array:
+func collectHitFx() -> Array:
 	var out: Array = []
 	for c in get_children():
 		if c is CPUParticles2D and String(c.name).begins_with("hitFx"):
@@ -104,7 +104,7 @@ func _collectHitFx() -> Array:
 #
 # 粒子用 local_coords = false —— 发射出去的粒子留在世界坐标里不跟着发射器走，
 # 目标一边走一边被烧，火花就会在后面拖出一条喷溅的尾巴，比"黏在身上"好看。
-func _updateHitFx() -> void:
+func updateHitFx() -> void:
 	for i in _hitFx.size():
 		var fx: CPUParticles2D = _hitFx[i]
 		if fx == null:
@@ -118,7 +118,7 @@ func _updateHitFx() -> void:
 			fx.emitting = false
 
 
-func _drawLaserBeam(start: Vector2, end: Vector2) -> void:
+func drawLaserBeam(start: Vector2, end: Vector2) -> void:
 	var direction = end - start
 	if direction.length_squared() <= 0.0001:
 		return
@@ -142,29 +142,29 @@ func _drawLaserBeam(start: Vector2, end: Vector2) -> void:
 	#draw_line(prev, end, color, width)
 
 
-func _onRadarAreaEntered(area: Area2D) -> void:
+func onRadarAreaEntered(area: Area2D) -> void:
 	target.push_back(area)
 
 
-func _onRadarAreaExited(area: Area2D) -> void:
+func onRadarAreaExited(area: Area2D) -> void:
 	target.erase(area)
 
 
 func _physics_process(_delta: float):
 	super._physics_process(_delta)
 	# 收集最多3个有效目标
-	laserTargets = _collectTargets()
+	laserTargets = collectTargets()
 
 	# 命中点的持续喷溅火花：跟着目标跑（和激光末端同一个坐标）
-	_updateHitFx()
+	updateHitFx()
 
 	# 炮塔自转：转速跟着锁定数量走（没有目标也慢慢转，塔是活的）。
 	# ⚠️ 必须等 init() 之后才转 —— 建塔动画那 1.6 秒里 base/turret 还是半透明的虚影，
 	#    让它转起来看着像 bug。
 	if deployed:
 		var wantSpeed: float = TURN_IDLE + TURN_PER_TARGET * float(laserTargets.size())
-		_spinSpeed = lerpf(_spinSpeed, wantSpeed, SPIN_SMOOTH * _delta)
-		turret.rotation += _spinSpeed * _delta
+		spinSpeed = lerpf(spinSpeed, wantSpeed, SPIN_SMOOTH * _delta)
+		turret.rotation += spinSpeed * _delta
 
 	# 伤害扣血: 使用 delayTimer/canShot 间隔扣血(与其他塔一致的脉冲机制)
 	if not laserTargets.is_empty() and canShot:
@@ -176,8 +176,8 @@ func _physics_process(_delta: float):
 	# 用 SoundManage 的循环通道（start_loop/stop_loop），它内部自己管播放器，
 	# 所以不用在这个场景里塞 AudioStreamPlayer，也不怕塔被卖掉时声音残留。
 	var wantLoop: bool = not laserTargets.is_empty()
-	if wantLoop != _laserLoopOn:
-		_laserLoopOn = wantLoop
+	if wantLoop != laserLoopOn:
+		laserLoopOn = wantLoop
 		if wantLoop:
 			SoundManage.startLoop("laser_tower", "tower_laser_charge", -14.0)
 		else:
@@ -200,7 +200,7 @@ func _draw():
 		if not is_instance_valid(enemy):
 			continue
 		var end = to_local(enemy.global_position)
-		_drawLaserBeam(start, end)
+		drawLaserBeam(start, end)
 
 
 ## 塔被卖掉或摧毁时一定要停掉循环音，否则会一直响下去

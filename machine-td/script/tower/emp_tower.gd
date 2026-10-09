@@ -6,21 +6,21 @@ const EMP_COLOR := Color(0.2, 0.85, 1.0, 1.0) # 电磁主题色(青色)
 	#super._physics_process(delta)
 
 func _ready() -> void:
-	rader.area_entered.connect(_onRadarAreaEntered)
-	rader.area_exited.connect(_onRadarAreaExited)
+	rader.area_entered.connect(onRadarAreaEntered)
+	rader.area_exited.connect(onRadarAreaExited)
 	super._ready()
 
-func _onRadarAreaEntered(area: Area2D) -> void:
+func onRadarAreaEntered(area: Area2D) -> void:
 	if area is Enemy and not area.flying and not target.has(area):
 		target.append(area)
-		_applySlow(area, true)
+		applySlow(area, true)
 
-func _onRadarAreaExited(area: Area2D) -> void:
+func onRadarAreaExited(area: Area2D) -> void:
 	target.erase(area)
 	if area is Enemy and is_instance_valid(area):
-		_applySlow(area, false)
+		applySlow(area, false)
 
-func _applySlow(enemy: Enemy, enabled: bool) -> void:
+func applySlow(enemy: Enemy, enabled: bool) -> void:
 	var slowRatio: float = clampf(float(atk) / 100.0, 0.0, 1.0)
 	if enabled:
 		enemy.speed = int(round(enemy.speed * (1.0 - slowRatio)))
@@ -31,7 +31,7 @@ func _applySlow(enemy: Enemy, enabled: bool) -> void:
 func _exit_tree() -> void:
 	for enemy in target:
 		if is_instance_valid(enemy) and enemy is Enemy:
-			_applySlow(enemy, false)
+			applySlow(enemy, false)
 
 
 func _draw():

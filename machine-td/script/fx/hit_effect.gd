@@ -34,13 +34,13 @@ var busy: bool = false
 
 @onready var _particles: CPUParticles2D = $Particles
 
-var _cd: float = 0.0
+var cd: float = 0.0
 
 
 func _ready() -> void:
 	z_index = 7
-	_apply()
-	_idle()
+	apply()
+	idle()
 
 
 ## 池子借出时调用：定位、重播粒子、开始计时
@@ -57,12 +57,12 @@ func playAt(pos: Vector2) -> void:
 	_particles.emitting = true
 	# 4) 全部就位了才显形
 	busy = true
-	_cd = hitDuration
+	cd = hitDuration
 	visible = true
 	set_process(true)
 
 
-func _idle() -> void:
+func idle() -> void:
 	# ⚠️ 这里**只隐藏，不要移动节点**。
 	#    以前这里还有一句 `global_position = OFFSCREEN`，结果回池那一帧节点在
 	#    "可见 + 位于命中点"的状态下被瞬移到 (-100000,-100000)，
@@ -76,7 +76,7 @@ func _idle() -> void:
 
 
 ## 把导出变量应用到粒子节点上（派生场景改了导出值，这里统一落下去）
-func _apply() -> void:
+func apply() -> void:
 	if _particles == null:
 		return
 	if particleTexture != null:
@@ -90,9 +90,9 @@ func _apply() -> void:
 
 
 func _process(delta: float) -> void:
-	_cd -= delta
-	if _cd <= 0.0:
-		_idle()
+	cd -= delta
+	if cd <= 0.0:
+		idle()
 
 
-## 回池：藏起来、停粒子（但**不销毁**，也不移动 —— 见 _idle() 的注释）
+## 回池：藏起来、停粒子（但**不销毁**，也不移动 —— 见 idle() 的注释）

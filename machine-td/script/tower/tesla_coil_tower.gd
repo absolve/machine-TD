@@ -26,10 +26,10 @@ func _ready() -> void:
 	# 炮塔动画：本塔的 turret SpriteFrames 里有 idle / attack 两个动画，
 	# 帧内容一样（都是电流的几种形态），差别只在播放速度。
 	# ⚠️ 必须在 super._ready() **之后** play，否则会被基类设成静态单帧。
-	_playTurretAnim(ANIM_IDLE)
+	playTurretAnim(ANIM_IDLE)
 
 
-func _playTurretAnim(anim: String) -> void:
+func playTurretAnim(anim: String) -> void:
 	if turret == null:
 		return
 	if not turret.sprite_frames.has_animation(anim):
@@ -51,7 +51,7 @@ func _playTurretAnim(anim: String) -> void:
 
 # 触发闪电: 以某个敌人为起点,收集最多MAX_CHAIN个链上敌人并显示特效
 func fireLightning(initial_target):
-	chainTargets = _collectChain(initial_target)
+	chainTargets = collectChain(initial_target)
 	# 攻击音：放一次电响一声。
 	# 用 `arc_zap_short`（0.28 秒）—— 这是 `arc_zap` 剪出来的短版：
 	# 原版整段 0.95 秒，尾巴是余响，而本塔 reload 只有 1.5 秒，
@@ -60,13 +60,13 @@ func fireLightning(initial_target):
 	# 不在代码里做限时切断 —— 音效该怎么响就该由音频文件本身决定。
 	# 也不用 tower_tesla_fire：那个整段 3.44 秒，比 reload 还长。
 	SoundManage.playAt("arc_zap_short", marker.global_position, -8.0, randf_range(0.92, 1.10))
-	_applyChainDamage()
+	applyChainDamage()
 	lightningTimer = LIGHTNING_DURATION
 	flickerTimer = 0.0
-	_regenerateJaggedPoints()
+	regenerateJaggedPoints()
 	queue_redraw()
 
-func _applyChainDamage() -> void:
+func applyChainDamage() -> void:
 	var damage: float = float(atk)
 	# 命中弧线的父节点（map）。用它做 to_local 换算，比直接写 global_position 稳：
 	# 万一 map 带缩放/偏移，global_position 会偏。
@@ -101,15 +101,15 @@ func _applyChainDamage() -> void:
 ##
 ##   （历史：以前敌人场景的根是 PathFollow2D、真正的 Area2D 是子节点 "Enemy"，
 ##    所以路径根节点会混进 target 列表。现在敌人场景根就是 Area2D
-##    —— 见 base_level._spawnEnemy —— 但雷达仍可能收到别的 Area2D，
+##    —— 见 base_level.spawnEnemy —— 但雷达仍可能收到别的 Area2D，
 ##    这道闸继续留着，成本为零。）
-func _isAreaTarget(t) -> bool:
+func isAreaTarget(t) -> bool:
 	return t is Area2D
 
 
 # 贪心收集链上敌人: 从首个敌人开始,每次找最近的未使用目标
-func _collectChain(first) -> Array:
-	if not is_instance_valid(first) or not _isAreaTarget(first) or not canTarget(first):
+func collectChain(first) -> Array:
+	if not is_instance_valid(first) or not isAreaTarget(first) or not canTarget(first):
 		return []
 	var result: Array = [first]
 	var used: Dictionary = {first: true}
@@ -118,7 +118,7 @@ func _collectChain(first) -> Array:
 		var next = null
 		var bestDist = CHAIN_MAX_DIST
 		for t in target:
-			if used.has(t) or not is_instance_valid(t) or not _isAreaTarget(t) or not canTarget(t):
+			if used.has(t) or not is_instance_valid(t) or not isAreaTarget(t) or not canTarget(t):
 				continue
 			var d = t.global_position.distance_to(current.global_position)
 			if d < bestDist:
@@ -132,7 +132,7 @@ func _collectChain(first) -> Array:
 	return result
 
 # 重新生成抖动折线点: 炮口 -> 敌人1 -> 敌人2 -> ... 
-func _regenerateJaggedPoints():
+func regenerateJaggedPoints():
 	jaggedPoints.clear()
 	if chainTargets.is_empty():
 		return
@@ -142,14 +142,14 @@ func _regenerateJaggedPoints():
 		if !is_instance_valid(enemy):
 			continue
 		var end = to_local(enemy.global_position)
-		var seg = _generateSegment(start, end, 6, 18.0)
+		var seg = generateSegment(start, end, 6, 18.0)
 		for p in seg:
 			jaggedPoints.append(p)
 		jaggedPoints.append(end)
 		start = end
 
 # 在 from->to 之间生成抖动中点(不含首尾)
-func _generateSegment(from: Vector2, to: Vector2, segments: int, jitter: float) -> Array:
+func generateSegment(from: Vector2, to: Vector2, segments: int, jitter: float) -> Array:
 	var arr: Array = []
 	var dir = to - from
 	if dir.length() < 1.0:
@@ -163,7 +163,7 @@ func _generateSegment(from: Vector2, to: Vector2, segments: int, jitter: float) 
 		arr.append(base1 + offset)
 	return arr
 
-func _drawLightningPath(points: PackedVector2Array, base_color: Color, max_width: float, min_width: float, outer_alpha: float, inner_alpha: float) -> void:
+func drawLightningPath(points: PackedVector2Array, base_color: Color, max_width: float, min_width: float, outer_alpha: float, inner_alpha: float) -> void:
 	if points.size() < 2:
 		return
 	for i in range(points.size() - 1):
@@ -182,11 +182,11 @@ func _drawLightningPath(points: PackedVector2Array, base_color: Color, max_width
 
 
 
-func _onRadarAreaEntered(area: Area2D) -> void:
+func onRadarAreaEntered(area: Area2D) -> void:
 	addTarget(area)
 
 
-func _onRadarAreaExited(area: Area2D) -> void:
+func onRadarAreaExited(area: Area2D) -> void:
 	target.erase(area)
 
 
@@ -202,14 +202,14 @@ func _physics_process(_delta: float) -> void:
 		lightningTimer -= _delta
 		flickerTimer -= _delta
 		if flickerTimer <= 0:
-			_regenerateJaggedPoints()
+			regenerateJaggedPoints()
 			flickerTimer = flickerInterval
 		queue_redraw()
 	# 电流形态：静着也一直在跳，放电那一小段切到急速版
 	if lightningTimer > 0.0:
-		_playTurretAnim(ANIM_ATTACK)
+		playTurretAnim(ANIM_ATTACK)
 	else:
-		_playTurretAnim(ANIM_IDLE)
+		playTurretAnim(ANIM_IDLE)
 
 
 ## 切炮塔动画。名字不存在就退回 idle。
@@ -225,7 +225,7 @@ func _draw():
 	super._draw()
 	if lightningTimer <= 0 or jaggedPoints.size() < 2:
 		return
-	_drawLightningPath(jaggedPoints, LIGHTNING_COLOR, 13.0, 1.0, 0.25, 0.75)
+	drawLightningPath(jaggedPoints, LIGHTNING_COLOR, 13.0, 1.0, 0.25, 0.75)
 	# 每个击中点画一个光晕
 	for enemy in chainTargets:
 		if !is_instance_valid(enemy):

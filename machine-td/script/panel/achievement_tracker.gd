@@ -18,16 +18,16 @@ extends Node
 # 单局型成就的目标（用于日志/校验，实际目标值以 AchievementManager 为准）
 const RUN_BEST_ACHIEVEMENTS: Array[String] = ["full_armory", "chain_reaction"]
 
-var _towerTypesUsed: Dictionary = {} # 本局用过的塔类型（全域火力）
-var _chainKills: int = 0 # 本局由特斯拉/火箭塔击杀的数量（连锁反应）
+var towerTypesUsed: Dictionary = {} # 本局用过的塔类型（全域火力）
+var chainKills: int = 0 # 本局由特斯拉/火箭塔击杀的数量（连锁反应）
 
 
 func _ready() -> void:
-	Game.enemyDefeated.connect(_onEnemyDefeated)
-	TowerUpgradeManager.towerLeveledUp.connect(_onTowerLeveledUp)
+	Game.enemyDefeated.connect(onEnemyDefeated)
+	TowerUpgradeManager.towerLeveledUp.connect(onTowerLeveledUp)
 
 
-func _onEnemyDefeated(enemy, source) -> void:
+func onEnemyDefeated(enemy, source) -> void:
 	if enemy == null or not is_instance_valid(enemy):
 		return
 
@@ -53,21 +53,21 @@ func _onEnemyDefeated(enemy, source) -> void:
 		return
 	var tower: Tower = source as Tower
 	if tower != null and (tower.type == Game.towerType.teslaCoilTower or tower.type == Game.towerType.rocketTower):
-		_chainKills += 1
-		_submitRunBest("chain_reaction", _chainKills)
+		chainKills += 1
+		submitRunBest("chain_reaction", chainKills)
 
 
 # ---------- 建造类 ----------
 
 # 由 map.placeTower 在塔真正放置成功后调用
 func recordTowerBuilt(tower_type) -> void:
-	_towerTypesUsed[tower_type] = true
-	_submitRunBest("full_armory", _towerTypesUsed.size())
+	towerTypesUsed[tower_type] = true
+	submitRunBest("full_armory", towerTypesUsed.size())
 
 
 # ---------- 成长类 ----------
 
-func _onTowerLeveledUp(_tower, level: int) -> void:
+func onTowerLeveledUp(_tower, level: int) -> void:
 	# 老兵塔：任意一座塔升到满级
 	if level >= TowerUpgradeManager.MAX_LEVEL:
 		AchievementManager.setProgress("veteran_tower", TowerUpgradeManager.MAX_LEVEL, false)
@@ -89,7 +89,7 @@ func recordStageCleared(stageId: int, flawless: bool, _multi_route: bool) -> voi
 # ---------- 内部 ----------
 
 # 单局型成就：只在超过历史最好成绩时提交，避免被下一局的低分覆盖
-func _submitRunBest(achievement_id: String, value: int) -> void:
+func submitRunBest(achievement_id: String, value: int) -> void:
 	if value > AchievementManager.getProgress(achievement_id):
 		AchievementManager.setProgress(achievement_id, value, false)
 

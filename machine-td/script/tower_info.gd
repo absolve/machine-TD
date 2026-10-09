@@ -29,7 +29,7 @@ func showDetail(obj, tower_type = 0):
 		nameLabel.text = tr(str(obj.get("name", "")))
 	descLabel.text = tr(obj.desc)
 	atkValue.text = str(obj.atk)
-	reloadValue.text = _fmtFireRate(float(obj.reload))
+	reloadValue.text = fmtFireRate(float(obj.reload))
 	scopeValue.text = str(obj.scope)
 	costValue.text = str(obj.cost)
 	hpValue.text = str(obj.get("hp", obj.get("maxHp", 0)))
@@ -39,7 +39,7 @@ func hideDetail():
 	visible = false
 
 # reload 为开火间隔(秒)，换算成每秒攻击次数展示（与 towerDetailPanel 一致）
-func _fmtFireRate(reload_s: float) -> String:
+func fmtFireRate(reload_s: float) -> String:
 	if reload_s <= 0.0:
 		return "--"
 	return "%.1f/s" % (1.0 / reload_s)

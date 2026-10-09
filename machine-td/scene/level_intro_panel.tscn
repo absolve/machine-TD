@@ -101,4 +101,4 @@ autowrap_mode = 3
 
 [node name="btnStart" parent="Center/panelBg/Margin/VBox/Footer" unique_id=1077812873 instance=ExtResource("5_khtis")]
 layout_mode = 2
-click_sound = 1
+clickSound = 1

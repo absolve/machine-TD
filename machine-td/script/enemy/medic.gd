@@ -21,6 +21,6 @@ func _physics_process(delta: float) -> void:
 	parent.progress += speed * delta
 	if parent.progress_ratio >= 1:
 		Game.enemyEscaped.emit(lossPoints)
-		_freeSelf()
+		freeSelf()
 	if target.size() > 0:
 		fire(target)

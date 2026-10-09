@@ -106,5 +106,5 @@ material = SubResource("ShaderMaterial_m0kww")
 sprite_frames = SubResource("SpriteFrames_autotur")
 animation = &"idle"
 
-[connection signal="area_entered" from="radar" to="." method="_onRadarAreaEntered"]
-[connection signal="area_exited" from="radar" to="." method="_onRadarAreaExited"]
+[connection signal="area_entered" from="radar" to="." method="onRadarAreaEntered"]
+[connection signal="area_exited" from="radar" to="." method="onRadarAreaExited"]

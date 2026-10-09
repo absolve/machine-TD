@@ -9,7 +9,7 @@ extends Control
 var isOpen = false
 var towerCard = preload("res://scene/tower_card.tscn")
 
-# 工具箱图标两态：合着 = 关上的工具箱；打开 = 掀开盖子、里面一把锤子（由 _onIconGuiInput 切换）
+# 工具箱图标两态：合着 = 关上的工具箱；打开 = 掀开盖子、里面一把锤子（由 onIconGuiInput 切换）
 var iconClosed = preload("res://sprite/icon/ui/redesigned/toolbox_closed.svg")
 var iconOpen = preload("res://sprite/icon/ui/redesigned/toolbox_open.svg")
 
@@ -106,7 +106,7 @@ func towerClick(type):
 	Game.selectTower.emit(type)
 
 
-func _onIconGuiInput(_event):
+func onIconGuiInput(_event):
 	if Input.is_action_just_pressed("click"):
 		isOpen = !isOpen
 		# 图标跟着开合状态换（箱子状态一眼可见，不再靠“变淡”区分）
@@ -125,13 +125,13 @@ func _onIconGuiInput(_event):
 
 ## ── 工具箱的呼吸提示 ──
 ## 给「没玩教程关就直接进第 1 关」的玩家指路：让左上角工具箱图标一闪一闪，
-## 直到他点开工具箱为止（见 map.gd::_startToolboxHint）。
+## 直到他点开工具箱为止（见 map.gd::startToolboxHint）。
 ##
 ## 手法和 title.gd::promptStart() 完全一致，包括下面那条 parallel() 的坑：
 ##   ⚠️ 只能用 parallel() 让「紧跟的那一条」并行。若写成 set_parallel(true)，
 ##      后面所有 tweener 都会并行 —— 变亮/变暗、放大/缩小同时跑，互相抵消，
 ##      scale 会永远停在 1.0（title.gd 那里已经踩过一次）。
-var _toolboxPromptTween: Tween
+var toolboxPromptTween: Tween
 
 
 func promptToolbox() -> void:
@@ -142,21 +142,21 @@ func promptToolbox() -> void:
 	if isOpen:
 		return
 	toolboxIcon.pivot_offset = toolboxIcon.size * 0.5
-	_toolboxPromptTween = create_tween().set_loops()
-	_toolboxPromptTween.tween_property(toolboxIcon, "modulate",
+	toolboxPromptTween = create_tween().set_loops()
+	toolboxPromptTween.tween_property(toolboxIcon, "modulate",
 		Color(1.9, 1.8, 1.25), 0.45).set_trans(Tween.TRANS_SINE)
-	_toolboxPromptTween.parallel().tween_property(toolboxIcon, "scale",
+	toolboxPromptTween.parallel().tween_property(toolboxIcon, "scale",
 		Vector2(1.18, 1.18), 0.45).set_trans(Tween.TRANS_SINE)
-	_toolboxPromptTween.tween_property(toolboxIcon, "modulate",
+	toolboxPromptTween.tween_property(toolboxIcon, "modulate",
 		Color.WHITE, 0.45).set_trans(Tween.TRANS_SINE)
-	_toolboxPromptTween.parallel().tween_property(toolboxIcon, "scale",
+	toolboxPromptTween.parallel().tween_property(toolboxIcon, "scale",
 		Vector2.ONE, 0.45).set_trans(Tween.TRANS_SINE)
 
 
 func stopToolboxPrompt() -> void:
-	if _toolboxPromptTween != null and _toolboxPromptTween.is_valid():
-		_toolboxPromptTween.kill()
-	_toolboxPromptTween = null
+	if toolboxPromptTween != null and toolboxPromptTween.is_valid():
+		toolboxPromptTween.kill()
+	toolboxPromptTween = null
 	if toolboxIcon != null:
 		toolboxIcon.modulate = Color.WHITE
 		toolboxIcon.scale = Vector2.ONE

@@ -3,7 +3,7 @@ extends "res://script/level/base_level.gd"
 ##
 ## 和普通关卡的区别：
 ##   · 数值写在脚本里（10 血 / 400 金），不从 StageData 读；
-##   · 波次编制**现场生成**（覆写 _build_wave_spawner），按波次解锁兵种、两条地面带子各分一半；
+##   · 波次编制**现场生成**（覆写 buildWaveSpawner），按波次解锁兵种、两条地面带子各分一半；
 ##   · `wave` 设成极大值，`currWave >= wave` 永不成立 → **永不"通关"**，只有基地被打爆；
 ##   · 难度按波次缩放（Game.enemyScale / Game.enemyAtkScale / spawnDelayScale）。
 ##
@@ -81,7 +81,7 @@ const COUNT_CAP := {
 	Game.enemyType.experimentalTank: 5,
 }
 
-## 空中兵种：走路线3（`_collectRoutes()` 里第 3 个 Path2D）
+## 空中兵种：走路线3（`collectRoutes()` 里第 3 个 Path2D）
 const AIR_TYPES: Array = [
 	Game.enemyType.scoutDrone,
 	Game.enemyType.attackHelicopter,
@@ -108,16 +108,16 @@ func _ready() -> void:
 	# 路线摆缺了要立刻看得见：getRoute() 越界时会回落到最后一条路线，
 	# 于是「三条路线的编制」全挤在一条路上出（表现＝只有一条路线出兵），
 	# 而且不报错。这里直接吼一声，别再靠猜。
-	if get_route_count() < ROUTE_TOTAL:
+	if getRouteCount() < ROUTE_TOTAL:
 		push_warning("无尽地图只摆了 %d 条路线（应有 %d 条：2 条地面带子 + 1 条空中航线），敌人会挤在同一条路上"
-			% [get_route_count(), ROUTE_TOTAL])
+			% [getRouteCount(), ROUTE_TOTAL])
 	# 地图上还没有 placeableArea 实例时，先用代码给出可建造格，
 	# 免得"进得去但没地方建塔"。M2 摆好真实塔位后这段自动不生效。
 	if allowArea.is_empty():
-		_fillFallbackAllowArea()
+		fillFallbackAllowArea()
 	# 本局统计：所有敌人（不分地面/空中）死亡都算进击杀数
 	startedAtMsec = Time.get_ticks_msec()
-	Game.enemyDefeated.connect(_onEnemyDefeated)
+	Game.enemyDefeated.connect(onEnemyDefeated)
 
 
 func _exit_tree() -> void:
@@ -127,7 +127,7 @@ func _exit_tree() -> void:
 
 
 ## 有敌人被消灭（信号来自 enemy.gd::hurt()）——只用来计数，不做别的。
-func _onEnemyDefeated(_enemy, _source) -> void:
+func onEnemyDefeated(_enemy, _source) -> void:
 	kills += 1
 
 
@@ -139,8 +139,8 @@ func elapsedSeconds() -> int:
 
 
 ## 覆写基类钩子：第 waveNo 波的生成记录**现场生成**。
-func _build_wave_spawner(waveNo: int) -> Array:
-	_applyDifficulty(waveNo)
+func buildWaveSpawner(waveNo: int) -> Array:
+	applyDifficulty(waveNo)
 	var rng := RandomNumberGenerator.new()
 	# 固定 seed：同一波次的编制可复现（将来要做每日挑战，把这里换成日期即可）
 	rng.seed = 20261004 + waveNo * 977
@@ -166,7 +166,7 @@ func _build_wave_spawner(waveNo: int) -> Array:
 		var extra = unlocked[rng.randi_range(0, unlocked.size() - 1)]
 		# 空中兵种最多只进 1 种：一周全是飞机的话，没防空的玩家没法玩
 		var extraIsAir: bool = extra in AIR_TYPES
-		if not active.has(extra) and not (extraIsAir and _airCount(active) > 0):
+		if not active.has(extra) and not (extraIsAir and airCount(active) > 0):
 			active.append(extra)
 
 	# 权重：基准量随波次缓慢上涨，受每种上限约束
@@ -206,7 +206,7 @@ func _build_wave_spawner(waveNo: int) -> Array:
 	## 分兵规则：地面兵种两条带子各一半（奇数余 1 个给路线1），空中兵种走路线3。
 	##
 	## ⚠️ 上一版是"先把路线1的兵全部排完，再排路线2" —— 而生成队列是**先进先出、
-	##    一次只放队首那一个**（见 base_level.gd::_onSpawnerTimerTimeout），
+	##    一次只放队首那一个**（见 base_level.gd::onSpawnerTimerTimeout），
 	##    结果整波的前半段只有路线1出兵、后半段只有路线2，玩家看到的是
 	##    "一次只出一条路线的敌人"（"两条带子始终都有敌人"的设计意图没落地）。
 	##    现在改成：先把每个兵种拆进各条路线的队列，再**按比例交织**成一条队列，
@@ -277,7 +277,7 @@ func _build_wave_spawner(waveNo: int) -> Array:
 
 
 ## 活跃池里的空中兵种个数（用来避免一波全是飞机）
-func _airCount(active: Array) -> int:
+func airCount(active: Array) -> int:
 	var n: int = 0
 	for t in active:
 		if t in AIR_TYPES:
@@ -286,7 +286,7 @@ func _airCount(active: Array) -> int:
 
 
 ## 按波次设置难度缩放（敌人 hp / atk 与出怪节奏）
-func _applyDifficulty(waveNo: int) -> void:
+func applyDifficulty(waveNo: int) -> void:
 	var steps: float = float(waveNo - 1)
 	Game.enemyScale = 1.0 + HP_SCALE_STEP * steps
 	Game.enemyAtkScale = 1.0 + ATK_SCALE_STEP * steps
@@ -296,7 +296,7 @@ func _applyDifficulty(waveNo: int) -> void:
 ## 占位地图的可建造格：两条带子之间那 4 行（双倍覆盖区）。
 ## ⚠️ 这只是 M1 的临时方案 —— M2 会在场景里摆真实的 placeableArea 实例
 ##   （带可建造高亮），那时 `allowArea` 非空，这里就不会生效。
-func _fillFallbackAllowArea() -> void:
+func fillFallbackAllowArea() -> void:
 	for row in FALLBACK_SLOT_ROWS:
 		for col in range(int(FALLBACK_SLOT_COLS[0]), int(FALLBACK_SLOT_COLS[1]) + 1):
 			allowArea.append(Vector2i(col, row))

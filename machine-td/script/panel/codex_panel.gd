@@ -105,37 +105,37 @@ var TOWERICONS: Dictionary = {
 
 # ---------- 状态 ----------
 
-var _cardScene: PackedScene = preload("res://scene/codex_card.tscn")
-var _tab: int = Tab.ENEMY
-var _entries: Array = [] # 当前页签的条目（顺序 = Game 表里的声明顺序）
-var _cards: Array = [] # 与 _entries 一一对应的卡片
+var cardScene: PackedScene = preload("res://scene/codex_card.tscn")
+var tab: int = Tab.ENEMY
+var entries: Array = [] # 当前页签的条目（顺序 = Game 表里的声明顺序）
+var cards: Array = [] # 与 entries 一一对应的卡片
 var _selected: int = 0 # 锁定的条目下标；-1 = 该页没有单位
-var _hover: int = -1 # 鼠标悬停的下标；-1 = 没悬停
-var _sbNormal: StyleBoxFlat
-var _sbHover: StyleBoxFlat
-var _sbActive: StyleBoxFlat
+var hover: int = -1 # 鼠标悬停的下标；-1 = 没悬停
+var sbNormal: StyleBoxFlat
+var sbHover: StyleBoxFlat
+var sbActive: StyleBoxFlat
 
 
 func _ready() -> void:
 	# 只接信号：内容等 open() -> refresh() 时再生成，
 	# 不让人在欢迎界面就提前实例化十几个单位场景
 	visible = false
-	_buildCardStyles()
+	buildCardStyles()
 	grid.columns = columns
-	tabEnemies.pressed.connect(_onTabPressed.bind(Tab.ENEMY))
-	tabTowers.pressed.connect(_onTabPressed.bind(Tab.TOWER))
+	tabEnemies.pressed.connect(onTabPressed.bind(Tab.ENEMY))
+	tabTowers.pressed.connect(onTabPressed.bind(Tab.TOWER))
 
 
 ## 三种卡片外观：普通 / 鼠标悬停 / 已选中
-func _buildCardStyles() -> void:
-	_sbNormal = _makeCardStyle(Color(0.101960786, 0.12156863, 0.15686275, 0.85),
+func buildCardStyles() -> void:
+	sbNormal = makeCardStyle(Color(0.101960786, 0.12156863, 0.15686275, 0.85),
 		Color(0.20392157, 0.23529412, 0.3019608, 1), 2)
-	_sbHover = _makeCardStyle(Color(0.16078432, 0.19215687, 0.23921569, 0.95),
+	sbHover = makeCardStyle(Color(0.16078432, 0.19215687, 0.23921569, 0.95),
 		Color(0.65882355, 0.6862745, 0.65882355, 1), 2)
-	_sbActive = _makeCardStyle(Color(0.24313726, 0.21176471, 0.101960786, 0.95), COLOR_GOLD, 3)
+	sbActive = makeCardStyle(Color(0.24313726, 0.21176471, 0.101960786, 0.95), COLOR_GOLD, 3)
 
 
-func _makeCardStyle(bg: Color, border: Color, width: int) -> StyleBoxFlat:
+func makeCardStyle(bg: Color, border: Color, width: int) -> StyleBoxFlat:
 	var sb: StyleBoxFlat = StyleBoxFlat.new()
 	sb.bg_color = bg
 	sb.border_color = border
@@ -160,10 +160,10 @@ func close() -> void:
 	closed.emit()
 
 
-func _onTabPressed(tab: int) -> void:
-	if _tab == tab:
+func onTabPressed(tab: int) -> void:
+	if tab == tab:
 		return
-	_tab = tab
+	tab = tab
 	refresh()
 
 
@@ -171,24 +171,24 @@ func _onTabPressed(tab: int) -> void:
 
 ## 重建当前页签；打开面板 / 切页签都走这里
 func refresh() -> void:
-	_applyTexts()
-	_styleTab(tabEnemies, _tab == Tab.ENEMY)
-	_styleTab(tabTowers, _tab == Tab.TOWER)
+	applyTexts()
+	styleTab(tabEnemies, tab == Tab.ENEMY)
+	styleTab(tabTowers, tab == Tab.TOWER)
 
-	_clearChildren(grid)
-	_entries = _collectEntries()
-	_cards.clear()
-	for i in _entries.size():
-		_cards.append(_makeCard(_entries[i], i))
+	clearChildren(grid)
+	entries = collectEntries()
+	cards.clear()
+	for i in entries.size():
+		cards.append(makeCard(entries[i], i))
 
 	# 切页签后默认选中第一条（没有单位就置 -1，信息栏显示提示语）
-	_selected = 0 if not _entries.is_empty() else -1
-	_hover = -1
-	_syncCards()
-	_updateDetail()
+	_selected = 0 if not entries.is_empty() else -1
+	hover = -1
+	syncCards()
+	updateDetail()
 
 
-func _applyTexts() -> void:
+func applyTexts() -> void:
 	titleLabel.text = Game.t("_Codex", "Codex")
 	closeButton.text = Game.t("_Close", "Close")
 	# 页签带上条目数，新增敌人 / 塔时会自己变
@@ -196,7 +196,7 @@ func _applyTexts() -> void:
 	tabTowers.text = "%s  %d" % [Game.t("_CodexTowers", "Towers"), Game.towerInfo.size()]
 
 
-func _styleTab(button: Button, active: bool) -> void:
+func styleTab(button: Button, active: bool) -> void:
 	var base: Color = COLOR_GOLD if active else COLOR_TEXT
 	button.add_theme_color_override("font_color", base)
 	button.add_theme_color_override("font_focus_color", base)
@@ -207,47 +207,47 @@ func _styleTab(button: Button, active: bool) -> void:
 
 # ---------- 卡片网格 ----------
 
-func _makeCard(entry: Dictionary, index: int) -> Control:
-	var card: Control = _cardScene.instantiate()
+func makeCard(entry: Dictionary, index: int) -> Control:
+	var card: Control = cardScene.instantiate()
 	# ★ 必须先入树再 setup —— 卡片的 @onready icon 要入树后才生效，
 	#   反过来调 setup 的话 set_icon 会因为 icon 还是 null 而静默跳过（卡面全空）
 	grid.add_child(card)
-	card.setup(entry, _sbNormal, _sbHover, _sbActive)
-	card.picked.connect(_onCardPicked.bind(index))
-	card.hovered.connect(_onCardHovered.bind(index))
-	card.unhovered.connect(_onCardUnhovered.bind(index))
+	card.setup(entry, sbNormal, sbHover, sbActive)
+	card.picked.connect(onCardPicked.bind(index))
+	card.hovered.connect(onCardHovered.bind(index))
+	card.unhovered.connect(onCardUnhovered.bind(index))
 	return card
 
 
 ## 点一下 = 锁定选中
-func _onCardPicked(_entry: Dictionary, index: int) -> void:
+func onCardPicked(_entry: Dictionary, index: int) -> void:
 	if _selected == index:
 		return
 	_selected = index
-	_syncCards()
-	_updateDetail()
+	syncCards()
+	updateDetail()
 
 
 ## 悬停 = 临时预览（不动选中项）
-func _onCardHovered(_entry: Dictionary, index: int) -> void:
-	if _hover == index:
+func onCardHovered(_entry: Dictionary, index: int) -> void:
+	if hover == index:
 		return
-	_hover = index
-	_updateDetail()
+	hover = index
+	updateDetail()
 
 
-func _onCardUnhovered(index: int) -> void:
-	if _hover != index:
+func onCardUnhovered(index: int) -> void:
+	if hover != index:
 		return
-	_hover = -1
-	_updateDetail()
+	hover = -1
+	updateDetail()
 
 
 ## 只同步「选中」标记；悬停外观由卡片自己的 mouse_entered 处理，
 ## 这样悬停预览时不会把金色的选中框也带走
-func _syncCards() -> void:
-	for i in _cards.size():
-		var card: Control = _cards[i]
+func syncCards() -> void:
+	for i in cards.size():
+		var card: Control = cards[i]
 		if card == null or not is_instance_valid(card):
 			continue
 		card.setSelected(i == _selected)
@@ -257,16 +257,16 @@ func _syncCards() -> void:
 
 ## 悬停优先，其次选中；两者都没有就回到提示语。
 ## 有选中项时信息栏**永远有内容**，不会因为鼠标移开就空掉。
-func _updateDetail() -> void:
-	_syncCards()
-	var index: int = _hover if _hover >= 0 else _selected
-	if index < 0 or index >= _entries.size():
-		_showHint()
+func updateDetail() -> void:
+	syncCards()
+	var index: int = hover if hover >= 0 else _selected
+	if index < 0 or index >= entries.size():
+		showHint()
 		return
-	_showDetail(_entries[index])
+	showDetail(entries[index])
 
 
-func _showDetail(entry: Dictionary) -> void:
+func showDetail(entry: Dictionary) -> void:
 	detailIcon.texture = entry["icon"]
 	detailName.text = entry["name"]
 	detailName.modulate = COLOR_TEXT
@@ -274,33 +274,33 @@ func _showDetail(entry: Dictionary) -> void:
 	detailTag.modulate = entry["color"]
 	detailDesc.text = entry["desc"]
 
-	_clearChildren(detailStats)
+	clearChildren(detailStats)
 	detailStats.columns = int(entry["stat_columns"])
 	for stat in entry["stats"]:
-		_addStat(str(stat[0]), str(stat[1]), stat[2])
+		addStat(str(stat[0]), str(stat[1]), stat[2])
 
 
-func _showHint() -> void:
+func showHint() -> void:
 	detailIcon.texture = null
 	detailName.text = Game.t("_CodexHoverHint", "Pick a unit to see its details")
 	detailName.modulate = COLOR_LABEL
 	detailTag.text = ""
 	detailDesc.text = ""
-	_clearChildren(detailStats)
+	clearChildren(detailStats)
 
 
 ## 一个数值块：小标题 + 大数值
-func _addStat(title: String, value: String, color: Color) -> void:
+func addStat(title: String, value: String, color: Color) -> void:
 	var chip: VBoxContainer = VBoxContainer.new()
 	chip.custom_minimum_size = Vector2(STAT_WIDTH, 0)
 	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	chip.add_child(_makeLabel(title, 22, COLOR_LABEL))
-	chip.add_child(_makeLabel(value, 32, color))
+	chip.add_child(makeLabel(title, 22, COLOR_LABEL))
+	chip.add_child(makeLabel(value, 32, color))
 	detailStats.add_child(chip)
 
 
-func _makeLabel(text: String, font_size: int, color: Color) -> Label:
+func makeLabel(text: String, font_size: int, color: Color) -> Label:
 	var label: Label = Label.new()
 	label.text = text
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -313,19 +313,19 @@ func _makeLabel(text: String, font_size: int, color: Color) -> Label:
 
 # ---------- 数据层：唯一需要区分敌人 / 塔的地方 ----------
 
-func _collectEntries() -> Array:
+func collectEntries() -> Array:
 	var out: Array = []
-	if _tab == Tab.ENEMY:
+	if tab == Tab.ENEMY:
 		for id in Game.enemyInfo:
-			out.append(_enemyEntry(id))
+			out.append(enemyEntry(id))
 	else:
 		for id in Game.towerInfo:
-			out.append(_towerEntry(id))
+			out.append(towerEntry(id))
 	return out
 
 
 ## 条目格式（显示层只认这几个 key）：name / tag / desc / icon / color / stat_columns / stats
-func _enemyEntry(id: int) -> Dictionary:
+func enemyEntry(id: int) -> Dictionary:
 	var info: Dictionary = Game.enemyInfo.get(id, {})
 	var atk: int = int(info.get("atk", 0))
 	var delay: float = float(info.get("shootDelay", 0.0))
@@ -333,18 +333,18 @@ func _enemyEntry(id: int) -> Dictionary:
 		"name": Game.getEnemyDisplayName(id),
 		"tag": Game.getEnemyRoleName(id),
 		"desc": Game.t(str(ENEMY_DESC_KEYS.get(str(info.get("role", "")), "")), ""),
-		"icon": _icon(ENEMY_ICONS, id),
+		"icon": icon(ENEMY_ICONS, id),
 		"color": COLOR_RED,
 		"stat_columns": 6, # 11 项数值排两行
 		"stats": [
 			[Game.t("_HP", "HP"), str(int(info.get("hp", 0))), COLOR_RED],
 			[Game.t("_Speed", "Speed"), str(int(info.get("speed", 0))), COLOR_TEXT],
 			[Game.t("_Armor", "Armor"), "%d%%" % roundi(float(info.get("armor", 0.0)) * 100.0), COLOR_TEXT],
-			[Game.t("_Flying", "Flying"), _yesNo(bool(info.get("flying", false))), COLOR_TEXT],
-			[Game.t("_Atk", "ATK"), _positive(atk), COLOR_TEXT],
-			[Game.t("_FireRate", "Fire Rate"), _fireRate(atk, delay), COLOR_TEXT],
-			[Game.t("_Dps", "DPS"), _dps(atk, delay), COLOR_TEXT],
-			[Game.t("_Range", "Range"), _positive(int(info.get("scope", 0))), COLOR_TEXT],
+			[Game.t("_Flying", "Flying"), yesNo(bool(info.get("flying", false))), COLOR_TEXT],
+			[Game.t("_Atk", "ATK"), positive(atk), COLOR_TEXT],
+			[Game.t("_FireRate", "Fire Rate"), fireRate(atk, delay), COLOR_TEXT],
+			[Game.t("_Dps", "DPS"), dps(atk, delay), COLOR_TEXT],
+			[Game.t("_Range", "Range"), positive(int(info.get("scope", 0))), COLOR_TEXT],
 			[Game.t("_Reward", "Kill Reward"), str(int(info.get("reward", 0))), COLOR_GOLD],
 			[Game.t("_EscapeCost", "Escape Loss"), str(int(info.get("lossPoints", 0))), COLOR_RED],
 			[Game.t("_RewardExp", "Kill EXP"), str(int(info.get("rewardExp", 0))), COLOR_GOLD],
@@ -352,7 +352,7 @@ func _enemyEntry(id: int) -> Dictionary:
 	}
 
 
-func _towerEntry(id: int) -> Dictionary:
+func towerEntry(id: int) -> Dictionary:
 	var info: Dictionary = Game.towerInfo.get(id, {})
 	var atk: int = int(info.get("atk", 0))
 	var reload: float = float(info.get("reload", 0.0))
@@ -361,13 +361,13 @@ func _towerEntry(id: int) -> Dictionary:
 		"name": Game.getTowerDisplayName(id),
 		"tag": "%s %d" % [Game.t("_Cost", "Cost"), int(info.get("cost", 0))],
 		"desc": Game.t(str(info.get("desc", "")), ""),
-		"icon": _icon(TOWERICONS, id),
+		"icon": icon(TOWERICONS, id),
 		"color": COLOR_TEAL,
 		"stat_columns": 4, # 8 项数值排两行
 		"stats": [
 			[Game.t("_Atk", "ATK"), str(atk), COLOR_TEXT],
-			[Game.t("_FireRate", "Fire Rate"), _fireRate(atk, reload), COLOR_TEXT],
-			[Game.t("_Dps", "DPS"), _dps(atk, reload), COLOR_TEXT],
+			[Game.t("_FireRate", "Fire Rate"), fireRate(atk, reload), COLOR_TEXT],
+			[Game.t("_Dps", "DPS"), dps(atk, reload), COLOR_TEXT],
 			[Game.t("_Range", "Range"), str(int(info.get("scope", 0))), COLOR_TEXT],
 			[Game.t("_HP", "HP"), str(int(info.get("hp", 0))), COLOR_TEXT],
 			[Game.t("_Cost", "Cost"), str(int(info.get("cost", 0))), COLOR_GOLD],
@@ -380,7 +380,7 @@ func _towerEntry(id: int) -> Dictionary:
 # ---------- 图标层 ----------
 
 ## 按路径表取图。表里没写、或者路径不存在就返回 null（卡面空着，但不会报错）
-func _icon(table: Dictionary, id: int) -> Texture2D:
+func icon(table: Dictionary, id: int) -> Texture2D:
 	var path: String = str(table.get(id, ""))
 	if path.is_empty() or not ResourceLoader.exists(path):
 		return null
@@ -389,29 +389,29 @@ func _icon(table: Dictionary, id: int) -> Texture2D:
 # ---------- 工具 ----------
 
 ## 清空动态生成的子节点（先脱离父节点再 queue_free，避免同一帧里新旧内容同时存在）
-func _clearChildren(node: Node) -> void:
+func clearChildren(node: Node) -> void:
 	for child in node.get_children():
 		node.remove_child(child)
 		child.queue_free()
 
 
-func _yesNo(value: bool) -> String:
+func yesNo(value: bool) -> String:
 	return Game.t("_Yes", "Yes") if value else Game.t("_No", "No")
 
 
 ## 只有正数才有意义的值（不参战的敌人 scope / atk 都是 0）
-func _positive(value: int) -> String:
+func positive(value: int) -> String:
 	return str(value) if value > 0 else "--"
 
 
 ## 开火间隔(秒) -> 每秒攻击次数；atk=0 表示不参战，delay=0 表示自爆型的一次性伤害
-func _fireRate(atk: int, delay_s: float) -> String:
+func fireRate(atk: int, delay_s: float) -> String:
 	if atk <= 0:
 		return "--"
 	return Game.t("_OneShot", "One-shot") if delay_s <= 0.0 else "%.1f/s" % (1.0 / delay_s)
 
 
-func _dps(atk: int, delay_s: float) -> String:
+func dps(atk: int, delay_s: float) -> String:
 	if atk <= 0 or delay_s <= 0.0:
 		return "--"
 	return "%.1f" % (float(atk) / delay_s)

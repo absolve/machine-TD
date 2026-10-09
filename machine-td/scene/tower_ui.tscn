@@ -105,4 +105,4 @@ theme_override_constants/separation = 20
 [node name="Player" type="AnimationPlayer" parent="." unique_id=184727995]
 libraries/ = SubResource("AnimationLibrary_fbohf")
 
-[connection signal="gui_input" from="icon" to="." method="_onIconGuiInput"]
+[connection signal="gui_input" from="icon" to="." method="onIconGuiInput"]

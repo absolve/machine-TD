@@ -18,7 +18,7 @@ extends Node2D
 
 func _ready() -> void:
 	if snapToGrid:
-		_snapToCell()
+		snapToCell()
 	if anim == null or anim.sprite_frames == null:
 		return
 	if not anim.sprite_frames.has_animation("default"):
@@ -36,6 +36,6 @@ func getGrid() -> Vector2i:
 	return Vector2i(floori(position.x / t), floori(position.y / t))
 
 
-func _snapToCell() -> void:
+func snapToCell() -> void:
 	var t: int = StageData.TileSize
 	position = Vector2(getGrid() * t) + Vector2(t, t) * 0.5

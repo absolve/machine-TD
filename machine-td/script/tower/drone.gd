@@ -44,7 +44,7 @@ const ORBIT_ANGULAR_SPEED := 1.15
 const ORBIT_ARRIVE_DIST := 26.0 # 离轨道点这么近就算归位
 
 ## ── 交战：绕敌人盘旋 ──
-## 这里直接把**加速度**算出来交给 _apply（不是"期望速度" —— 绕圈必须显式算向心加速度）：
+## 这里直接把**加速度**算出来交给 apply（不是"期望速度" —— 绕圈必须显式算向心加速度）：
 ##   ① 切向：把"沿绕行方向的速率"往 orbit_speed 推 —— 这一项保证**永远在动**（旧版死区就是停在这的）
 ##   ② 径向：半径误差做弹簧 + 阻尼，把距离钉在 _attack_radius() 上
 ##   ③ 向心：补一项 v²/r —— 不补的话弹簧会被"离心"顶掉，实测半径会比目标明显偏大
@@ -93,10 +93,10 @@ var reloadLeft: float = 0.0
 var fireCooldown: float = 0.0
 
 ## 待机/返航用的轨道相位
-var _orbitPhase: float = 0.0
-var _orbitAngle: float = 0.0
+var orbitPhase: float = 0.0
+var orbitAngle: float = 0.0
 
-var _lastTrailPos: Vector2 = Vector2.ZERO
+var lastTrailPos: Vector2 = Vector2.ZERO
 
 @onready var trail: Line2D = $Trail
 @onready var shotSound = $ShotSound
@@ -110,13 +110,13 @@ func setupDrone(base, index: int, count: int) -> void:
 	homeBase = base
 	slotIndex = index
 	slotCount = maxi(count, 1)
-	_orbitPhase = TAU * float(index) / float(slotCount)
-	_orbitAngle = _orbitPhase
+	orbitPhase = TAU * float(index) / float(slotCount)
+	orbitAngle = orbitPhase
 	var info: Dictionary = Game.towerInfo.get(Game.towerType.droneBase, {})
 	bulletDamage = int(info.get("atk", bulletDamage))
 	if trail:
 		trail.clear_points()
-	_lastTrailPos = global_position
+	lastTrailPos = global_position
 
 
 ## 塔每帧调用：告诉这架无人机去打谁。target 传 null = 回去待机。
@@ -125,14 +125,14 @@ func setupDrone(base, index: int, count: int) -> void:
 func assign(target, _angle: float = 0.0) -> void:
 	if target == null:
 		if state != State.IDLE and state != State.RETURN:
-			_stateTo(State.RETURN)
+			stateTo(State.RETURN)
 		return
 	if currentTarget != target or state == State.IDLE or state == State.RETURN:
 		currentTarget = target
-		_stateTo(State.SORTIE)
+		stateTo(State.SORTIE)
 
 
-func _stateTo(s: int) -> void:
+func stateTo(s: int) -> void:
 	state = s
 	if s == State.ATTACK:
 		# 新一轮交战：弹匣装满、冷却清零
@@ -146,58 +146,58 @@ func _stateTo(s: int) -> void:
 # ============================================================
 
 # ---------- 待机：绕基地轨道 ----------
-func _doIdle(delta: float) -> void:
-	_steerTowards(_baseOrbitPoint(), delta)
+func doIdle(delta: float) -> void:
+	steerTowards(baseOrbitPoint(), delta)
 
 
 # ---------- 出击：seek 冲向目标 ----------
-func _doSortie(delta: float) -> void:
+func doSortie(delta: float) -> void:
 	if currentTarget == null:
-		_stateTo(State.RETURN)
+		stateTo(State.RETURN)
 		return
 	if global_position.distance_to(currentTarget.global_position) <= ATTACK_ENTER:
-		_stateTo(State.ATTACK)
+		stateTo(State.ATTACK)
 		return
-	_apply(_seek(), delta)
+	apply(seek(), delta)
 
 
 # ---------- 攻击：**绕目标盘旋** ----------
 ##
 ## 加速度拆成三块（切向 + 径向弹簧 + 向心），见上面 ENGAGE_* 的注释。
 ## 切向那项保证它**一直在绕**；径向那项决定它**离敌人多远** —— 每架的目标半径都不一样。
-func _doAttack(delta: float) -> void:
+func doAttack(delta: float) -> void:
 	if currentTarget == null:
-		_stateTo(State.RETURN)
+		stateTo(State.RETURN)
 		return
 
 	var toTarget: Vector2 = currentTarget.global_position - global_position
 	var dist: float = toTarget.length()
 	if dist <= ENGAGE_PANIC_DIST:
 		# 贴脸了：直接反向推开，免得从敌人身上穿过去
-		_apply(_flee(), delta)
+		apply(flee(), delta)
 		return
 
 	var dir: Vector2 = toTarget / maxf(dist, 0.001) # 指向敌人（= 向心的方向）
 	var tangent: Vector2 = Vector2(-dir.y, dir.x) * ORBIT_SIGN # 绕行方向
-	var orbitSpeed: float = _orbitSpeed()
+	var orbitSpeed: float = orbitSpeed()
 
 	# 径向：半径误差弹簧 + 径向速度阻尼 + 向心加速度 v²/r（三项都取"向敌为正"）
-	var radialAccel: float = (dist - _attackRadius()) * ENGAGE_RADIAL_GAIN
+	var radialAccel: float = (dist - attackRadius()) * ENGAGE_RADIAL_GAIN
 	radialAccel -= velocity.dot(dir) * ENGAGE_RADIAL_DAMPING
 	radialAccel += orbitSpeed * orbitSpeed / maxf(dist, 1.0)
 	# 切向：把"沿绕行方向的速率"推到 orbit_speed —— 这项保证它一直在绕
 	var tangentAccel: float = (orbitSpeed - velocity.dot(tangent)) * ENGAGE_TANGENT_GAIN
-	_apply((dir * radialAccel + tangent * tangentAccel).limit_length(ACCEL_MAX), delta)
+	apply((dir * radialAccel + tangent * tangentAccel).limit_length(ACCEL_MAX), delta)
 
 
 # ---------- 返航：回到自己的轨道 ----------
-func _doReturn(delta: float) -> void:
-	_steerTowards(_baseOrbitPoint(), delta)
+func doReturn(delta: float) -> void:
+	steerTowards(baseOrbitPoint(), delta)
 	# ⚠️ 到达判定**不能拿"轨道点"比** —— 那个点自己在绕圈跑（约 110px/s），追进 26px 几乎不可能，
 	#    旧版因此一直卡在 RETURN 切不回 IDLE（表现上没差，但状态是错的）。
 	#    改成看"离基地的距离有没有落到本机那条轨道半径上"。
-	if absf(global_position.distance_to(homeBase.global_position) - _orbitRadius()) <= ORBIT_ARRIVE_DIST:
-		_stateTo(State.IDLE)
+	if absf(global_position.distance_to(homeBase.global_position) - orbitRadius()) <= ORBIT_ARRIVE_DIST:
+		stateTo(State.IDLE)
 
 
 # ============================================================
@@ -205,14 +205,14 @@ func _doReturn(delta: float) -> void:
 # ============================================================
 
 ## GSAISeek：朝目标方向的满加速度
-func _seek() -> Vector2:
+func seek() -> Vector2:
 	if currentTarget == null:
 		return Vector2.ZERO
 	return global_position.direction_to(currentTarget.global_position) * ACCEL_MAX
 
 
 ## GSAIFlee：背离目标方向的满加速度（只在贴脸时用一下，把无人机推开）
-func _flee() -> Vector2:
+func flee() -> Vector2:
 	if currentTarget == null:
 		return Vector2.ZERO
 	var dir: Vector2 = global_position.direction_to(currentTarget.global_position)
@@ -221,27 +221,27 @@ func _flee() -> Vector2:
 
 ## 盘旋半径：**每架一号往外错开一大截** —— 几架一起上时是一圈套一圈，
 ## 而不是几架叠在同一条轨迹上（效果就是"每台离敌人的距离都不一样"）。
-func _attackRadius() -> float:
+func attackRadius() -> float:
 	return ENGAGE_RADIUS + ENGAGE_RADIUS_STEP * float(slotIndex)
 
 
 ## 绕圈速度：外圈半径大可以飞快点；内圈半径小，必须慢下来才转得过来
 ## （全速 260 时最小转弯半径 = SPEED_MAX² / ACCEL_MAX ≈ 75px，卡着这个值会一直擦地）。
-func _orbitSpeed() -> float:
+func orbitSpeed() -> float:
 	return SPEED_MAX * (ENGAGE_SPEED_BASE + ENGAGE_SPEED_STEP * float(slotIndex))
 
 
 ## 把加速度积分成速度（照搬 agent._apply_position_steering）
 ##   velocity = (velocity + accel × delta).limit_length(SPEED_MAX)
 ##   position += velocity × delta
-func _apply(accel: Vector2, delta: float) -> void:
+func apply(accel: Vector2, delta: float) -> void:
 	velocity = (velocity + accel * delta).limit_length(SPEED_MAX)
 	global_position += velocity * delta
 
 
-## 朝某个点飞：先按距离决定要不要减速，再把"期望速度 − 当前速度"当加速度交给 _apply。
+## 朝某个点飞：先按距离决定要不要减速，再把"期望速度 − 当前速度"当加速度交给 apply。
 ## 用于待机绕轨道 / 返航这种"要停到位"的场合 —— 纯 seek 会冲过头。
-func _steerTowards(targetPos: Vector2, delta: float) -> void:
+func steerTowards(targetPos: Vector2, delta: float) -> void:
 	var toTarget: Vector2 = targetPos - global_position
 	var dist: float = toTarget.length()
 	if dist < 0.01:
@@ -251,12 +251,12 @@ func _steerTowards(targetPos: Vector2, delta: float) -> void:
 	if dist < 110.0:
 		desiredSpeed *= dist / 110.0
 	var desiredVel: Vector2 = toTarget / dist * desiredSpeed
-	_apply((desiredVel - velocity).limit_length(ACCEL_MAX), delta)
+	apply((desiredVel - velocity).limit_length(ACCEL_MAX), delta)
 
 
 ## 朝向：**只看速度方向** —— 朝哪飞就朝哪，不再对着敌人。
-## 瞄准以后由单独挂的炮塔负责，机身不用管（子弹方向仍然是朝目标的，见 _fire）。
-func _faceVelocity(delta: float) -> void:
+## 瞄准以后由单独挂的炮塔负责，机身不用管（子弹方向仍然是朝目标的，见 fire）。
+func faceVelocity(delta: float) -> void:
 	if velocity.length_squared() <= 4.0:
 		return
 	rotation = rotate_toward(rotation, velocity.angle(), turnSpeed * delta)
@@ -267,7 +267,7 @@ func _faceVelocity(delta: float) -> void:
 # ============================================================
 
 ## 本机专属轨道半径：按防御塔射程分层
-func _orbitRadius() -> float:
+func orbitRadius() -> float:
 	if homeBase == null or not is_instance_valid(homeBase):
 		return ORBIT_FALLBACK_RADIUS
 	var scope: float = float(homeBase.radarScope)
@@ -278,20 +278,20 @@ func _orbitRadius() -> float:
 	return inner + step * float(slotIndex)
 
 
-func _baseOrbitPoint() -> Vector2:
-	return homeBase.global_position + Vector2.from_angle(_orbitAngle) * _orbitRadius()
+func baseOrbitPoint() -> Vector2:
+	return homeBase.global_position + Vector2.from_angle(orbitAngle) * orbitRadius()
 
 
 ## 开火判定：**只看基地分配的目标还在不在防御塔雷达范围内** ——
 ## 与无人机自己飞到哪、处于什么状态都无关，敌人进圈就能打。
-func _tryFire() -> void:
+func tryFire() -> void:
 	if fireCooldown > 0.0 or reloadLeft > 0.0:
 		return
 	if currentTarget == null or not is_instance_valid(currentTarget):
 		return
 	if homeBase.global_position.distance_to(currentTarget.global_position) > float(homeBase.radarScope):
 		return
-	_fire()
+	fire()
 	fireCooldown = FIRE_INTERVAL
 	bulletsLeft -= 1
 	if bulletsLeft <= 0:
@@ -300,7 +300,7 @@ func _tryFire() -> void:
 
 ## 子弹从机头（速度正前方）出膛，但**方向仍然指向目标** ——
 ## 机身只负责飞，瞄准交给枪口角度；将来换成单独炮塔瞄准也一样。
-func _fire() -> void:
+func fire() -> void:
 	if currentTarget == null or not is_instance_valid(currentTarget):
 		return
 	if shotSound:
@@ -317,18 +317,18 @@ func _fire() -> void:
 # 尾迹
 # ============================================================
 
-func _updateTrail() -> void:
+func updateTrail() -> void:
 	if trail == null:
 		return
-	var moved: float = global_position.distance_to(_lastTrailPos)
+	var moved: float = global_position.distance_to(lastTrailPos)
 	if moved > TRAIL_BREAK_DISTANCE:
 		trail.clear_points()
-		_lastTrailPos = global_position
+		lastTrailPos = global_position
 		trail.add_point(global_position)
 		return
 	if moved < TRAIL_MIN_STEP:
 		return
-	_lastTrailPos = global_position
+	lastTrailPos = global_position
 	trail.add_point(global_position)
 	while trail.get_point_count() > TRAIL_MAX_POINTS:
 		trail.remove_point(0)
@@ -345,7 +345,7 @@ func _physics_process(delta: float) -> void:
 	if currentTarget != null and not is_instance_valid(currentTarget):
 		currentTarget = null
 		if state == State.SORTIE or state == State.ATTACK:
-			_stateTo(State.RETURN)
+			stateTo(State.RETURN)
 
 	# 计时器
 	fireCooldown = maxf(fireCooldown - delta, 0.0)
@@ -353,18 +353,18 @@ func _physics_process(delta: float) -> void:
 		reloadLeft = maxf(reloadLeft - delta, 0.0)
 		if reloadLeft <= 0.0:
 			bulletsLeft = MAX_BULLETS
-	_orbitAngle = fmod(_orbitAngle + ORBIT_ANGULAR_SPEED * delta, TAU)
+	orbitAngle = fmod(orbitAngle + ORBIT_ANGULAR_SPEED * delta, TAU)
 
 	match state:
 		State.IDLE:
-			_doIdle(delta)
+			doIdle(delta)
 		State.SORTIE:
-			_doSortie(delta)
+			doSortie(delta)
 		State.ATTACK:
-			_doAttack(delta)
+			doAttack(delta)
 		State.RETURN:
-			_doReturn(delta)
+			doReturn(delta)
 
-	_faceVelocity(delta)
-	_tryFire()
-	_updateTrail()
+	faceVelocity(delta)
+	tryFire()
+	updateTrail()

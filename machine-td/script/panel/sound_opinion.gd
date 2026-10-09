@@ -9,7 +9,7 @@ signal muteToggled(isMuted: bool)
 		#busNameLabel.text=str(val)
 		sound.bus = val
 		busName = val
-		_applyMute()
+		applyMute()
 		
 @export var volume: float = 0.0:
 	set(val):
@@ -20,26 +20,26 @@ signal muteToggled(isMuted: bool)
 @export var showMuteButton: bool = false:
 	set(val):
 		showMuteButton = val
-		_refreshMuteButtonVisible()
-		_refreshMuteVisual()
+		refreshMuteButtonVisible()
+		refreshMuteVisual()
 
 ## 当前是否处于静音状态。
 @export var muted: bool = false:
 	set(val):
 		muted = val
-		_refreshMuteVisual()
-		_applyMute()
+		refreshMuteVisual()
+		applyMute()
 
 ## 静音按钮的图标：未静音 / 已静音。
 @export var muteIconOn: Texture2D = null:
 	set(val):
 		muteIconOn = val
-		_refreshMuteVisual()
+		refreshMuteVisual()
 
 @export var muteIconOff: Texture2D = null:
 	set(val):
 		muteIconOff = val
-		_refreshMuteVisual()
+		refreshMuteVisual()
 
 
 @onready var busNameLabel = $name
@@ -51,19 +51,19 @@ signal muteToggled(isMuted: bool)
 func _ready() -> void:
 	if btnMute:
 		btnMute.set_pressed_no_signal(muted)
-		btnMute.toggled.connect(_onBtnMuteToggled)
-	_refreshMuteButtonVisible()
-	_refreshMuteVisual()
-	_applyMute()
+		btnMute.toggled.connect(onBtnMuteToggled)
+	refreshMuteButtonVisible()
+	refreshMuteVisual()
+	applyMute()
 
 
-func _refreshMuteButtonVisible() -> void:
+func refreshMuteButtonVisible() -> void:
 	if not is_node_ready() or btnMute == null:
 		return
 	btnMute.visible = showMuteButton
 
 
-func _refreshMuteVisual() -> void:
+func refreshMuteVisual() -> void:
 	if not is_node_ready():
 		return
 	if btnMute:
@@ -77,7 +77,7 @@ func _refreshMuteVisual() -> void:
 		slider.modulate = Color(1, 1, 1, 0.4) if muted else Color(1, 1, 1, 1)
 
 
-func _applyMute() -> void:
+func applyMute() -> void:
 	if not is_node_ready():
 		return
 	# 没有静音按钮的音量条不接管总线静音，避免影响别处的静音设置
@@ -88,7 +88,7 @@ func _applyMute() -> void:
 		AudioServer.set_bus_mute(busIndex, muted)
 
 
-func _onBtnMuteToggled(toggled_on: bool) -> void:
+func onBtnMuteToggled(toggled_on: bool) -> void:
 	muted = toggled_on
 	muteToggled.emit(muted)
 

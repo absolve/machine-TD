@@ -25,16 +25,16 @@ const FALLBACK_ICON := "res://sprite/achievement_3d.png" # 没配图标时的兜
 @onready var detailProgress: Label = $PanelContainer/VBoxContainer/DetailBox/DetailHBox/DetailVBox/detailProgress
 
 # 图标置灰/原色两份共享材质（同一状态的所有格子共用，避免每格一个材质实例）
-var _matUnlocked: ShaderMaterial
-var _matLocked: ShaderMaterial
+var matUnlocked: ShaderMaterial
+var matLocked: ShaderMaterial
 
 
 func _ready() -> void:
 	visible = false
-	_makeIconMaterials()
+	makeIconMaterials()
 	#close_button.pressed.connect(close)
 	if AchievementManager:
-		AchievementManager.achievementUnlocked.connect(_onAchievementUnlocked)
+		AchievementManager.achievementUnlocked.connect(onAchievementUnlocked)
 	refresh()
 
 
@@ -52,11 +52,11 @@ func close() -> void:
 	closed.emit()
 
 
-func _onBtnClosePressed() -> void:
+func onBtnClosePressed() -> void:
 	close()
 
 
-func _onAchievementUnlocked(_achievement_id: String, _achievement: Dictionary) -> void:
+func onAchievementUnlocked(_achievement_id: String, _achievement: Dictionary) -> void:
 	refresh()
 
 
@@ -73,26 +73,26 @@ func refresh() -> void:
 		if AchievementManager.isUnlocked(achievement_id):
 			unlockedCount += 1
 		var achievement: Dictionary = achievementMap.get(achievement_id, {})
-		grid.add_child(_makeTile(achievement_id, achievement))
+		grid.add_child(makeTile(achievement_id, achievement))
 
 	# 标题带上总进度，例如「成就 3/9」；语言切换后重新拼接即可生效
 	titleLabel.text = "%s  %d/%d" % [Game.t("_Achievements", "Achievements"), unlockedCount, ids.size()]
 
 	# 重置详情区为提示文案
-	_showDetail("")
+	showDetail("")
 
 
 # ---------- 徽章格 ----------
 
-func _makeTile(achievement_id: String, achievement: Dictionary) -> PanelContainer:
+func makeTile(achievement_id: String, achievement: Dictionary) -> PanelContainer:
 	var unlocked: bool = AchievementManager.isUnlocked(achievement_id)
 
 	var tile: PanelContainer = PanelContainer.new()
 	tile.custom_minimum_size = TILE_MIN_SIZE
 	tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	tile.add_theme_stylebox_override("panel", _makeTileStyle(unlocked))
-	tile.mouse_entered.connect(_onTileMouseEntered.bind(achievement_id))
-	tile.mouse_exited.connect(_onTileMouseExited)
+	tile.add_theme_stylebox_override("panel", makeTileStyle(unlocked))
+	tile.mouse_entered.connect(onTileMouseEntered.bind(achievement_id))
+	tile.mouse_exited.connect(onTileMouseExited)
 
 	var content: VBoxContainer = VBoxContainer.new()
 	content.add_theme_constant_override("separation", 8)
@@ -114,15 +114,15 @@ func _makeTile(achievement_id: String, achievement: Dictionary) -> PanelContaine
 
 	var icon: TextureRect = TextureRect.new()
 	icon.custom_minimum_size = ICON_SIZE
-	icon.texture = _loadIcon(achievement)
+	icon.texture = loadIcon(achievement)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	icon.material = _matUnlocked if unlocked else _matLocked
+	icon.material = matUnlocked if unlocked else matLocked
 	badge.add_child(icon)
 
 	var nameLabel: Label = Label.new()
-	nameLabel.text = _achievementName(achievement_id, achievement)
+	nameLabel.text = achievementName(achievement_id, achievement)
 	nameLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	nameLabel.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	nameLabel.add_theme_font_size_override("font_size", 28)
@@ -131,7 +131,7 @@ func _makeTile(achievement_id: String, achievement: Dictionary) -> PanelContaine
 	content.add_child(nameLabel)
 
 	var progress: Label = Label.new()
-	progress.text = _progressText(achievement_id, achievement)
+	progress.text = progressText(achievement_id, achievement)
 	progress.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	progress.add_theme_font_size_override("font_size", 24)
 	progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -142,7 +142,7 @@ func _makeTile(achievement_id: String, achievement: Dictionary) -> PanelContaine
 
 
 # 已解锁：偏亮的深蓝底 + 金边 + 轻微外发光；未解锁：更暗的底 + 灰边
-func _makeTileStyle(unlocked: bool) -> StyleBoxFlat:
+func makeTileStyle(unlocked: bool) -> StyleBoxFlat:
 	var style: StyleBoxFlat = StyleBoxFlat.new()
 	style.content_margin_left = 14.0
 	style.content_margin_top = 14.0
@@ -206,19 +206,19 @@ func categoryAccent(category: String) -> Color:
 
 # ---------- 悬停详情 ----------
 
-func _onTileMouseEntered(achievement_id: String) -> void:
-	_showDetail(achievement_id)
+func onTileMouseEntered(achievement_id: String) -> void:
+	showDetail(achievement_id)
 
 
-func _onTileMouseExited() -> void:
-	_showDetail("")
+func onTileMouseExited() -> void:
+	showDetail("")
 
 
 # 传入空字符串表示没有悬停目标，详情区回到提示文案
-func _showDetail(achievement_id: String) -> void:
+func showDetail(achievement_id: String) -> void:
 	if achievement_id.is_empty():
 		detailIcon.texture = load(FALLBACK_ICON) as Texture2D
-		detailIcon.material = _matLocked
+		detailIcon.material = matLocked
 		detailName.text = Game.t("_AchvHoverHint", "Hover an achievement to see its details")
 		detailName.modulate = Color(0.62352943, 0.7058824, 0.76862746)
 		detailStatus.text = ""
@@ -229,60 +229,60 @@ func _showDetail(achievement_id: String) -> void:
 	var achievement: Dictionary = AchievementManager.getAchievement(achievement_id)
 	var unlocked: bool = AchievementManager.isUnlocked(achievement_id)
 
-	detailIcon.texture = _loadIcon(achievement)
-	detailIcon.material = _matUnlocked if unlocked else _matLocked
+	detailIcon.texture = loadIcon(achievement)
+	detailIcon.material = matUnlocked if unlocked else matLocked
 
-	detailName.text = _achievementName(achievement_id, achievement)
+	detailName.text = achievementName(achievement_id, achievement)
 	detailName.modulate = Color(0.97254902, 0.98431373, 0.99215686) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
 
 	detailStatus.text = Game.t("_AchievementUnlocked", "Unlocked") if unlocked else Game.t("_AchievementLocked", "Locked")
 	detailStatus.modulate = Color(0.654902, 0.9411765, 0.4392157) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
 
-	detailDesc.text = _achievementDesc(achievement_id, achievement)
+	detailDesc.text = achievementDesc(achievement_id, achievement)
 	detailDesc.modulate = Color(0.91764706, 0.9490196, 0.96862745)
 
-	detailProgress.text = _progressText(achievement_id, achievement)
+	detailProgress.text = progressText(achievement_id, achievement)
 	detailProgress.modulate = Color(1, 0.7764706, 0.101960786) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
 
 
 # ---------- 工具 ----------
 
-func _makeIconMaterials() -> void:
+func makeIconMaterials() -> void:
 	var shader: Shader = load("res://shader/achievement_icon.gdshader")
 	if shader == null:
 		return
-	_matUnlocked = ShaderMaterial.new()
-	_matUnlocked.shader = shader
-	_matUnlocked.set_shader_parameter("desaturate", 0.0)
-	_matUnlocked.set_shader_parameter("dim", 1.0)
-	_matUnlocked.set_shader_parameter("icon_zoom", 1.25)
-	_matUnlocked.set_shader_parameter("outline_color", Color(1.0, 0.78, 0.2, 0.9))
+	matUnlocked = ShaderMaterial.new()
+	matUnlocked.shader = shader
+	matUnlocked.set_shader_parameter("desaturate", 0.0)
+	matUnlocked.set_shader_parameter("dim", 1.0)
+	matUnlocked.set_shader_parameter("icon_zoom", 1.25)
+	matUnlocked.set_shader_parameter("outline_color", Color(1.0, 0.78, 0.2, 0.9))
 
-	_matLocked = ShaderMaterial.new()
-	_matLocked.shader = shader
-	_matLocked.set_shader_parameter("desaturate", 1.0)
-	_matLocked.set_shader_parameter("dim", 0.55)
-	_matLocked.set_shader_parameter("icon_zoom", 1.25)
-	_matLocked.set_shader_parameter("outline_color", Color(0.48, 0.6, 0.66, 0.45))
+	matLocked = ShaderMaterial.new()
+	matLocked.shader = shader
+	matLocked.set_shader_parameter("desaturate", 1.0)
+	matLocked.set_shader_parameter("dim", 0.55)
+	matLocked.set_shader_parameter("icon_zoom", 1.25)
+	matLocked.set_shader_parameter("outline_color", Color(0.48, 0.6, 0.66, 0.45))
 
 
-func _progressText(achievement_id: String, achievement: Dictionary) -> String:
+func progressText(achievement_id: String, achievement: Dictionary) -> String:
 	var currentValue: int = AchievementManager.getProgress(achievement_id)
 	var targetValue: int = int(achievement.get("target", 0))
 	return "%d/%d" % [currentValue, targetValue]
 
 
 # 成就名称/描述在 ACHIEVEMENTS 里存的是多语言 key，这里按当前语言解析
-func _achievementName(achievement_id: String, achievement: Dictionary) -> String:
+func achievementName(achievement_id: String, achievement: Dictionary) -> String:
 	return Game.t(str(achievement.get("name", "")), achievement_id)
 
 
-func _achievementDesc(achievement_id: String, achievement: Dictionary) -> String:
+func achievementDesc(achievement_id: String, achievement: Dictionary) -> String:
 	return Game.t(str(achievement.get("description", "")), achievement_id)
 
 
 # 取成就图标；路径缺失或加载失败时回退到默认成就图
-func _loadIcon(achievement: Dictionary) -> Texture2D:
+func loadIcon(achievement: Dictionary) -> Texture2D:
 	var path: String = str(achievement.get("icon", ""))
 	if not path.is_empty() and ResourceLoader.exists(path):
 		var tex: Resource = load(path)

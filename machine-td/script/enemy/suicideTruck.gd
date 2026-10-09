@@ -25,7 +25,7 @@ func triggerSelfExplode() -> void:
 	bomb.damageType = "physical"
 	bomb.targetMask = 1 << 0 # 只命中塔 layer 1
 	Game.addObj(bomb)
-	_freeSelf()
+	freeSelf()
 
 func _physics_process(delta: float) -> void:
 	if points.size() == 0:

@@ -86,7 +86,7 @@ func refresh() -> void:
 		reloadValueLabel.text = Game.t("_OneShot", "One-shot")
 		dpsValueLabel.text = "--"
 	else:
-		reloadValueLabel.text = _fmtFireRate(e.shootDelay)
+		reloadValueLabel.text = fmtFireRate(e.shootDelay)
 		dpsValueLabel.text = "%.1f" % (float(e.atk) / e.shootDelay)
 
 	# 移动与防护
@@ -101,7 +101,7 @@ func refresh() -> void:
 
 
 # shootDelay 为开火间隔(秒)，换算成每秒攻击次数展示（与塔详情面板一致）
-func _fmtFireRate(reload_s: float) -> String:
+func fmtFireRate(reload_s: float) -> String:
 	if reload_s <= 0.0:
 		return "--"
 	return "%.1f/s" % (1.0 / reload_s)

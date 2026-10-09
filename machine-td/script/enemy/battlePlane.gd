@@ -45,7 +45,7 @@ func _physics_process(delta: float) -> void:
 	parent.progress += speed * delta
 	if parent.progress_ratio >= 1:
 		# 飞越结束：静静离场，**不发 enemyEscaped**（详见类文档 ②）
-		_freeSelf()
+		freeSelf()
 		return
 	# 取最近的**有效**目标，把炮塔转过去；到位了才开火
 	var temp = pickTarget()

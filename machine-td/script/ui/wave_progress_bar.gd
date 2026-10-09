@@ -10,9 +10,9 @@ extends Control
 func _ready() -> void:
 	progressBar.max_value = maxProgress
 	progressBar.value = currentProgress
-	_updateGlow()
+	updateGlow()
 
-func _updateGlow() -> void:
+func updateGlow() -> void:
 	progressBar.max_value = maxProgress
 	progressBar.value = clamp(currentProgress, 0.0, maxProgress)
 	if progressBar.value <= 0.0:
@@ -27,7 +27,7 @@ func _updateGlow() -> void:
 func setProgress(value: float) -> void:
 	currentProgress = clamp(value, 0.0, maxProgress)
 	progressBar.value = currentProgress
-	_updateGlow()
+	updateGlow()
 
 
 func _process(_delta: float) -> void:

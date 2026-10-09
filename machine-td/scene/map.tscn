@@ -82,5 +82,5 @@ script = ExtResource("10_track")
 [node name="Timer" type="Timer" parent="." unique_id=1553136818]
 wait_time = 0.5
 
-[connection signal="pressed" from="Hud/Button" to="." method="_onButtonPressed"]
+[connection signal="pressed" from="Hud/Button" to="." method="onButtonPressed"]
 [connection signal="timeout" from="Timer" to="." method="finish"]

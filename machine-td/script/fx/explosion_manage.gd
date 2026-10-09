@@ -63,7 +63,7 @@ const HIT_VARIANTS := {
 	"blast":   "res://scene/fx/hit_blast.tscn", # 爆炸型火花：火团贴图，最大最亮
 }
 ## 每种变体各有一个池子（路径 -> Array）
-var _hitPools: Dictionary = {}
+var hitPools: Dictionary = {}
 const HIT_POOL_MAX := 24
 ## 排查命中特效位置时打开它，会在控制台打印传入坐标和节点当前坐标
 const _debug_hit_pos := false
@@ -73,7 +73,7 @@ const _debug_hit_pos := false
 func playHit(pos: Vector2, variant: String = "default") -> void:
 	if not HIT_VARIANTS.has(variant):
 		variant = "default"
-	var fx: Node2D = _acquireHit(variant, pos)
+	var fx: Node2D = acquireHit(variant, pos)
 	if fx == null:
 		return
 	if _debug_hit_pos:
@@ -91,11 +91,11 @@ func playHit(pos: Vector2, variant: String = "default") -> void:
 ##   冷启动新建的节点出生在 (0,0)，如果先 `add_child()` 再定位，它就有机会在**地图原点**
 ##   ——也就是画面左上方向——被画出来一次；池子里有节点之后直接复用，就不再发生。
 ##   把定位提前到入树之前，新建的节点**从一开始就在命中点**，这一帧中间态根本不存在。
-func _acquireHit(variant: String, play_pos: Vector2) -> Node2D:
+func acquireHit(variant: String, play_pos: Vector2) -> Node2D:
 	var path: String = HIT_VARIANTS[variant]
-	if not _hitPools.has(variant):
-		_hitPools[variant] = []
-	var pool: Array = _hitPools[variant]
+	if not hitPools.has(variant):
+		hitPools[variant] = []
+	var pool: Array = hitPools[variant]
 	for f in pool:
 		if is_instance_valid(f) and not f.busy:
 			return f

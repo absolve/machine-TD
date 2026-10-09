@@ -38,16 +38,16 @@ var hp = 0:
 var currentWave: int = 0:
 	set(value):
 		currentWave = value
-		_refreshWaveLabel()
+		refreshWaveLabel()
 		
 		
 var wave = 1:
 	set(value):
 		wave = value
-		_refreshWaveLabel()
+		refreshWaveLabel()
 		
 ## 波次文本：普通关卡 "3/8"；无尽模式没有总波数，总波数显示成 "-"。
-func _refreshWaveLabel() -> void:
+func refreshWaveLabel() -> void:
 	if Game.endlessMode:
 		waveLabel.text = str(currentWave) + "/-"
 	else:
@@ -85,7 +85,7 @@ var score = 0:
 ## ⚠️ 必须用 set_pressed_no_signal —— 直接写 button_pressed 会触发 toggled，
 ##    反过来又发一次 start / pause，声音和状态都会错乱。
 ## 开始按钮的呼吸提示循环（见 prompt_start）
-var _promptTween: Tween
+var promptTween: Tween
 
 
 func setPlaying(playing: bool) -> void:
@@ -103,23 +103,23 @@ func promptStart() -> void:
 	# ⚠️ 用 parallel() 只让「紧跟的那一条」并行。
 	#    别用 set_parallel(true) —— 那会让后面**所有** tweener 都并行，
 	#    "变亮"和"变暗"、"放大"和"缩小"同时跑，互相抵消，scale 会永远停在 1.0（这里踩过）。
-	_promptTween = create_tween().set_loops()
-	_promptTween.tween_property(btnStart, "modulate", Color(1.9, 1.8, 1.25), 0.45).set_trans(Tween.TRANS_SINE)
-	_promptTween.parallel().tween_property(btnStart, "scale", Vector2(1.14, 1.14), 0.45).set_trans(Tween.TRANS_SINE)
-	_promptTween.tween_property(btnStart, "modulate", Color.WHITE, 0.45).set_trans(Tween.TRANS_SINE)
-	_promptTween.parallel().tween_property(btnStart, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_SINE)
+	promptTween = create_tween().set_loops()
+	promptTween.tween_property(btnStart, "modulate", Color(1.9, 1.8, 1.25), 0.45).set_trans(Tween.TRANS_SINE)
+	promptTween.parallel().tween_property(btnStart, "scale", Vector2(1.14, 1.14), 0.45).set_trans(Tween.TRANS_SINE)
+	promptTween.tween_property(btnStart, "modulate", Color.WHITE, 0.45).set_trans(Tween.TRANS_SINE)
+	promptTween.parallel().tween_property(btnStart, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_SINE)
 
 
 func stopPrompt() -> void:
-	if _promptTween != null and _promptTween.is_valid():
-		_promptTween.kill()
-	_promptTween = null
+	if promptTween != null and promptTween.is_valid():
+		promptTween.kill()
+	promptTween = null
 	if btnStart != null:
 		btnStart.modulate = Color.WHITE
 		btnStart.scale = Vector2.ONE
 
 
-func _onTextureButtonToggled(toggled_on: bool) -> void:
+func onTextureButtonToggled(toggled_on: bool) -> void:
 	if toggled_on:
 		# 刚按下 → 现在显示 ⏸ → 意思是开始 / 继续
 		started.emit()
@@ -128,7 +128,7 @@ func _onTextureButtonToggled(toggled_on: bool) -> void:
 		paused.emit()
 
 
-func _onBtnSpeedToggled(toggled_on: bool) -> void:
+func onBtnSpeedToggled(toggled_on: bool) -> void:
 	if toggled_on:
 		speedOnPressed.emit()
 		speedLabel.text = str("2X")
@@ -137,20 +137,20 @@ func _onBtnSpeedToggled(toggled_on: bool) -> void:
 		speedLabel.text = str("1X")
 
 
-func _onBtnSoundToggled(toggled_on: bool) -> void:
+func onBtnSoundToggled(toggled_on: bool) -> void:
 	if toggled_on:
 		soundOffPressed.emit()
 	else:
 		soundOnPressed.emit()
 
-func _onBtnMusicToggled(toggled_on: bool) -> void:
+func onBtnMusicToggled(toggled_on: bool) -> void:
 	if toggled_on:
 		musicOffPressed.emit()
 	else:
 		musicOnPressed.emit()
 
 
-func _onBtnHomePressed() -> void:
+func onBtnHomePressed() -> void:
 	homePressed.emit()
 
 

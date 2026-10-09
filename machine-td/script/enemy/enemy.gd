@@ -81,9 +81,17 @@ const LIFE_BAR_OFFSET := Vector2(0.0, -50.0)
 const RECOIL_BACK_TIME: float = 0.1
 const RECOIL_RETURN_TIME: float = 0.1
 
-var _recoilTween: Tween
-var _turretOffsetBase: Vector2 = Vector2.ZERO
-var _turretOffsetCached: bool = false
+## ── 被击中的"变亮"反馈 ──
+## 材质挂在 scene/enemy/enemy.tscn 的 base / turret 上，所有敌人共用（派生场景继承得到）。
+## 这里只负责把 shader 的 flash 参数从 1 补间到 0。
+const HIT_FLASH_TIME := 0.10
+var hitFlashTween: Tween
+
+var recoilTween: Tween
+var turretOffsetBase: Vector2 = Vector2.ZERO
+var turretOffsetCached: bool = false
+
+
 ## 开火点：有**可见**炮塔就用 `turret/Muzzle`（跟着炮管转 ⇒ 正好在炮口），
 ## 没炮塔（直升机 / 飞机 / 卡车）就把炮口算在机身正前方（跟着机头转）。
 ## 两条路径都返回 Vector2，调用方不用再判空。
@@ -132,13 +140,13 @@ func setupEnemyInfo():
 	# 炮口标记的位置也在这里写（理由见 muzzleOffset 的注释：场景里改会被编辑器丢掉）
 	if muzzleMarker != null:
 		muzzleMarker.position = Vector2(muzzleOffset, 0.0)
-	_applyRadarScope()
+	applyRadarScope()
 
 
 # 按 radarScope 同步雷达碰撞体半径（数值唯一来源是 Game.enemyInfo 的 scope 字段）
 # 推进型(radarScope <= 0)不参战，直接关闭雷达侦测，避免空转物理检测
 # 场景里没有配置 radar/shape 形状的敌人（自爆车、侦察无人机）在这里按需补一个圆形碰撞体
-func _applyRadarScope() -> void:
+func applyRadarScope() -> void:
 	if radar == null or radarShape == null:
 		return
 	if radarScope <= 0.0:
@@ -155,7 +163,7 @@ func _applyRadarScope() -> void:
 # 点击敌人：通知地图选中它
 # 这里主动把事件标记为已处理，阻止它继续传导到 map._unhandled_input 的“点空地取消选中”，
 # 否则刚弹出的敌人信息面板会被同一击立刻收起来
-func _onInputEvent(_viewport, _event, _shape_idx):
+func onInputEvent(_viewport, _event, _shape_idx):
 	if _event.is_action_pressed("click"):
 		var vp: Viewport = get_viewport()
 		if vp:
@@ -178,13 +186,13 @@ func _onInputEvent(_viewport, _event, _shape_idx):
 ##
 ## 排除 self：敌机主 Area2D 在 layer 2，而各自 radar 的 mask 是 1，
 ## 正常不会侦测到自己；但万一以后有人改了层，这里兜一手。
-func _onRadarAreaEntered(area) -> void:
+func onRadarAreaEntered(area) -> void:
 	if area == self or area == null:
 		return
 	target.append(area)
 
 
-func _onRadarAreaExited(area) -> void:
+func onRadarAreaExited(area) -> void:
 	if area == self or area == null:
 		return
 	target.erase(area)
@@ -291,7 +299,7 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 			Game.gemRewarded.emit(gemReward)
 		# 成就统计需要知道敌人类型和击杀来源，必须在节点释放之前发出
 		Game.enemyDefeated.emit(self, _source)
-		_freeSelf()
+		freeSelf()
 		if _source != null && _source is Tower:
 			_source.addExp(rewardExp)
 
@@ -300,14 +308,14 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 ## ★ 为什么必须连包裹层一起删：
 ##   旧场景结构里敌人是 PathFollow2D 里的**嵌套节点**，它的 `owner` 就是这个包裹层，
 ##   所以当年的 `owner.queue_free()` 会"包裹层 + 敌人"一起删掉。
-##   现在敌人自己就是场景根，而包裹层是 base_level._spawnEnemy() 运行时建的
+##   现在敌人自己就是场景根，而包裹层是 base_level.spawnEnemy() 运行时建的
 ##   （见那里的注释：包裹层放代码里建，是为了避开"嵌套场景覆写"在导出后丢资源的坑）。
 ##   如果这里只 `queue_free()` 自己，包裹层会永远留在路线下 —— 实测杀光 4 个敌人后
 ##   路线的子节点数一个都没少，整关每刷一个敌人就漏一个节点。
 ##
 ##   所以这里补回旧行为：先删承载自己的包裹层（连自己一起走），
 ##   没有包裹层时（例如单独放进场景测试）就退化成只删自己。
-func _freeSelf() -> void:
+func freeSelf() -> void:
 	var wrapper: Node = get_parent()
 	if wrapper != null and wrapper is PathFollow2D:
 		# 先删包裹层：它连同子节点（自己）一起被释放，
@@ -317,23 +325,18 @@ func _freeSelf() -> void:
 	queue_free()
 
 
-## ── 被击中的"变亮"反馈 ──
-## 材质挂在 scene/enemy/enemy.tscn 的 base / turret 上，所有敌人共用（派生场景继承得到）。
-## 这里只负责把 shader 的 flash 参数从 1 补间到 0。
-const HIT_FLASH_TIME := 0.10
 
-var _hitFlashTween: Tween
 
 
 func playHitFlash() -> void:
-	_setHitFlash(1.0)
-	if _hitFlashTween != null and _hitFlashTween.is_valid():
-		_hitFlashTween.kill()
-	_hitFlashTween = create_tween()
-	_hitFlashTween.tween_method(_setHitFlash, 1.0, 0.0, HIT_FLASH_TIME)
+	setHitFlash(1.0)
+	if hitFlashTween != null and hitFlashTween.is_valid():
+		hitFlashTween.kill()
+	hitFlashTween = create_tween()
+	hitFlashTween.tween_method(setHitFlash, 1.0, 0.0, HIT_FLASH_TIME)
 
 
-func _setHitFlash(v: float) -> void:
+func setHitFlash(v: float) -> void:
 	# base / turret 都可能不存在（无人机之类只有 base），逐个判空
 	for n in [base, turret]:
 		if n == null:
@@ -351,17 +354,17 @@ func playTurretRecoil() -> void:
 		return
 	# 基准 offset 是场景里配的（如装甲坦克 Vector2(17, 0)），第一次开火时记下来：
 	# 子类的 _ready() 基本都不调 super()，不能指望在这里统一初始化。
-	if not _turretOffsetCached:
-		_turretOffsetBase = turret.offset
-		_turretOffsetCached = true
+	if not turretOffsetCached:
+		turretOffsetBase = turret.offset
+		turretOffsetCached = true
 	# 连射时上一段后坐还没播完就重来，避免几段补间叠在一起
-	if _recoilTween != null and _recoilTween.is_valid():
-		_recoilTween.kill()
-	turret.offset = _turretOffsetBase
-	_recoilTween = create_tween()
-	_recoilTween.tween_property(turret, "offset",
-		_turretOffsetBase + Vector2(-turretRecoil, 0.0), RECOIL_BACK_TIME)
-	_recoilTween.tween_property(turret, "offset", _turretOffsetBase, RECOIL_RETURN_TIME)
+	if recoilTween != null and recoilTween.is_valid():
+		recoilTween.kill()
+	turret.offset = turretOffsetBase
+	recoilTween = create_tween()
+	recoilTween.tween_property(turret, "offset",
+		turretOffsetBase + Vector2(-turretRecoil, 0.0), RECOIL_BACK_TIME)
+	recoilTween.tween_property(turret, "offset", turretOffsetBase, RECOIL_RETURN_TIME)
 
 ## 恢复生命值并限制在最大值内；待补充回复特效。
 func addHp(_num: int):
@@ -377,7 +380,7 @@ func fire(_t):
 # 开火冷却结束：复位 canShot，允许下一次开火
 # 对抗型敌人（中型坦克 / 导弹车 / 攻击直升机 / 维修车）开火后会把 canShot 置 false
 # 并启动 delay 定时器，靠这个回调复位，否则整局只会开火一次
-func _onDelayTimeout() -> void:
+func onDelayTimeout() -> void:
 	canShot = true
 
 
@@ -387,7 +390,7 @@ func _physics_process(_delta):
 	parent.progress += speed * _delta
 	if parent.progress_ratio >= 1:
 		Game.enemyEscaped.emit(lossPoints)
-		_freeSelf()
+		freeSelf()
 	if lifeBar == null or not is_instance_valid(lifeBar):
 		return
 	lifeBar.global_position =parent.global_position+LIFE_BAR_OFFSET

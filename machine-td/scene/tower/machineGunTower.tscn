@@ -214,5 +214,5 @@ volume_db = -12.0
 max_distance = 1400.0
 bus = &"Sfx"
 
-[connection signal="area_entered" from="radar" to="." method="_onRadarAreaEntered"]
-[connection signal="area_exited" from="radar" to="." method="_onRadarAreaExited"]
+[connection signal="area_entered" from="radar" to="." method="onRadarAreaEntered"]
+[connection signal="area_exited" from="radar" to="." method="onRadarAreaExited"]

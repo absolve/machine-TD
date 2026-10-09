@@ -51,9 +51,9 @@ func close() -> void:
 func showLevel(stage_data: Dictionary) -> void:
 	if stage_data.is_empty():
 		return
-	_fillHeader(stage_data)
-	_buildInfo(stage_data)
-	_buildEnemyList(stage_data)
+	fillHeader(stage_data)
+	buildInfo(stage_data)
+	buildEnemyList(stage_data)
 	show()
 
 
@@ -63,13 +63,13 @@ func showEndless(bestWave: int) -> void:
 	titleLabel.text = Game.t("_Endless", "Endless Mode")
 	subtitleLabel.text = Game.t("_EndlessIntroHint", "No finish line — hold the base "
 		+ "and see how many waves you can take.")
-	_clearChildren(infoBox)
-	_addChip(Game.t("_BaseHealth", "Base HP"), "10", Color(0.75, 0.95, 1.0, 1.0))
-	_addChip(Game.t("_EndlessCrowd", "On Screen"), "90", Color(1.0, 0.85, 0.6, 1.0))
-	_addChip(Game.t("_EndlessBest", "Best Record"), str(bestWave), Color(1.0, 0.78, 0.72, 1.0))
+	clearChildren(infoBox)
+	addChip(Game.t("_BaseHealth", "Base HP"), "10", Color(0.75, 0.95, 1.0, 1.0))
+	addChip(Game.t("_EndlessCrowd", "On Screen"), "90", Color(1.0, 0.85, 0.6, 1.0))
+	addChip(Game.t("_EndlessBest", "Best Record"), str(bestWave), Color(1.0, 0.78, 0.72, 1.0))
 	# 规则用几行纯文本代替"敌人清单"，比逐条列兵种好读
 	intelTitle.text = Game.t("_EndlessRules", "Rules")
-	_clearChildren(enemyList)
+	clearChildren(enemyList)
 	for key in ["_EndlessRule1", "_EndlessRule2", "_EndlessRule3"]:
 		var line: Label = Label.new()
 		line.text = tr(key)
@@ -80,7 +80,7 @@ func showEndless(bestWave: int) -> void:
 	show()
 
 
-func _fillHeader(stage_data: Dictionary) -> void:
+func fillHeader(stage_data: Dictionary) -> void:
 	var levelName: String = str(stage_data.get("name", ""))
 	if levelName.is_valid_int():
 		titleLabel.text = Game.t("_LevelTitleFmt", "Level %s") % levelName
@@ -104,19 +104,19 @@ func _fillHeader(stage_data: Dictionary) -> void:
 
 
 # 关卡基础信息：波数 / 基地生命 / 初始金币 / 宝石奖励 / 敌人种类 / 敌人总数
-func _buildInfo(stage_data: Dictionary) -> void:
-	_clearChildren(infoBox)
-	var stats: Dictionary = _collectEnemyStats(stage_data)
-	_addChip(Game.t("_Wave", "Wave"), str(int(stage_data.get("wave", 0))), Color(0.75, 0.95, 1.0, 1.0))
-	_addChip(Game.t("_BaseHealth", "Base HP"), str(int(stage_data.get("health", 0))), Color(1.0, 0.78, 0.72, 1.0))
-	_addChip(Game.t("_StartMoney", "Start Money"), str(int(stage_data.get("money", 0))), Color(1.0, 0.85, 0.6, 1.0))
-	_addChip(Game.t("_GemRewardShort", "Gem Reward"), str(int(stage_data.get("gemReward", 0))), Color(0.4, 0.9, 1.0, 1.0))
-	_addChip(Game.t("_EnemyTypes", "Enemy Types"), str(stats["types"].size()), COLOR_TEXT)
-	_addChip(Game.t("_TotalEnemies", "Total Enemies"), str(stats["total"]), COLOR_TEXT)
+func buildInfo(stage_data: Dictionary) -> void:
+	clearChildren(infoBox)
+	var stats: Dictionary = collectEnemyStats(stage_data)
+	addChip(Game.t("_Wave", "Wave"), str(int(stage_data.get("wave", 0))), Color(0.75, 0.95, 1.0, 1.0))
+	addChip(Game.t("_BaseHealth", "Base HP"), str(int(stage_data.get("health", 0))), Color(1.0, 0.78, 0.72, 1.0))
+	addChip(Game.t("_StartMoney", "Start Money"), str(int(stage_data.get("money", 0))), Color(1.0, 0.85, 0.6, 1.0))
+	addChip(Game.t("_GemRewardShort", "Gem Reward"), str(int(stage_data.get("gemReward", 0))), Color(0.4, 0.9, 1.0, 1.0))
+	addChip(Game.t("_EnemyTypes", "Enemy Types"), str(stats["types"].size()), COLOR_TEXT)
+	addChip(Game.t("_TotalEnemies", "Total Enemies"), str(stats["total"]), COLOR_TEXT)
 
 
 # 按出现顺序汇总本关敌人类型和数量
-func _collectEnemyStats(stage_data: Dictionary) -> Dictionary:
+func collectEnemyStats(stage_data: Dictionary) -> Dictionary:
 	var order: Array = []
 	var counts: Dictionary = {}
 	var total: int = 0
@@ -137,9 +137,9 @@ func _collectEnemyStats(stage_data: Dictionary) -> Dictionary:
 	return {"types": order, "counts": counts, "total": total}
 
 
-func _buildEnemyList(stage_data: Dictionary) -> void:
-	_clearChildren(enemyList)
-	var stats: Dictionary = _collectEnemyStats(stage_data)
+func buildEnemyList(stage_data: Dictionary) -> void:
+	clearChildren(enemyList)
+	var stats: Dictionary = collectEnemyStats(stage_data)
 	var order: Array = stats["types"]
 	if order.is_empty():
 		var empty: Label = Label.new()
@@ -150,7 +150,7 @@ func _buildEnemyList(stage_data: Dictionary) -> void:
 		return
 
 	# 表头
-	_addRow(
+	addRow(
 		Game.t("_EnemyColName", "Enemy"),
 		Game.t("_EnemyColRole", "Role"),
 		Game.t("_EnemyColCount", "Count"),
@@ -163,7 +163,7 @@ func _buildEnemyList(stage_data: Dictionary) -> void:
 	for enemyType in order:
 		var info: Dictionary = Game.enemyInfo.get(enemyType, {})
 		var isAir: bool = bool(info.get("flying", false))
-		_addRow(
+		addRow(
 			Game.getEnemyDisplayName(enemyType),
 			Game.getEnemyRoleName(enemyType),
 			"x%d" % int(stats["counts"].get(enemyType, 0)),
@@ -174,7 +174,7 @@ func _buildEnemyList(stage_data: Dictionary) -> void:
 
 
 # 一行敌人信息；is_header 为 true 时在行后追加分隔线
-func _addRow(
+func addRow(
 	col_name: String,
 	col_role: String,
 	col_count: String,
@@ -188,22 +188,22 @@ func _addRow(
 	var row: HBoxContainer = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
 
-	var nameCell: Label = _makeCell(col_name, 0, HORIZONTAL_ALIGNMENT_LEFT, color, font_size)
+	var nameCell: Label = makeCell(col_name, 0, HORIZONTAL_ALIGNMENT_LEFT, color, font_size)
 	nameCell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(nameCell)
 
-	row.add_child(_makeCell(col_role, COL_WIDTH_ROLE, HORIZONTAL_ALIGNMENT_LEFT, color, font_size))
-	row.add_child(_makeCell(col_count, COL_WIDTH_COUNT, HORIZONTAL_ALIGNMENT_CENTER, color, font_size))
-	row.add_child(_makeCell(col_hp, COL_WIDTH_HP, HORIZONTAL_ALIGNMENT_RIGHT, color, font_size))
-	row.add_child(_makeCell(col_speed, COL_WIDTH_SPEED, HORIZONTAL_ALIGNMENT_RIGHT, color, font_size))
-	row.add_child(_makeCell(col_air, COL_WIDTH_AIR, HORIZONTAL_ALIGNMENT_CENTER, color, font_size))
+	row.add_child(makeCell(col_role, COL_WIDTH_ROLE, HORIZONTAL_ALIGNMENT_LEFT, color, font_size))
+	row.add_child(makeCell(col_count, COL_WIDTH_COUNT, HORIZONTAL_ALIGNMENT_CENTER, color, font_size))
+	row.add_child(makeCell(col_hp, COL_WIDTH_HP, HORIZONTAL_ALIGNMENT_RIGHT, color, font_size))
+	row.add_child(makeCell(col_speed, COL_WIDTH_SPEED, HORIZONTAL_ALIGNMENT_RIGHT, color, font_size))
+	row.add_child(makeCell(col_air, COL_WIDTH_AIR, HORIZONTAL_ALIGNMENT_CENTER, color, font_size))
 
 	enemyList.add_child(row)
 	if is_header:
 		enemyList.add_child(HSeparator.new())
 
 
-func _makeCell(text: String, width: int, align: HorizontalAlignment, color: Color, font_size: int) -> Label:
+func makeCell(text: String, width: int, align: HorizontalAlignment, color: Color, font_size: int) -> Label:
 	var cell: Label = Label.new()
 	cell.text = text
 	cell.horizontal_alignment = align
@@ -215,7 +215,7 @@ func _makeCell(text: String, width: int, align: HorizontalAlignment, color: Colo
 
 
 # 两条路线：路线1 走上方，路线2 走下方（折点见同名 .tscn 里的两个 Path2D）
-func _addChip(title: String, value: String, color: Color) -> void:
+func addChip(title: String, value: String, color: Color) -> void:
 	var chip: VBoxContainer = VBoxContainer.new()
 	chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	chip.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -238,7 +238,7 @@ func _addChip(title: String, value: String, color: Color) -> void:
 
 
 # 清空动态生成的子节点（立即移除，避免同帧残留）
-func _clearChildren(node: Node) -> void:
+func clearChildren(node: Node) -> void:
 	for child in node.get_children():
 		node.remove_child(child)
 		child.queue_free()

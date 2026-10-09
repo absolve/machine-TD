@@ -19,9 +19,9 @@ const TOWER_BULLET: PackedScene = preload("res://scene/bullet/gunBullet.tscn")
 const RECOIL_BACK_TIME: float = 0.1
 const RECOIL_RETURN_TIME: float = 0.1
 
-var _recoilTween: Tween
-var _turretOffsetBase: Vector2 = Vector2.ZERO
-var _turretOffsetCached: bool = false
+var recoilTween: Tween
+var turretOffsetBase: Vector2 = Vector2.ZERO
+var turretOffsetCached: bool = false
 
 var targets: Array[Area2D] = []
 var canShot: bool = true
@@ -117,16 +117,16 @@ func playTurretRecoil() -> void:
 	if ownerType != OwnerType.ENEMY:
 		return
 	# 基准 offset 第一次开火时记下来（场景里可能配过初值）
-	if not _turretOffsetCached:
-		_turretOffsetBase = turretSprite.offset
-		_turretOffsetCached = true
-	if _recoilTween != null and _recoilTween.is_valid():
-		_recoilTween.kill()
-	turretSprite.offset = _turretOffsetBase
-	_recoilTween = create_tween()
-	_recoilTween.tween_property(turretSprite, "offset",
-		_turretOffsetBase + Vector2(-fireRecoil, 0.0), RECOIL_BACK_TIME)
-	_recoilTween.tween_property(turretSprite, "offset", _turretOffsetBase, RECOIL_RETURN_TIME)
+	if not turretOffsetCached:
+		turretOffsetBase = turretSprite.offset
+		turretOffsetCached = true
+	if recoilTween != null and recoilTween.is_valid():
+		recoilTween.kill()
+	turretSprite.offset = turretOffsetBase
+	recoilTween = create_tween()
+	recoilTween.tween_property(turretSprite, "offset",
+		turretOffsetBase + Vector2(-fireRecoil, 0.0), RECOIL_BACK_TIME)
+	recoilTween.tween_property(turretSprite, "offset", turretOffsetBase, RECOIL_RETURN_TIME)
 
 
 func _physics_process(delta: float) -> void:

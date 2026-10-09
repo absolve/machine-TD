@@ -23,21 +23,21 @@ extends Node2D
 ## 颜色（青蓝，和特斯拉闪电链同一色系）
 @export var arcColor: Color = Color(0.45, 0.85, 1.0, 1.0)
 
-var _left: float = 0.0
-var _flick: float = 0.0
-var _arcs: Array = []
+var left: float = 0.0
+var flick: float = 0.0
+var arcs: Array = []
 
 
 func _ready() -> void:
 	z_index = 8
-	_left = duration
-	_flick = 0.0
-	_rebuild()
+	left = duration
+	flick = 0.0
+	rebuild()
 	set_process(true)
 
 
-func _rebuild() -> void:
-	_arcs.clear()
+func rebuild() -> void:
+	arcs.clear()
 	for i in arcCount:
 		var ang: float = TAU * float(i) / float(arcCount) + randf_range(-0.45, 0.45)
 		var dir: Vector2 = Vector2.RIGHT.rotated(ang)
@@ -50,24 +50,24 @@ func _rebuild() -> void:
 			# 抖动随距离放大：根部贴近中心、末端更散，像真的放电
 			pts.append(dir * length * f + perp * randf_range(-jitter, jitter) * f)
 		pts.append(dir * length)
-		_arcs.append(pts)
+		arcs.append(pts)
 
 
 func _process(delta: float) -> void:
-	_left -= delta
-	_flick -= delta
-	if _flick <= 0.0:
+	left -= delta
+	flick -= delta
+	if flick <= 0.0:
 		# 重算路径 —— 这就是"电弧在抖"的来源
-		_rebuild()
-		_flick = maxf(flickerInterval, 0.01)
+		rebuild()
+		flick = maxf(flickerInterval, 0.01)
 	queue_redraw()
-	if _left <= 0.0:
+	if left <= 0.0:
 		queue_free()
 
 
 func _draw() -> void:
-	var a: float = clampf(_left / maxf(duration, 0.01), 0.0, 1.0)
-	for pts in _arcs:
+	var a: float = clampf(left / maxf(duration, 0.01), 0.0, 1.0)
+	for pts in arcs:
 		for i in range(pts.size() - 1):
 			# 三层叠加：外圈粗而暗、中层彩、内芯白 —— 和特斯拉塔的闪电画法一致
 			draw_line(pts[i], pts[i + 1], Color(arcColor.r, arcColor.g, arcColor.b, a * 0.75), 3.0, true)

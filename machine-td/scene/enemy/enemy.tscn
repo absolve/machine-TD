@@ -42,7 +42,7 @@ position = Vector2(0, -50)
 [node name="Delay" type="Timer" parent="." unique_id=692711619]
 one_shot = true
 
-[connection signal="input_event" from="." to="." method="_onInputEvent"]
-[connection signal="area_entered" from="radar" to="." method="_onRadarAreaEntered"]
-[connection signal="area_exited" from="radar" to="." method="_onRadarAreaExited"]
-[connection signal="timeout" from="Delay" to="." method="_onDelayTimeout"]
+[connection signal="input_event" from="." to="." method="onInputEvent"]
+[connection signal="area_entered" from="radar" to="." method="onRadarAreaEntered"]
+[connection signal="area_exited" from="radar" to="." method="onRadarAreaExited"]
+[connection signal="timeout" from="Delay" to="." method="onDelayTimeout"]

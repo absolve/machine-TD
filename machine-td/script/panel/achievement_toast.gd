@@ -19,52 +19,52 @@ const SLIDE_OUT_TIME := 0.8 # 滑出时长（"缓缓"消失）
 @onready var nameLabel: Label = $HBox/vbox/nameLabel
 @onready var descLabel: Label = $HBox/vbox/descLabel
 
-var _queue: Array = [] # 待播放的成就队列
-var _busy: bool = false # 是否正在播放
-var _shownX: float = 0.0 # 停靠位置
-var _hiddenX: float = 0.0 # 屏幕外位置
+var queue: Array = [] # 待播放的成就队列
+var busy: bool = false # 是否正在播放
+var shownX: float = 0.0 # 停靠位置
+var hiddenX: float = 0.0 # 屏幕外位置
 
 
 func _ready() -> void:
 	visible = false
 	headerLabel.text = Game.t("_AchievementToast", "Achievement Unlocked")
-	_layout()
-	get_viewport().size_changed.connect(_layout)
+	layout()
+	get_viewport().size_changed.connect(layout)
 	if AchievementManager:
-		AchievementManager.achievementUnlocked.connect(_onAchievementUnlocked)
+		AchievementManager.achievementUnlocked.connect(onAchievementUnlocked)
 
 
 # ---------- 队列 ----------
 
-func _onAchievementUnlocked(achievement_id: String, achievement: Dictionary) -> void:
-	_queue.append({"id": achievement_id, "achievement": achievement})
-	if not _busy:
-		_processQueue()
+func onAchievementUnlocked(achievement_id: String, achievement: Dictionary) -> void:
+	queue.append({"id": achievement_id, "achievement": achievement})
+	if not busy:
+		processQueue()
 
 
-func _processQueue() -> void:
-	_busy = true
-	while not _queue.is_empty():
-		var item: Dictionary = _queue.pop_front()
-		await _play(item)
-	_busy = false
+func processQueue() -> void:
+	busy = true
+	while not queue.is_empty():
+		var item: Dictionary = queue.pop_front()
+		await play(item)
+	busy = false
 
 
 # ---------- 播放 ----------
 
-func _play(item: Dictionary) -> void:
+func play(item: Dictionary) -> void:
 	var achievement: Dictionary = item.get("achievement", {})
-	icon.texture = _loadIcon(achievement)
+	icon.texture = loadIcon(achievement)
 	nameLabel.text = Game.t(str(achievement.get("name", "")), str(item.get("id", "")))
 	descLabel.text = Game.t(str(achievement.get("description", "")), "")
 
-	_layout()
+	layout()
 	visible = true
 	var tw: Tween = create_tween()
-	tw.tween_property(self, "position:x", _shownX, SLIDE_IN_TIME) \
+	tw.tween_property(self, "position:x", shownX, SLIDE_IN_TIME) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tw.tween_interval(HOLD_TIME)
-	tw.tween_property(self, "position:x", _hiddenX, SLIDE_OUT_TIME) \
+	tw.tween_property(self, "position:x", hiddenX, SLIDE_OUT_TIME) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	await tw.finished
 	visible = false
@@ -73,19 +73,19 @@ func _play(item: Dictionary) -> void:
 # ---------- 位置 ----------
 
 # 右下角停靠：滑入起点在屏幕右边缘之外，终点贴在 margin_right 处
-func _layout() -> void:
+func layout() -> void:
 	var vp: Vector2 = get_viewport_rect().size
 	var toastSize: Vector2 = Vector2(maxf(size.x, custom_minimum_size.x), maxf(size.y, custom_minimum_size.y))
-	_hiddenX = vp.x
-	_shownX = vp.x - toastSize.x - marginRight
+	hiddenX = vp.x
+	shownX = vp.x - toastSize.x - marginRight
 	var y: float = vp.y - marginBottom - toastSize.y
 	# 正在播放时不要打断动画，只更新终点位置
-	position = Vector2(_hiddenX if not visible else position.x, y)
+	position = Vector2(hiddenX if not visible else position.x, y)
 
 
 # ---------- 工具 ----------
 
-func _loadIcon(achievement: Dictionary) -> Texture2D:
+func loadIcon(achievement: Dictionary) -> Texture2D:
 	var path: String = str(achievement.get("icon", ""))
 	if not path.is_empty() and ResourceLoader.exists(path):
 		var tex: Resource = load(path)

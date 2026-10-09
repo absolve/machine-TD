@@ -32,14 +32,14 @@ const COLOR_POOR := Color(0.48, 0.50, 0.55, 1.0)
 
 var abilityId: String = ""
 ## 宝石够不够放这个技能（由 refresh_affordable 更新）
-var _affordable: bool = true
+var affordable: bool = true
 
 
 func _ready() -> void:
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	cooldownTimer.timeout.connect(_onCooldownTimeout)
-	mouse_entered.connect(_on_mouse_entered)
-	mouse_exited.connect(_on_mouse_exited)
+	cooldownTimer.timeout.connect(onCooldownTimeout)
+	mouse_entered.connect(onMouseEntered)
+	mouse_exited.connect(onMouseExited)
 	# 没有冷却时不需要逐帧刷新
 	set_process(false)
 
@@ -56,20 +56,20 @@ func setup(id: String) -> void:
 	costBox.visible = cost > 0
 	setHighlighted(false)
 	refreshAffordable()
-	_refresh(0.0)
+	refresh(0.0)
 
 
 ## 刷新"宝石够不够"状态。技能消耗宝石后由技能条调用。
 func refreshAffordable() -> void:
 	if abilityId.is_empty():
 		return
-	_affordable = AbilityManager.canAfford(abilityId)
+	affordable = AbilityManager.canAfford(abilityId)
 	# 成本数字也跟着变色：买不起时变红
 	if costLabel != null:
-		costLabel.modulate = Color(1, 1, 1, 1) if _affordable else Color(1, 0.45, 0.45, 1)
+		costLabel.modulate = Color(1, 1, 1, 1) if affordable else Color(1, 0.45, 0.45, 1)
 	# 立刻按"当前冷却进度"重算一次配色，不等下一帧
 	var total: float = cooldownTimer.wait_time
-	_refresh(cooldownTimer.time_left / total if total > 0.0 else 0.0)
+	refresh(cooldownTimer.time_left / total if total > 0.0 else 0.0)
 
 
 # 冷却是否进行中
@@ -82,7 +82,7 @@ func startCooldown() -> void:
 	if cooldownTimer.wait_time <= 0.0:
 		return
 	cooldownTimer.start()
-	_refresh(1.0)
+	refresh(1.0)
 	set_process(true)
 
 
@@ -91,13 +91,13 @@ func setHighlighted(on: bool) -> void:
 	bg.add_theme_stylebox_override("panel", STYLE_ACTIVE if on else STYLE_NORMAL)
 
 
-func _onCooldownTimeout() -> void:
-	_refresh(0.0)
+func onCooldownTimeout() -> void:
+	refresh(0.0)
 	set_process(false)
 
 
 # 更新冷却遮罩（着色器 progress）与剩余秒数
-func _refresh(ratio: float) -> void:
+func refresh(ratio: float) -> void:
 	var clamped: float = clampf(ratio, 0.0, 1.0)
 	var mat: ShaderMaterial = cooldownRect.material as ShaderMaterial
 	if mat:
@@ -111,7 +111,7 @@ func _refresh(ratio: float) -> void:
 
 	# 配色优先级：宝石不够 > 冷却中 > 可用
 	# （"买不起"比"冷却中"更该被看见 —— 冷却等一会就有，宝石不够得去打通关）
-	if not _affordable:
+	if not affordable:
 		modulate = COLOR_POOR
 	elif clamped > 0.001:
 		modulate = COLOR_COOLING
@@ -119,11 +119,11 @@ func _refresh(ratio: float) -> void:
 		modulate = COLOR_READY
 
 
-func _on_mouse_entered() -> void:
+func onMouseEntered() -> void:
 	slotHovered.emit(abilityId, self)
 
 
-func _on_mouse_exited() -> void:
+func onMouseExited() -> void:
 	slotUnhovered.emit()
 
 
@@ -132,7 +132,7 @@ func _process(_delta: float) -> void:
 	if total <= 0.0:
 		set_process(false)
 		return
-	_refresh(cooldownTimer.time_left / total)
+	refresh(cooldownTimer.time_left / total)
 
 
 func _gui_input(event: InputEvent) -> void:

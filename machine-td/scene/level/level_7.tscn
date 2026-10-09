@@ -1522,5 +1522,5 @@ position = Vector2(1568, 416)
 [node name="alarm_24_9" parent="propLayer" index="34" unique_id=240072014 instance=ExtResource("7_prop_alarm")]
 position = Vector2(1568, 608)
 
-[connection signal="timeout" from="WaveTimer" to="." method="_onWaveTimerTimeout"]
-[connection signal="timeout" from="SpawnerTimer" to="." method="_onSpawnerTimerTimeout"]
+[connection signal="timeout" from="WaveTimer" to="." method="onWaveTimerTimeout"]
+[connection signal="timeout" from="SpawnerTimer" to="." method="onSpawnerTimerTimeout"]

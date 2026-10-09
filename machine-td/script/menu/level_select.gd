@@ -54,6 +54,6 @@ func loadMap(levelId: int) -> void:
 	# get_tree().change_scene_to_file("res://scene/map.tscn")
 	SceneTransition.changeScene("res://scene/map.tscn")
 
-func _onUiButtonPressed() -> void:
+func onUiButtonPressed() -> void:
 	# get_tree().change_scene_to_file("res://scene/welcome.tscn")
 	SceneTransition.changeScene("res://scene/welcome.tscn")

@@ -22,7 +22,7 @@ var initTime = 1 # 初始化时间 秒
 
 ## 无敌状态（由能力技能施加）：无敌期间免疫一切伤害
 var invincible: bool = false
-var _invincibleLeft: float = 0.0
+var invincibleLeft: float = 0.0
 
 ## 修满血的最高费用占造价的百分比（残血越多越贵，满血时为 0）
 const REPAIR_COST_RATIO := 0.5
@@ -49,7 +49,7 @@ const RADAR_SCAN_SPEED := 1.8
 ## 1 级时正好是 1.0（动画原速），升级后同步变快。
 var aniSpeed = 1
 ## 1 级的 reload —— 算 aniSpeed 的基准；不参与升级的塔保持 0 表示"不用管"
-var _baseDelay = 0
+var baseDelay = 0
 
 ## 炮口到轴心的像素距离 —— 代码里写 `marker.position`，**不要**去场景里改 Marker2D。
 ##
@@ -103,7 +103,7 @@ func _ready() -> void:
 	# 记下 1 级的 reload 当基准，算出当前的动画倍速。
 	# ⚠️ 必须**建塔时**就抓一次 —— 升级会把 delay 改掉，之后再取就再也拿不到 1 级的值了。
 	#    towerInfo 里存的就是 1 级数值，所以直接查表，不依赖"此刻的 delay 恰好是 1 级"。
-	_baseDelay = delay
+	baseDelay = delay
 	refreshAniSpeed()
 	monitorable = false
 	set_physics_process(false)
@@ -233,14 +233,14 @@ func stopGlow() -> void:
 		tm.set_shader_parameter("enable_flash", false)
 
 
-func _onDelayTimeout():
+func onDelayTimeout():
 	canShot = true
 
 
 ## 1 级的 reload。查 game.gd 的 towerInfo（那里存的就是 1 级数值）。
 ## 查不到就退回"当前 delay"—— 退回的值会让 aniSpeed 恰好是 1.0，
 ## 也就是"不动画"，比乱算一个倍速安全。
-func _lookupBaseDelay() -> float:
+func lookupBaseDelay() -> float:
 	var info = Game.towerInfo.get(type)
 	if info is Dictionary and info.has("reload"):
 		var r: float = float(info["reload"])
@@ -259,7 +259,7 @@ func _lookupBaseDelay() -> float:
 func refreshAniSpeed() -> void:
 	if delay <= 0.0:
 		return
-	aniSpeed = _baseDelay / delay
+	aniSpeed = baseDelay / delay
 	if player == null:
 		return
 	# 只有**真的有 "fire" 动画**的塔才写 speed_scale。
@@ -290,18 +290,18 @@ func setInvincible(duration: float) -> void:
 		return
 	invincible = true
 	# 重复施加时取更长的剩余时间，不做叠加
-	_invincibleLeft = maxf(_invincibleLeft, duration)
-	_setInvincibleVisual(true)
+	invincibleLeft = maxf(invincibleLeft, duration)
+	setInvincibleVisual(true)
 	set_process(true)
 
 
 # 无敌期间用安全黄色高亮，和"我方强化"的视觉约定一致
-func _setInvincibleVisual(on: bool) -> void:
+func setInvincibleVisual(on: bool) -> void:
 	if on:
 		modulate = Color(1.0, 0.92, 0.55, 1.0)
 		return
 	invincible = false
-	_invincibleLeft = 0.0
+	invincibleLeft = 0.0
 	modulate = Color(1.0, 1.0, 1.0, 1.0)
 	set_process(false)
 
@@ -335,14 +335,14 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 		# 音效也用 global_position 定位，必须在 queue_free 之前播。
 		ExplosionManage.playExplosion(global_position, "heavy")
 		SoundManage.playAt("tower_destroyed", global_position, -6.0, randf_range(0.95, 1.05))
-		_releaseGrid()
+		releaseGrid()
 		queue_free()
 
 
 ## 把本塔占用的格子归还给关卡（出售 / 被打爆 都要走这一步）。
 ## ⚠️ 复用 Game.sellTower 那条通路会连带把"售价"也加给玩家 —— 打爆不该给钱，
 ##    所以这里单独发 towerGridReleased，只归还格子。
-func _releaseGrid() -> void:
+func releaseGrid() -> void:
 	if coverGrid.is_empty():
 		return
 	Game.towerGridReleased.emit(coverGrid)
@@ -364,7 +364,7 @@ func playMuzzleFlash(target_position: Vector2) -> void:
 	spark.rotation = (target_position - marker.global_position).angle()
 	sparkPlayer.play("spark")
 
-func _onInputEvent(_viewport, _event, _shape_idx):
+func onInputEvent(_viewport, _event, _shape_idx):
 	#if event is InputEventMouseButton:
 		#if event.is_pressed()&& event.button_index==MouseButton.MOUSE_BUTTON_LEFT:
 			#selected=!selected
@@ -374,7 +374,7 @@ func _onInputEvent(_viewport, _event, _shape_idx):
 
 
 # 出售前需要额外清理的塔（如无人机基地）覆写本方法
-func _onBeforeSell() -> void:
+func onBeforeSell() -> void:
 	pass
 
 
@@ -382,7 +382,7 @@ func _onBeforeSell() -> void:
 func sell():
 	if selected:
 		hideSelect() # 出售前先取消选中，让右侧信息面板与地图状态同步清理
-	_onBeforeSell()
+	onBeforeSell()
 	# 出售：金币响声（先响再 free，free 之后位置就没了）
 	#SoundManage.play_at("tower_sold", global_position, -2.0, randf_range(0.97, 1.05))
 	SoundManage.play("tower_sold_b")
@@ -428,9 +428,9 @@ func playRepairGlow() -> void:
 
 func _physics_process(delta: float) -> void:
 	if invincible: # 无敌期间
-		_invincibleLeft -= delta
-		if _invincibleLeft <= 0.0:
-			_setInvincibleVisual(false)
+		invincibleLeft -= delta
+		if invincibleLeft <= 0.0:
+			setInvincibleVisual(false)
 			
 	if not selected:
 		return

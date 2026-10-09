@@ -6,15 +6,15 @@ signal infoShown
 signal infoHidden
 signal selected
 
-func _on_mouse_entered():
+func onMouseEntered():
 	infoShown.emit(type)
 
 
-func _on_mouse_exited():
+func onMouseExited():
 	infoHidden.emit(type)
 
 
 
-func _onGuiInput(_event):
+func onGuiInput(_event):
 	if Input.is_action_just_pressed("click"):
 		selected.emit(type)

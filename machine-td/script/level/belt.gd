@@ -25,10 +25,10 @@ const DEFAULT_KEY := "we"
 
 func _ready() -> void:
 	if snapToGrid:
-		_snapToCell()
-	_ensureAnimation()
+		snapToCell()
+	ensureAnimation()
 	play() ## 帧动画得手动起跑（autoplay 留空，方向由 animation 决定）
-	_applyShader()
+	applyShader()
 
 
 ## 本实例覆盖的格子（中心坐标 → 格子索引）
@@ -39,7 +39,7 @@ func getGrid() -> Vector2i:
 
 ## 检查器里没选对动画时，回落到一个确实存在的动画，避免 play() 报错。
 ## 注意 has_animation() 是 SpriteFrames 上的方法，AnimatedSprite2D 没有。
-func _ensureAnimation() -> void:
+func ensureAnimation() -> void:
 	if sprite_frames == null or sprite_frames.has_animation(animation):
 		return
 	var names: Array = sprite_frames.get_animation_names()
@@ -48,7 +48,7 @@ func _ensureAnimation() -> void:
 	animation = DEFAULT_KEY if sprite_frames.has_animation(DEFAULT_KEY) else names[0]
 
 
-func _applyShader() -> void:
+func applyShader() -> void:
 	var mat: ShaderMaterial = material as ShaderMaterial
 	if mat == null:
 		return
@@ -59,6 +59,6 @@ func _applyShader() -> void:
 	mat.set_shader_parameter("route_phase", routePhase)
 
 
-func _snapToCell() -> void:
+func snapToCell() -> void:
 	var t: int = StageData.TileSize
 	position = Vector2(getGrid() * t) + Vector2(t, t) * 0.5
