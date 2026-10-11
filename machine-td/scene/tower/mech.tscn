@@ -1,0 +1,130 @@
+[gd_scene format=3 uid="uid://ddkarn71eaqgk"]
+
+[ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://3wvpmb4t0dnk" path="res://script/tower/mech.gd" id="2_mech"]
+[ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_r6erc"]
+[ext_resource type="Texture2D" uid="uid://b2dcsnqwgy2we" path="res://sprite/tower/mech_base_1.png" id="10_b1"]
+[ext_resource type="Texture2D" uid="uid://5hupjligdasb" path="res://sprite/tower/mech_base_2.png" id="10_b2"]
+[ext_resource type="Texture2D" uid="uid://dj4py7vp10rsy" path="res://sprite/tower/mech_base_3.png" id="10_b3"]
+[ext_resource type="Texture2D" uid="uid://c3xcyrk83vl3l" path="res://sprite/tower/mech_base_4.png" id="10_b4"]
+[ext_resource type="Texture2D" uid="uid://cguclsbhqtybk" path="res://sprite/tower/mech_turret_1.png" id="11_t1"]
+[ext_resource type="Texture2D" uid="uid://bsibb713jixwb" path="res://sprite/tower/mech_turret_2.png" id="11_t2"]
+[ext_resource type="Texture2D" uid="uid://cilwhvw58tfrv" path="res://sprite/tower/mech_turret_3.png" id="11_t3"]
+[ext_resource type="Texture2D" uid="uid://dbywe37r38rd6" path="res://sprite/tower/mech_turret_4.png" id="11_t4"]
+[ext_resource type="Texture2D" uid="uid://dl20d3cxbv5dp" path="res://sprite/fx/fx_spark.png" id="12_spark"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mech"]
+size = Vector2(64, 64)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c8e2w"]
+resource_local_to_scene = true
+shader = ExtResource("3_r6erc")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 14.0
+shader_parameter/flash_amplitude = 0.8
+shader_parameter/outline_thickness = 0.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mech_base"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_b1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_b2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_b3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_b4")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mech_radar"]
+radius = 180.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s5dng"]
+resource_local_to_scene = true
+shader = ExtResource("3_r6erc")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 14.0
+shader_parameter/flash_amplitude = 0.8
+shader_parameter/outline_thickness = 0.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mech_turret"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_t1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_t2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_t3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_t4")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 4.0
+}]
+
+[node name="mech" unique_id=1099991569 instance=ExtResource("1_base")]
+script = ExtResource("2_mech")
+selfHealInterval = 6.0
+selfHealRatio = 0.06
+moveSpeed = 140.0
+arriveEpsilon = 2.0
+salvageScope = 220.0
+salvageSeconds = 1.2
+muzzleOffset = 22.0
+
+[node name="shape" parent="." index="0" unique_id=1958475246]
+shape = SubResource("RectangleShape2D_mech")
+
+[node name="base" parent="." index="1" unique_id=1580788916]
+material = SubResource("ShaderMaterial_c8e2w")
+sprite_frames = SubResource("SpriteFrames_mech_base")
+
+[node name="radar" parent="." index="2" unique_id=2082783838]
+visible = false
+
+[node name="CollisionShape2D" parent="radar" index="0" unique_id=803920863]
+shape = SubResource("CircleShape2D_mech_radar")
+
+[node name="turret" parent="." index="3" unique_id=1212426607]
+material = SubResource("ShaderMaterial_s5dng")
+sprite_frames = SubResource("SpriteFrames_mech_turret")
+
+[node name="SelfHealTimer" type="Timer" parent="." index="12" unique_id=181945475]
+wait_time = 6.0
+
+[node name="MuzzleFx" type="CPUParticles2D" parent="." index="13" unique_id=1145295426]
+emitting = false
+amount = 14
+texture = ExtResource("12_spark")
+lifetime = 0.35
+one_shot = true
+explosiveness = 1.0
+local_coords = true
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 90.0
+initial_velocity_max = 260.0
+angular_velocity_min = -220.0
+angular_velocity_max = 220.0
+damping_min = 60.0
+damping_max = 160.0
+scale_amount_min = 0.5
+scale_amount_max = 1.1
+color = Color(1, 0.82, 0.25, 1)

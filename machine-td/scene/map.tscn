@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" path="res://scene/achievement_toast.tscn" id="11_toast"]
 [ext_resource type="PackedScene" path="res://scene/ability_bar.tscn" id="12_ability"]
 [ext_resource type="PackedScene" uid="uid://dev1wi4vmspkd" path="res://scene/battle_start_banner.tscn" id="13_banner"]
+[ext_resource type="PackedScene" path="res://scene/ui/wave_banner.tscn" id="14_wavebanner"]
 
 [node name="map" type="Node2D" unique_id=988854810]
 script = ExtResource("1_rgtto")
@@ -69,6 +70,8 @@ layer = 10
 
 [node name="battleStartBanner" parent="PopupLayer" unique_id=990114280 instance=ExtResource("13_banner")]
 holdSec = 2.0
+
+[node name="waveBanner" parent="PopupLayer" unique_id=990114281 instance=ExtResource("14_wavebanner")]
 
 [node name="levelIntroPanel" parent="PopupLayer" unique_id=990114276 instance=ExtResource("9_intro")]
 

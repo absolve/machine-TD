@@ -6,14 +6,17 @@ extends Control
 @onready var moneyLabel = $PanelContainer/hbox/hbox3/moneyLabel
 @onready var gemLabel = $PanelContainer/hbox/hboxGem/gemLabel
 @onready var gemIcon = $PanelContainer/hbox/hboxGem/gemIcon
-@onready var scoreLabel = $PanelContainer/hbox/hbox4/scoreLabel
-@onready var scoreTitle = $PanelContainer/hbox/hbox4/Label
-@onready var speedLabel = $PanelContainer/hbox/HBoxContainer3/btnFast/Label
-@onready var btnSpeed = $PanelContainer/hbox/HBoxContainer3/btnFast
-@onready var btnStart = $PanelContainer/hbox/HBoxContainer3/btnStart/MarginContainer/btnStart
-@onready var btnSound = $PanelContainer/hbox/HBoxContainer3/btnSfx/MarginContainer/btnStart
-@onready var btnMusic = $PanelContainer/hbox/HBoxContainer3/btnMusic
-@onready var btnHome = $PanelContainer/hbox/HBoxContainer3/btnHome/MarginContainer/btnStart
+@onready var scoreLabel = $PanelContainer/hbox/spacerRight/hbox4/scoreLabel
+@onready var scoreTitle = $PanelContainer/hbox/spacerRight/hbox4/Label
+## 顶栏最左侧的关卡名（数字关卡显示"第 N 关"，教程关显示"教程"）。
+## ⚠️ hbox4（score）已从 hbox 直接子节点挪进 spacerRight，路径要跟着改。
+@onready var levelLabel = $hboxLevel/levelLabel
+@onready var speedLabel = $hboxButton/btnFast/Label
+@onready var btnSpeed = $hboxButton/btnFast
+@onready var btnStart = $hboxButton/btnStart/MarginContainer/btnStart
+@onready var btnSound = $hboxButton/btnSfx/MarginContainer/btnStart
+@onready var btnMusic = $hboxButton/btnMusic
+@onready var btnHome = $hboxButton/btnHome/MarginContainer/btnStart
 
 
 signal started
@@ -75,6 +78,26 @@ var score = 0:
 	set(value):
 		score = value
 		scoreLabel.text = str(value)
+
+
+## 顶栏最左侧的关卡名。文案规则见 StageData.getLevelDisplayName()
+## （数字关卡 → "第 N 关"；具名关卡如 Tutorial → 同名翻译键），
+## 与关卡情报弹窗共用一份实现，避免两处各写一套判断。
+##
+## ⚠️ setter 里**不直接写 label**，只存值 + 调 refreshLevelLabel()。
+##    原因：map.gd 是在**它自己的 `_ready()` 里**给这个属性赋值的，那时 HUD 下的
+##    本节点还没进入场景树，`@onready var levelLabel` 仍是 null ——
+##    直接在 setter 里写 label 会静默丢掉（踩过：赋值成功但顶栏一片空白）。
+##    存值 + 在 `_ready()` 里套用，两条路径都能生效。
+var levelName: String = "":
+	set(value):
+		levelName = value
+		refreshLevelLabel()
+
+
+func refreshLevelLabel() -> void:
+	if levelLabel != null:
+		levelLabel.text = levelName
 
 
 ## ▶/⏸ 是 toggle_mode 按钮，两种状态的语义：
@@ -159,3 +182,10 @@ func _ready() -> void:
 	scoreTitle.text = tr("_Score")
 	# 宝石数来自存档（技能消耗的就是它），进关卡先同步一次
 	gem = UserData.gem
+	# 关卡名靠左对齐。静态属性代码里设一次就够（code_design.md §6.3）——
+	# Label 默认居中，会让名字在左侧空出一大块，看着像没对齐。
+	if levelLabel != null:
+		levelLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	# map.gd 可能已经在它自己的 _ready() 里赋过关卡名（那时本节点还没进树，
+	# @onready 未求值）—— 这里补写一次，保证名字一定显示出来。
+	refreshLevelLabel()

@@ -1,224 +1,234 @@
-Keys,en,zh
-_appName,Simple Tower Defense,简易塔防
-_General,General,通用
-_Volume,Volume,音量
-_Language,Language,语言
-_Master_Volume,Master Volume,主音量
-_Music,Music,音乐
-_Sound,Sound,音效
-_Restart,Restart,重新开始
-_Resume,Resume,返回游戏
-_NextLevel,Next Level,下一关
-_Main_Menu,Main Menu,主菜单
-_Start_game,Start Game,开始游戏
-_Settings,Settings,设置
-_About,About,关于
-_About_Title,About the Game,关于游戏
-_About_Text,"[b]Simple Tower Defense[/b]\n\nBuild towers, stop incoming waves, and survive as long as you can.\nEach level teaches a different battle rhythm and reward system.\nThe goal is to protect the base, manage resources, and improve your defense line.","[b]简易塔防[/b]\n\n建造防御塔，阻止敌人进攻，并尽可能保住基地。\n每一关都有不同的节奏和奖励节奏，考验你的资源管理和布局能力。\n目标是守住基地、合理建塔、不断提升防线。"
-_Close,Close,关闭
-_Mute,Mute,静音
-_Tutorial,Tutorial,教程
-_LevelFailed,Level Failed,失败
-_LevelCompleted,Level Completed,过关
-_GemReward,Gems earned: +%d,获得宝石：+%d
-_GemRewardNone,No gems (already cleared),本次无宝石（已通关过）
-_GemRewardAlready,Already earned this stage,本关宝石已领取过
-_GemPicked,Gem +%d,宝石 +%d
-_SelectLevel,Select Level,选择关卡
-_Wave,Wave,波数
-_machineGunTowerDesc,"Quick Fire,Effectively combat the enemy","快速射击,有效打击敌人"
-_cannonTowerDesc,"High-power strike,Effective combat the enemy","大威力，有效打击敌人"
-_rocketTowerDesc,"Launch missiles to attack enemies, with air defense capability","发射导弹打击敌人，具有防空功能"
-_EMPTowerDesc,"Effectively slow down the enemy","有效减速敌人"
-_droneBaseDesc,"Launch drones to attack enemies, track and strike enemies over a wide range, and can target enemies in the air","出动无人机打击敌人，大范围跟踪打击敌人，可打击空中敌人"
-_teslaCoilTowerDesc,"Release electric energy to attack enemies, capable of chain attacks","释放电能打击敌人，可以连锁打击"
-_laserTowerDesc,"Laser TLock onto targets at a distance and simultaneously strike multiple enemies","远距离锁定目标，同时打击多个敌人"
-_ironBoxDesc,"A defensive tower that can block enemy attacks, but cannot attack","防御塔，可以阻挡敌人攻击，但无法攻击敌人"
-_TowerName_machineGun,Machine Gun Tower,机枪塔
-_TowerName_cannon,Cannon Tower,加农炮塔
-_TowerName_rocket,Rocket Tower,火箭炮塔
-_TowerName_emp,EMP Tower,EMP干扰塔
-_TowerName_drone,Drone Base,无人机基地
-_TowerName_tesla,Tesla Coil Tower,特斯拉线圈塔
-_TowerName_laser,Laser Tower,激光塔
-_TowerName_ironBox,Iron Box,铁箱
-_HP,HP,血量
-_EXP,EXP,经验
-_Atk,ATK,攻击
-_FireRate,Fire Rate,射速
-_Range,Range,范围
-_Cost,Cost,造价
-_SellPrice,Sell Price,出售价
-_Repair,Repair,修理
-_RepairFull,HP Full,血量已满
-_Sell,Sell,出售
-_NotEnoughMoney,Not enough money,金币不足
-_NotEnoughGem,Not enough gems,宝石不足
-_PanelHint,Click the tower again or empty ground to deselect.,再次点击该塔或点击空地取消选择。
-_Speed,Speed,移动速度
-_Armor,Armor,护甲
-_Flying,Flying,飞行
-_Yes,Yes,是
-_No,No,否
-_Reward,Kill Reward,击杀奖励
-_EscapeCost,Escape Loss,逃脱扣血
-_RewardExp,Kill EXP,击杀经验
-_Dps,DPS,每秒伤害
-_OneShot,One-shot,一次性
-_EnemyPanelHint,Click the enemy again or empty ground to deselect.,再次点击该敌人或点击空地取消选择。
-_EnemyName_miniTank,Mini Tank,迷你坦克
-_EnemyName_mediumTank,Medium Tank,中型坦克
-_EnemyName_heavyTank,Heavy Tank,重型坦克
-_EnemyName_armoredTank,Armored Tank,装甲坦克
-_EnemyName_assaultBuggy,Assault Buggy,突击车
-_EnemyName_medic,Repair Truck,维修车
-_EnemyName_suicideTruck,Suicide Truck,自爆车
-_EnemyName_missileTruck,Missile Truck,导弹车
-_EnemyName_scoutDrone,Scout Drone,侦察无人机
-_EnemyName_attackHelicopter,Attack Helicopter,攻击直升机
-_EnemyName_experimentalTank,Experimental Tank,实验坦克
-_EnemyName_battlePlane,Battle Plane,战斗飞机
-_EnemyRole_pusher,Pusher,推进型
-_EnemyRole_attacker,Attacker,对抗型
-_EnemyRole_support,Support,支援型
-_EnemyRole_bomber,Suicide Bomber,自爆型
-_EnemyRole_siege,Siege,远程打击型
-_EnemyRole_air,Air Unit,空中单位
-_EnemyRole_fortress,Fortress,要塞型
-_LevelTitleFmt,Level %s,第 %s 关
-_LevelIntel,Level Briefing,关卡情报
-_ability_bombard_name,Airstrike,区域轰炸
-_ability_bombard_desc,Click the map to call an airstrike. Deals heavy damage to every enemy inside the target area.,点击地图呼叫区域轰炸，对范围内所有敌人造成大量伤害。
-_ability_invincible_name,Overdrive Shield,塔防御护盾
-_ability_invincible_desc,Click the map to make every tower in the target area invincible for a while. Invincible towers take no damage.,点击地图，使范围内所有防御塔在一段时间内无敌，无敌期间不会受到任何伤害。
-_ability_target_position,Click the map to choose an area.,点击地图选择目标区域。
-_ability_gem_cost_fmt,Cost: %d gem,消耗宝石：%d
-_ability_gem_lack,(not enough),（宝石不足）
-_ability_cooldown_fmt,Cooldown: %ss,冷却时间：%s 秒
-_ability_duration_fmt,Duration: %ss,持续时间：%s 秒
-_ability_bombard_hit,Airstrike hit %d enemies,区域轰炸命中 %d 个敌人
-_ability_bombard_miss,Airstrike hit nothing,区域轰炸没有命中敌人
-_ability_invincible_hit,%d towers are now invincible,%d 座防御塔进入无敌状态
-_ability_invincible_miss,No tower in range,范围内没有防御塔
-_BaseHealth,Base HP,基地生命
-_StartMoney,Start Money,初始金币
-_GemRewardShort,Gem Reward,宝石奖励
-_TotalEnemies,Total Enemies,敌人总数
-_EnemyTypes,Enemy Types,敌人种类
-_EnemyIntel,Enemy Intel,敌方情报
-_EnemyColName,Enemy,敌人
-_EnemyColRole,Role,定位
-_EnemyColCount,Count,数量
-_EnemyColHp,HP,血量
-_EnemyColSpeed,Speed,速度
-_EnemyColAir,Air,空中
-_BeginBattle,Begin Battle,开始战斗
-_IntelHint,"Close this window, then press Start to begin the battle.",关闭本窗口后点击开始按钮进入战斗。
-_NoEnemyData,No enemy data for this level.,本关暂无敌人数据。
-_Achievements,Achievements,成就
-_AchievementUnlocked,Unlocked,已解锁
-_AchievementLocked,Locked,未解锁
-_AchvHoverHint,Hover an achievement to see its details,把鼠标移到成就上查看详情
-_AchievementToast,Achievement Unlocked,成就达成
-_Achv_first_defense_name,First Defense,初次防守
-_Achv_first_defense_desc,Complete level 1,完成第 1 关
-_Achv_ground_breaker_name,Ground Breaker,地面清扫者
-_Achv_ground_breaker_desc,Defeat 100 ground enemies in total,累计击败 100 个地面敌人
-_Achv_iron_hunter_name,Iron Hunter,重装猎手
-_Achv_iron_hunter_desc,Defeat 20 heavy or armored tanks in total,累计击败 20 个重型坦克或装甲坦克
-_Achv_sky_guardian_name,Sky Guardian,天空守卫
-_Achv_sky_guardian_desc,Defeat 30 air enemies in total,累计击败 30 个空中敌人
-_Achv_full_armory_name,Full Armory,全域火力
-_Achv_full_armory_desc,Use 7 kinds of towers in one level,同一关中使用过 7 种防御塔
-_Achv_chain_reaction_name,Chain Reaction,连锁反应
-_Achv_chain_reaction_desc,Defeat 5 enemies with Tesla or Rocket towers in one run,单局内使用 Tesla 或火箭塔击败 5 个敌人
-_Achv_veteran_tower_name,Veteran Tower,老兵塔
-_Achv_veteran_tower_desc,Level any tower up to level 3,任意一座塔升至 3 级
-_Achv_perfect_base_name,Perfect Base,零损防线
-_Achv_perfect_base_desc,Complete any level without losing base HP,不损失基地生命完成任意关卡
-_Achv_fortress_breaker_name,"Fortress Breaker","要塞终结者"
-_Achv_fortress_breaker_desc,"Destroy 30 experimental tanks","摧毁 30 辆实验坦克"
-_Achv_legion_slayer_name,"Legion Slayer","千军之敌"
-_Achv_legion_slayer_desc,"Destroy 3000 enemies in total","累计消灭 3000 个敌人"
-_Endless,"Endless Mode","无尽模式"
-_EndlessBestFmt,"Best: Wave %s","最高记录：第 %s 波"
-_EndlessResult,"You survived %s waves","你撑到了第 %s 波"
-_EndlessKills,"Total Kills","击杀总数"
-_EndlessTime,"Time","用时"
-_EndlessNewRecord,"New Record!","新纪录！"
-_EndlessGiveUp,"End Run","结束本局"
-_EndlessRetry,"Run Again","再来一局"
-_Achv_endless_10_name,"Wave Rider","波次行者"
-_Achv_endless_10_desc,"Reach wave 10 in Endless Mode","无尽模式到达第 10 波"
-_Achv_endless_30_name,"Endless Veteran","无尽老兵"
-_Achv_endless_30_desc,"Reach wave 30 in Endless Mode","无尽模式到达第 30 波"
-_EndlessIntroHint,"No finish line — hold the base and see how many waves you can take.","没有终点 —— 守住基地，看你能撑到第几波"
-_EndlessCrowd,"On Screen","同屏上限"
-_EndlessBest,"Best Record","最高记录"
-_EndlessRules,"Rules","规则"
-_EndlessRule1,"The base has only 10 HP — 10 leaks and the run ends.","基地只有 10 点血，漏 10 个敌人本局结束"
-_EndlessRule2,"The next wave only starts after the current one is wiped out; late waves can fill the screen with 90 enemies.","当前一波清空后才会来下一波；后期同屏最多 90 个敌人"
-_EndlessRule3,"Enemies get tougher every wave — every 10 waves you receive bonus gems.","敌人每波都在变强；每 10 波额外奖励宝石"
-_Score,Score:,得分:
-_Pause,Pause,暂停
-_LevelLocked,LOCKED,未解锁
-_TowerLockedInStage,This tower is not available in this stage,本关不可建造该防御塔
-_Codex,Unit Codex,单位图鉴
-_CodexEnemies,Enemies,敌人
-_CodexTowers,Defense Towers,防御塔
-_CodexHoverHint,Hover a unit to see its details,把鼠标移到单位上查看详细数据
-_InitTime,Build Time,建造时间
-_GridSize,Grid,占地
-_EnemyDesc_pusher,Pusher - heads straight for the base and ignores your towers,推进型 - 直冲基地，不理会沿途防御塔
-_EnemyDesc_attacker,Attacker - fires at your towers along the way,对抗型 - 行进途中会向防御塔开火
-_EnemyDesc_support,Support - repairs nearby damaged enemies,支援型 - 为附近受伤的敌人提供维修
-_EnemyDesc_bomber,Suicide Bomber - charges a tower and blows itself up,自爆型 - 冲撞防御塔并自爆
-_EnemyDesc_siege,Siege - bombards your towers from long range,远程打击型 - 从超远距离轰炸防御塔
-_EnemyDesc_air,Air Unit - towers without anti-air cannot hit it,空中单位 - 不具备防空能力的塔无法命中
-_EnemyDesc_fortress,Fortress - mounts 4 independent turrets that shell your towers,要塞型 - 搭载 4 座独立炮塔，持续炮击防御塔
-_BattleStart,Battle Start,游戏开始
-_EnemiesIncoming,Enemies incoming,敌人即将到来
-_TutorialCategory,"Factory Forecourt","厂前空地"
-_TutorialDescription,"Factory forecourt. Tutorial level, a straight single lane — meet each kind of enemy and its threat one at a time.","厂前空地。教程关卡，单向直线，逐一认识各类敌人的威胁与节奏"
-_Level1Category,"Factory Gate","厂区大门"
-_Level1Description,"Enemies pour in through the main gate on open lanes, good for getting used to the defense rhythm; medium tanks make their debut from wave 2 and will shoot back at your towers.","敌人从厂区正门涌入，路线开阔，适合熟悉防守节奏；第 2 波起中型坦克首次登场，会向防御塔开火"
-_Level2Category,"Gatehouse & Loading Bay","门岗与装卸区"
-_Level2Description,"The loading bay widens and enemies start pushing in from the main gate in groups.","装卸区通道变宽，敌人开始成群从正门压上"
-_Level3Category,"Material Yard","原料堆场"
-_Level3Description,"The material yard narrows down, and heavy targets show up for the first time.","原料堆场道路收窄，第一次出现重型目标"
-_Level4Category,"Conveyor No.1","一号传送带"
-_Level4Description,"Defend along Conveyor No.1 — more corners to cover, and suicide trucks start appearing.","沿一号传送带布防，转角增多，自爆车开始出现"
-_Level5Category,"Assembly Workshop","装配车间"
-_Level5Description,"Into the assembly workshop with longer corridors; missile trucks debut, and experimental tanks plus battle planes (on their own air route) appear for the first time.","进入装配车间，夹道更长；导弹车首次登场，实验坦克与战斗飞机（独立空中航线）首次亮相"
-_Level6Category,"Welding Workshop","焊接车间"
-_Level6Description,"Criss-crossing lanes inside the welding workshop, with air and ground units attacking together.","焊接车间内通道交错，空中与地面单位混合来袭"
-_Level7Category,"Painting Workshop","喷涂车间"
-_Level7Description,"The painting workshop runs deeper, and enemy density rises noticeably.","喷涂车间纵深更长，敌人密度明显提升"
-_Level8Category,"Inspection Line","质检线"
-_Level8Description,"The inspection line is narrower, with denser long-range and air units.","质检线道路更窄，远程与空中单位密度提高"
-_Level9Category,"Finished Goods Warehouse","成品仓库"
-_Level9Description,"Huge enemy groups press in on the finished goods warehouse — your line has to keep suppressing them.","成品仓库高数量敌群压境，防线需要持续压制"
-_Level10Category,"Central Control Room","中央控制室"
-_Level10Description,"On the way to the central control room, testing ground, air and long-range defense together.","通往中央控制室，综合考验地面、空中与远程防守"
-_Level11Category,"Underground Utility Tunnel","地下管廊"
-_Level11Description,"Into the underground utility tunnel, where dense heavy units keep coming.","转入地下管廊，高密度重型单位连续出现"
-_Level12Category,"Power Room","动力机房"
-_Level12Description,"Mixed waves of many unit types keep rolling through the power room.","动力机房内多类型复合波次持续不断"
-_Level13Category,"Automated Warehouse","自动化仓储"
-_Level13Description,"In the automated warehouse, long-range firepower and heavy units both scale up.","自动化仓储，远程火力与重型单位同步增强"
-_Level14Category,"Core Assembly Line","核心装配线"
-_Level14Description,"The core assembly line: high numbers and high intensity in one sustained defense.","核心装配线，高数量、高强度的综合防守"
-_Level15Category,"Factory Core","工厂核心"
-_Level15Description,"The factory core — the final level, facing the largest enemy force.","工厂核心，最终关卡，迎接最大规模的敌群"
-_TutorialGuide1,"Tap the toolbox (top-left) to open the tower list.","点左上角的工具箱，打开建塔列表"
-_TutorialGuide2,"Tap a tower card to pick it — the %s is a good first one.","点一张塔卡片选上它 —— 先来座%s最稳"
-_TutorialGuide3,"Now tap the highlighted cell to build it there.","再点地图上高亮的那一格，把塔建起来"
-_TutorialGuide4,"Tap ▶ to send in the enemies. Hold the line!","点 ▶ 开始出怪。撑住！"
-_TutorialGuide5,"Gems buy support: tap the ability icon, then tap the map where you want it.","有宝石可以呼叫支援：先点左侧的技能图标，再点地图上想要的位置"
-_TutorialGuide6,"Tap your new tower to open its info panel.","点一下刚建好的塔，打开它的信息面板"
-_TutorialGuide7,"Towers level up by KILLING. Every kill fills the EXP bar; when it fills, the tower upgrades itself to Lv.2, then Lv.3 — higher damage, faster fire, longer range.","防御塔靠击杀升级：每次击杀都会涨经验条，经验满就自动升到 Lv.2、再到 Lv.3 —— 伤害更高、射速更快、射程更远"
-_TutorialGuide8,"So spread towers along the lane and let them keep killing. Lv.3 is the max.","所以把塔分散摆在路线上，让它们持续拿人头。最高 3 级"
-_TutorialGuideFinish,"That's the whole loop — survive all %d waves!","就这些了 —— 撑过全部 %d 波就算过关"
-_TutorialGuideSkip,"Skip guide","跳过引导"
-_TutorialGuideOk,"Got it","知道了"
-_TutorialGuideCancelHint,"Right-click to cancel.","右键取消选择"
+"Keys","en","zh"
+"_appName","Simple Tower Defense","简易塔防"
+"_General","General","通用"
+"_Volume","Volume","音量"
+"_Language","Language","语言"
+"_Master_Volume","Master Volume","主音量"
+"_Music","Music","音乐"
+"_Sound","Sound","音效"
+"_Restart","Restart","重新开始"
+"_Resume","Resume","返回游戏"
+"_NextLevel","Next Level","下一关"
+"_Main_Menu","Main Menu","主菜单"
+"_Start_game","Start Game","开始游戏"
+"_Settings","Settings","设置"
+"_About","About","关于"
+"_About_Title","About the Game","关于游戏"
+"_About_Text","[b]Simple Tower Defense[/b]\n\nBuild towers, stop incoming waves, and survive as long as you can.\nEach level teaches a different battle rhythm and reward system.\nThe goal is to protect the base, manage resources, and improve your defense line.","[b]简易塔防[/b]\n\n建造防御塔，阻止敌人进攻，并尽可能保住基地。\n每一关都有不同的节奏和奖励节奏，考验你的资源管理和布局能力。\n目标是守住基地、合理建塔、不断提升防线。"
+"_Close","Close","关闭"
+"_Mute","Mute","静音"
+"_Tutorial","Tutorial","教程"
+"_LevelFailed","Level Failed","失败"
+"_LevelCompleted","Level Completed","过关"
+"_GemReward","Gems earned: +%d","获得宝石：+%d"
+"_GemRewardNone","No gems (already cleared)","本次无宝石（已通关过）"
+"_GemRewardAlready","Already earned this stage","本关宝石已领取过"
+"_GemPicked","Gem +%d","宝石 +%d"
+"_SelectLevel","Select Level","选择关卡"
+"_Wave","Wave","波数"
+"_machineGunTowerDesc","Quick Fire,Effectively combat the enemy","快速射击,有效打击敌人"
+"_cannonTowerDesc","High-power strike,Effective combat the enemy","大威力，有效打击敌人"
+"_rocketTowerDesc","Launch missiles to attack enemies, with air defense capability","发射导弹打击敌人，具有防空功能"
+"_EMPTowerDesc","Effectively slow down the enemy","有效减速敌人"
+"_droneBaseDesc","Launch drones to attack enemies, track and strike enemies over a wide range, and can target enemies in the air","出动无人机打击敌人，大范围跟踪打击敌人，可打击空中敌人"
+"_teslaCoilTowerDesc","Release electric energy to attack enemies, capable of chain attacks","释放电能打击敌人，可以连锁打击"
+"_laserTowerDesc","Laser TLock onto targets at a distance and simultaneously strike multiple enemies","远距离锁定目标，同时打击多个敌人"
+"_ironBoxDesc","A defensive tower that can block enemy attacks, but cannot attack","防御塔，可以阻挡敌人攻击，但无法攻击敌人"
+"_TowerName_machineGun","Machine Gun Tower","机枪塔"
+"_TowerName_cannon","Cannon Tower","加农炮塔"
+"_TowerName_rocket","Rocket Tower","火箭炮塔"
+"_TowerName_emp","EMP Tower","EMP干扰塔"
+"_TowerName_drone","Drone Base","无人机基地"
+"_TowerName_tesla","Tesla Coil Tower","特斯拉线圈塔"
+"_TowerName_laser","Laser Tower","激光塔"
+"_TowerName_ironBox","Iron Box","铁箱"
+"_HP","HP","血量"
+"_EXP","EXP","经验"
+"_Atk","ATK","攻击"
+"_FireRate","Fire Rate","射速"
+"_Range","Range","范围"
+"_Cost","Cost","造价"
+"_SellPrice","Sell Price","出售价"
+"_Repair","Repair","修理"
+"_RepairFull","HP Full","血量已满"
+"_Sell","Sell","出售"
+"_NotEnoughMoney","Not enough money","金币不足"
+"_NotEnoughGem","Not enough gems","宝石不足"
+"_PanelHint","Click the tower again or empty ground to deselect.","再次点击该塔或点击空地取消选择。"
+"_Speed","Speed","移动速度"
+"_Armor","Armor","护甲"
+"_Flying","Flying","飞行"
+"_Yes","Yes","是"
+"_No","No","否"
+"_Reward","Kill Reward","击杀奖励"
+"_EscapeCost","Escape Loss","逃脱扣血"
+"_RewardExp","Kill EXP","击杀经验"
+"_Dps","DPS","每秒伤害"
+"_OneShot","One-shot","一次性"
+"_EnemyPanelHint","Click the enemy again or empty ground to deselect.","再次点击该敌人或点击空地取消选择。"
+"_EnemyName_miniTank","Mini Tank","迷你坦克"
+"_EnemyName_mediumTank","Medium Tank","中型坦克"
+"_EnemyName_heavyTank","Heavy Tank","重型坦克"
+"_EnemyName_armoredTank","Armored Tank","装甲坦克"
+"_EnemyName_assaultBuggy","Assault Buggy","突击车"
+"_EnemyName_medic","Repair Truck","维修车"
+"_EnemyName_suicideTruck","Suicide Truck","自爆车"
+"_EnemyName_missileTruck","Missile Truck","导弹车"
+"_EnemyName_scoutDrone","Scout Drone","侦察无人机"
+"_EnemyName_attackHelicopter","Attack Helicopter","攻击直升机"
+"_EnemyName_experimentalTank","Experimental Tank","实验坦克"
+"_EnemyName_battlePlane","Battle Plane","战斗飞机"
+"_EnemyRole_pusher","Pusher","推进型"
+"_EnemyRole_attacker","Attacker","对抗型"
+"_EnemyRole_support","Support","支援型"
+"_EnemyRole_bomber","Suicide Bomber","自爆型"
+"_EnemyRole_siege","Siege","远程打击型"
+"_EnemyRole_air","Air Unit","空中单位"
+"_EnemyRole_fortress","Fortress","要塞型"
+"_LevelTitleFmt","Level %s","第 %s 关"
+"_LevelIntel","Level Briefing","关卡情报"
+"_ability_bombard_name","Airstrike","区域轰炸"
+"_ability_bombard_desc","Click the map to call an airstrike. Deals heavy damage to every enemy inside the target area.","点击地图呼叫区域轰炸，对范围内所有敌人造成大量伤害。"
+"_ability_invincible_name","Overdrive Shield","塔防御护盾"
+"_ability_invincible_desc","Click the map to make every tower in the target area invincible for a while. Invincible towers take no damage.","点击地图，使范围内所有防御塔在一段时间内无敌，无敌期间不会受到任何伤害。"
+"_ability_target_position","Click the map to choose an area.","点击地图选择目标区域。"
+"_ability_gem_cost_fmt","Cost: %d gem","消耗宝石：%d"
+"_ability_gem_lack","(not enough)","（宝石不足）"
+"_ability_cooldown_fmt","Cooldown: %ss","冷却时间：%s 秒"
+"_ability_duration_fmt","Duration: %ss","持续时间：%s 秒"
+"_ability_bombard_hit","Airstrike hit %d enemies","区域轰炸命中 %d 个敌人"
+"_ability_bombard_miss","Airstrike hit nothing","区域轰炸没有命中敌人"
+"_ability_invincible_hit","%d towers are now invincible","%d 座防御塔进入无敌状态"
+"_ability_invincible_miss","No tower in range","范围内没有防御塔"
+"_BaseHealth","Base HP","基地生命"
+"_StartMoney","Start Money","初始金币"
+"_GemRewardShort","Gem Reward","宝石奖励"
+"_TotalEnemies","Total Enemies","敌人总数"
+"_EnemyTypes","Enemy Types","敌人种类"
+"_EnemyIntel","Enemy Intel","敌方情报"
+"_EnemyColName","Enemy","敌人"
+"_EnemyColRole","Role","定位"
+"_EnemyColCount","Count","数量"
+"_EnemyColHp","HP","血量"
+"_EnemyColSpeed","Speed","速度"
+"_EnemyColAir","Air","空中"
+"_BeginBattle","Begin Battle","开始战斗"
+"_IntelHint","Close this window, then press Start to begin the battle.","关闭本窗口后点击开始按钮进入战斗。"
+"_NoEnemyData","No enemy data for this level.","本关暂无敌人数据。"
+"_Achievements","Achievements","成就"
+"_AchievementUnlocked","Unlocked","已解锁"
+"_AchievementLocked","Locked","未解锁"
+"_AchvHoverHint","Hover an achievement to see its details","把鼠标移到成就上查看详情"
+"_AchievementToast","Achievement Unlocked","成就达成"
+"_Achv_first_defense_name","First Defense","初次防守"
+"_Achv_first_defense_desc","Complete level 1","完成第 1 关"
+"_Achv_ground_breaker_name","Ground Breaker","地面清扫者"
+"_Achv_ground_breaker_desc","Defeat 100 ground enemies in total","累计击败 100 个地面敌人"
+"_Achv_iron_hunter_name","Iron Hunter","重装猎手"
+"_Achv_iron_hunter_desc","Defeat 20 heavy or armored tanks in total","累计击败 20 个重型坦克或装甲坦克"
+"_Achv_sky_guardian_name","Sky Guardian","天空守卫"
+"_Achv_sky_guardian_desc","Defeat 30 air enemies in total","累计击败 30 个空中敌人"
+"_Achv_full_armory_name","Full Armory","全域火力"
+"_Achv_full_armory_desc","Use 7 kinds of towers in one level","同一关中使用过 7 种防御塔"
+"_Achv_chain_reaction_name","Chain Reaction","连锁反应"
+"_Achv_chain_reaction_desc","Defeat 5 enemies with Tesla or Rocket towers in one run","单局内使用 Tesla 或火箭塔击败 5 个敌人"
+"_Achv_veteran_tower_name","Veteran Tower","老兵塔"
+"_Achv_veteran_tower_desc","Level any tower up to level 3","任意一座塔升至 3 级"
+"_Achv_perfect_base_name","Perfect Base","零损防线"
+"_Achv_perfect_base_desc","Complete any level without losing base HP","不损失基地生命完成任意关卡"
+"_Achv_fortress_breaker_name","Fortress Breaker","要塞终结者"
+"_Achv_fortress_breaker_desc","Destroy 30 experimental tanks","摧毁 30 辆实验坦克"
+"_Achv_legion_slayer_name","Legion Slayer","千军之敌"
+"_Achv_legion_slayer_desc","Destroy 3000 enemies in total","累计消灭 3000 个敌人"
+"_Endless","Endless Mode","无尽模式"
+"_EndlessBestFmt","Best: Wave %s","最高记录：第 %s 波"
+"_EndlessResult","You survived %s waves","你撑到了第 %s 波"
+"_EndlessKills","Total Kills","击杀总数"
+"_EndlessTime","Time","用时"
+"_EndlessNewRecord","New Record!","新纪录！"
+"_EndlessGiveUp","End Run","结束本局"
+"_EndlessRetry","Run Again","再来一局"
+"_Achv_endless_10_name","Wave Rider","波次行者"
+"_Achv_endless_10_desc","Reach wave 10 in Endless Mode","无尽模式到达第 10 波"
+"_Achv_endless_30_name","Endless Veteran","无尽老兵"
+"_Achv_endless_30_desc","Reach wave 30 in Endless Mode","无尽模式到达第 30 波"
+"_EndlessIntroHint","No finish line — hold the base and see how many waves you can take.","没有终点 —— 守住基地，看你能撑到第几波"
+"_EndlessCrowd","On Screen","同屏上限"
+"_EndlessBest","Best Record","最高记录"
+"_EndlessRules","Rules","规则"
+"_EndlessRule1","The base has only 10 HP — 10 leaks and the run ends.","基地只有 10 点血，漏 10 个敌人本局结束"
+"_EndlessRule2","The next wave only starts after the current one is wiped out; late waves can fill the screen with 90 enemies.","当前一波清空后才会来下一波；后期同屏最多 90 个敌人"
+"_EndlessRule3","Enemies get tougher every wave — every 10 waves you receive bonus gems.","敌人每波都在变强；每 10 波额外奖励宝石"
+"_Score","Score:","得分:"
+"_Pause","Pause","暂停"
+"_LevelLocked","LOCKED","未解锁"
+"_TowerLockedInStage","This tower is not available in this stage","本关不可建造该防御塔"
+"_Codex","Unit Codex","单位图鉴"
+"_CodexEnemies","Enemies","敌人"
+"_CodexTowers","Defense Towers","防御塔"
+"_CodexHoverHint","Hover a unit to see its details","把鼠标移到单位上查看详细数据"
+"_InitTime","Build Time","建造时间"
+"_GridSize","Grid","占地"
+"_EnemyDesc_pusher","Pusher - heads straight for the base and ignores your towers","推进型 - 直冲基地，不理会沿途防御塔"
+"_EnemyDesc_attacker","Attacker - fires at your towers along the way","对抗型 - 行进途中会向防御塔开火"
+"_EnemyDesc_support","Support - repairs nearby damaged enemies","支援型 - 为附近受伤的敌人提供维修"
+"_EnemyDesc_bomber","Suicide Bomber - charges a tower and blows itself up","自爆型 - 冲撞防御塔并自爆"
+"_EnemyDesc_siege","Siege - bombards your towers from long range","远程打击型 - 从超远距离轰炸防御塔"
+"_EnemyDesc_air","Air Unit - towers without anti-air cannot hit it","空中单位 - 不具备防空能力的塔无法命中"
+"_EnemyDesc_fortress","Fortress - mounts 4 independent turrets that shell your towers","要塞型 - 搭载 4 座独立炮塔，持续炮击防御塔"
+"_BattleStart","Battle Start","游戏开始"
+"_EnemiesIncoming","Enemies incoming","敌人即将到来"
+"_TutorialCategory","Factory Forecourt","厂前空地"
+"_TutorialDescription","Factory forecourt. Tutorial level, a straight single lane — meet each kind of enemy and its threat one at a time.","厂前空地。教程关卡，单向直线，逐一认识各类敌人的威胁与节奏"
+"_Level1Category","Factory Gate","厂区大门"
+"_Level1Description","Enemies pour in through the main gate on open lanes, good for getting used to the defense rhythm; medium tanks make their debut from wave 2 and will shoot back at your towers.","敌人从厂区正门涌入，路线开阔，适合熟悉防守节奏；第 2 波起中型坦克首次登场，会向防御塔开火"
+"_Level2Category","Gatehouse & Loading Bay","门岗与装卸区"
+"_Level2Description","The loading bay widens and enemies start pushing in from the main gate in groups.","装卸区通道变宽，敌人开始成群从正门压上"
+"_Level3Category","Material Yard","原料堆场"
+"_Level3Description","The material yard narrows down, and heavy targets show up for the first time.","原料堆场道路收窄，第一次出现重型目标"
+"_Level4Category","Conveyor No.1","一号传送带"
+"_Level4Description","Defend along Conveyor No.1 — more corners to cover, and suicide trucks start appearing.","沿一号传送带布防，转角增多，自爆车开始出现"
+"_Level5Category","Assembly Workshop","装配车间"
+"_Level5Description","Into the assembly workshop with longer corridors; missile trucks debut, and experimental tanks plus battle planes (on their own air route) appear for the first time.","进入装配车间，夹道更长；导弹车首次登场，实验坦克与战斗飞机（独立空中航线）首次亮相"
+"_Level6Category","Welding Workshop","焊接车间"
+"_Level6Description","Criss-crossing lanes inside the welding workshop, with air and ground units attacking together.","焊接车间内通道交错，空中与地面单位混合来袭"
+"_Level7Category","Painting Workshop","喷涂车间"
+"_Level7Description","The painting workshop runs deeper, and enemy density rises noticeably.","喷涂车间纵深更长，敌人密度明显提升"
+"_Level8Category","Inspection Line","质检线"
+"_Level8Description","The inspection line is narrower, with denser long-range and air units.","质检线道路更窄，远程与空中单位密度提高"
+"_Level9Category","Finished Goods Warehouse","成品仓库"
+"_Level9Description","Huge enemy groups press in on the finished goods warehouse — your line has to keep suppressing them.","成品仓库高数量敌群压境，防线需要持续压制"
+"_Level10Category","Central Control Room","中央控制室"
+"_Level10Description","On the way to the central control room, testing ground, air and long-range defense together.","通往中央控制室，综合考验地面、空中与远程防守"
+"_Level11Category","Underground Utility Tunnel","地下管廊"
+"_Level11Description","Into the underground utility tunnel, where dense heavy units keep coming.","转入地下管廊，高密度重型单位连续出现"
+"_Level12Category","Power Room","动力机房"
+"_Level12Description","Mixed waves of many unit types keep rolling through the power room.","动力机房内多类型复合波次持续不断"
+"_Level13Category","Automated Warehouse","自动化仓储"
+"_Level13Description","In the automated warehouse, long-range firepower and heavy units both scale up.","自动化仓储，远程火力与重型单位同步增强"
+"_Level14Category","Core Assembly Line","核心装配线"
+"_Level14Description","The core assembly line: high numbers and high intensity in one sustained defense.","核心装配线，高数量、高强度的综合防守"
+"_Level15Category","Factory Core","工厂核心"
+"_Level15Description","The factory core — the final level, facing the largest enemy force.","工厂核心，最终关卡，迎接最大规模的敌群"
+"_TutorialGuide1","Tap the toolbox (top-left) to open the tower list.","点左上角的工具箱，打开建塔列表"
+"_TutorialGuide2","Tap a tower card to pick it — the %s is a good first one.","点一张塔卡片选上它 —— 先来座%s最稳"
+"_TutorialGuide3","Now tap the highlighted cell to build it there.","再点地图上高亮的那一格，把塔建起来"
+"_TutorialGuide4","Tap ▶ to send in the enemies. Hold the line!","点 ▶ 开始出怪。撑住！"
+"_TutorialGuide5","Gems buy support: tap the ability icon, then tap the map where you want it.","有宝石可以呼叫支援：先点左侧的技能图标，再点地图上想要的位置"
+"_TutorialGuide6","Tap your new tower to open its info panel.","点一下刚建好的塔，打开它的信息面板"
+"_TutorialGuide7","Towers level up by KILLING. Every kill fills the EXP bar; when it fills, the tower upgrades itself to Lv.2, then Lv.3 — higher damage, faster fire, longer range.","防御塔靠击杀升级：每次击杀都会涨经验条，经验满就自动升到 Lv.2、再到 Lv.3 —— 伤害更高、射速更快、射程更远"
+"_TutorialGuide8","So spread towers along the lane and let them keep killing. Lv.3 is the max.","所以把塔分散摆在路线上，让它们持续拿人头。最高 3 级"
+"_TutorialGuideFinish","That's the whole loop — survive all %d waves!","就这些了 —— 撑过全部 %d 波就算过关"
+"_TutorialGuideSkip","Skip guide","跳过引导"
+"_TutorialGuideOk","Got it","知道了"
+"_TutorialGuideCancelHint","Right-click to cancel.","右键取消选择"
+"_WaveBannerFmt","Wave %d","第 %d 波"
+"_FinalWave","Final Wave","最后一波"
+"_TowerName_mech","Mech","机甲"
+"_mechDesc","A mobile support unit. Repairs damaged towers with a laser; cannot attack and cannot be upgraded.","移动后勤单位。用激光修复受损的防御塔；不能攻击敌人，也无法升级。"
+"_MechLimitReached","Mech limit reached (max %d)","机甲数量已达上限（最多 %d 台）"
+"_MechBuildCooldown","Mech is recharging (%ds)","机甲建造冷却中（还需 %d 秒）"
+"_MechCannotEnterRoute","The mech cannot enter the enemy route","机甲不能开上敌人的路线"
+"_MechCellOccupied","That cell is already taken","那一格已经被占用了"
+
+"_MechCannotLeaveMap","The mech cannot leave the map","机甲不能开出地图范围"

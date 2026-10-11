@@ -24,7 +24,10 @@ enum enemyType {
 # 塔类型
 enum towerType {
 	machineGunTower = 1000, cannonTower, rocketTower, EMPTower,
-	droneBase, teslaCoilTower, laserTower, ironBox
+	droneBase, teslaCoilTower, laserTower, ironBox,
+	# 移动机甲（后勤单位）：不杀敌、不升级，用激光修复附近残血防御塔。
+	# 新增枚举值只追加在末尾 —— 中间插值会让已有存档 / 场景里写死的整数对不上。
+	mech
 }
 
 ## ── 无尽模式（设计见 endless_mode_design.md）──
@@ -138,6 +141,24 @@ const towerInfo = {
 	"initTime": 1.0,
 	"desc": "_ironBoxDesc",
 	"gridSize": Vector2i(1, 1)
+	},
+	# ── 移动机甲（后勤单位，见 script/tower/mech.gd）──
+	# ★ atk 在这里是**维修量**，不是伤害：机甲的激光对防御塔发 `-atk`，
+	#   而 tower.hurt() 是"血量 - ceil(参数)"，传负数就是回血。
+	#   这样"维修/回收"和普通攻击共用同一条扣血通路，不用另开一套生命值接口。
+	# ★ scope = 激光作用半径（自己的、别的塔够不着的那种"修理臂长度"）。
+	# ★ 不参与升级：见 towerUpgradeManager 的 NON_UPGRADABLE。
+	towerType.mech: {
+	"name": "_TowerName_mech",
+	"atk": 12, # 每次激光脉冲修复 12 点血（不是伤害）
+	"cost": 70,
+	"reload": 1.4, # 激光脉冲间隔（秒）
+	"scope": 180, # 激光作用半径
+	"hp": 320,
+	"maxHp": 320,
+	"initTime": 1.2,
+	"desc": "_mechDesc",
+	"gridSize": Vector2i(1, 1)
 	}
 }
 
@@ -164,18 +185,21 @@ const towerInfo = {
 const enemyInfo = {
 	enemyType.miniTank: {
 		"name": "_EnemyName_miniTank",
+		"showsRange": false, # 点击时是否画攻击范围（见 feature_design.md §9.3）
 		"hp": 150, "speed": 50, "reward": 5, "lossPoints": 1, "rewardExp": 2,
 		"armor": 0.05, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_pusher",
 		"gemReward": 0
 	},
 	enemyType.mediumTank: {
 		"name": "_EnemyName_mediumTank",
+		"showsRange": true, # 点击时是否画攻击范围（见 feature_design.md §9.3）
 		"hp": 300, "speed": 45, "reward": 8, "lossPoints": 2, "rewardExp": 4,
 		"armor": 0.25, "flying": false, "atk": 15, "shootDelay": 0.9, "scope": 240, "role": "_EnemyRole_attacker",
 		"gemReward": 0
 	},
 	enemyType.heavyTank: {
 		"name": "_EnemyName_heavyTank",
+		"showsRange": true, # 点击时是否画攻击范围（见 feature_design.md §9.3）
 		"hp": 600, "speed": 30, "reward": 20, "lossPoints": 3, "rewardExp": 10,
 		"armor": 0.5, "flying": false, "atk": 25,
 		"shootDelay": 1.8, "scope": 260, "role": "_EnemyRole_attacker",
@@ -183,6 +207,7 @@ const enemyInfo = {
 	},
 	enemyType.armoredTank: {
 		"name": "_EnemyName_armoredTank",
+		"showsRange": true, # 点击时是否画攻击范围（见 feature_design.md §9.3）
 		"hp": 500, "speed": 35, "reward": 15, "lossPoints": 2, "rewardExp": 8,
 		"armor": 0.6, "flying": false, "atk": 18,
 		"shootDelay": 1.5, "scope": 220, "role": "_EnemyRole_attacker",
@@ -190,6 +215,7 @@ const enemyInfo = {
 	},
 	enemyType.assaultBuggy: {
 		"name": "_EnemyName_assaultBuggy",
+		"showsRange": true, # 点击时是否画攻击范围（见 feature_design.md §9.3）
 		"hp": 140, "speed": 115, "reward": 4, "lossPoints": 1, "rewardExp": 2,
 		"armor": 0.1, "flying": false, "atk": 6,
 		"shootDelay": 0.6, "scope": 180, "role": "_EnemyRole_attacker",
@@ -197,30 +223,35 @@ const enemyInfo = {
 	},
 	enemyType.medic: {
 		"name": "_EnemyName_medic",
+		"showsRange": false, # 点击时是否画攻击范围（见 feature_design.md §9.3）
 		"hp": 200, "speed": 50, "reward": 10, "lossPoints": 1, "rewardExp": 5,
 		"armor": 0.1, "flying": false, "atk": 20, "shootDelay": 3.0, "scope": 180, "role": "_EnemyRole_support",
 		"gemReward": 0
 	},
 	enemyType.suicideTruck: {
 		"name": "_EnemyName_suicideTruck",
+		"showsRange": false, # 点击时是否画攻击范围（见 feature_design.md §9.3）
 		"hp": 120, "speed": 90, "reward": 3, "lossPoints": 1, "rewardExp": 2,
 		"armor": 0.0, "flying": false, "atk": 80, "shootDelay": 0.0, "scope": 150, "role": "_EnemyRole_bomber",
 		"gemReward": 0
 	},
 	enemyType.missileTruck: {
 		"name": "_EnemyName_missileTruck",
+		"showsRange": true, # 点击时是否画攻击范围（见 feature_design.md §9.3）
 		"hp": 260, "speed": 40, "reward": 12, "lossPoints": 2, "rewardExp": 6,
 		"armor": 0.25, "flying": false, "atk": 35, "shootDelay": 1.8, "scope": 700, "role": "_EnemyRole_siege",
 		"gemReward": 0
 	},
 	enemyType.scoutDrone: {
 		"name": "_EnemyName_scoutDrone",
+		"showsRange": false, # 点击时是否画攻击范围（见 feature_design.md §9.3）
 		"hp": 100, "speed": 130, "reward": 3, "lossPoints": 1, "rewardExp": 2,
 		"armor": 0.0, "flying": true, "atk": 0, "shootDelay": 1.0, "scope": 0, "role": "_EnemyRole_air",
 		"gemReward": 0
 	},
 	enemyType.attackHelicopter: {
 		"name": "_EnemyName_attackHelicopter",
+		"showsRange": true, # 点击时是否画攻击范围（见 feature_design.md §9.3）
 		"hp": 380, "speed": 80, "reward": 15, "lossPoints": 2, "rewardExp": 8,
 		"armor": 0.2, "flying": true, "atk": 5, "shootDelay": 0.25, "scope": 300, "role": "_EnemyRole_air",
 		"gemReward": 0
@@ -233,6 +264,7 @@ const enemyInfo = {
 	#   想改掉落数量 / 给别的精英也加掉落，只改这一行或对应条目的 "gemReward" 即可。
 	enemyType.experimentalTank: {
 		"name": "_EnemyName_experimentalTank",
+		"showsRange": true, # 点击时是否画攻击范围（见 feature_design.md §9.3）
 		"hp": 1000, "speed": 28, "reward": 40, "lossPoints": 5, "rewardExp": 25,
 		"armor": 0.5, "flying": false, "atk": 16, "shootDelay": 0.8, "scope": 300,
 		"role": "_EnemyRole_fortress",
@@ -244,6 +276,7 @@ const enemyInfo = {
 	# ★ gemReward = 1 + gemRewardChance = 0.5：**不是每架都掉**，击落时约一半概率掉 1 颗。
 	enemyType.battlePlane: {
 		"name": "_EnemyName_battlePlane",
+		"showsRange": true, # 点击时是否画攻击范围（见 feature_design.md §9.3）
 		"hp": 240, "speed": 130, "reward": 12, "lossPoints": 0, "rewardExp": 6,
 		"armor": 0.1, "flying": true, "atk": 12, "shootDelay": 0.5, "scope": 320,
 		"role": "_EnemyRole_air",

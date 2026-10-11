@@ -22,6 +22,8 @@ var tower5 = preload("res://sprite/tower/tower_tesla.png")
 var tower6 = preload("res://sprite/tower/tower_laser.png")
 var tower7 = preload("res://sprite/tower/tower_drone.png")
 var tower8 = preload("res://sprite/tower/turret_ironbox.png")
+## 机甲卡片图标＝本体帧 1 叠上炮塔帧 1（和游戏里渲染的层次一致）
+var tower9 = preload("res://sprite/tower/turret_mech.png")
 
 var towerIcon = preload("res://scene/tower_icon.tscn")
 
@@ -33,6 +35,7 @@ var towersData = [
 {'type': Game.towerType.teslaCoilTower, 'img': tower5},
 {'type': Game.towerType.laserTower, 'img': tower6},
 {'type': Game.towerType.droneBase, 'img': tower7},
+{'type': Game.towerType.mech, 'img': tower9},
 ]
 
 

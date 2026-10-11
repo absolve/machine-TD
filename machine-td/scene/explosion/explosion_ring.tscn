@@ -1,0 +1,137 @@
+[gd_scene load_steps=62 format=3]
+
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_1.png" id="f1"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_2.png" id="f2"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_3.png" id="f3"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_4.png" id="f4"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_5.png" id="f5"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_6.png" id="f6"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_7.png" id="f7"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_8.png" id="f8"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_9.png" id="f9"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_10.png" id="f10"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_11.png" id="f11"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_12.png" id="f12"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_13.png" id="f13"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_14.png" id="f14"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_15.png" id="f15"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_16.png" id="f16"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_17.png" id="f17"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_18.png" id="f18"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_19.png" id="f19"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_20.png" id="f20"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_21.png" id="f21"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_22.png" id="f22"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_23.png" id="f23"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_24.png" id="f24"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_25.png" id="f25"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_26.png" id="f26"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_27.png" id="f27"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_28.png" id="f28"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_29.png" id="f29"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_30.png" id="f30"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_31.png" id="f31"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_32.png" id="f32"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_33.png" id="f33"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_34.png" id="f34"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_35.png" id="f35"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_36.png" id="f36"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_37.png" id="f37"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_38.png" id="f38"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_39.png" id="f39"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_40.png" id="f40"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_41.png" id="f41"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_42.png" id="f42"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_43.png" id="f43"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_44.png" id="f44"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_45.png" id="f45"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_46.png" id="f46"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_47.png" id="f47"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_48.png" id="f48"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_49.png" id="f49"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_50.png" id="f50"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_51.png" id="f51"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_52.png" id="f52"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_53.png" id="f53"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_54.png" id="f54"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_55.png" id="f55"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_56.png" id="f56"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_57.png" id="f57"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_58.png" id="f58"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_59.png" id="f59"]
+[ext_resource type="Texture2D" path="res://sprite/fx/explo_ring_60.png" id="f60"]
+[ext_resource type="Script" path="res://script/fx/explosion.gd" id="1_script"]
+
+[sub_resource type="SpriteFrames" id="Frames"]
+animations = [{
+"frames": [
+{"duration": 1.0, "texture": ExtResource("f1")},
+{"duration": 1.0, "texture": ExtResource("f2")},
+{"duration": 1.0, "texture": ExtResource("f3")},
+{"duration": 1.0, "texture": ExtResource("f4")},
+{"duration": 1.0, "texture": ExtResource("f5")},
+{"duration": 1.0, "texture": ExtResource("f6")},
+{"duration": 1.0, "texture": ExtResource("f7")},
+{"duration": 1.0, "texture": ExtResource("f8")},
+{"duration": 1.0, "texture": ExtResource("f9")},
+{"duration": 1.0, "texture": ExtResource("f10")},
+{"duration": 1.0, "texture": ExtResource("f11")},
+{"duration": 1.0, "texture": ExtResource("f12")},
+{"duration": 1.0, "texture": ExtResource("f13")},
+{"duration": 1.0, "texture": ExtResource("f14")},
+{"duration": 1.0, "texture": ExtResource("f15")},
+{"duration": 1.0, "texture": ExtResource("f16")},
+{"duration": 1.0, "texture": ExtResource("f17")},
+{"duration": 1.0, "texture": ExtResource("f18")},
+{"duration": 1.0, "texture": ExtResource("f19")},
+{"duration": 1.0, "texture": ExtResource("f20")},
+{"duration": 1.0, "texture": ExtResource("f21")},
+{"duration": 1.0, "texture": ExtResource("f22")},
+{"duration": 1.0, "texture": ExtResource("f23")},
+{"duration": 1.0, "texture": ExtResource("f24")},
+{"duration": 1.0, "texture": ExtResource("f25")},
+{"duration": 1.0, "texture": ExtResource("f26")},
+{"duration": 1.0, "texture": ExtResource("f27")},
+{"duration": 1.0, "texture": ExtResource("f28")},
+{"duration": 1.0, "texture": ExtResource("f29")},
+{"duration": 1.0, "texture": ExtResource("f30")},
+{"duration": 1.0, "texture": ExtResource("f31")},
+{"duration": 1.0, "texture": ExtResource("f32")},
+{"duration": 1.0, "texture": ExtResource("f33")},
+{"duration": 1.0, "texture": ExtResource("f34")},
+{"duration": 1.0, "texture": ExtResource("f35")},
+{"duration": 1.0, "texture": ExtResource("f36")},
+{"duration": 1.0, "texture": ExtResource("f37")},
+{"duration": 1.0, "texture": ExtResource("f38")},
+{"duration": 1.0, "texture": ExtResource("f39")},
+{"duration": 1.0, "texture": ExtResource("f40")},
+{"duration": 1.0, "texture": ExtResource("f41")},
+{"duration": 1.0, "texture": ExtResource("f42")},
+{"duration": 1.0, "texture": ExtResource("f43")},
+{"duration": 1.0, "texture": ExtResource("f44")},
+{"duration": 1.0, "texture": ExtResource("f45")},
+{"duration": 1.0, "texture": ExtResource("f46")},
+{"duration": 1.0, "texture": ExtResource("f47")},
+{"duration": 1.0, "texture": ExtResource("f48")},
+{"duration": 1.0, "texture": ExtResource("f49")},
+{"duration": 1.0, "texture": ExtResource("f50")},
+{"duration": 1.0, "texture": ExtResource("f51")},
+{"duration": 1.0, "texture": ExtResource("f52")},
+{"duration": 1.0, "texture": ExtResource("f53")},
+{"duration": 1.0, "texture": ExtResource("f54")},
+{"duration": 1.0, "texture": ExtResource("f55")},
+{"duration": 1.0, "texture": ExtResource("f56")},
+{"duration": 1.0, "texture": ExtResource("f57")},
+{"duration": 1.0, "texture": ExtResource("f58")},
+{"duration": 1.0, "texture": ExtResource("f59")},
+{"duration": 1.0, "texture": ExtResource("f60")}
+],
+"loop": false,
+"name": &"default",
+"speed": 60.0
+}]
+
+[node name="explosion_ring" type="AnimatedSprite2D"]
+sprite_frames = SubResource("Frames")
+script = ExtResource("1_script")
+animScale = 0.6

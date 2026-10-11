@@ -35,12 +35,15 @@ func refresh() -> void:
 			expLabel.text = "%d/%d" % [currExp, expNeeded]
 	visible = selected
 
-func setStatus(_hp: int, _max_hp: int, _currExp: int, _exp_needed: int, selected: bool = false, _tower_name: String = "Tower") -> void:
+## ⚠️ 参数**不能叫 `selected`** —— 类里有成员 `var selected`，同名会把成员遮蔽掉，
+##    于是 `selected = selected` 只是把参数赋给自己，成员永远不会被更新。
+##    （全项目去下划线改名时引入：成员 `_selected` 变成 `selected` 后与参数撞名。）
+func setStatus(_hp: int, _max_hp: int, _currExp: int, _exp_needed: int, selectedState: bool = false, _tower_name: String = "Tower") -> void:
 	hp = _hp
 	maxHp = max(1, _max_hp)
 	currExp = _currExp
 	expNeeded = max(1, _exp_needed)
-	selected = selected
+	selected = selectedState
 	towerName = _tower_name
 	refresh()
 

@@ -26,6 +26,8 @@ var endlessStatsText: String = ""
 @onready var levelIntroPanel = $PopupLayer/levelIntroPanel
 ## 战斗开始横幅（独立场景）。关卡**第一次**开打时闪一下提示玩家
 @onready var battleStartBanner = $PopupLayer/battleStartBanner
+## 波次来袭横幅（独立场景，见 feature_design.md §十三）。每一波开始时列出本波敌人
+@onready var waveBanner = $PopupLayer/waveBanner
 @onready var achievementTracker = $AchievementTracker
 @onready var abilityBar = $Hud/abilityBar
 @onready var customCamera = $CustomCamera
@@ -42,6 +44,16 @@ var teslaCoilTower = preload("res://scene/tower/teslaCoilTower.tscn")
 var laserTower = preload("res://scene/tower/laserTower.tscn")
 var droneBase = preload("res://scene/tower/droneBase.tscn")
 var ironBox = preload("res://scene/tower/ironBox.tscn")
+## 移动机甲（后勤单位）。建造受数量上限与建造 CD 约束，见 placeTower() 里的机甲分支。
+var mech = preload("res://scene/tower/mech.tscn")
+
+## ── 移动机甲的建造约束（只约束机甲，其它塔不受影响）──
+## 全图同时存在的机甲上限
+const MECH_MAX_COUNT: int = 10
+## 建造 CD（秒）：刚放下后这段时间内不能再放（防止一路连点刷满）
+const MECH_BUILD_COOLDOWN: float = 3.0
+## 上一次成功建造机甲的时刻（秒）。用 Time.get_ticks_msec() 换算，不依赖帧率。
+var mechLastBuiltMsec: int = -999999
 
 var isLastWave = false # 最后一波
 ## 结算复查开关：lastWave() 打开，finish() 复查到"敌人全清"后关闭并弹结算。
@@ -76,6 +88,9 @@ func _ready():
 	Game.towerClicked.connect(onTowerClicked)
 	Game.enemyClicked.connect(onEnemyClicked)
 	Game.towerLocked.connect(onTowerLocked)
+	# 敌人信息面板自己收起时（敌人死亡 / 逃脱），清掉敌人的选中态 ——
+	# 那条路径 map 收不到点击，只能靠面板的 closed 信号（见 _refreshEnemyRangeSelection）
+	enemyDetailPanel.closed.connect(_refreshEnemyRangeSelection)
 	# 技能选中的范围预览圈由 map 的 _draw 画；取消时也必须重绘，否则圈会残留
 	AbilityManager.selectionStarted.connect(onAbilitySelectionChanged)
 	AbilityManager.selectionEnded.connect(onAbilitySelectionChanged)
@@ -100,6 +115,12 @@ func _ready():
 	titleNode.wave = level.wave
 	titleNode.money = level.money
 	titleNode.score = UserData.score
+	# 顶栏最左侧的关卡名。无尽模式不在 allStage 里（_loadEndlessLevel 传的 levelId 是 -1），
+	# 查不到就显示"无尽模式"，免得那里空一块。
+	if Game.endlessMode:
+		titleNode.levelName = Game.t("_Endless", "Endless Mode")
+	else:
+		titleNode.levelName = StageData.getLevelDisplayName(StageData.currentStageId)
 	# 波次进度条暂时用不上（无尽模式没有总波数），先整条隐藏 ——
 	# 需要恢复时把下面这行删掉，并还原 syncWaveProgressBar() 的调用即可。
 	if waveProgressBar:
@@ -112,8 +133,8 @@ func _ready():
 	titleNode.musicOnPressed.connect(onMusicOnPressed)
 	titleNode.musicOffPressed.connect(onMusicOffPressed)
 	titleNode.homePressed.connect(onHomePressed)
-	titleNode.speedOnPressed.connect(onSpeedOnPressed)
-	titleNode.speedOffPressed.connect(onSpeedOffPressed)
+	#titleNode.speedOnPressed.connect(onSpeedOnPressed)
+	#titleNode.speedOffPressed.connect(onSpeedOffPressed)
 	#queue_redraw()
 	# print(int(1920.0 / cellSize))
 	font = ThemeDB.fallback_font
@@ -337,6 +358,10 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 		# print('Insufficient funds')
 		addNotice(tr("_NotEnoughMoney"))
 		return
+	# 机甲的两条额外约束（数量上限 / 建造 CD）。**必须在扣钱之前**判断 ——
+	# 放在扣钱之后的话，被拒绝的那次会把钱白扣掉。
+	if type == Game.towerType.mech and not canBuildMech():
+		return
 	var temp = null
 	titleNode.money -= cost
 	if type == Game.towerType.machineGunTower:
@@ -355,6 +380,10 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 		temp = droneBase.instantiate()
 	elif type == Game.towerType.ironBox:
 		temp = ironBox.instantiate()
+	elif type == Game.towerType.mech:
+		temp = mech.instantiate()
+		# 建造 CD 从"建成"这一刻起算
+		mechLastBuiltMsec = Time.get_ticks_msec()
 	else:
 		push_error("未知塔类型: " + str(type))
 		return
@@ -387,19 +416,86 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 	if achievementTracker:
 		achievementTracker.recordTowerBuilt(type)
 	#level.setShadowHide()
-	
-		
+
+
+## 机甲能不能建？不能就弹一句提示并返回 false。
+##
+## 两条约束（见 MECH_MAX_COUNT / MECH_BUILD_COOLDOWN 的注释）：
+##   · 数量上限：**只数机甲**，其它塔完全不受影响
+##   · 建造 CD：防止一路连点刷满
+##
+## ⚠️ 由 placeTower() 在**扣钱之前**调用 —— 拒绝的那次不能把钱扣掉。
+func canBuildMech() -> bool:
+	var alive: int = get_tree().get_nodes_in_group("mech").size()
+	if alive >= MECH_MAX_COUNT:
+		addNotice(tr("_MechLimitReached") % MECH_MAX_COUNT)
+		return false
+	var elapsed: float = float(Time.get_ticks_msec() - mechLastBuiltMsec) / 1000.0
+	if elapsed < MECH_BUILD_COOLDOWN:
+		# 剩余秒数向上取整，提示"还要等几秒"而不是 0.4 这种读数
+		var left: int = int(ceil(MECH_BUILD_COOLDOWN - elapsed))
+		addNotice(tr("_MechBuildCooldown") % left)
+		return false
+	return true
+
+
 func refreshData(dict):
-	print(dict)
 	if dict.get("hp") != null:
 		titleNode.hp = dict.hp
 	if dict.get("wave") != null:
 		titleNode.currentWave = dict.wave
+		# 新一波 -> 弹「波次来袭」横幅列出本波敌人（见 feature_design.md §十三）。
+		# 放在这里而不是新连一个 dataRefreshed：本函数已经是它的处理者，
+		# 再连一个只会多一次回调、顺序还不好控。
+		showWaveBanner(int(dict.wave))
 	if dict.get("money") != null:
 		titleNode.money = dict.money
 	if dict.get("score") != null:
 		titleNode.score = dict.score
 	# syncWaveProgressBar()
+
+
+## 弹本波横幅：标题是波次号，副标题列出这一波会出现的敌人。
+##
+## ★ 为什么要自己调 buildWaveSpawner()：
+##   base_level.gd 是**先发 dataRefreshed、后**把编制填进 currentSpawner 的
+##   （见 base_level.gd::onWaveTimerTimeout 的顺序）。信号到达这里时 currentSpawner
+##   还是空的，所以拿不到编制；而 buildWaveSpawner(wave) 只**读**关卡数据、返回一个新
+##   数组，不会重复生成敌人，调它是最直接的取法。
+func showWaveBanner(wave: int) -> void:
+	if waveBanner == null or level == null:
+		return
+	if not level.has_method("buildWaveSpawner"):
+		return
+	var rows: Array = level.buildWaveSpawner(wave)
+	if rows.is_empty():
+		# 无尽模式的编制是现场生成的，这一次调用可能刚好取不到 —— 不弹就行了，
+		# 没必要为此改 buildWaveSpawner 的接口。
+		return
+	# 最后一波：标题换成「最后一波」
+	var isFinal: bool = (not Game.endlessMode) and wave >= int(level.wave)
+	waveBanner.playWave(wave, summarizeWave(rows), isFinal)
+
+
+## 把一波的生成记录汇总成「按数量降序的兵种清单」。
+##
+## ★ 必须先**按 type 合并 number**：同一兵种可能有多条记录（走不同路线或不同偏移，
+##   见 stageData.gd 里 enemySpawner 的格式说明）。不合并的话同一个兵种会被列出两次。
+func summarizeWave(rows: Array) -> Array:
+	var counts: Dictionary = {}
+	for r in rows:
+		var t = r.get("type")
+		if t == null:
+			continue
+		counts[t] = int(counts.get(t, 0)) + int(r.get("number", 0))
+	var out: Array = []
+	for t in counts.keys():
+		var info = Game.enemyInfo.get(t)
+		var displayName: String = tr(str(info.get("name", "?"))) if info != null else str(t)
+		out.append({"name": displayName, "number": counts[t]})
+	# 数量从多到少 —— 玩家最需要先看到"这一波主要是什么"
+	out.sort_custom(func(a, b): return int(a.number) > int(b.number))
+	return out
 
 func onEnemyDefeated(point):
 	titleNode.money += point
@@ -691,15 +787,38 @@ func onEnemyClicked(enemy):
 	# 再次点击同一个敌人 -> 取消选中
 	if enemyDetailPanel and enemyDetailPanel.visible and enemyDetailPanel.enemy == enemy:
 		enemyDetailPanel.clear()
+		_refreshEnemyRangeSelection()
 		return
 	deselectTower()
 	if enemyDetailPanel:
 		enemyDetailPanel.showEnemy(enemy)
+	_refreshEnemyRangeSelection()
+
+
+## 选中敌人变化时，把"画不画射程圈"同步给敌人自己。
+##
+## 面板（enemyDetailPanel.enemy）是"谁被选中"的唯一状态来源，这里只做同步：
+## 先全部取消，再把当前选中的那个置上。
+## 为什么要"先全部取消"而不是只记住上一个：上一次取消时若漏了（比如面板被
+## clear() 之外的方式关掉），会留下一个永远画着圈的敌人；全量扫一遍代价很小
+## （同屏敌人最多几十个），换来的是不可能残留。
+##
+## ⚠️ 敌人死亡时面板是**在自己的 _process 里**发现失效并 clear() 的，map 收不到通知，
+##    所以不能只在点击时同步。面板的 `closed` 信号就是为这种情况准备的（见 _ready），
+##    这里由那个回调兜住"面板自己收起"的路径。
+func _refreshEnemyRangeSelection() -> void:
+	var current = enemyDetailPanel.enemy if enemyDetailPanel != null else null
+	for e in get_tree().get_nodes_in_group("enemy"):
+		if not is_instance_valid(e) or not e.has_method("setSelected"):
+			continue
+		e.setSelected(e == current)
+
 
 # 收起敌人信息面板
 func clearEnemyDetail():
 	if enemyDetailPanel:
 		enemyDetailPanel.clear()
+	_refreshEnemyRangeSelection()
 
 # 取消当前选中的塔（不递归触发敌人选中）
 func deselectTower():
@@ -811,7 +930,6 @@ func onButtonPressed():
 	# 地图内按钮用 ui_confirm（区别于菜单里的 coin）
 	SoundManage.playConfirm()
 	resultScreen.show()
-	
 	pass # Replace with function body.
 
 
@@ -824,8 +942,6 @@ func _physics_process(_delta: float) -> void:
 # 技能选中 / 取消都要重绘一次。
 # ⚠️ 取消时如果不重绘，_physics_process 里的条件变假 → 再也不调 _draw，
 #    最后一帧画的范围预览圈就会一直留在画布上（黄色的圈不消失）。
-
-
 func _unhandled_input(_event):
 	# 正在等待技能目标时，这一击只用于确认/取消技能，不再走原来的取消逻辑
 	if AbilityManager.isSelecting():
@@ -836,6 +952,12 @@ func _unhandled_input(_event):
 			AbilityManager.cancelSelecting()
 			return
 	if _event.is_action_pressed("selectCancel"):
+		# ── 右键 = 取消选中（所有塔，含机甲）──
+		# 机甲**必须**有这一路取消：它的左键被"派它过去"占用了，
+		# 少了这条右键退出，玩家选中机甲后就再也退不出选中态（实测就是这个 bug）。
+		# ⚠️ 只在确实处于选中态时才调 hideSelect()：那个函数是**取反**，
+		#    状态不同步时盲调会把"取消"变成"选中"。
+		deselectCurrentTower()
 		for i in get_tree().get_nodes_in_group("placeableArea"):
 			i.isShow = false
 		#towerShadow.setInactive()
@@ -843,13 +965,40 @@ func _unhandled_input(_event):
 		# 这一击若刚选中了敌人，就不要再当成“点空地”把面板取消掉
 		if Time.get_ticks_msec() - enemyClickMsec > 150:
 			clearEnemyDetail()
-		if selectedTower and is_instance_valid(selectedTower):
-			selectedTower.hideSelect()
+		# ── 机甲：左键 = 派它去那一格（feature_design.md §10.4）──
+		# ⚠️ 这里**不能**再顺手取消选中：左键已经被"移动"占用了，
+		#    取消统一走右键（见上面的 selectCancel 分支）。
+		#    之前这里既移动又取消，导致"点一下就没得点了"；后来改成只移动、
+		#    却忘了补取消路径，于是变成"选中后再也取消不掉"。
+		if selectedTower != null and is_instance_valid(selectedTower) \
+				and selectedTower.type == Game.towerType.mech:
+			var targetGrid: Vector2i = level.world2Grid(get_global_mouse_position())
+			if selectedTower.commandMoveTo(targetGrid):
+				get_viewport().set_input_as_handled()
+			return
+		# 普通塔：左键照旧 = 取消选中
+		deselectCurrentTower()
+
+
+## 取消当前选中的塔（如果有）。幂等：没选中时什么都不做。
+##
+## 为什么包一层而不是直接 `selectedTower.hideSelect()`：
+## `Tower.hideSelect()` 是**取反**（`selected = !selected`），
+## 只在"确实处于选中态"时调用它才等价于"取消选中"。
+func deselectCurrentTower() -> void:
+	if selectedTower == null or not is_instance_valid(selectedTower):
+		return
+	if selectedTower.selected:
+		selectedTower.hideSelect()
+	else:
+		# 状态不同步（selectedTower 有值但 selected 是 false）：
+		# 至少把面板和引用清干净，别留下"选着一个没选中的塔"
+		selectedTower = null
+		if towerDetailPanel:
+			towerDetailPanel.clear()
 
 
 # 确认技能目标：范围类技能直接用鼠标位置
-
-
 func _draw() -> void:
 	if debug:
 		for i in range(int(1920.0 / cellSize) + 1):

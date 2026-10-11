@@ -153,6 +153,30 @@ D:\VLC\vlc.exe -I dummy --no-video --quiet "<源.wav>" `
 | 造 | `mech_count.ogg` | MACHMech_Mechanism Counting Machine Interact Loose Container Short 01_ESM_HDLM.wav |
 | 敌 | `enemy_attack.ogg` | CREAHmn_Designed Orc Male Attack Long Heavy Hit Charged Up 03_ESM_HC4.wav |
 
+### 移动机甲的爬行音 `mech_crawl.ogg`（2026-10-11）
+
+**这是合成出来的，不是音源包里的现成音效。** 音源库里没有"机甲爬行"这一档：
+能搜到的机械脚步（`footstep_a_mech_mega_*`）全是**单次 hit**（包络 duty 只有 40~50%），
+直接循环会变成"咚…咚…咚"的重复踏步，而不是爬行；而连续机械音（伺服/马达嗡鸣）
+又太静态、没有步子。
+
+所以按下面的方式合成了一个 2 秒无缝循环：
+
+| 层 | 原始文件 | 作用 |
+| --- | --- | --- |
+| 底噪 | `power_move_mech_18.wav` | 连续机械运转（duty 82%），读作"伺服在转" |
+| 步点 ×4 | `footstep_a_mech_mega_02.wav` | 四拍步态，每拍**音量与音高都不同**（0.0/0.52/1.04/1.54s，1.00/0.94/1.06/0.90 倍速），避免节拍器感 |
+
+处理：mono / 44.1kHz / 两端 12ms 淡化（消除循环爆音）/ `loudnorm I=-18 TP=-1.5`。
+最终循环接缝误差 **0.002**、duty **82%**、低频占比 **67%**。
+
+> 复现脚本在 `.td_verify/search_crawl.py`（扫多种底噪 × 淡化方式并打分，
+> 选出"接缝最小且连续"的那个组合）。
+
+播放方式：机甲移动时 `SoundManage.startLoop("mech_crawl", "mech_crawl", -11.0)`，
+到达 / 停下 / 被卖掉 / 被摧毁时 `stopLoop`（见 `script/tower/mech.gd`）。
+音量比一次性音效轻一档 —— 它是持续底噪，同响度会很快烦人。
+
 ---
 
 ## 尚未使用但值得留意的候选

@@ -75,9 +75,8 @@ func spawnBomb() -> void:
 	if is_queued_for_deletion():
 		return
 	spawnHitEffect()
-	# 爆炸的**视觉**（动画 + 粒子 + 音效）走新的统一入口；
-	# bomb 只负责范围伤害，它自带的旧爆炸动画会被隐藏（见 bomb.gd）。
-	ExplosionManage.playExplosion(global_position)
+	# 爆炸的视觉由 bomb **自己的动画**负责（sprite/explosionSmoke1..5.png，见 bomb.gd），
+	# 所以这里**不要再调 ExplosionManage.playExplosion()** —— 会叠成两套爆炸。
 	var bomb = bombScene.instantiate()
 	bomb.global_position = global_position
 	bomb.damage = sourceTower.atk if is_instance_valid(sourceTower) else damage

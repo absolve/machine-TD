@@ -42,6 +42,9 @@ var currentSpawner = [] # 当前生产列表
 
 var allowArea: Array[Vector2i] = [] # 允许放置塔的区域
 var occupiedArea: Array[Vector2i] = [] # 已占用的区域
+## 当前在建造栏里选中的塔类型（由 selectTower 记录）。
+## 放置预览与落点校验据此分派 —— 机甲放宽到"任何非路线格"，其余塔只认 allowArea。
+var selectedTowerType: int = -1
 
 ## ── 行进偏移（v_offset）：让同一路线上的敌人不再叠在一起 ──
 ##
@@ -121,6 +124,8 @@ func _ready() -> void:
 			break
 	# 可建造区：关卡里摆的 placeableArea 实例（子节点 _ready 已先跑完，位置对齐过了）
 	collectAllowArea()
+	# 路线格集合：移动机甲靠它判断"不能开上敌人路线"（§10.2）
+	collectRouteArea()
 	# 需要提示的航线由关卡数据声明（地面路线有传送带，玩家看得出走向，不用提示）
 	for routeNo in StageData.getHintRoutes(levelId):
 		hintRoutes.append(int(routeNo))
@@ -178,6 +183,9 @@ func selectTower(type):
 	towerShadow.gridSize = temp.gridSize
 	towerShadow.scope=temp.scope
 	print(temp.gridSize)
+	# 记下本次选的塔类型：放置预览与落点校验都要据此分派
+	# （机甲走"非路线格"那条放宽的判定，见 canPlaceForType）
+	selectedTowerType = type
 	towerShadow.setActive()
 
 # 将世界坐标对齐到网格
@@ -194,6 +202,31 @@ func canPlace(coverGrids: Array[Vector2i]) -> bool:
 		if i in occupiedArea:
 			return false
 	return true
+
+
+## 移动机甲专用的放置判定（feature_design.md §10.2）：
+## **地图上任何空地都行，只要不压在敌人路线上** —— 不受 placeableArea 限制。
+##
+## 为什么机甲要另开一条：placeableArea 是"塔位"，是关卡精心摆的一小块区域；
+## 机甲是**机动**后勤单位，只能在塔位上就完全体现不出"移动"这件事。
+## 代价是它不能占路（那会挡住敌人），这也是它和"再放一座塔"的区别。
+##
+## 已在建的塔/机甲仍然算占用 —— 机甲之间不能叠。
+func canPlaceMech(coverGrids: Array[Vector2i]) -> bool:
+	for i in coverGrids:
+		if i in routeArea:
+			return false
+		if i in occupiedArea:
+			return false
+	return true
+
+
+## 按塔类型选放置判定：机甲放宽到"非路线格"，其余塔仍然只认塔位。
+## selectTower() 会把类型记进 selectedTowerType，这里据此分派。
+func canPlaceForType(tower_type, coverGrids: Array[Vector2i]) -> bool:
+	if tower_type == Game.towerType.mech:
+		return canPlaceMech(coverGrids)
+	return canPlace(coverGrids)
 
 # 开始生成敌人
 func start():
@@ -388,13 +421,66 @@ func removeOccupiedArea(grid: Array[Vector2i]):
 	for i in grid:
 		occupiedArea.erase(i)
 
+
+## ── 敌人路线覆盖的格子 ──
+##
+## 供**移动机甲**判断"这一格能不能开过去"（见 feature_design.md §10.2）。
+## 机甲可以进可建造区、也可以进空地，唯独不能压到敌人路线上 —— 那是它的核心约束。
+##
+## 为什么不像 allowArea 那样直接读 placeableArea 节点：
+## 路线是 Path2D 的自由曲线，没有"格节点"可读，只能**沿曲线采样**再换算成格子。
+## 采样步长取半个格子：既不会漏掉窄通道，格子数也在几百的量级（每关只在 _ready 算一次）。
+const ROUTE_SAMPLE_STEP := StageData.TileSize * 0.5
+## 路线格向外膨胀的格子数。**取 0**。
+##
+## ⚠️ 一开始给了 1（想让机甲停得离路线远一点），结果很糟：
+##    采样步长只有半格，每个采样点膨胀成 3×3=9 格，路线被撑成一条很宽的带 ——
+##    实测每关吃掉 **22~53 格可建造区**（占 allowArea 的三四成）。
+##    而采样步长 32px < 格子 64px，本身就保证路径连贯无孔，不需要额外膨胀。
+##    真要留余量，也应该在**机甲停靠**时留，而不是把路线判定放宽。
+const ROUTE_CELL_PADDING := 0
+
+var routeArea: Array[Vector2i] = []
+
+
+## 采样所有路线的曲线，算出被路线覆盖（含膨胀）的格子集合。
+## 在 _ready 里 collectAllowArea() 之后调用一次即可。
+func collectRouteArea() -> void:
+	routeArea.clear()
+	var seen: Dictionary = {}
+	for route in routes:
+		if route == null or route.curve == null:
+			continue
+		var length: float = route.curve.get_baked_length()
+		if length <= 0.0:
+			# 退化曲线（只有一个点）：至少把那个点所在格算进去
+			length = 0.0
+		var travelled: float = 0.0
+		while travelled <= length:
+			var world: Vector2 = route.to_global(route.curve.sample_baked(travelled))
+			var base: Vector2i = world2Grid(world)
+			for dx in range(-ROUTE_CELL_PADDING, ROUTE_CELL_PADDING + 1):
+				for dy in range(-ROUTE_CELL_PADDING, ROUTE_CELL_PADDING + 1):
+					var g: Vector2i = base + Vector2i(dx, dy)
+					if not seen.has(g):
+						seen[g] = true
+						routeArea.append(g)
+			if length <= 0.0:
+				break
+			travelled += ROUTE_SAMPLE_STEP
+
+
+## 某个格子是否压在敌人路线上（机甲不能开上去）
+func isRouteCell(grid: Vector2i) -> bool:
+	return grid in routeArea
+
 func _physics_process(_delta: float) -> void:
 	if towerShadow.active:
 		towerShadow.position = get_global_mouse_position()
 		var grid = world2Grid(towerShadow.position)
 		var towerCoverGrid = getTowerCoverGrid(grid, towerShadow.gridSize)
 		# print(towerCoverGrid)
-		towerShadow.placeable = canPlace(towerCoverGrid)
+		towerShadow.placeable = canPlaceForType(selectedTowerType, towerCoverGrid)
 		# print(towerShadow.placeable)
 		queue_redraw()
 		if Input.is_action_just_pressed("selectCancel"):
@@ -412,7 +498,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	var mousePosition: Vector2 = get_global_mouse_position()
 	var grid: Vector2i = world2Grid(mousePosition)
 	var towerCoverGrid: Array[Vector2i] = getTowerCoverGrid(grid, towerShadow.gridSize)
-	if not canPlace(towerCoverGrid):
+	if not canPlaceForType(selectedTowerType, towerCoverGrid):
 		return
 
 	Game.towerPlaced.emit(towerShadow.towerType, towerShadow.cost, grid,

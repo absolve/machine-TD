@@ -160,10 +160,16 @@ func close() -> void:
 	closed.emit()
 
 
-func onTabPressed(tab: int) -> void:
-	if tab == tab:
+## 切页签。
+##
+## ⚠️ 参数**不能叫 `tab`** —— 类里已经有一个成员 `var tab`，参数同名会把成员遮蔽掉，
+##    于是 `if tab == tab` 恒为真、`tab = tab` 赋给自己，页签永远切不动。
+##    （这是全项目去下划线改名时引入的：成员 `_tab` 变成 `tab` 后与参数撞名；
+##      改名工具只查了"声明之间"的冲突，没查"成员 vs 参数"的遮蔽。）
+func onTabPressed(newTab: int) -> void:
+	if tab == newTab:
 		return
-	tab = tab
+	tab = newTab
 	refresh()
 
 

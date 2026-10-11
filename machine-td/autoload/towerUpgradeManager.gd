@@ -58,7 +58,13 @@ const configs: Dictionary = {
 # EMP 干扰塔只做减速、不造成任何伤害，因此拿不到击杀经验，默认停在 Lv.1。
 # 它的 lv2 / lv3 配置保留在 configs 里，将来如果给它接上独立经验来源
 # （例如"减速覆盖时长"或"助攻计数"），把这里删掉即可直接启用。
-const NON_UPGRADABLE: Array = [Game.towerType.EMPTower]
+#
+# 移动机甲（mech）是**后勤单位**，同样不升级：
+#   · 它不杀敌（激光打在**我方防御塔**上做维修），因此没有击杀经验来源
+#   · configs 里**故意不给它写任何等级配置** —— canUpgrade() 要求
+#     "有配置 且 不在排除名单"，两条同时成立才可升级；机甲两条都不满足，
+#     所以就算以后有人误删这里的登记，它依然升不了级（双保险）。
+const NON_UPGRADABLE: Array = [Game.towerType.EMPTower, Game.towerType.mech]
 
 # 获取当前等级的经验阈值
 func getExpThreshold(towerType: Game.towerType, currentLevel: int) :

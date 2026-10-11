@@ -74,17 +74,23 @@ func getAbilities(stageId: int) -> Array:
 
 
 ## 各关卡**允许建造**的防御塔（key = 关卡 id，值 = 塔类型数组）
-## 没有列在这里的关卡 = 不限制（tower_ui 会显示全部 7 座）
+## 没有列在这里的关卡 = 不限制（tower_ui 会显示全部塔）
 ## 想放开某关就从这张表里删掉它，或补上缺的塔类型
+##
+## ⚠️ 移动机甲（mech）**每一关都放行**：它是后勤单位，功能是给已建的塔维修，
+##    不是新的输出手段。某关不放行的话，玩家建了塔却永远修不了，属于功能缺失
+##    而不是"关卡限制"。所以下面每一关的列表里都带上它。
 var stageTowers: Dictionary = {
 	#0: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower],
-	1: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower],
+	1: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower,
+		Game.towerType.mech],
 	2: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower,
-		Game.towerType.EMPTower],
+		Game.towerType.EMPTower, Game.towerType.mech],
 	3: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower,
-		Game.towerType.EMPTower, Game.towerType.teslaCoilTower],
+		Game.towerType.EMPTower, Game.towerType.teslaCoilTower, Game.towerType.mech],
 	4: [Game.towerType.machineGunTower, Game.towerType.cannonTower, Game.towerType.rocketTower,
-		Game.towerType.EMPTower, Game.towerType.teslaCoilTower, Game.towerType.laserTower],
+		Game.towerType.EMPTower, Game.towerType.teslaCoilTower, Game.towerType.laserTower,
+		Game.towerType.mech],
 	# 5 关及以后不配置 = 全部可建
 }
 
@@ -117,6 +123,33 @@ func getHintRoutes(stageId: int) -> Array:
 		if int(s.get("id", -1)) == stageId:
 			return s.get("hintRoutes", [])
 	return []
+
+
+## 查某关卡的配置字典（查不到返回空字典）。UI 想读 name / category 这类字段时用它。
+func getStage(stageId: int) -> Dictionary:
+	for s in allStage:
+		if int(s.get("id", -1)) == stageId:
+			return s
+	return {}
+
+
+## 关卡的**显示名**（已过翻译）。
+##
+## ⚠️ 抽出来是因为**两个地方都要用**：关卡情报弹窗（level_intro_panel.fillHeader）
+##    与地图顶栏新加的关卡名 Label。以前这段判断只写在弹窗里，顶栏要显示就得再抄一份
+##    —— 抄一份就多一处"以后改了这里忘了那里"的风险。
+##
+## 规则与弹窗原来一致：
+##   · 数字关卡名（"1" / "15"）→ 走 _LevelTitleFmt 格式化成"第 N 关"
+##   · 具名关卡（"Tutorial"）  → 取同名翻译键（"_Tutorial"），取不到就原样显示
+func getLevelDisplayName(stageId: int) -> String:
+	var stage_data: Dictionary = getStage(stageId)
+	var levelName: String = str(stage_data.get("name", ""))
+	if levelName.is_empty():
+		return ""
+	if levelName.is_valid_int():
+		return Game.t("_LevelTitleFmt", "Level %s") % levelName
+	return Game.t("_" + levelName, levelName)
 
 
 # 关卡数据配置。

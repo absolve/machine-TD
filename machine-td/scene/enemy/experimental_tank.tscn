@@ -1,13 +1,19 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene format=3 uid="uid://crsh8lo8iq5em"]
 
-[ext_resource type="PackedScene" path="res://scene/enemy/enemy.tscn" id="1_base"]
-[ext_resource type="Script" path="res://script/enemy/experimentalTank.gd" id="2_script"]
-
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/experimental_tank_body.svg" id="3_body"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/experimental_tank_body_2.svg" id="3_body2"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/experimental_tank_body_3.svg" id="3_body3"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/experimental_tank_body_4.svg" id="3_body4"]
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://c2n8wqmvtx4ka" path="res://script/enemy/experimentalTank.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://dmk170m8igfr1" path="res://sprite/enemy/redesigned/experimental_tank_body.svg" id="3_body"]
+[ext_resource type="Texture2D" uid="uid://cibcmxbehqsaw" path="res://sprite/enemy/redesigned/experimental_tank_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D" uid="uid://c6bkhb4dymca" path="res://sprite/enemy/redesigned/experimental_tank_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D" uid="uid://5t1lgf2usm1a" path="res://sprite/enemy/redesigned/experimental_tank_body_4.svg" id="3_body4"]
+[ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_omc4h"]
 [ext_resource type="PackedScene" path="res://scene/turret/base_turret.tscn" id="4_turret"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t2s1u"]
+resource_local_to_scene = true
+shader = ExtResource("3_omc4h")
+shader_parameter/flash = 0.0
+shader_parameter/brighten = 0.85
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_body"]
 animations = [{
@@ -29,58 +35,61 @@ animations = [{
 "speed": 16.0
 }]
 
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(80, 40)
 
-[node name="experimental_tank" instance=ExtResource("1_base")]
-
+[node name="experimental_tank" unique_id=852443066 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 10
 muzzleOffset = 46.0
 
-[node name="base" parent="." index="0"]
+[node name="base" parent="." index="0" unique_id=1108324432]
+material = SubResource("ShaderMaterial_t2s1u")
 sprite_frames = SubResource("SpriteFrames_body")
 
-[node name="turret" parent="." index="2"]
+[node name="turret" parent="." index="2" unique_id=108539921]
 visible = false
+material = SubResource("ShaderMaterial_t2s1u")
 
-[node name="shape" parent="." index="3"]
+[node name="shape" parent="." index="3" unique_id=359688443]
 shape = SubResource("RectangleShape2D_body")
 
-[node name="TurretFL" parent="." instance=ExtResource("4_turret")]
+[node name="TurretFL" parent="." index="6" unique_id=1084228689 instance=ExtResource("4_turret")]
+visible = false
+z_index = -1
 position = Vector2(-20, -10)
-z_index = -1
 atk = 16
 shootDelay = 0.8
 radarScope = 300.0
 rotationSpeed = 8.0
 muzzleOffset = 24.0
 
-[node name="TurretFR" parent="." instance=ExtResource("4_turret")]
+[node name="TurretFR" parent="." index="7" unique_id=1310704841 instance=ExtResource("4_turret")]
+visible = false
+z_index = -1
 position = Vector2(20, -10)
-z_index = -1
 atk = 16
 shootDelay = 0.8
 radarScope = 300.0
 rotationSpeed = 8.0
 muzzleOffset = 24.0
 
-[node name="TurretBL" parent="." instance=ExtResource("4_turret")]
+[node name="TurretBL" parent="." index="8" unique_id=1190708134 instance=ExtResource("4_turret")]
+visible = false
+z_index = -1
 position = Vector2(-20, 10)
-z_index = -1
 atk = 16
 shootDelay = 0.8
 radarScope = 300.0
 rotationSpeed = 8.0
 muzzleOffset = 24.0
 
-[node name="TurretBR" parent="." instance=ExtResource("4_turret")]
+[node name="TurretBR" parent="." index="9" unique_id=1315719934 instance=ExtResource("4_turret")]
+visible = false
+z_index = -1
 position = Vector2(20, 10)
-z_index = -1
 atk = 16
 shootDelay = 0.8
 radarScope = 300.0
 rotationSpeed = 8.0
 muzzleOffset = 24.0
-

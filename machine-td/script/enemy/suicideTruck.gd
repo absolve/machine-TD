@@ -15,7 +15,8 @@ func triggerSelfExplode() -> void:
 	if dead:
 		return
 	dead = true
-	ExplosionManage.playExplosion(global_position, "heavy")
+	# 爆炸的视觉由 bomb **自己的动画**负责（sprite/explosionSmoke1..5.png，见 bomb.gd），
+	# 所以这里**不要再调 ExplosionManage.playExplosion()** —— 会叠成两套爆炸。
 	var bomb = bombScene.instantiate()
 	bomb.global_position = global_position
 	bomb.damage = atk if atk > 0 else hp

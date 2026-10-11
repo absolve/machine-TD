@@ -28,6 +28,13 @@ extends PanelContainer
 @onready var expValueLabel: Label = $Margin/VBox/Reward/expRow/Value
 @onready var hintLabel: Label = $Margin/VBox/hintLabel
 
+## 面板收起时发出。map.gd 接它来清掉敌人的选中态（射程圈）。
+##
+## ⚠️ 必须有这个信号：敌人死亡时是**本面板在自己的 _process 里**发现节点失效并
+##    clear() 的，map 完全收不到通知。没有它的话，敌人身上"选中"这个状态就永远
+##    留着（表现：红圈残留）。
+signal closed
+
 var enemy: Node = null # 当前选中的敌人
 
 
@@ -55,8 +62,12 @@ func showEnemy(e: Node) -> void:
 
 # 取消选中 / 敌人已被消灭 -> 隐藏面板
 func clear() -> void:
+	# 只在"原来确实有选中"时才发信号，避免 _process 每帧重复 clear() 刷一串信号
+	var had: bool = enemy != null
 	enemy = null
 	visible = false
+	if had:
+		closed.emit()
 
 
 func refresh() -> void:

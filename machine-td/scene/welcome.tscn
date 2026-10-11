@@ -173,10 +173,10 @@ icon = ExtResource("9_vkhmq")
 [node name="achievement" type="TextureButton" parent="Ui" unique_id=152348764]
 material = SubResource("ShaderMaterial_glow")
 layout_mode = 0
-offset_left = 1752.0
-offset_top = 792.0
-offset_right = 2008.0
-offset_bottom = 1048.0
+offset_left = 1760.0001
+offset_top = 856.0
+offset_right = 2016.0001
+offset_bottom = 1112.0
 scale = Vector2(0.6, 0.6)
 texture_normal = ExtResource("9_vn0ct")
 

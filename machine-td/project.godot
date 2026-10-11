@@ -31,6 +31,7 @@ TowerUpgradeManager="*uid://chlgw3pk7jvcl"
 SceneTransition="*res://scene/scene_transition.tscn"
 AchievementManager="*res://autoload/achievement_manager.gd"
 AbilityManager="*res://autoload/ability_manager.gd"
+RewardPopup="*res://scene/fx/reward_popup.tscn"
 
 [display]
 

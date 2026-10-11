@@ -90,6 +90,10 @@ var baseDelay = 0
 
 
 func _ready() -> void:
+	# 所有防御塔统一进 "tower" 组：机甲的激光靠它找维修目标（mech.gd::pickRepairTarget）。
+	# 用组而不是遍历地图子节点 —— 塔是 map 的直接子节点，但组查询不受层级影响，
+	# 以后塔要是挪到别的容器下也不会悄悄失效。
+	add_to_group("tower")
 	if raderShape.shape:
 		raderShape.shape.radius = radarScope
 	if maxHp <= 0 and hp > 0:
@@ -337,6 +341,27 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 		SoundManage.playAt("tower_destroyed", global_position, -6.0, randf_range(0.95, 1.05))
 		releaseGrid()
 		queue_free()
+
+
+## 恢复防御塔血量并限制在最大值内。返回**实际**回复了多少（满血时返回 0）。
+##
+## ⚠️ 为什么不直接复用 `hurt(负数)` —— 这是踩过的坑：
+##    `hurt()` 里有一句 `hp -= int(max(0.0, ceil(actualDamage)))`，
+##    那个 `max(0.0, ...)` 会把负伤害**夹成 0**，于是"负伤害＝治疗"根本不会生效
+##    （实测传 -12 时血量纹丝不动）。而且 `hurt()` 开头还有
+##    `if invincible: return` —— 无敌中的塔不该免疫治疗。
+##    所以治疗单独走这个函数，语义也和 enemy.gd 的 addHp() 对齐。
+func addHp(num: int) -> int:
+	if num <= 0 or hp <= 0:
+		return 0
+	var before: int = hp
+	hp = mini(maxHp, hp + num)
+	if hp != before:
+		if lifeBar:
+			lifeBar.maxHp = maxHp
+			lifeBar.value = hp
+		updateStatusUi()
+	return hp - before
 
 
 ## 把本塔占用的格子归还给关卡（出售 / 被打爆 都要走这一步）。

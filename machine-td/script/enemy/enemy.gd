@@ -15,6 +15,10 @@ class_name Enemy
 @export var atk: int = 0 # 攻击力（对抗型有效，推进型为0）
 @export var shootDelay: float = 1.0 # 开火间隔秒（对抗型有效）
 @export var radarScope: float = 0.0 # 雷达半径(像素)：对抗/支援型的攻击或支援范围，0 表示不参战
+## 点击这个敌人时是否画出攻击范围（见 feature_design.md §9.3）。
+## ⚠️ **不能只看 `atk > 0`**：维修车 atk=20 但是治疗友军、自爆车 atk=80 但是撞击自爆，
+##    两者都不远程打塔。所以这个开关由 Game.enemyInfo 显式声明，这里只负责读。
+@export var showsRange: bool = false
 var maxHp: int = 100 # 最大血量（初始化时由 hp 同步）
 
 var vec = Vector2.ZERO
@@ -22,12 +26,26 @@ var target = [] # 目标
 var points = [] # 路径点
 var pointIndex = 0
 var dead = false # 是否死亡
+## 被点击选中（选中时自己画攻击范围圈，见 _draw）。
+## ⚠️ 为什么圈由**敌人自己画**、而不是在 map.gd 里画：
+##    画在 map 上时，敌人一旦 free，map 里那个"选中敌人"就变无效，
+##    `_physics_process` 里的重绘条件变假 → 再没人调 _draw → **上一帧的圈永远留在画布上**
+##    （玩家实测：敌人被消灭后地图上留一个红圈）。
+##    与防御塔同一套做法（tower.gd 也是自己画），敌人没了圈自然就没了。
+var selected = false
+## 雷达扫描线角度（选中时那条旋转的亮线，与防御塔的观感一致）
+var radarSweepAngle: float = 0.0
 var rotationSpeed = 10
 var canShot = true
 
 var parent: PathFollow2D
 
 const ENEMY_BULLET: PackedScene = preload("res://scene/bullet/enemy_bullet.tscn")
+## 回血特效（绿色 + 号，向上飘后淡出）。见 addHp()。
+const HEAL_FX := "res://scene/fx/heal_particles.tscn"
+## 雷达扫描线转速（弧度/秒）。与 tower.gd 的 RADAR_SCAN_SPEED 保持一致 ——
+## 两种圈看起来才是同一个东西，而不是"我方一种、敌方另一种"。
+const RADAR_SCAN_SPEED := 1.8
 
 @onready var base = $base
 ## ⚠️ 必须用 get_node_or_null：直升机/无人机这类**没有 turret 节点**，
@@ -124,6 +142,7 @@ func setupEnemyInfo():
 	armor = float(info.get("armor", armor))
 	flying = bool(info.get("flying", flying))
 	atk = int(info.get("atk", atk))
+	showsRange = bool(info.get("showsRange", showsRange))
 	# 无尽模式难度缩放：hp / atk 乘一个随波次上涨的系数（普通关卡恒为 1.0）
 	if Game.enemyScale != 1.0:
 		hp = int(ceil(float(hp) * Game.enemyScale))
@@ -292,6 +311,14 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 		# 万一其中有人回调 hurt()，dead 已经为 true 就不会二次结算。
 		dead = true
 		ExplosionManage.playExplosion(global_position)
+		# 地面敌人留一坨可以回收的残骸（feature_design.md §十一）。
+		# ⚠️ 必须在 freeSelf() **之前**调用 —— 节点一旦 free，读 reward / global_position
+		#    都会静默变 null / (0,0)（code_design.md §7.5）。
+		# ⚠️ 只在这个"被打死"的分支里生成，**不要**挪到 _exit_tree()：
+		#    逃脱、换关卡也会走 _exit_tree()，那会凭空刷出残骸（§11.4 明确写了）。
+		spawnWreckage()
+		# 击杀金币飘字（独立场景 + 池化，见 feature_design.md §十二）。
+		RewardPopup.playAt(global_position, reward)
 		Game.enemyRewarded.emit(reward)
 		# 特殊敌人额外掉宝石（数量来自 enemyInfo.gemReward，普通敌人是 0 就不发）
 		# gemRewardChance < 1 的敌人（如战斗飞机）还要过一道概率，不是每只都掉
@@ -366,12 +393,62 @@ func playTurretRecoil() -> void:
 		turretOffsetBase + Vector2(-turretRecoil, 0.0), RECOIL_BACK_TIME)
 	recoilTween.tween_property(turret, "offset", turretOffsetBase, RECOIL_RETURN_TIME)
 
-## 恢复生命值并限制在最大值内；待补充回复特效。
+## 死亡时留一坨可回收的残骸（feature_design.md §十一）。
+##
+## 规则（§11.2）：**地面单位都掉，空中单位不掉**。
+## 理由：空中单位被击落可以理解为"掉在场外"；这条规则也顺带避开了
+## "飞机掉在航线正下方、机甲够得着但路线挡着"的尴尬。
+##
+## 存活时长按身价分档（越贵留得越久，给机甲更多赶过去的时间）。
+func spawnWreckage() -> void:
+	if flying:
+		return
+	# 身体贴图：取敌人当前那一帧。贴图是运行期才知道的（每种敌人不一样），
+	# 所以残骸场景里没法预摆，只能在这里传进去。
+	var tex: Texture2D = null
+	if base != null:
+		tex = base.sprite_frames.get_frame_texture(base.animation, base.frame) if base.sprite_frames != null else null
+	ExplosionManage.spawnWreckage(global_position, tex, reward, wreckageLifetimeFor(reward))
+
+
+## 残骸存活时长（秒）按身价分档，见 §11.2 的表。
+## 抽成静态函数，方便探针直接核对每一档，不用去生成一个敌人。
+static func wreckageLifetimeFor(reward: int) -> float:
+	if reward >= 40:
+		return 16.0    # 实验坦克
+	if reward >= 15:
+		return 12.0    # 重型 / 装甲坦克
+	if reward >= 6:
+		return 10.0    # 小型
+	return 8.0         # 迷你坦克 / 突击车 / 自爆车
+
+
+## 恢复生命值并限制在最大值内，同时弹出"绿色 + 号"回复特效。
+##
+## 特效挂在 addHp 上、而不是写在 medic.gd 里：addHp 是**所有**回血的唯一入口，
+## 以后再有别的治疗来源（道具 / 技能）也自动带特效，不会漏。
+## 生命周期交给 ExplosionManage 那一套（播完自毁），这里不用自己管。
+##
+## ── 特效参数（写在 scene/fx/heal_particles.tscn 里，这里记一份原因）──
+## 6 个 + 号就够读成"几个"。贴图 144px，缩到 0.20~0.32 约 29~46px，比敌人本体小一圈。
+## 试过 9 个 × 0.42~0.62，在窄锥角里全叠成一团绿疙瘩 —— 所以：
+##   · amount 6
+##   · explosiveness 0.08（让 + 号在 lifetime 里**陆续**冒出，而不是同一帧全炸出来）
+##   · spread 90° + 初速 170~280（先向四周散开再一起上飘，竖向才拉得开间距）
+##   · angle ±30°（随机旋转，避免 6 个一模一样的十字排一起像复制粘贴）
 func addHp(_num: int):
+	if _num <= 0:
+		return
+	# 已经满血就别弹特效 —— 维修车锁到满血目标时不该刷一串 + 号
+	var wasFull: bool = hp >= maxHp
 	hp += _num
 	if hp > maxHp:
 		hp = maxHp
 	lifeBar.value = hp
+	if not wasFull:
+		var fx: Node = (load(HEAL_FX) as PackedScene).instantiate()
+		fx.position = global_position + Vector2(0, -26)
+		ExplosionManage.add_child(fx)
 
 func fire(_t):
 	pass
@@ -384,13 +461,77 @@ func onDelayTimeout() -> void:
 	canShot = true
 
 
+## 选中 / 取消选中。选中期间自己画攻击范围圈（见 _draw）。
+##
+## 由 map.gd 在敌人信息面板开合时调用 —— 面板才是"谁被选中"的唯一状态，
+## 敌人这边只跟着它走，不自己判断点击。
+func setSelected(on: bool) -> void:
+	if selected == on:
+		return
+	selected = on
+	# 取消选中时把扫描线归零，下次选中的观感每次都一样
+	if not selected:
+		radarSweepAngle = 0.0
+	queue_redraw()
+
+
 func _physics_process(_delta):
+	# 选中时：扫描线转起来 + 每物理帧重绘（和 tower.gd 的写法一致）
+	if selected:
+		radarSweepAngle = fmod(radarSweepAngle + _delta * RADAR_SCAN_SPEED, TAU)
+		queue_redraw()
 	if points.size() == 0:
 		return
 	parent.progress += speed * _delta
 	if parent.progress_ratio >= 1:
 		Game.enemyEscaped.emit(lossPoints)
 		freeSelf()
+
+
+## 选中时画攻击范围 —— **与防御塔完全同一套画法**（tower.gd::_draw）：
+## 同一个颜色、同样的填充/外圈/3 道同心环/旋转扫描扇 + 扫描线。
+##
+## 玩家反馈"应该和防御塔点击显示攻击范围一样"，所以这里刻意不另设计一套样式；
+## 参数与 tower.gd 逐条对齐（0.12 填充 / 0.8 外圈 / 内环 0.15 /
+## 24 段扇尾 60° / 扫描线 1.0 宽 2.0）。要改观感就两边一起改。
+##
+## 只在 showsRange 为真时画：维修车（治疗）与自爆车（撞击）虽然 atk > 0，
+## 但它们的"范围"不是打塔射程，画出来会误导（见 feature_design.md §9.3）。
+func _draw() -> void:
+	if not selected or not showsRange or radarScope <= 0.0:
+		return
+	var radarColor: Color = Color(0.25, 0.75, 1.0, 1.0)
+	draw_circle(Vector2.ZERO, radarScope,
+		Color(radarColor.r, radarColor.g, radarColor.b, 0.12))
+	draw_arc(Vector2.ZERO, radarScope, 0.0, TAU, 64,
+		Color(radarColor.r, radarColor.g, radarColor.b, 0.8), 2.0)
+	for i in range(1, 4):
+		var r = radarScope * (i / 4.0)
+		draw_arc(Vector2.ZERO, r, 0.0, TAU, 64,
+			Color(radarColor.r, radarColor.g, radarColor.b, 0.15), 1.0)
+	var segments: int = 24
+	var tailSpan: float = PI / 3.0
+	for s in range(segments):
+		var t = float(s) / segments
+		var a = radarSweepAngle - tailSpan * t
+		var alpha = (1.0 - t) * 0.5
+		var nextA = radarSweepAngle - tailSpan * (float(s + 1) / segments)
+		var p1 = Vector2(cos(a), sin(a)) * radarScope
+		var p2 = Vector2(cos(nextA), sin(nextA)) * radarScope
+		draw_polygon(
+			PackedVector2Array([Vector2.ZERO, p1, p2]),
+			PackedColorArray([
+				Color(radarColor.r, radarColor.g, radarColor.b, alpha),
+				Color(radarColor.r, radarColor.g, radarColor.b, alpha),
+				Color(radarColor.r, radarColor.g, radarColor.b, 0.0)
+			])
+		)
+	draw_line(
+		Vector2.ZERO,
+		Vector2(cos(radarSweepAngle), sin(radarSweepAngle)) * radarScope,
+		Color(radarColor.r, radarColor.g, radarColor.b, 1.0),
+		2.0
+	)
 	if lifeBar == null or not is_instance_valid(lifeBar):
 		return
 	lifeBar.global_position =parent.global_position+LIFE_BAR_OFFSET

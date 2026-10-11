@@ -2,6 +2,15 @@ extends Area2D
 
 var blastRadius: float = 90.0 # 爆炸范围
 var explosionScale: float = 1.0 # 爆炸动画缩放，根据爆炸范围调整
+
+## 动画贴图相对"1 单位 = blastRadius 90 时正好铺满"的换算系数。
+##
+## 现在用的是新素材 `sprite/fx/explo_big_*.png`（256px，来自 VFX Free Pack 的大爆炸），
+## 而原来那套 `explosionSmoke*.png` 只有 ~60px。旧公式按"贴图 90px 宽"定的，
+## 直接套到 256px 上会让爆炸大出四倍多 —— 所以这里补一个系数把它压回来。
+## 想换帧序/改成别的爆炸时，只改这一个数即可（不必动下面的公式）。
+const SHEET_SCALE := 0.22
+
 var damage: int = 40 # 伤害
 var sourceTower: Tower = null
 var source: Node = null
@@ -26,11 +35,14 @@ func _ready() -> void:
 	if blastRadius > 0:
 		explosionScale = clamp(blastRadius / 90.0, 0.7, 3.0)
 	if aniNode:
-		aniNode.scale = Vector2.ONE * explosionScale
-		# 只留它当"伤害生效的计时器"，不再显示 —— 爆炸的视觉统一由
-		# ExplosionManage.playExplosion() 负责（动画+粒子+音效三件套）。
-		# 不隐藏的话会和新的爆炸叠成两层，看着又乱又是旧素材。
-		aniNode.visible = false
+		# SHEET_SCALE 把"按 blastRadius 算出的缩放"换算到实际贴图尺寸（见常量注释）
+		aniNode.scale = Vector2.ONE * explosionScale * SHEET_SCALE
+		# ★ bomb **显示自己的动画**作为爆炸视觉（现在是 sprite/fx/explo_big_*.png）。
+		#   之前这里写过 `aniNode.visible = false`（那时视觉统一交给 ExplosionManage），
+		#   现在改回由 bomb 自己显示 —— 所以**调用方不要再叠一次
+		#   ExplosionManage.playExplosion()**，否则同一位置会同时出现两套爆炸。
+		#   动画同时兼任"伤害生效的计时器"：onAniFrameChanged 在 frame>=1 时置 hasDamage。
+		#aniNode.visible = true
 	if source == null:
 		source = sourceTower
 	if targetMask != 0:

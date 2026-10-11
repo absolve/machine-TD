@@ -81,12 +81,9 @@ func showEndless(bestWave: int) -> void:
 
 
 func fillHeader(stage_data: Dictionary) -> void:
-	var levelName: String = str(stage_data.get("name", ""))
-	if levelName.is_valid_int():
-		titleLabel.text = Game.t("_LevelTitleFmt", "Level %s") % levelName
-	else:
-		# 教程等具名关卡：优先取同名翻译键（如 _Tutorial）
-		titleLabel.text = Game.t("_" + levelName, levelName)
+	# 关卡名规则（数字关卡 → "第 N 关"，具名关卡 → 同名翻译键）已抽到
+	# StageData.getLevelDisplayName()，因为地图顶栏也要显示同一个名字，两边共用一份实现。
+	titleLabel.text = StageData.getLevelDisplayName(int(stage_data.get("id", -1)))
 
 	var categoryKey: String = str(stage_data.get("category", ""))
 	var descriptionKey: String = str(stage_data.get("description", ""))

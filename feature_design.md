@@ -2,8 +2,9 @@
 
 > 本文档用于记录后续功能模块的设计方案与更新计划，便于独立开发、维护和扩展。
 >
-> **文档版本**：v1.1
+> **文档版本**：v1.3
 > **创建日期**：2026-08-19
+> **最近更新**：2026-10-09（新增五个模块设计稿，**均未实现**：§九 敌人攻击范围显示 / §十 移动机甲 / §十一 敌人残骸与回收 / §十二 击杀金币飘字 / §十三 波次来袭横幅；§十四 汇总依赖与实施顺序）
 > **适用项目**：Machine-TD（Godot 4.7 塔防游戏）
 
 ---
@@ -18,7 +19,13 @@
 - [六、防御塔升级系统（Tower Upgrade System）](#六防御塔升级系统tower-upgrade-system)
 - [七、场景切换（Scene Transition）](#七场景切换scene-transition)
 - [八、模块更新记录](#八模块更新记录)
-- [九、后续可扩展模块（规划中）](#九后续可扩展模块规划中)
+- [九、敌人攻击范围显示（Enemy Attack Range Indicator）](#九敌人攻击范围显示enemy-attack-range-indicator)
+- [十、移动机甲 + 维修 / 回收（Mobile Mech）](#十移动机甲--维修--回收mobile-mech)
+- [十一、敌人残骸与回收（Enemy Wreckage & Salvage）](#十一敌人残骸与回收enemy-wreckage--salvage)
+- [十二、击杀金币飘字（Kill Reward Floating Text）](#十二击杀金币飘字kill-reward-floating-text)
+- [十三、波次来袭横幅（Wave Incoming Banner）](#十三波次来袭横幅wave-incoming-banner)
+- [十四、五个新模块的总览与依赖](#十四五个新模块的总览与依赖)
+- [十五、后续可扩展模块（规划中）](#十五后续可扩展模块规划中)
 
 ---
 
@@ -1439,9 +1446,510 @@ layer 100 的转场遮罩就永远盖不住它 —— 转场时会看到弹窗�
 | 2026-10-06 | 调整：引导「放技能」那一步点一下即过 + 补右键取消提示 | v1.0 | 反馈：“**到了这个技能提示的地方，可以点击然后直接下一个步骤，选择技能和防御塔的时候加个右键可以取消的提示**”。① **技能步放行条件放宽**：原来只听 `AbilityManager.abilityActivated`（＝玩家得真的把技能砸到地图上才算过），现在**点一下就过** —— 三路信号任一到就算完成：瞬发技能 `abilityActivated`、范围技能 `selectionStarted`（点图标即进入“选目标”状态）、被拦下 `abilityFailed`（宝石不够/冷却中）。最后一路是为了**不把玩家卡在一个完不成的任务上**：他确实点过了，就该放行。② **「右键取消」提示**：气泡里加一行小字（`hintLabel`，金黄 22px），显隐**跟着状态走、不跟着步骤走** —— `AbilityManager.isSelecting()` 或 `level.towerShadow.active` 为真（＝选好了还没落地）就出现，平时不占地方；显隐切换时 `bubble.reset_size()` 重排气泡高度。文案 `_TutorialGuideCancelHint`（“右键取消选择”/“Right-click to cancel.”）。核对过 `project.godot`：`selectCancel` 只绑了 `button_index = 2`（鼠标右键），没有键盘替代键，所以提示说右键没写错。⚠️ 目前这行提示**只在教程关**出现（它属于引导场景）；若要做成“所有关卡选中塔/技能时都提示”的全局提示，需要把它挪到 HUD 层（另开一个小场景，见 map.gd 里 `_setupTutorialGuide` 同款接法）。验证：信号名/参数个数与 `ability_manager.gd` 逐条对账（多收参数会运行时炸）、`_process` 每帧确实调用了提示刷新、场景里 `hintLabel` 插在正文与按钮之间的正确位置、9 个翻译键全覆盖，全部脚本化检查通过；`get_errors` 全绿 |
 | 2026-10-06 | 修复：进教程关报 `Nonexistent function 'setup' in base 'CanvasLayer'` | v1.0 | 报错栈：`map.gd:157 @ _setupTutorialGuide()`。根因：引导场景的**根节点是 `CanvasLayer`（`layer = 5`，要它才能盖在相机之上又低于 PopupLayer），脚本挂在它里面那层 `Root` 控件上**（CanvasLayer 没有 `size`、也没有 `_draw`，遮罩只能由 Control 画）；而 `scene.instantiate()` 返回的是**根节点**，于是 `setup()` 调到了没脚本的 CanvasLayer 上。修法：`map.gd::_find_guide_root()` —— 根有 `setup` 就用根，否则找第一层子节点，都没有才 `push_error`。**不写死节点名**（编辑器里改名不会悄悄坏），失败会大声报错而不是静默失效 |
 
+| 2026-10-09 | §九 敌人攻击范围显示 | v1.0 | 新增设计（**未实现**）：点击敌人时把"会攻击防御塔的敌人"的射程画成一圈可见范围。**关键结论：判据不能用 `atk > 0`** —— 排查 13 种敌人后发现两个反例：**维修车 `atk=20` 但 `fire(targets: Array)` 是治疗友军**、**自爆车 `atk=80` 但走 `triggerSelfExplode()` 撞击**，两者都不远程打塔。因此改为在 `enemyInfo` 每条**显式声明 `showsRange`**（与 `hintRoutes` 同一思路：不做推断），本轮 8 种为 true（四种坦克 / 突击车 / 导弹车 / 攻击直升机 / 战斗飞机 / 实验坦克）、4 种为 false（迷你坦克 / 侦察无人机 / 维修车 / 自爆车）。画法与技能范围圈同源：由 `map.gd::_draw()` 绘制（**不新增 UI 节点**，天然跟随相机与缩放），锈红 `#C4553F` 半透明填充 + 实线外圈 + 4 段虚线内圈（与技能圈的实线区分，避免误认成我方技能）。取消时机与敌人信息面板同一生命周期 |
+| 2026-10-09 | §十 移动机甲 + 维修 / 回收 | v1.0 | 新增设计（**未实现**）：一座**能在屏幕上移动、不占固定格**的后勤机甲，继承 `tower.gd` 拿到血量/承伤/选中/详情面板，但走自己的放置通道（**任意非路线格**，不要求 `placeableArea`）。① **移动**：选中 → 点地面 → 自己开过去（与现有"选塔→点格子"同操作）；本轮**不做寻路**，直线移动、撞到路线格就停并提示；移动时释放旧格占新格。② **不能出现在路线上**是核心约束，靠 `Path2D` 曲线采样的格集合判定。③ **自动作业**（不需要逐个下令）：每 0.5s 索敌一次，**谁近做谁**，维修优先于回收（塔被打爆不可逆、残骸只是钱）。④ **回收不需要开上路线** —— 机甲从当前位置**发一道激光**吸住残骸，持续 `salvageSeconds`；这条解决了"敌人多数死在路线上、而机甲不能上路线"的逻辑冲突（设计阶段正是这个冲突先暴露出来才定的方案）。⑤ 数值全部放 `@export`（`moveSpeed 220` / `repairScope 100` / `salvageScope 140` / `repairRate 25HP/s` / `salvageSeconds 1.2`），符合 §6.3「静态属性进 Inspector」。⑥ 全关卡可用（**含教程关**），塔卡片列表加第 9 张 |
+| 2026-10-09 | §十一 敌人残骸与回收 | v1.0 | 新增设计（**未实现**）：地面敌人被击杀后**原地留一坨残骸**，存活 8~16 秒（按档次），可被 §十 的机甲回收，换回**该敌人原价 10%** 的金币（`maxi(1, floor(reward * 0.1))`）。① **空中单位不掉**（侦察无人机 / 攻击直升机 / 战斗飞机），地面 9 种全掉 —— 既符合"被击落 = 直接损毁"的直觉，也避开了"残骸掉在航线正下方"的尴尬。② **逃脱的敌人不留残骸**（没被摧毁），所以生成点必须放在 `hurt()` 的死亡分支、**不能**放 `_exit_tree()`（逃脱与场景卸载也会走那里）。③ **位置在 `freeSelf()` 之前取** —— `code_design.md` §7.5 明确写着节点 `free()` 之后读成员会静默变 `null`。④ **不做对象池**（与命中特效相反）：残骸要挂计时器、数量受单波敌人数限制，池化状态复杂而收益低。⑤ **平衡flag**：第 1 关有 99 只迷你坦克，按"至少 1 金币"全回收是 **+99**（初始 150），疑似过强，已在文档里写明"先按至少 1 实现、实测后再决定是否改成不足 1 就不掉" |
+| 2026-10-09 | §十二 击杀金币飘字 | v1.0 | 新增设计（**未实现**）：敌人被摧毁时在**它倒下的位置**弹 `+N` 金币飘字，上飘 44px 后淡出。现状是**静默进账**（只看到顶栏数字跳，不知是哪只给的）。**关键发现：`Game.enemyRewarded` 信号不带位置**（`autoload/game.gd:260` 是裸 `signal enemyRewarded`），而飘字需要世界坐标 —— 对比"改信号签名"与"敌人在自己脚本里直接调静态入口"两个方案后**取后者**（敌人本来就有 `reward` 与 `global_position`，零信号改动）。**不复用 `toast_label`**：它是屏幕坐标的 HUD 提示（`fixedOffsetY = 70` 是屏幕底部偏移），飘字要世界坐标。**用对象池**（与 `ExplosionManage` 同一套，`POOL_MAX 24`）—— 与 §十一 残骸**故意相反**：飘字高频短命无状态适合池化，残骸要挂计时器不适合。位置必须在 `freeSelf()` **之前**取（`code_design.md` §7.5），与残骸是同一个坑 |
+| 2026-10-09 | §十三 波次来袭横幅 | v1.0 | 新增设计（**未实现**）：每波开始时弹横幅告知本波会来哪些敌人。现状是**悄悄开始**（只发 `Game.dataRefreshed`，顶栏数字变一下），玩家常在敌人上路后才发现。**外观与动画参数直接抄 `battle_start_banner`**（`fadeInSec 0.26` / `holdSec 1.15` / `outScale 0.86` / 复用 `hazard_strip` 危险条纹），新建独立 `wave_banner` 而不是改造开场横幅（后者 `play()` 签名与 `startGame()` 调用点已稳定，改造会牵动开场流程）；也可让新脚本 `extends battle_start_banner.gd` 只覆写清单排版，符合 §6.2「基础脚本 + 子类只覆盖差异」。**数据来源零新增**：`base_level.buildWaveSpawner(wave)` 本来就返回 `{time, type, number}` 记录数组。**两个实现要点**：① `dataRefreshed` 是在 `buildWaveSpawner()` **之前**发的，所以 `map.gd` 要自己调一次 `buildWaveSpawner()` 取编制（该方法只读数据、不会重复生成敌人）；② 同一兵种可能有多条记录（走不同路线/偏移），**必须先按 type 合并 `number`** 再排序。敌人名必须走 `tr()`（`enemyInfo.name` 里存的就是翻译键，见 v5.4）。横幅 `mouse_filter = IGNORE`、不暂停、连点可跳过 |
+| 2026-10-09 | §十四 五个新模块总览 | v1.0 | 补齐五个新模块（§九 / §十 / §十一 / §十二 / §十三）的依赖与建议顺序，并把原「十二、三个模块的相互依赖」并入本节：**前三个（§九 攻击范围 / §十二 金币飘字 / §十三 波次横幅）互相独立、都不改战斗逻辑**，可一次做完一起验；**§十一 残骸独立产生**、**§十 机甲依赖残骸**，按顺序做。同时把原「十三、后续可扩展模块」顺延为 §十五，目录与章节号同步 |
+
 ---
 
-## 九、后续可扩展模块（规划中）
+## 九、敌人攻击范围显示（Enemy Attack Range Indicator）
+
+### 9.1 模块定位
+
+点击敌人时，**会攻击防御塔的敌人**把它的攻击范围画出来，让玩家在布防前就能看出"这座塔会不会挨打"。
+
+现状：敌人信息面板（§八 2026-09-12「敌人信息面板」）已经显示名称/血量/攻击/属性/收益，但**射程只有一个数字**，玩家得自己在脑子里换算成屏幕距离。本模块把这个数字变成地面上的一圈可见范围。
+
+### 9.2 数据来源（已存在，无需新增字段）
+
+`Game.enemyInfo` 每条已经有：
+
+| 字段 | 含义 | 本模块用法 |
+| --- | --- | --- |
+| `scope` | 攻击范围（像素） | **画圈的半径** |
+| `atk` | 单次伤害（0 = 不会攻击） | 初筛"会不会攻击" |
+| `role` | 行为定位（`_EnemyRole_*`） | 辅助判定（见 9.3） |
+
+### 9.3 ⚠️ 判据不能只看 `atk > 0`
+
+**`atk > 0` 不等于"会远程打塔"** —— 项目里有两种特例，必须按行为排除：
+
+| 敌人 | `atk` | 实际行为 | 是否画攻击范围 |
+| --- | --- | --- | --- |
+| `miniTank` | 0 | 纯推进 | ❌ |
+| `scoutDrone` | 0 | 纯推进（飞行） | ❌ |
+| `mediumTank` | 15 | `fire()` → 打塔 | ✅ |
+| `heavyTank` | 25 | `attackTower()` | ✅ |
+| `armoredTank` | 18 | `attackTower()` | ✅ |
+| `assaultBuggy` | 6 | `attackTower()` | ✅ |
+| `missileTruck` | 35 | `fire()`，`scope 700` | ✅（射程特别远，最能说明问题） |
+| `attackHelicopter` | 5 | `fire()` | ✅ |
+| `battlePlane` | 12 | `fire()` | ✅ |
+| `experimentalTank` | 16 | 4 座 `BaseTurret` | ✅ |
+| **`medic`** | **20** | **`fire(targets: Array)` = 治疗友军** | ❌（不打塔） |
+| **`suicideTruck`** | **80** | **`triggerSelfExplode()` = 撞击自爆** | ❌（无远程攻击） |
+
+**判据实现**：`enemyInfo` 每条新增一个显式字段 **`"showsRange": true/false`**，与 §八 的 `hintRoutes` 同一个思路 —— **显式声明，不做推断**。理由是这次正好踩到：medic / suicideTruck 的 `atk` 都大于 0，靠数值推断会画错，而后人看代码也猜不出"为什么这两条被排除"。
+
+同时在 `game.gd` 的 `enemyInfo` 上方写一段注释说明 `showsRange` 的含义与那两个特例。
+
+### 9.4 交互与视觉
+
+- **触发**：点击敌人（复用已有的 `Game.enemyClicked` / 信息面板打开时机），只对 `showsRange` 为真的敌人生效。
+- **取消**：点空白处 / 敌人死亡 / 逃脱 / 面板关闭 时一起收掉（与信息面板同一生命周期）。
+- **画在哪**：**由 `map.gd` 的 `_draw()` 画**，与技能范围预览（`AbilityManager.isSelectingPosition()` 那个安全黄圆圈）**同一套做法** —— 不新增 UI 节点、不进 `Hud`、天然跟着相机与缩放。
+
+  > ⚠️ 为什么不用 `Hud` 里的 `Control`：地图是会被相机推拉/缩放的 `Node2D`，`Control` 画在世界坐标外，得每帧自己换算屏幕位置；而 `map.gd` 本来就在 `_draw()` 里画技能圈，同源最省事也最不容易错位。
+
+- **样式**（与 `art_style.md` 的语义色一致 —— 红=敌方）：
+
+| 元素 | 颜色 | 说明 |
+| --- | --- | --- |
+| 范围外圈 | 锈红 `#C4553F`，alpha 0.9，宽 3 | 主体 |
+| 范围填充 | 同色，alpha 0.10 | 让范围一眼看出是"面"不是"线" |
+| 内圈刻度 | 同色虚线，4 段 | 与技能圈的实线区分开，避免误认成"我方技能" |
+
+- **跟随**：画在敌人**当前世界坐标**上，敌人移动时圈跟着走（每帧 `queue_redraw()`，仅在选中且 `showsRange` 为真时）。
+- **性能**：`queue_redraw()` 只在"有选中的攻击型敌人"期间调用；没有选中时一次都不重画（与技能圈的开关方式一致）。
+
+### 9.5 集成点
+
+| 位置 | 改动 |
+| --- | --- |
+| `autoload/game.gd` | `enemyInfo` 每条加 `"showsRange"` 字段 |
+| `script/enemy/enemy.gd` | `setupEnemyInfo()` 读该字段存成 `@export showsRange: bool` |
+| `script/map.gd` | 记录当前选中的敌人；`_draw()` 里多画一圈；选中/取消时 `queue_redraw()` |
+| `lang/language.csv` | 无新增文案（纯图形） |
+
+### 9.6 验证方式
+
+- 逐条核对 `enemyInfo` 的 `showsRange` 与各敌人脚本的实际行为一致（**特别是 medic / suicideTruck 必须为 false**）。
+- 运行时探针：选中每种敌人，断言"画圈的半径 == `enemyInfo.scope`"、"miniTank / scoutDrone / medic / suicideTruck 不画圈"。
+- 视觉：`missileTruck`（scope 700）与 `mediumTank`（scope 240）同屏对比，确认半径差别明显、且圈不超出关卡边界时会被裁剪而不是画到屏幕外。
+
+---
+
+## 十、移动机甲 + 维修 / 回收（Mobile Mech）
+
+### 10.1 模块定位
+
+新增一座**能在屏幕上移动的机甲**。与所有现有防御塔的本质区别：**它不固定在格子上**。
+
+职责三条：
+
+1. **维修**防御塔（比塔自带的 `repairCost` 修理更省，见 10.5）
+2. **回收**敌人残骸（§十一）
+3. 自身**不攻击** —— 它是后勤单位，不是战斗单位
+
+**限制：不能出现在敌人的路线上**（`Path2D` 所覆盖的格子）。这是它的核心约束，也是它与"再放一座塔"的区别：机动性换来的是"不能占路"。
+
+### 10.2 与"塔"的关系：继承基类，但不受建造格限制
+
+机甲**继承 `tower.gd`**（拿到血量 / 承伤 / 选中 / 详情面板 / 升级经验这一整套现成机制），但走**自己的放置通道**：
+
+| 维度 | 普通防御塔 | 机甲 |
+| --- | --- | --- |
+| 放置位置 | 必须是 `placeableArea` 格 | **任意非路线格**（可跨可建造区） |
+| 占用格子 | `addOccupiedArea()` 占住 | 占住当前格，**移动时释放旧格、占住新格** |
+| 移动 | 不能 | 能（见 10.4） |
+| 攻击 | 有 | **无**（`fire()` 不覆写，攻击逻辑不启用） |
+| 承伤 | 敌人按 `targetValue` 选目标 | 同左（敌人会打它，这是它的风险） |
+
+> ⚠️ **"任意非路线格"要靠格集合判定**：路线格集合来自各 `Path2D` 的 `Curve2D` 采样（`base_level.gd` 已有 `_collectRoutes()`）。机甲的目标格若落在路线格上，**拒绝移动并给一次红色提示**（与 `Game.towerLocked` 同款 toast）。
+
+### 10.3 数据与文件
+
+| 文件 | 内容 |
+| --- | --- |
+| `autoload/game.gd` | `enum towerType` 加 `mech = 1007`；`towerInfo` 加一条（见下表） |
+| `script/tower/mech.gd` | 移动 + 自动作业状态机 |
+| `script/tower/mech_repair_beam.gd` | 维修 / 回收激光的绘制与进度（也可并入 `mech.gd`） |
+| `scene/tower/mech.tscn` | 机甲本体（`base` 车体 + `beamOrigin` Marker2D） |
+| `sprite/tower/redesigned/mech_body.svg` | 美术素材 |
+| `sprite/icon/unit/mech.png` | 塔卡片图标 |
+| `lang/language.csv` | 塔名 / 描述 / 提示文案 |
+
+**`towerInfo` 建议数值**（待平衡）：
+
+```gdscript
+towerType.mech: {
+	"name": "_TowerName_mech",
+	"atk": 0,          # 不攻击
+	"cost": 60,
+	"reload": 0.0,
+	"scope": 0,        # 用 repairScope / salvageScope，见下
+	"hp": 300,
+	"maxHp": 300,
+	"initTime": 1.2,
+	"desc": "_mechDesc",
+	"gridSize": Vector2i(1, 1)
+}
+```
+
+专用参数（写在 `mech.gd` 的 `@export`，可在场景 Inspector 里调，符合 §6.3）：
+
+| 参数 | 建议值 | 含义 |
+| --- | --- | --- |
+| `moveSpeed` | 220 px/s | 移动速度 |
+| `repairScope` | 100 px | 维修激光射程（**检修半径**） |
+| `salvageScope` | 140 px | 回收激光射程（比维修远，减少开上路线旁的压力） |
+| `repairRate` | 25 HP/s | 维修速度 |
+| `salvageSeconds` | 1.2 s | 回收一坨残骸所需时间 |
+| `salvageRange` | 140 px | 同上（与 `salvageScope` 取其一，避免两个概念） |
+
+### 10.4 移动
+
+- **操作**：选中机甲 → 点地面目标格 → 机甲**自己开过去**（与"选塔 → 点格子"同一套操作，见 §八 v5.3 的塔选择交互）。
+- **移动中**：直线朝目标格中心走，`moveSpeed` 匀速；到达后 `snapToCell()`（复用 `placeable_area.gd` 的思路）对齐格中心。
+- **路径受阻**：机甲是移动单位，但**不做寻路**（本轮不做 A*）—— 只做"直线 + 撞到路线格就停并提示"。理由：可建造区之间本来就是连通的空地，绕路需求低；真需要绕的时候再加格子寻路（`Vector2i` 网格上的 BFS 很短）。
+- **选择预览**：选中机甲后，把"可移动到的格"用**绿色半透明**标出、"路线格"用**红色**标出（复用 `placeable_area.gd` 的 `isShow` 高亮通道）。
+- **移动中不能作业**：正在移动时中断维修/回收（避免"边走边吸"的怪异表现）；到达后重新索敌。
+
+### 10.5 自动作业（范围型，不需要玩家逐个下令）
+
+机甲的 `_physics_process` 里跑一个**简单状态机**，每 `0.5s` 重新索敌一次：
+
+```text
+IDLE ──(找到目标)──> WORKING ──(目标完成/失效)──> IDLE
+  │                     │
+  └──(玩家下令移动)──────┴──> MOVING ──(到达)──> IDLE
+```
+
+**索敌优先级**（同一帧只有一个目标，**谁近做谁**）：
+
+1. **血量未满的防御塔**（`hp < maxHp`）→ 维修
+2. **存活中的残骸**（§十一）→ 回收
+
+> 为什么"维修优先"：塔被打爆是不可逆损失，残骸只是钱。玩家真想让机甲专注回收时，把残骸放在更近的位置即可（距离优先），不必再做一层手动优先级 UI。
+
+**维修**：
+- 锁定的塔进入 `repairScope` 后开始作业，`repairRate` 持续加血
+- **收费**：按 §八 塔自带修理的比例口径（`REPAIR_COST_RATIO = 0.5`）× 恢复量**按秒结算**；钱不够则**中止**并给一次"金币不足"提示（复用 `_NotEnoughMoney`）
+- 加满即完成，塔身上播 `playRepairGlow()`（复用现成特效）
+
+**回收**：
+- 锁定残骸进入 `salvageRange` 后开始作业，**持续 `salvageSeconds` 秒**
+- 作业期间残骸头顶画一圈**进度环**，机甲到残骸之间拉一道**回收激光**（见 10.6）
+- 完成后残骸销毁、入账 `scrapValue`（§十一）、飘字提示
+- **残骸中途消失**（自然过期）→ 立刻切下一个目标
+
+### 10.6 回收激光（为什么不需要"机甲走上路线"）
+
+机甲**从当前位置发射一道激光**吸住残骸，全程不需要进入路线格。
+
+- 光束：`Line2D`，从机甲 `beamOrigin` 连到残骸中心
+- 配色：**电青 `#6FD6EA`**（与特斯拉 / 无人机的能量色一致，读作"我方作业"），芯部白、外晕青
+- 进度：靠近残骸一端画一小段**递增的亮段**表示吸力进度（与 `air_route_hint` 的"逐段点亮"同一套读法）
+- 束流期间的音效走 `SoundManage.playAt()`（**定位音效**，见 §八 2026-10-04「2D 听者」）
+
+### 10.7 集成点
+
+| 位置 | 改动 |
+| --- | --- |
+| `autoload/game.gd` | `towerType.mech`；`towerInfo` 一条 |
+| `autoload/stageData.gd` | 机甲加入 `getTowers()` 的默认集合（全关卡可用，**教程关也可**） |
+| `script/tower/tower_ui.gd` | `towersData` 加一条卡片（第 9 张） |
+| `script/map.gd` | 放置通道放行机甲（跳过 `placeableArea` 检查，改为"非路线格"检查）；选中时高亮可移动区域 |
+| `script/tower/tower_detail_panel.gd` | 机甲详情里显示"维修/回收"参数而非攻击力 |
+| `scene/tower/mech.tscn` + 美术 | 新建 |
+| `lang/language.csv` | 塔名 / 描述 / 「机甲不能开上敌人路线」「金币不足」 |
+
+### 10.8 验证方式
+
+- 路线格判定：断言机甲**无法**被放到任何一条路线覆盖的格子上（对 1~15 关 + 教程关 + 无尽逐关扫）。
+- 移动：断言移动结束后位置落在目标格中心（误差 ≤1px）、移动中不占用旧格。
+- 维修：造一座残血塔 → 断言机甲到位后 `hp` 按 `repairRate` 上升、金币按比例扣除、钱不够时中止。
+- 回收：放一坨残骸 → 断言 `salvageSeconds` 后入账 `scrapValue`、残骸被销毁；中途让残骸过期 → 断言机甲切下一个目标、不卡死。
+- 不攻击：断言机甲的 `atk == 0` 且不会产生任何子弹。
+
+---
+
+## 十一、敌人残骸与回收（Enemy Wreckage & Salvage）
+
+### 11.1 模块定位
+
+敌人被击杀后**在原地留下一坨残骸**，一段时间后自行消失；期间可以被维修机甲（§十）用激光回收，换回**该敌人原价 10%** 的金币。
+
+设计目的：给"打完了就没了"的战斗补一层**战后清理**的小节奏，也让机甲有第二个存在理由。
+
+### 11.2 数据
+
+**谁掉残骸**：**地面单位全部掉**；**空中单位不掉**（`flying == true`）。
+
+| 掉 | 不掉 |
+| --- | --- |
+| 迷你坦克 / 中型坦克 / 重型坦克 / 装甲坦克 / 突击车 / 维修车 / 自爆车 / 导弹车 / 实验坦克 | 侦察无人机 / 攻击直升机 / 战斗飞机 |
+
+> 理由：空中单位被击落可以理解为"掉在场外"或"直接损毁"，而地面单位留下车体残骸符合直觉。这条规则也顺带避免了"飞机掉在航线正下方、机甲够得着但路线挡着"的尴尬。
+
+**存活时长**按敌人档次走（价值越高留得越久）：
+
+| 敌人 | `reward` | 残骸存活 | 回收价 = `reward × 10%` |
+| --- | --- | --- | --- |
+| 迷你坦克 | 5 | 8 s | **0**（见下） |
+| 突击车 | 4 | 8 s | 0 |
+| 自爆车 | 3 | 8 s | 0 |
+| 小型（其余） | 6~12 | 10 s | 1 |
+| 重型坦克 | 20 | 12 s | 2 |
+| 装甲坦克 | 15 | 12 s | 2 |
+| 实验坦克 | 40 | 16 s | 4 |
+
+`scrapValue = floor(reward × 0.10)`，**至少 1**（否则 5 金币的迷你坦克算出 0，回收变成空操作）。也就是 `maxi(1, floor(reward * 0.10))`。
+
+> ⚠️ 平衡提醒：第 1 关有 99 只迷你坦克，按"至少 1"算，全回收是 **+99 金币**（初始 150），接近一倍 —— 可能太强。建议先按"至少 1"实现，实测后再决定是否改成"不足 1 就不掉残骸"（即 `reward < 10` 的敌人不掉）。这个开关写成 `mech.gd` 里的一个常量方便调。
+
+### 11.3 文件与结构
+
+- `scene/fx/wreckage.tscn` + `script/fx/wreckage.gd`
+  - 根 `Node2D`（或 `Area2D`，若将来要做"点击查看残骸价值"）
+  - 子：`Sprite2D`（敌人 `base` 的贴图，**压暗 + 轻微随机倾斜**，读作"报废"）
+  - 子：`Timer`（`one_shot`，存活时长）
+  - 可选子：`CPUParticles2D` 小股烟（复用现有粒子资产）
+- **不使用对象池**：与命中特效（`ExplosionManage` 池化）不同，残骸数量受"上一波敌人数量"限制且要挂计时器，池化收益低、状态复杂。等实测发现数量确实大（同屏上百）再考虑。
+
+### 11.4 生命流程
+
+```text
+敌人死亡（enemy.gd 的 freeSelf() 之前，位置还有效）
+   │
+   ├─ flying == true        → 不掉，直接结束
+   └─ flying == false       → 在敌人 global_position 生成 wreckage
+                                 │
+                                 ├─ 机甲回收（§十）→ 入账 scrapValue → 销毁 + 飘字
+                                 └─ 存活时长到 → 淡出 → 销毁
+```
+
+**生成位置**：敌人**死亡瞬间的 `global_position`**（也就是"死在哪儿"），落在路线上是正常的 —— 回收靠激光，不需要机甲开上路线（§10.6）。
+
+**关键实现点**：
+- 必须在 `freeSelf()` **之前**取位置 —— 节点 `free()` 之后读成员会静默变 `null`（`code_design.md` §7.5 明确写着）。
+- 生成发生在 `enemy.gd::hurt()` 的死亡分支里（与 `enemyDefeated` / 奖励同一个位置），**不要**放到 `_exit_tree()` —— 逃脱、场景卸载也会走 `_exit_tree()`，那会凭空产生残骸。
+- **逃脱的敌人不留残骸**（没被摧毁，只是走出了屏幕）。
+
+### 11.5 视觉
+
+| 状态 | 表现 |
+| --- | --- |
+| 刚生成 | 残骸从 `scale 0.7` 弹到 `1.0`（0.15s），飘一小股烟 |
+| 存活中 | 贴图压暗（`modulate` 灰）、随机 `±12°` 倾斜；剩余时间 < 25% 时开始**闪烁**（提示快没了） |
+| 被回收中 | 头顶画进度环 + 与机甲之间的回收激光（§10.6） |
+| 消失 | 淡出 0.3s 后 `queue_free()` |
+
+配色遵循 `art_style.md`：残骸用**锈红/暗灰**系（敌方报废物），回收激光用电青（我方作业）。**不要把残骸画成亮的** —— 亮的会与敌人本体混淆。
+
+### 11.6 与成就的联动（可选，本轮不做）
+
+现有成就里 `legion_slayer`（3000 击杀）、`fortress_breaker`（30 辆实验坦克）都基于 `Game.enemyDefeated`，与残骸无关。若将来想做"回收大师"类成就，直接累加"回收次数"即可，不需要改本模块结构。
+
+### 11.7 集成点
+
+| 位置 | 改动 |
+| --- | --- |
+| `script/enemy/enemy.gd` | 死亡分支里按 `flying` 判定并生成残骸；`freeSelf()` 之前取位置 |
+| `scene/fx/wreckage.tscn` + `script/fx/wreckage.gd` | 新建 |
+| `script/tower/mech.gd` | 索敌时把残骸纳入目标（分组 `wreckage`） |
+| `script/map.gd` | 残骸容器挂载点（与 `ExplosionManage` 同级，避免被关卡卸载带走） |
+| `lang/language.csv` | 「回收 +N」飘字 |
+
+### 11.8 验证方式
+
+- 掉落规则：断言地面 9 种敌人**都**掉、空中 3 种**都不**掉；断言逃脱的敌人**不**留残骸。
+- 位置：断言残骸坐标 == 敌人死亡坐标（误差 ≤1px）—— 这条能抓出"在 `free()` 之后取位置"的写法。
+- 定价：断言 `scrapValue == maxi(1, floor(reward * 0.1))`，逐敌人核对表 11.2。
+- 过期：断言存活时长到时残骸确实被销毁（不泄漏节点）。
+- 回收：断言回收后金币恰好 +`scrapValue`、残骸被销毁、机甲回到 `IDLE`。
+
+---
+
+## 十二、击杀金币飘字（Kill Reward Floating Text）
+
+### 12.1 模块定位
+
+敌人被摧毁时，在**它倒下的位置**弹出一个 `+N` 的金币飘字，**向上飘一段后淡出**，让玩家立刻看到"这一下赚了多少"。
+
+现状：击杀奖励是**静默进账**的 —— `enemy.gd` 发 `Game.enemyRewarded`，`map.gd` 转成顶栏 `money`，玩家只能看到顶栏数字跳一下，**根本不知道是哪只敌人给的、给了多少**。一波几十只的时候这个反馈缺口最明显。
+
+### 12.2 ⚠️ 实现要点：`enemyRewarded` 信号不带位置
+
+```gdscript
+# autoload/game.gd:260
+signal enemyRewarded        # ← 无参数！只有"发生了"这件事
+```
+
+而飘字需要**敌人倒下的世界坐标**。两种做法：
+
+| 方案 | 做法 | 评价 |
+| --- | --- | --- |
+| A | 给信号加参数 `enemyRewarded(amount, pos)` | 要改信号签名 + 所有连接方，且 `map.gd` 已经有一处连接的写法要动 |
+| **B（推荐）** | **在 `enemy.gd` 里直接调飘字的静态入口** | 敌人自己就有 `reward` 和 `global_position`，零信号改动 |
+
+**采用 B**：`enemy.gd` 在死亡分支（与 `Game.enemyRewarded.emit()` 同一处）调 `RewardPopup.playAt(global_position, reward)`。
+
+> ⚠️ **必须在 `freeSelf()` 之前调** —— `code_design.md` §7.5：节点 `free()` 之后读成员会静默变 `null`。这与 §十一 残骸的位置取值是同一个坑。
+
+### 12.3 复用与新建
+
+**不复用 `toast_label.tscn`**：它是**屏幕坐标**的提示（挂在 `Hud` 下的 `toastInfo`），`fixedOffsetY = 70` 是屏幕底部偏移；而飘字需要**世界坐标**跟随敌人倒下的位置（相机推拉时位置要对）。
+
+新增：
+
+| 文件 | 内容 |
+| --- | --- |
+| `scene/fx/reward_popup.tscn` | `Node2D` + `Label` |
+| `script/fx/reward_popup.gd` | 池化 + `playAt(pos, amount)` 静态入口 |
+
+**对象池**：与命中特效（`ExplosionManage`）**同一套做法** —— 一波几十只敌人会同时要飘字，每次 `instantiate()` 太浪费。池子常量与 `ExplosionManage` 对齐（`POOL_MAX` 建议 24）。
+
+> 与 §十一 的残骸**故意相反**：残骸要挂计时器、数量受单波限制，所以不池化；飘字是"高频、短命、无状态"，正适合池化。
+
+### 12.4 动画与视觉
+
+| 阶段 | 时长 | 表现 |
+| --- | --- | --- |
+| 弹出 | 0.10 s | `scale 0.6 → 1.0`（`TRANS_BACK / EASE_OUT`，有一点回弹） |
+| 上飘 | 0.55 s | `position.y -= 44`（`TRANS_QUAD / EASE_OUT`，先快后慢） |
+| 淡出 | 0.25 s | `modulate.a → 0`，结束后回池 |
+
+**样式**（遵循 `art_style.md` 的语义色 —— 金/黄 = 收益）：
+
+- 文本：`+N`
+- 颜色：`#FFC61A`（安全黄），带 1px 深色描边（`Label` 的 `theme_override_constants/outline_size = 4` + 深色 `font_outline_color`）—— 地图底色是深钢灰，没有描边的黄字在地板花纹上会糊掉
+- 字号：40（与地图内 UI 字阶的"数值"档一致）
+- `z_index` 高于敌人（敌人 `z_index = 2`，飘字取 20），确保压在敌人与特效之上
+
+**随机抖动**：同帧多只敌人死亡时，起始位置各自加 `±14px` 随机偏移，避免叠成一坨看不清（这个方法在命中特效那边已经用过）。
+
+### 12.5 集成点
+
+| 位置 | 改动 |
+| --- | --- |
+| `scene/fx/reward_popup.tscn` + `script/fx/reward_popup.gd` | 新建（含池） |
+| `script/enemy/enemy.gd` | 死亡分支、`freeSelf()` **之前**调 `RewardPopup.playAt()` |
+| `script/map.gd` | 提供飘字节点的挂载点（与 `ExplosionManage` 同级，避免被关卡卸载带走） |
+| `lang/language.csv` | `_RewardPopupFmt` = `"+%d"`（en/zh 相同，但按 §6.8 仍走 `tr()`） |
+
+### 12.6 验证方式
+
+- 断言飘字位置 == 敌人死亡坐标（误差 ≤1px）—— 这条能抓出"在 `free()` 之后取位置"的写法。
+- 断言池子复用：连续击杀 30 只后，节点总数 **不超过 `POOL_MAX`**（不泄漏）。
+- 断言文本 == `"+%d" % reward`，逐敌人核对（迷你坦克 `+5`、实验坦克 `+40`）。
+- 视觉：一波 20 只同屏死亡时截图，确认飘字不重叠成糊字、且能被相机缩放正确跟随。
+
+---
+
+## 十三、波次来袭横幅（Wave Incoming Banner）
+
+### 13.1 模块定位
+
+**每一波开始时**弹一条横幅，告诉玩家这一波会来哪些敌人。
+
+现状：新一波是**悄悄开始**的 —— `base_level.gd` 只发 `Game.dataRefreshed.emit({'wave': currWave})`，顶栏波次数字变一下，玩家往往在敌人已经上路后才发现。战斗飞机的空中航线还要靠单独的航线提示（§八 2026-10-04）来补，说明"提前告知"这件事本来就是刚需。
+
+### 13.2 复用：横幅外观直接抄 `battle_start_banner`
+
+`scene/battle_start_banner.tscn` 已经有现成的横幅结构，**直接复用它的层次与动画参数**：
+
+```text
+center (CenterContainer)
+└── band (Control)
+    ├── bg (ColorRect)
+    ├── hazardTop / hazardBottom (危险条纹, scene/ui/hazard_strip.tscn)
+    └── content/VBox
+        ├── titleLabel   ← "第 3 波"
+        └── subLabel     ← 敌人清单
+```
+
+- 动画参数照搬：`fadeInSec 0.26` / `holdSec 1.15` / `fadeOutSec 0.45` / `fromScale 0.86` / `outOffsetY -34`（`battle_start_banner.gd` 的 `@export`）
+- 对外接口照搬：`play(title, sub, hold_override)` + `signal finished` + `skip()`
+
+**新建 `scene/ui/wave_banner.tscn` + `script/ui/wave_banner.gd`**（而不是改造 `battle_start_banner`）：后者的 `play()` 签名与调用点（`map.gd::startGame`）已经稳定，改造它会牵动开场流程；新做一个只多一层"敌人清单"的组件，风险更低。
+
+> 也可以更省：只加一个 `wave_banner.tscn`，脚本 `extends "res://script/ui/battle_start_banner.gd"`，只覆写"把清单排版进 `subLabel`"这一步。**这符合 `code_design.md` §6.2「先做基础场景 + 基础脚本，子类只覆盖差异」**。二选一，实现时看哪种更顺手。
+
+### 13.3 横幅内容
+
+**标题**：`tr("_WaveBannerFmt") % currWave` → "第 3 波" / "Wave 3"
+**副标题**：本波**出现的敌人种类**，按"数量从多到少"排序，形如：
+
+```text
+迷你坦克 ×22  ·  中型坦克 ×5  ·  战斗飞机 ×3
+```
+
+数据来源：**`base_level.gd` 已经有现成的东西** —— `onWaveTimerTimeout()` 里 `currentSpawner.append_array(buildWaveSpawner(currWave))` 拿到的就是本波的 `{time, type, number, route?, offset?}` 记录数组（见 `stageData.gd:124` 的格式说明）。
+
+**统计方法**（`_summarizeWave(rows) -> String`）：
+
+```text
+1. 按 type 聚合 number（同一兵种可能有多条记录 = 走了不同路线/偏移，要合并）
+2. 按 number 降序排序
+3. 每项显示 "tr(enemyInfo[type].name) ×N"
+4. 用 " · " 连接
+```
+
+> ⚠️ 敌人名**必须走 `tr()`**：`Game.enemyInfo[x].name` 现在存的就是**翻译键**（如 `"_EnemyName_miniTank"`，见 §八 v5.4）。
+
+**特殊文案**：
+- 最后一波：标题改成 `tr("_FinalWave")` → "最后一波" / "Final Wave"（与 `_LvWaves` 那套键的命名对齐）
+- 无尽模式：波次没有上限，标题用 `_WaveBannerFmt` 照常显示 `currWave`
+
+### 13.4 触发时机与不打断
+
+- **触发点**：`map.gd` 里接 `Game.dataRefreshed`（`base_level.gd:221` 发的那个），当 payload 带 `'wave'` 时弹横幅。
+
+  > 为什么不用新信号：`dataRefreshed.emit({'wave': currWave})` 这一句**正好在 `buildWaveSpawner()` 之前**（`base_level.gd:220-224`），但那时 `currentSpawner` 还没填 —— 所以 `map.gd` 拿到 `currWave` 后要**自己调 `level.buildWaveSpawner(wave)`** 取编制。该方法本来就是公开的，不会重复生成敌人（`buildWaveSpawner` 只读数据、返回新数组）。
+
+- **不打断游戏**：横幅是 `CanvasLayer` 上的覆盖层，**不暂停**、不拦输入（`mouse_filter = IGNORE`），与 `battle_start_banner` 同一层级（`PopupLayer`，`layer = 10`）。
+- **与开场横幅不冲突**：`startGame()` 里 `await battleStartBanner.play()` 是**开打前**；第 1 波的横幅在**开打后**第一波计时器触发时才弹，两者天然错开。
+- **与航线提示不冲突**：航线提示（`air_route_hint`）画在**地图世界层**（`z_index = -1`），横幅在 **HUD 层**，互不遮挡。
+- **跳过**：连点屏幕可以提前收掉（复用 `skip()`）。
+
+### 13.5 集成点
+
+| 位置 | 改动 |
+| --- | --- |
+| `scene/ui/wave_banner.tscn` + `script/ui/wave_banner.gd` | 新建（外观与动画参数抄 `battle_start_banner`） |
+| `script/map.gd` | 接 `Game.dataRefreshed`；`_showWaveBanner(wave)` 取编制 → 汇总 → 弹横幅 |
+| `script/level/base_level.gd` | **无需改动**（`buildWaveSpawner()` 已经是公开接口） |
+| `scene/map.tscn` | 横幅挂到 `PopupLayer` 下 |
+| `lang/language.csv` | `_WaveBannerFmt` / `_FinalWave` / `_WaveEnemiesFmt`（分隔符格式） |
+
+### 13.6 验证方式
+
+- 断言汇总结果与实际编制一致：对 1~15 关逐波跑 `buildWaveSpawner(n)` → 断言"横幅里每个兵种 ×数量"之和 == 该波敌人总数、且**兵种集合完全相同**（这条能抓出"漏合并同兵种多条记录"的 bug）。
+- 断言 `tr()` 生效：切英文后横幅显示 `Mini Tank` 而不是 `_EnemyName_miniTank`。
+- 断言第一波横幅在 `battleStartBanner` 播完之后才出现（两者不叠在一起）。
+- 断言横幅**不影响战斗**：弹出期间敌人照常移动、塔照常开火、鼠标点击仍能落到底下的地图（`mouse_filter = IGNORE`）。
+- 无尽模式：连跑 30 波不报错、波次号正确递增。
+
+---
+
+## 十四、五个新模块的总览与依赖
+
+| 模块 | 章节 | 依赖 | 建议顺序 |
+| --- | --- | --- | --- |
+| 敌人攻击范围显示 | §九 | 只读 `Game.enemyInfo` | **1**（改动最小） |
+| 击杀金币飘字 | §十二 | 无（只读敌人的 `reward`） | **2**（独立、见效快） |
+| 波次来袭横幅 | §十三 | 读 `base_level.buildWaveSpawner()` | **3**（独立） |
+| 敌人残骸与回收 | §十一 | 无（独立产生） | **4** |
+| 移动机甲 | §十 | **依赖 §十一** 的残骸 | **5**（最复杂，放最后） |
+
+```text
+§九  敌人攻击范围     独立
+§十二 击杀金币飘字    独立
+§十三 波次横幅        独立（复用 battle_start_banner 的外观）
+§十一 敌人残骸        独立产生 ──┐
+                                ▼
+§十  移动机甲         依赖残骸 + 防御塔
+```
+
+**前三个（§九 / §十二 / §十三）互相独立、都不改战斗逻辑**，可以一次做完一起验；后两个（§十一 / §十）需要配套，按顺序做。
+
+---
+
+## 十五、后续可扩展模块（规划中）
 
 以下模块为后续规划，待需求明确后补充详细设计：
 
