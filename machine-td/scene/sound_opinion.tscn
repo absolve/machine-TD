@@ -42,9 +42,9 @@ layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "_Mute"
 toggle_mode = true
-ignore_texture_size = true
-stretch_mode = 5
 texture_normal = ExtResource("5_muteon")
 texture_pressed = ExtResource("6_muteoff")
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="sound" type="AudioStreamPlayer" parent="." unique_id=269045260]

@@ -4,8 +4,13 @@ extends VBoxContainer
 ## 并用图标和置灰的滑条提示“此时调节音量不会生效”。
 signal muteToggled(isMuted: bool)
 
+#标签名字
+@export var busLabel=''
+
 @export var busName = 'Master':
 	set(val):
+		if not is_node_ready():
+			return
 		#busNameLabel.text=str(val)
 		sound.bus = val
 		busName = val
@@ -55,7 +60,7 @@ func _ready() -> void:
 	refreshMuteButtonVisible()
 	refreshMuteVisual()
 	applyMute()
-
+	busNameLabel.text=busLabel
 
 func refreshMuteButtonVisible() -> void:
 	if not is_node_ready() or btnMute == null:

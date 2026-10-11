@@ -183,8 +183,7 @@ texture_normal = ExtResource("9_vn0ct")
 [node name="AboutPanel" parent="." unique_id=968769467 instance=ExtResource("3_0h2lm")]
 
 [node name="setting" parent="." unique_id=762839594 instance=ExtResource("9_vvofi")]
-layout_mode = 3
-anchors_preset = 0
+visible = false
 
 [node name="AchievementPanel" parent="." unique_id=1661854894 instance=ExtResource("11_achv")]
 
