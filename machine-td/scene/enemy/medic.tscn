@@ -2,10 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://nlpg2kpom2rd" path="res://script/enemy/medic.gd" id="2_script"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_body.svg" id="3_body"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_body_2.svg" id="3_body2"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_body_3.svg" id="3_body3"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_body_4.svg" id="3_body4"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_v2_body.svg" id="3_body"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_v2_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_v2_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_v2_body_4.svg" id="3_body4"]
 [ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_gtpx3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0roa5"]

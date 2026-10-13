@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="14" viewBox="0 0 20 14" shape-rendering="crispEdges">
+  <!-- AP shell v2: brass casing (x2-8) + steel body (x9-15) + dark nose cone (x17-19), nose-right -->
+  <path d="M0 1h2v1H0zM0 2h15v1H0zM0 3h17v1H0zM0 4h20v1H0zM0 5h20v1H0zM0 6h20v1H0zM0 7h20v1H0zM0 8h20v1H0zM0 9h19v1H0zM0 10h17v1H0zM0 11h15v1H0zM0 12h2v1H0z" fill="#1a1c2c"/>
+  <path d="M2 2h7v2H2zM2 10h7v2H2z" fill="#ffc61a"/>
+  <path d="M1 4h8v1H1zM1 5h8v1H1zM1 6h8v1H1zM1 7h8v1H1zM1 8h8v1H1zM1 9h8v1H1zM1 10h8v1H1z" fill="#e08a2e"/>
+  <path d="M9 2h7v2H9zM9 10h7v2H9z" fill="#dceaf2"/>
+  <path d="M9 4h7v1H9zM9 5h7v1H9zM9 6h7v1H9zM9 7h7v1H9zM9 8h7v1H9zM9 9h7v1H9zM9 10h7v1H9z" fill="#94b0c2"/>
+  <path d="M16 2h1v10h-1z" fill="#566c86"/>
+  <path d="M17 4h3v1h-3zM17 5h3v1h-3zM17 6h3v1h-3zM17 7h3v1h-3zM17 8h3v1h-3zM17 9h1v1h-1z" fill="#333c57"/>
+</svg>

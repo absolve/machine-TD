@@ -25,8 +25,11 @@ enum Tab { ENEMY, TOWER }
 
 # ---------- 可调参数 ----------
 
-## 网格每行几张卡
-@export var columns := 6:
+## 网格每行几张卡。
+##
+## 改成左右布局后左侧只剩约 1350px 宽，6 列会把卡片压得太窄；
+## 卡片还会随面板大小变化，所以这里配合场景里的 columns 一起调到 4。
+@export var columns := 4:
 	set(value):
 		columns = maxi(1, value)
 		if is_node_ready() and grid != null:
@@ -42,7 +45,7 @@ const COLOR_RED := Color(1, 0.5529412, 0.5019608, 1.0) # 敌人主色：暖红
 const COLOR_TEAL := Color(0.49803922, 0.8156863, 0.7764706, 1.0) # 防御塔主色：青
 const COLOR_HOVER := Color(1, 0.8509804, 0.39215687, 1.0)
 
-const STAT_WIDTH := 150 # 信息栏里每个数值块的最小宽度
+const STAT_WIDTH := 118 # 信息栏里每个数值块的最小宽度（右侧窄栏，所以比横向布局时小）
 
 ## 敌人行为定位 -> 一句话说明（两边存的都是翻译键）
 const ENEMY_DESC_KEYS := {
@@ -91,17 +94,21 @@ var TOWERICONS: Dictionary = {
 }
 
 # ---------- 节点 ----------
+#
+# ⚠️ 路径按**左右布局**：左侧是 Tabs + 卡片网格，右侧是详情栏。
+#    以前是上下布局（Tabs / Scroll / DetailBox 依次竖排），改成左右时这些路径全变了，
+#    漏改一条就会在 _ready() 里静默失败、后面所有赋值都不生效。
 
 @onready var titleLabel: Label = $Frame/PanelContainer/VBox/Header/Label
 @onready var closeButton: Button = $Frame/PanelContainer/VBox/Footer/btnClose
-@onready var tabEnemies: Button = $Frame/PanelContainer/VBox/Tabs/btnEnemies
-@onready var tabTowers: Button = $Frame/PanelContainer/VBox/Tabs/btnTowers
-@onready var grid: GridContainer = $Frame/PanelContainer/VBox/Scroll/CenterRow/grid
-@onready var detailIcon: TextureRect = $Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop/IconCenter/detailIcon
-@onready var detailName: Label = $Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop/DetailInfo/DetailHeader/detailName
-@onready var detailTag: Label = $Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop/DetailInfo/DetailHeader/detailTag
-@onready var detailDesc: Label = $Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop/DetailInfo/detailDesc
-@onready var detailStats: GridContainer = $Frame/PanelContainer/VBox/DetailBox/DetailVBox/detailStats
+@onready var tabEnemies: Button = $Frame/PanelContainer/VBox/Columns/Left/Tabs/btnEnemies
+@onready var tabTowers: Button = $Frame/PanelContainer/VBox/Columns/Left/Tabs/btnTowers
+@onready var grid: GridContainer = $Frame/PanelContainer/VBox/Columns/Left/Scroll/CenterRow/grid
+@onready var detailIcon: TextureRect = $Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/IconCenter/detailIcon
+@onready var detailName: Label = $Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/DetailHeader/detailName
+@onready var detailTag: Label = $Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/DetailHeader/detailTag
+@onready var detailDesc: Label = $Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/detailDesc
+@onready var detailStats: GridContainer = $Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/detailStats
 
 # ---------- 状态 ----------
 
@@ -341,7 +348,9 @@ func enemyEntry(id: int) -> Dictionary:
 		"desc": Game.t(str(ENEMY_DESC_KEYS.get(str(info.get("role", "")), "")), ""),
 		"icon": icon(ENEMY_ICONS, id),
 		"color": COLOR_RED,
-		"stat_columns": 6, # 11 项数值排两行
+		# 右侧详情栏是**竖长条**（约 430px 宽），所以数值排 2 列。
+		# 以前详情栏横在底部、有一千多像素宽，那时才用 6 列。
+		"stat_columns": 2, # 11 项数值 -> 6 行
 		"stats": [
 			[Game.t("_HP", "HP"), str(int(info.get("hp", 0))), COLOR_RED],
 			[Game.t("_Speed", "Speed"), str(int(info.get("speed", 0))), COLOR_TEXT],
@@ -369,7 +378,7 @@ func towerEntry(id: int) -> Dictionary:
 		"desc": Game.t(str(info.get("desc", "")), ""),
 		"icon": icon(TOWERICONS, id),
 		"color": COLOR_TEAL,
-		"stat_columns": 4, # 8 项数值排两行
+		"stat_columns": 2, # 8 项数值 -> 4 行（右侧竖栏，见敌人条目里的说明）
 		"stats": [
 			[Game.t("_Atk", "ATK"), str(atk), COLOR_TEXT],
 			[Game.t("_FireRate", "Fire Rate"), fireRate(atk, reload), COLOR_TEXT],

@@ -3,8 +3,8 @@
 [ext_resource type="PackedScene" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" path="res://script/enemy/attackHelicopter.gd" id="2_script"]
 
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/attack_helicopter_body.svg" id="3_body"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/attack_helicopter_rotor.svg" id="4_rotor"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/attack_helicopter_v2_body.svg" id="3_body"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/attack_helicopter_v2_rotor.svg" id="4_rotor"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_body"]
 animations = [{

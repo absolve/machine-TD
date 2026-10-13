@@ -3,10 +3,10 @@
 [ext_resource type="PackedScene" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" path="res://script/enemy/missileTruck.gd" id="2_script"]
 
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/missile_truck_body.svg" id="3_body"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/missile_truck_body_2.svg" id="3_body2"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/missile_truck_body_3.svg" id="3_body3"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/missile_truck_body_4.svg" id="3_body4"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/missile_truck_v2_body.svg" id="3_body"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/missile_truck_v2_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/missile_truck_v2_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/missile_truck_v2_body_4.svg" id="3_body4"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_body"]
 animations = [{

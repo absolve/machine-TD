@@ -52,94 +52,95 @@ text = "_Codex"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Tabs" type="HBoxContainer" parent="Frame/PanelContainer/VBox" unique_id=419018711]
+[node name="Columns" type="HBoxContainer" parent="Frame/PanelContainer/VBox" unique_id=770001001]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 22
+
+[node name="Left" type="VBoxContainer" parent="Frame/PanelContainer/VBox/Columns" unique_id=770001002]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="Tabs" type="HBoxContainer" parent="Frame/PanelContainer/VBox/Columns/Left" unique_id=419018711]
 layout_mode = 2
 theme_override_constants/separation = 18
 alignment = 1
 
-[node name="btnEnemies" parent="Frame/PanelContainer/VBox/Tabs" unique_id=617180467 instance=ExtResource("3_btn")]
+[node name="btnEnemies" parent="Frame/PanelContainer/VBox/Columns/Left/Tabs" unique_id=617180467 instance=ExtResource("3_btn")]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "_CodexEnemies"
 
-[node name="btnTowers" parent="Frame/PanelContainer/VBox/Tabs" unique_id=1269078431 instance=ExtResource("3_btn")]
+[node name="btnTowers" parent="Frame/PanelContainer/VBox/Columns/Left/Tabs" unique_id=1269078431 instance=ExtResource("3_btn")]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 text = "_CodexTowers"
 
-[node name="Scroll" type="ScrollContainer" parent="Frame/PanelContainer/VBox" unique_id=1168103173]
+[node name="Scroll" type="ScrollContainer" parent="Frame/PanelContainer/VBox/Columns/Left" unique_id=1168103173]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="CenterRow" type="HBoxContainer" parent="Frame/PanelContainer/VBox/Scroll" unique_id=30500843]
+[node name="CenterRow" type="HBoxContainer" parent="Frame/PanelContainer/VBox/Columns/Left/Scroll" unique_id=30500843]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 alignment = 1
 
-[node name="grid" type="GridContainer" parent="Frame/PanelContainer/VBox/Scroll/CenterRow" unique_id=347986046]
+[node name="grid" type="GridContainer" parent="Frame/PanelContainer/VBox/Columns/Left/Scroll/CenterRow" unique_id=347986046]
 layout_mode = 2
-size_flags_vertical = 4
+size_flags_horizontal = 4
+size_flags_vertical = 0
 theme_override_constants/h_separation = 14
 theme_override_constants/v_separation = 14
-columns = 6
+columns = 4
 
-[node name="DetailBox" type="PanelContainer" parent="Frame/PanelContainer/VBox" unique_id=134651597]
-custom_minimum_size = Vector2(0, 282)
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="DetailVBox" type="VBoxContainer" parent="Frame/PanelContainer/VBox/DetailBox" unique_id=421947337]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="DetailTop" type="HBoxContainer" parent="Frame/PanelContainer/VBox/DetailBox/DetailVBox" unique_id=109285872]
-layout_mode = 2
-theme_override_constants/separation = 22
-
-[node name="IconCenter" type="CenterContainer" parent="Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop" unique_id=1119266907]
-custom_minimum_size = Vector2(168, 168)
+[node name="DetailBox" type="PanelContainer" parent="Frame/PanelContainer/VBox/Columns" unique_id=134651597]
+custom_minimum_size = Vector2(430, 0)
 layout_mode = 2
 
-[node name="detailIcon" type="TextureRect" parent="Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop/IconCenter" unique_id=2074881076]
-custom_minimum_size = Vector2(160, 160)
+[node name="DetailVBox" type="VBoxContainer" parent="Frame/PanelContainer/VBox/Columns/DetailBox" unique_id=421947337]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="IconCenter" type="CenterContainer" parent="Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox" unique_id=1119266907]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+
+[node name="detailIcon" type="TextureRect" parent="Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/IconCenter" unique_id=2074881076]
+custom_minimum_size = Vector2(136, 136)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="DetailInfo" type="VBoxContainer" parent="Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop" unique_id=322669662]
+[node name="DetailHeader" type="HBoxContainer" parent="Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox" unique_id=1382656332]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="detailName" type="Label" parent="Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/DetailHeader" unique_id=1279274190]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_constants/separation = 6
-
-[node name="DetailHeader" type="HBoxContainer" parent="Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop/DetailInfo" unique_id=1382656332]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="detailName" type="Label" parent="Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop/DetailInfo/DetailHeader" unique_id=1279274190]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 30
 vertical_alignment = 1
-
-[node name="detailTag" type="Label" parent="Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop/DetailInfo/DetailHeader" unique_id=406212951]
-layout_mode = 2
-theme_override_font_sizes/font_size = 26
-vertical_alignment = 1
-
-[node name="detailDesc" type="Label" parent="Frame/PanelContainer/VBox/DetailBox/DetailVBox/DetailTop/DetailInfo" unique_id=640045052]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.91764706, 0.9490196, 0.96862745, 1)
-theme_override_font_sizes/font_size = 25
 autowrap_mode = 3
 
-[node name="detailStats" type="GridContainer" parent="Frame/PanelContainer/VBox/DetailBox/DetailVBox" unique_id=1817606378]
+[node name="detailTag" type="Label" parent="Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/DetailHeader" unique_id=406212951]
 layout_mode = 2
-theme_override_constants/h_separation = 26
-theme_override_constants/v_separation = 6
-columns = 6
+theme_override_font_sizes/font_size = 22
+vertical_alignment = 1
+
+[node name="detailDesc" type="Label" parent="Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox" unique_id=640045052]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.91764706, 0.9490196, 0.96862745, 1)
+theme_override_font_sizes/font_size = 21
+autowrap_mode = 3
+
+[node name="detailStats" type="GridContainer" parent="Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox" unique_id=1817606378]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 2
+columns = 2
 
 [node name="Footer" type="HBoxContainer" parent="Frame/PanelContainer/VBox" unique_id=931070395]
 layout_mode = 2

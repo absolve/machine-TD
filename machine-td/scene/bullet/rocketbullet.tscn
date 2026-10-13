@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://5gs5yimexruo" path="res://scene/bullet/bullet.tscn" id="1_bullet"]
 [ext_resource type="Script" uid="uid://d2fkq4ou2ipbx" path="res://script/bullet/rocketbullet.gd" id="2_script"]
-[ext_resource type="Texture2D" path="res://sprite/bullet/redesigned/rocket_bullet.svg" id="3_tex"]
+[ext_resource type="Texture2D" path="res://sprite/bullet/redesigned/rocket_bullet_v2.svg" id="3_tex"]
 [ext_resource type="PackedScene" path="res://scene/fx/missile_smoke_trail.tscn" id="4_trail"]
 
 [sub_resource type="RectangleShape2D" id="Shape"]

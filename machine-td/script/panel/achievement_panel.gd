@@ -12,17 +12,19 @@ signal closed # 面板已关闭，宿主可以据此做后续处理
 
 const ICON_SIZE := Vector2(146, 146) # 徽章格图标绘制区
 const BADGE_SIZE := Vector2(184, 184)
-const TILE_MIN_SIZE := Vector2(300, 300) # 单格最小尺寸：5 列铺满面板宽度
+const TILE_MIN_SIZE := Vector2(300, 300) # 单格最小尺寸；左右布局后左侧约 1350px，3 列
 const FALLBACK_ICON := "res://sprite/achievement_3d.png" # 没配图标时的兜底图
 
-@onready var grid: GridContainer = $PanelContainer/VBoxContainer/ScrollContainer/GridContainer
+# ⚠️ 路径按**左右布局**：左侧是徽章网格，右侧是详情栏。
+#    以前详情栏横在底部（DetailBox/DetailHBox 一路平铺），改成右侧竖栏后层级变了。
+@onready var grid: GridContainer = $PanelContainer/VBoxContainer/Columns/ScrollContainer/GridContainer
 @onready var titleLabel: Label = $PanelContainer/VBoxContainer/Header/Label
 @onready var closeButton: Button = $PanelContainer/VBoxContainer/Footer/btnClose
-@onready var detailIcon: TextureRect = $PanelContainer/VBoxContainer/DetailBox/DetailHBox/IconCenter/detailIcon
-@onready var detailName: Label = $PanelContainer/VBoxContainer/DetailBox/DetailHBox/DetailVBox/DetailHeader/detailName
-@onready var detailStatus: Label = $PanelContainer/VBoxContainer/DetailBox/DetailHBox/DetailVBox/DetailHeader/detailStatus
-@onready var detailDesc: Label = $PanelContainer/VBoxContainer/DetailBox/DetailHBox/DetailVBox/detailDesc
-@onready var detailProgress: Label = $PanelContainer/VBoxContainer/DetailBox/DetailHBox/DetailVBox/detailProgress
+@onready var detailIcon: TextureRect = $PanelContainer/VBoxContainer/Columns/DetailBox/DetailVBox/IconCenter/detailIcon
+@onready var detailName: Label = $PanelContainer/VBoxContainer/Columns/DetailBox/DetailVBox/DetailHeader/detailName
+@onready var detailStatus: Label = $PanelContainer/VBoxContainer/Columns/DetailBox/DetailVBox/DetailHeader/detailStatus
+@onready var detailDesc: Label = $PanelContainer/VBoxContainer/Columns/DetailBox/DetailVBox/detailDesc
+@onready var detailProgress: Label = $PanelContainer/VBoxContainer/Columns/DetailBox/DetailVBox/detailProgress
 
 # 图标置灰/原色两份共享材质（同一状态的所有格子共用，避免每格一个材质实例）
 var matUnlocked: ShaderMaterial
