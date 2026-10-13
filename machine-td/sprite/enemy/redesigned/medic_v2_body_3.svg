@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">
+  <defs>
+    <clipPath id="medTrackClip">
+      <rect x="1" y="3" width="62" height="11" rx="5" ry="5"/>
+      <rect x="1" y="50" width="62" height="11" rx="5" ry="5"/>
+    </clipPath>
+  </defs>
+  <!-- 医疗车 帧1：白底红十字 + 侧面设备箱 + 绿十字药箱 -->
+  <g clip-path="url(#medTrackClip)">
+    <rect x="1" y="3" width="62" height="11" fill="#1a1c2c"/>
+    <rect x="1" y="3" width="62" height="1.5" fill="#333c57"/>
+    <rect x="1" y="12.5" width="62" height="1.5" fill="#333c57"/>
+    <g fill="#3d4964">
+      <rect x="-3" y="3" width="5" height="2"/>
+      <rect x="3" y="3" width="5" height="2"/>
+      <rect x="9" y="3" width="5" height="2"/>
+      <rect x="15" y="3" width="5" height="2"/>
+      <rect x="21" y="3" width="5" height="2"/>
+      <rect x="27" y="3" width="5" height="2"/>
+      <rect x="33" y="3" width="5" height="2"/>
+      <rect x="39" y="3" width="5" height="2"/>
+      <rect x="45" y="3" width="5" height="2"/>
+      <rect x="51" y="3" width="5" height="2"/>
+      <rect x="57" y="3" width="2" height="2"/>
+      <rect x="0" y="6" width="5" height="2"/>
+      <rect x="6" y="6" width="5" height="2"/>
+      <rect x="12" y="6" width="5" height="2"/>
+      <rect x="18" y="6" width="5" height="2"/>
+      <rect x="24" y="6" width="5" height="2"/>
+      <rect x="30" y="6" width="5" height="2"/>
+      <rect x="36" y="6" width="5" height="2"/>
+      <rect x="42" y="6" width="5" height="2"/>
+      <rect x="48" y="6" width="5" height="2"/>
+      <rect x="54" y="6" width="5" height="2"/>
+    </g>
+  </g>
+  <g clip-path="url(#medTrackClip)">
+    <rect x="1" y="50" width="62" height="11" fill="#1a1c2c"/>
+    <rect x="1" y="50" width="62" height="1.5" fill="#333c57"/>
+    <rect x="1" y="59.5" width="62" height="1.5" fill="#333c57"/>
+    <g fill="#3d4964">
+      <rect x="-3" y="56" width="5" height="2"/>
+      <rect x="3" y="56" width="5" height="2"/>
+      <rect x="9" y="56" width="5" height="2"/>
+      <rect x="15" y="56" width="5" height="2"/>
+      <rect x="21" y="56" width="5" height="2"/>
+      <rect x="27" y="56" width="5" height="2"/>
+      <rect x="33" y="56" width="5" height="2"/>
+      <rect x="39" y="56" width="5" height="2"/>
+      <rect x="45" y="56" width="5" height="2"/>
+      <rect x="51" y="56" width="5" height="2"/>
+      <rect x="57" y="56" width="2" height="2"/>
+      <rect x="0" y="59" width="5" height="2"/>
+      <rect x="6" y="59" width="5" height="2"/>
+      <rect x="12" y="59" width="5" height="2"/>
+      <rect x="18" y="59" width="5" height="2"/>
+      <rect x="24" y="59" width="5" height="2"/>
+      <rect x="30" y="59" width="5" height="2"/>
+      <rect x="36" y="59" width="5" height="2"/>
+      <rect x="42" y="59" width="5" height="2"/>
+      <rect x="48" y="59" width="5" height="2"/>
+      <rect x="54" y="59" width="5" height="2"/>
+    </g>
+  </g>
+  <!-- 底盘外壳（与坦克一致：盖住履带内沿） -->
+  <path d="M7 8H57L61 14V50L57 56H7L3 50V14Z" fill="#0a0e1a" opacity=".5"/>
+  <path d="M8 8H56L60 14V50L56 56H8L4 50V14Z" fill="#566c86" stroke="#1a1c2c" stroke-width="2"/>
+  <path d="M11 12H53L57 16V48L53 52H11L9 20V16Z" fill="#5f7794" stroke="#1a1c2c" stroke-width="1"/>
+  <!-- 顶部受光 -->
+  <path d="M8 8H56L57 12H7Z" fill="#dceaf2" opacity=".5"/>
+  <!-- 底部阴影 -->
+  <path d="M7 53L11 54H53L57 53V54H7Z" fill="#1a1c2c" opacity=".6"/>
+  <!-- 驾驶室（左侧：x=4-18） -->
+  <path d="M4 16H18L20 20V40L18 42H4L2 40V20Z" fill="#0a0e1a" opacity=".5"/>
+  <path d="M4 16H18L20 20V40L18 42H4L2 40V20Z" fill="#3a4658" stroke="#1a1c2c" stroke-width="1.5"/>
+  <path d="M6 19H16L18 21V39L16 41H6L4 39V21Z" fill="#94b0c2"/>
+  <!-- 驾驶室顶受光 -->
+  <path d="M4 16H18L19 19H3Z" fill="#dceaf2" opacity=".55"/>
+  <!-- 风挡 -->
+  <rect x="6" y="22" width="10" height="3" fill="#1a1c2c"/>
+  <rect x="7" y="23" width="8" height="1" fill="#dceaf2" opacity=".7"/>
+  <!-- 引擎盖条纹 -->
+  <g stroke="#1a1c2c" stroke-width="0.6" opacity=".7">
+    <path d="M6 28h10M6 32h10M6 36h10"/>
+  </g>
+  <!-- 驾驶室与货厢间隙 -->
+  <rect x="20" y="16" width="2" height="26" fill="#1a1c2c"/>
+  <!-- 货厢（白底：x=22-58） -->
+  <rect x="22" y="14" width="38" height="30" fill="#dceaf2" stroke="#1a1c2c" stroke-width="1.2"/>
+  <!-- 货厢顶受光 -->
+  <rect x="22" y="14" width="38" height="2" fill="#f4f4f4"/>
+  <!-- 货厢底阴影 -->
+  <rect x="22" y="42" width="38" height="2" fill="#94b0c2"/>
+  <!-- 大红十字（中央：x=35-47, y=22-38） -->
+  <rect x="38" y="22" width="6" height="18" fill="#a95035"/>
+  <rect x="31" y="29" width="20" height="4" fill="#a95035"/>
+  <!-- 十字描边（深色边框） -->
+  <rect x="38" y="22" width="6" height="18" fill="none" stroke="#1a1c2c" stroke-width="0.5"/>
+  <rect x="31" y="29" width="20" height="4" fill="none" stroke="#1a1c2c" stroke-width="0.5"/>
+  <!-- 货厢左门板 -->
+  <rect x="22" y="20" width="8" height="20" fill="#94b0c2" stroke="#1a1c2c" stroke-width="0.8"/>
+  <g fill="#3a4658">
+    <rect x="24" y="22" width="4" height="1"/>
+    <rect x="24" y="25" width="4" height="1"/>
+    <rect x="24" y="28" width="4" height="1"/>
+    <rect x="24" y="31" width="4" height="1"/>
+    <rect x="24" y="34" width="4" height="1"/>
+    <rect x="24" y="37" width="4" height="1"/>
+  </g>
+  <!-- 货厢右门板 -->
+  <rect x="52" y="20" width="8" height="20" fill="#94b0c2" stroke="#1a1c2c" stroke-width="0.8"/>
+  <g fill="#3a4658">
+    <rect x="54" y="22" width="4" height="1"/>
+    <rect x="54" y="25" width="4" height="1"/>
+    <rect x="54" y="28" width="4" height="1"/>
+    <rect x="54" y="31" width="4" height="1"/>
+    <rect x="54" y="34" width="4" height="1"/>
+    <rect x="54" y="37" width="4" height="1"/>
+  </g>
+  <!-- 货厢顶警示灯（蓝/青） -->
+  <rect x="36" y="13" width="2" height="1" fill="#7fd0c6"/>
+  <rect x="44" y="13" width="2" height="1" fill="#7fd0c6"/>
+  <rect x="38" y="11" width="6" height="2" fill="#1a1c2c"/>
+  <rect x="39" y="11" width="4" height="0.5" fill="#7fd0c6"/>
+  <!-- 货厢顶提手 -->
+  <rect x="38" y="43" width="6" height="1" fill="#1a1c2c"/>
+  <!-- 铆钉 -->
+  <g fill="#1a1c2c">
+    <circle cx="24" cy="16" r="0.7"/>
+    <circle cx="58" cy="16" r="0.7"/>
+    <circle cx="24" cy="42" r="0.7"/>
+    <circle cx="58" cy="42" r="0.7"/>
+  </g>
+  <!-- 信号灯（医疗专用：青绿） -->
+  <rect x="4" y="26" width="2" height="2" fill="#7fd0c6"/>
+  <rect x="4" y="29" width="2" height="2" fill="#7fd0c6" opacity=".5"/>
+  <rect x="60" y="20" width="2" height="2" fill="#7fd0c6"/>
+  <rect x="60" y="23" width="2" height="2" fill="#7fd0c6" opacity=".5"/>
+  <!-- 高光斜面 -->
+  <path d="M48 16l5 5v3l-5-5Z" fill="#94b0c2" opacity=".35"/>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" shape-rendering="crispEdges">
+  <!-- 侦察无人机 旋翼 帧3：旋转 60°（接近圆盘） -->
+  <g transform="translate(4,24) rotate(60)">
+    <g fill="#94b0c2" stroke="#1a1c2c" stroke-width="0.4" opacity=".5">
+      <rect x="-3" y="-0.6" width="3" height="1.2"/>
+      <rect x="0" y="-0.6" width="3" height="1.2"/>
+      <rect x="-0.6" y="-3" width="1.2" height="3"/>
+      <rect x="-0.6" y="0" width="1.2" height="3"/>
+    </g>
+    <circle r="3" fill="#94b0c2" opacity=".3"/>
+    <circle r="0.7" fill="#1a1c2c"/>
+  </g>
+  <g transform="translate(44,24) rotate(-60)">
+    <g fill="#94b0c2" stroke="#1a1c2c" stroke-width="0.4" opacity=".5">
+      <rect x="-3" y="-0.6" width="3" height="1.2"/>
+      <rect x="0" y="-0.6" width="3" height="1.2"/>
+      <rect x="-0.6" y="-3" width="1.2" height="3"/>
+      <rect x="-0.6" y="0" width="1.2" height="3"/>
+    </g>
+    <circle r="3" fill="#94b0c2" opacity=".3"/>
+    <circle r="0.7" fill="#1a1c2c"/>
+  </g>
+  <g transform="translate(24,4) rotate(-60)">
+    <g fill="#94b0c2" stroke="#1a1c2c" stroke-width="0.4" opacity=".5">
+      <rect x="-3" y="-0.6" width="3" height="1.2"/>
+      <rect x="0" y="-0.6" width="3" height="1.2"/>
+      <rect x="-0.6" y="-3" width="1.2" height="3"/>
+      <rect x="-0.6" y="0" width="1.2" height="3"/>
+    </g>
+    <circle r="3" fill="#94b0c2" opacity=".3"/>
+    <circle r="0.7" fill="#1a1c2c"/>
+  </g>
+  <g transform="translate(24,44) rotate(60)">
+    <g fill="#94b0c2" stroke="#1a1c2c" stroke-width="0.4" opacity=".5">
+      <rect x="-3" y="-0.6" width="3" height="1.2"/>
+      <rect x="0" y="-0.6" width="3" height="1.2"/>
+      <rect x="-0.6" y="-3" width="1.2" height="3"/>
+      <rect x="-0.6" y="0" width="1.2" height="3"/>
+    </g>
+    <circle r="3" fill="#94b0c2" opacity=".3"/>
+    <circle r="0.7" fill="#1a1c2c"/>
+  </g>
+</svg>

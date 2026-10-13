@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">
+  <defs>
+    <clipPath id="expTrackClip">
+      <rect x="1" y="3" width="62" height="11" rx="5" ry="5"/>
+      <rect x="1" y="50" width="62" height="11" rx="5" ry="5"/>
+    </clipPath>
+  </defs>
+  <!-- 实验坦克 v4 帧2：4 炮塔底盘（2x2 挂载位） -->
+  <g clip-path="url(#expTrackClip)">
+    <rect x="1" y="3" width="62" height="11" fill="#1a1c2c"/>
+    <rect x="1" y="3" width="62" height="1.5" fill="#333c57"/>
+    <rect x="1" y="12.5" width="62" height="1.5" fill="#333c57"/>
+    <g fill="#3d4964">
+      <rect x="-1" y="3" width="5" height="2"/>
+      <rect x="5" y="3" width="5" height="2"/>
+      <rect x="11" y="3" width="5" height="2"/>
+      <rect x="17" y="3" width="5" height="2"/>
+      <rect x="23" y="3" width="5" height="2"/>
+      <rect x="29" y="3" width="5" height="2"/>
+      <rect x="35" y="3" width="5" height="2"/>
+      <rect x="41" y="3" width="5" height="2"/>
+      <rect x="47" y="3" width="5" height="2"/>
+      <rect x="53" y="3" width="5" height="2"/>
+      <rect x="59" y="3" width="2" height="2"/>
+      <rect x="2" y="6" width="5" height="2"/>
+      <rect x="8" y="6" width="5" height="2"/>
+      <rect x="14" y="6" width="5" height="2"/>
+      <rect x="20" y="6" width="5" height="2"/>
+      <rect x="26" y="6" width="5" height="2"/>
+      <rect x="32" y="6" width="5" height="2"/>
+      <rect x="38" y="6" width="5" height="2"/>
+      <rect x="44" y="6" width="5" height="2"/>
+      <rect x="50" y="6" width="5" height="2"/>
+      <rect x="56" y="6" width="5" height="2"/>
+    </g>
+  </g>
+  <g clip-path="url(#expTrackClip)">
+    <rect x="1" y="50" width="62" height="11" fill="#1a1c2c"/>
+    <rect x="1" y="50" width="62" height="1.5" fill="#333c57"/>
+    <rect x="1" y="59.5" width="62" height="1.5" fill="#333c57"/>
+    <g fill="#3d4964">
+      <rect x="-1" y="56" width="5" height="2"/>
+      <rect x="5" y="56" width="5" height="2"/>
+      <rect x="11" y="56" width="5" height="2"/>
+      <rect x="17" y="56" width="5" height="2"/>
+      <rect x="23" y="56" width="5" height="2"/>
+      <rect x="29" y="56" width="5" height="2"/>
+      <rect x="35" y="56" width="5" height="2"/>
+      <rect x="41" y="56" width="5" height="2"/>
+      <rect x="47" y="56" width="5" height="2"/>
+      <rect x="53" y="56" width="5" height="2"/>
+      <rect x="59" y="56" width="2" height="2"/>
+      <rect x="2" y="59" width="5" height="2"/>
+      <rect x="8" y="59" width="5" height="2"/>
+      <rect x="14" y="59" width="5" height="2"/>
+      <rect x="20" y="59" width="5" height="2"/>
+      <rect x="26" y="59" width="5" height="2"/>
+      <rect x="32" y="59" width="5" height="2"/>
+      <rect x="38" y="59" width="5" height="2"/>
+      <rect x="44" y="59" width="5" height="2"/>
+      <rect x="50" y="59" width="5" height="2"/>
+      <rect x="56" y="59" width="5" height="2"/>
+    </g>
+  </g>
+  <!-- 装甲（与 v3 一致） -->
+  <path d="M7 8H57L61 14V50L57 56H7L3 50V14Z" fill="#0a0e1a" opacity=".5"/>
+  <path d="M8 8H56L60 14V50L56 56H8L4 50V14Z" fill="#566c86" stroke="#1a1c2c" stroke-width="2"/>
+  <path d="M11 12H53L57 16V48L53 52H11L9 20V16Z" fill="#5f7794" stroke="#1a1c2c" stroke-width="1"/>
+  <!-- 黄色测试警示带（顶部 + 底部边缘） -->
+  <rect x="11" y="13" width="42" height="1.5" fill="#ffc61a"/>
+  <rect x="11" y="13" width="42" height="0.5" fill="#1a1c2c" opacity=".6"/>
+  <rect x="11" y="50" width="42" height="1.5" fill="#ffc61a"/>
+  <rect x="11" y="51" width="42" height="0.5" fill="#1a1c2c" opacity=".6"/>
+  <!-- 顶部受光 -->
+  <path d="M8 8H56L57 12H7Z" fill="#dceaf2" opacity=".5"/>
+  <!-- 底部阴影 -->
+  <path d="M7 53L11 54H53L57 53V54H7Z" fill="#1a1c2c" opacity=".6"/>
+  <!-- V 形撞角 -->
+  <path d="M4 50L11 52L4 54Z" fill="#1a1c2c"/>
+  <path d="M4 50L11 49L11 52Z" fill="#3d4964"/>
+
+  <!-- 4 个炮塔挂载位（2x2 布局） -->
+  <!-- Top-Left -->
+  <g>
+    <rect x="13" y="15" width="14" height="14" fill="#1a1c2c"/>
+    <rect x="13.5" y="15.5" width="13" height="13" fill="none" stroke="#3d4964" stroke-width="0.5"/>
+    <circle cx="15" cy="17" r="0.9" fill="#ffc61a"/>
+    <circle cx="25" cy="17" r="0.9" fill="#ffc61a"/>
+    <circle cx="15" cy="27" r="0.9" fill="#ffc61a"/>
+    <circle cx="25" cy="27" r="0.9" fill="#ffc61a"/>
+    <circle cx="20" cy="22" r="1.4" fill="#0a0e1a" stroke="#3d4964" stroke-width="0.4"/>
+    <circle cx="20" cy="22" r="0.5" fill="#48b2a8" opacity=".9"/>
+  </g>
+  <!-- Top-Right -->
+  <g>
+    <rect x="37" y="15" width="14" height="14" fill="#1a1c2c"/>
+    <rect x="37.5" y="15.5" width="13" height="13" fill="none" stroke="#3d4964" stroke-width="0.5"/>
+    <circle cx="39" cy="17" r="0.9" fill="#ffc61a"/>
+    <circle cx="49" cy="17" r="0.9" fill="#ffc61a"/>
+    <circle cx="39" cy="27" r="0.9" fill="#ffc61a"/>
+    <circle cx="49" cy="27" r="0.9" fill="#ffc61a"/>
+    <circle cx="44" cy="22" r="1.4" fill="#0a0e1a" stroke="#3d4964" stroke-width="0.4"/>
+    <circle cx="44" cy="22" r="0.5" fill="#48b2a8" opacity=".9"/>
+  </g>
+  <!-- Bottom-Left -->
+  <g>
+    <rect x="13" y="35" width="14" height="14" fill="#1a1c2c"/>
+    <rect x="13.5" y="35.5" width="13" height="13" fill="none" stroke="#3d4964" stroke-width="0.5"/>
+    <circle cx="15" cy="37" r="0.9" fill="#ffc61a"/>
+    <circle cx="25" cy="37" r="0.9" fill="#ffc61a"/>
+    <circle cx="15" cy="47" r="0.9" fill="#ffc61a"/>
+    <circle cx="25" cy="47" r="0.9" fill="#ffc61a"/>
+    <circle cx="20" cy="42" r="1.4" fill="#0a0e1a" stroke="#3d4964" stroke-width="0.4"/>
+    <circle cx="20" cy="42" r="0.5" fill="#48b2a8" opacity=".9"/>
+  </g>
+  <!-- Bottom-Right -->
+  <g>
+    <rect x="37" y="35" width="14" height="14" fill="#1a1c2c"/>
+    <rect x="37.5" y="35.5" width="13" height="13" fill="none" stroke="#3d4964" stroke-width="0.5"/>
+    <circle cx="39" cy="37" r="0.9" fill="#ffc61a"/>
+    <circle cx="49" cy="37" r="0.9" fill="#ffc61a"/>
+    <circle cx="39" cy="47" r="0.9" fill="#ffc61a"/>
+    <circle cx="49" cy="47" r="0.9" fill="#ffc61a"/>
+    <circle cx="44" cy="42" r="1.4" fill="#0a0e1a" stroke="#3d4964" stroke-width="0.4"/>
+    <circle cx="44" cy="42" r="0.5" fill="#48b2a8" opacity=".9"/>
+  </g>
+
+  <!-- 中心区域（4 挂载位中间）：原型/X 测试标 -->
+  <g stroke="#ffc61a" stroke-width="0.7" opacity=".75">
+    <path d="M30 31L34 35M34 31L30 35"/>
+  </g>
+  <g fill="#48b2a8" opacity=".6">
+    <rect x="31.5" y="14.5" width="1" height="0.6"/>
+    <rect x="31.5" y="49" width="1" height="0.6"/>
+  </g>
+
+  <!-- 信号灯（双青色：原型/测试状态） -->
+  <rect x="3" y="22" width="3" height="2" fill="#48b2a8" opacity=".95"/>
+  <rect x="3" y="25" width="3" height="2" fill="#48b2a8" opacity=".5"/>
+  <rect x="58" y="22" width="3" height="2" fill="#48b2a8" opacity=".95"/>
+  <rect x="58" y="25" width="3" height="2" fill="#48b2a8" opacity=".5"/>
+
+  <!-- 铆钉 -->
+  <g fill="#1a1c2c">
+    <circle cx="10" cy="11" r="1.2"/>
+    <circle cx="54" cy="11" r="1.2"/>
+    <circle cx="10" cy="53" r="1.2"/>
+    <circle cx="54" cy="53" r="1.2"/>
+  </g>
+  <!-- 高光斜面 -->
+  <path d="M50 12l7 7v5l-7-7Z" fill="#dceaf2" opacity=".35"/>
+</svg>

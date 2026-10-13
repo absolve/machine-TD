@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">
+  <defs>
+    <clipPath id="abTrackClip">
+      <rect x="1" y="3" width="62" height="11" rx="5" ry="5"/>
+      <rect x="1" y="50" width="62" height="11" rx="5" ry="5"/>
+    </clipPath>
+  </defs>
+  <!-- 突击车 帧1：开放车顶 + 滚架 + 单管炮 + 暴露驾驶位 -->
+  <g clip-path="url(#abTrackClip)">
+    <rect x="1" y="3" width="62" height="11" fill="#1a1c2c"/>
+    <rect x="1" y="3" width="62" height="1.5" fill="#333c57"/>
+    <rect x="1" y="12.5" width="62" height="1.5" fill="#333c57"/>
+    <g fill="#3d4964">
+      <rect x="-3" y="3" width="5" height="2"/>
+      <rect x="3" y="3" width="5" height="2"/>
+      <rect x="9" y="3" width="5" height="2"/>
+      <rect x="15" y="3" width="5" height="2"/>
+      <rect x="21" y="3" width="5" height="2"/>
+      <rect x="27" y="3" width="5" height="2"/>
+      <rect x="33" y="3" width="5" height="2"/>
+      <rect x="39" y="3" width="5" height="2"/>
+      <rect x="45" y="3" width="5" height="2"/>
+      <rect x="51" y="3" width="5" height="2"/>
+      <rect x="57" y="3" width="2" height="2"/>
+      <rect x="0" y="6" width="5" height="2"/>
+      <rect x="6" y="6" width="5" height="2"/>
+      <rect x="12" y="6" width="5" height="2"/>
+      <rect x="18" y="6" width="5" height="2"/>
+      <rect x="24" y="6" width="5" height="2"/>
+      <rect x="30" y="6" width="5" height="2"/>
+      <rect x="36" y="6" width="5" height="2"/>
+      <rect x="42" y="6" width="5" height="2"/>
+      <rect x="48" y="6" width="5" height="2"/>
+      <rect x="54" y="6" width="5" height="2"/>
+    </g>
+  </g>
+  <g clip-path="url(#abTrackClip)">
+    <rect x="1" y="50" width="62" height="11" fill="#1a1c2c"/>
+    <rect x="1" y="50" width="62" height="1.5" fill="#333c57"/>
+    <rect x="1" y="59.5" width="62" height="1.5" fill="#333c57"/>
+    <g fill="#3d4964">
+      <rect x="-3" y="56" width="5" height="2"/>
+      <rect x="3" y="56" width="5" height="2"/>
+      <rect x="9" y="56" width="5" height="2"/>
+      <rect x="15" y="56" width="5" height="2"/>
+      <rect x="21" y="56" width="5" height="2"/>
+      <rect x="27" y="56" width="5" height="2"/>
+      <rect x="33" y="56" width="5" height="2"/>
+      <rect x="39" y="56" width="5" height="2"/>
+      <rect x="45" y="56" width="5" height="2"/>
+      <rect x="51" y="56" width="5" height="2"/>
+      <rect x="57" y="56" width="2" height="2"/>
+      <rect x="0" y="59" width="5" height="2"/>
+      <rect x="6" y="59" width="5" height="2"/>
+      <rect x="12" y="59" width="5" height="2"/>
+      <rect x="18" y="59" width="5" height="2"/>
+      <rect x="24" y="59" width="5" height="2"/>
+      <rect x="30" y="59" width="5" height="2"/>
+      <rect x="36" y="59" width="5" height="2"/>
+      <rect x="42" y="59" width="5" height="2"/>
+      <rect x="48" y="59" width="5" height="2"/>
+      <rect x="54" y="59" width="5" height="2"/>
+    </g>
+  </g>
+  <!-- 底盘外壳（与坦克一致：盖住履带内沿） -->
+  <path d="M7 8H57L61 14V50L57 56H7L3 50V14Z" fill="#0a0e1a" opacity=".5"/>
+  <path d="M8 8H56L60 14V50L56 56H8L4 50V14Z" fill="#566c86" stroke="#1a1c2c" stroke-width="2"/>
+  <path d="M11 12H53L57 16V48L53 52H11L9 20V16Z" fill="#5f7794" stroke="#1a1c2c" stroke-width="1"/>
+  <!-- 顶部受光 -->
+  <path d="M8 8H56L57 12H7Z" fill="#dceaf2" opacity=".5"/>
+  <!-- 底部阴影 -->
+  <path d="M7 53L11 54H53L57 53V54H7Z" fill="#1a1c2c" opacity=".6"/>
+  <!-- 车体底盘（更窄：x=10-54） -->
+  <path d="M10 14H54L57 18V46L54 50H10L7 46V18Z" fill="#0a0e1a" opacity=".5"/>
+  <path d="M11 14H53L56 18V46L53 50H11L8 46V18Z" fill="#566c86" stroke="#1a1c2c" stroke-width="1.5"/>
+  <path d="M13 17H51L54 20V44L51 47H13L11 20V20Z" fill="#94b0c2"/>
+  <!-- 顶部受光（明显） -->
+  <path d="M11 14H53L54 17H10Z" fill="#dceaf2" opacity=".55"/>
+  <!-- 底部阴影 -->
+  <path d="M10 47L13 48H51L54 47V48H10Z" fill="#1a1c2c" opacity=".6"/>
+  <!-- 滚架（6 根管子形成保护笼） -->
+  <g fill="#1a1c2c">
+    <rect x="14" y="14" width="1.5" height="14"/>
+    <rect x="22" y="14" width="1.5" height="14"/>
+    <rect x="40" y="14" width="1.5" height="14"/>
+    <rect x="48" y="14" width="1.5" height="14"/>
+  </g>
+  <!-- 滚架顶部横梁 -->
+  <rect x="13" y="13" width="37" height="2" fill="#3a4658" stroke="#1a1c2c" stroke-width="0.8"/>
+  <rect x="13" y="13" width="37" height="0.5" fill="#94b0c2"/>
+  <!-- 驾驶位（开放，可见驾驶员） -->
+  <rect x="24" y="18" width="14" height="10" fill="#1a1c2c" opacity=".7"/>
+  <!-- 驾驶员头部（圆形） -->
+  <circle cx="29" cy="22" r="2" fill="#3a4658" stroke="#94b0c2" stroke-width="0.5"/>
+  <circle cx="29" cy="22" r="1.2" fill="#94b0c2" opacity=".5"/>
+  <!-- 风挡（小） -->
+  <rect x="36" y="18" width="2" height="6" fill="#94b0c2" opacity=".5"/>
+  <!-- 炮座（中央偏前） -->
+  <rect x="28" y="28" width="8" height="2" fill="#1a1c2c"/>
+  <rect x="30" y="30" width="4" height="2" fill="#3a4658" stroke="#1a1c2c" stroke-width="0.6"/>
+  <!-- 单管炮 -->
+  <rect x="32" y="32" width="3" height="10" fill="#1a1c2c"/>
+  <rect x="32.5" y="32" width="2" height="8" fill="#3a4658"/>
+  <rect x="32" y="40" width="3" height="2" fill="#1a1c2c"/>
+  <!-- 弹药箱（后部） -->
+  <rect x="40" y="32" width="10" height="10" fill="#3a4658" stroke="#1a1c2c" stroke-width="0.8"/>
+  <rect x="42" y="34" width="6" height="1" fill="#94b0c2"/>
+  <rect x="42" y="36" width="6" height="1" fill="#94b0c2"/>
+  <rect x="42" y="38" width="6" height="1" fill="#94b0c2"/>
+  <rect x="40" y="32" width="10" height="2" fill="#1a1c2c" opacity=".5"/>
+  <!-- 侧挂油桶/工具箱（左侧） -->
+  <rect x="9" y="32" width="2" height="8" fill="#1a1c2c"/>
+  <rect x="9" y="32" width="2" height="2" fill="#e08a2e"/>
+  <!-- 警示色块 -->
+  <rect x="49" y="14" width="3" height="2" fill="#e08a2e"/>
+  <rect x="14" y="44" width="3" height="2" fill="#e08a2e"/>
+  <!-- 信号灯 -->
+  <rect x="11" y="20" width="2" height="2" fill="#94b0c2" opacity=".95"/>
+  <rect x="11" y="23" width="2" height="2" fill="#94b0c2" opacity=".5"/>
+  <rect x="51" y="20" width="2" height="2" fill="#a95035"/>
+  <rect x="51" y="23" width="2" height="2" fill="#a95035" opacity=".5"/>
+  <!-- 铆钉 -->
+  <g fill="#1a1c2c">
+    <circle cx="14" cy="16" r="0.7"/>
+    <circle cx="50" cy="16" r="0.7"/>
+    <circle cx="14" cy="46" r="0.7"/>
+    <circle cx="50" cy="46" r="0.7"/>
+  </g>
+  <!-- 高光斜面 -->
+  <path d="M48 17l5 5v3l-5-5Z" fill="#dceaf2" opacity=".35"/>
+</svg>

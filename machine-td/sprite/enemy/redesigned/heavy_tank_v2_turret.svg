@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="22" viewBox="0 0 50 22" shape-rendering="crispEdges">
+  <!-- 重型坦克 炮塔：箱式底座 + 单根特长炮管 + 锈红装饰 -->
+  <rect x="2" y="5" width="14" height="12" rx="1" fill="#0a0e1a" opacity=".5"/>
+  <rect x="2" y="5" width="14" height="12" rx="1" fill="#2a3344" stroke="#1a1c2c" stroke-width="1.4"/>
+  <rect x="2" y="5" width="14" height="2" rx="0.5" fill="#3a4658"/>
+  <rect x="2" y="15" width="14" height="2" fill="#1a1c2c"/>
+  <!-- 箱式强化线条 -->
+  <g stroke="#1a1c2c" stroke-width="0.7" opacity=".7">
+    <path d="M6 5v12M10 5v12M2 9h14M2 13h14"/>
+  </g>
+  <!-- 铆钉（深色密） -->
+  <g fill="#1a1c2c">
+    <circle cx="4" cy="7" r="0.7"/>
+    <circle cx="14" cy="7" r="0.7"/>
+    <circle cx="4" cy="15" r="0.7"/>
+    <circle cx="14" cy="15" r="0.7"/>
+  </g>
+  <!-- 单管基座（粗） -->
+  <rect x="16" y="8" width="5" height="6" fill="#1a1c2c"/>
+  <rect x="16" y="9" width="5" height="1" fill="#3a4658"/>
+  <!-- 单管炮身（特长，最粗） -->
+  <rect x="21" y="9" width="22" height="4" fill="#3a4658" stroke="#1a1c2c" stroke-width="1.2"/>
+  <rect x="21" y="13" width="22" height="0.5" fill="#1a1c2c"/>
+  <rect x="21" y="9.5" width="22" height="0.5" fill="#566c86" opacity=".6"/>
+  <!-- 炮口制退器（粗大） -->
+  <rect x="43" y="8" width="5" height="6" fill="#1a1c2c" stroke="#1a1c2c" stroke-width="1"/>
+  <rect x="44" y="10" width="3" height="2" fill="#0a0e1a"/>
+  <rect x="44" y="13" width="3" height="1" fill="#1a1c2c"/>
+  <!-- 锈红装饰条 -->
+  <rect x="22" y="11" width="20" height="0.5" fill="#a95035"/>
+  <!-- 顶部受光（少） -->
+  <path d="M2 5H16L14 7H4Z" fill="#566c86" opacity=".5"/>
+  <!-- 顶部天线/传感器 -->
+  <rect x="6" y="3" width="1" height="2" fill="#1a1c2c"/>
+  <circle cx="6.5" cy="3" r="0.6" fill="#a95035"/>
+</svg>

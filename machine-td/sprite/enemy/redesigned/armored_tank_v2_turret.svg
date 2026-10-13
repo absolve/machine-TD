@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="22" viewBox="0 0 50 22" shape-rendering="crispEdges">
+  <!-- 装甲坦克 炮塔：厚座 + 双管重炮 + 金色螺栓 -->
+  <rect x="2" y="6" width="14" height="10" rx="1" fill="#0a0e1a" opacity=".5"/>
+  <rect x="2" y="6" width="14" height="10" rx="1" fill="#3a4658" stroke="#1a1c2c" stroke-width="1.4"/>
+  <rect x="2" y="6" width="14" height="2" rx="0.5" fill="#566c86"/>
+  <rect x="2" y="14" width="14" height="2" fill="#1a1c2c"/>
+  <!-- 装甲刻线 -->
+  <g stroke="#1a1c2c" stroke-width="0.8" opacity=".7">
+    <path d="M9 6v10M2 11h14"/>
+  </g>
+  <!-- 金色螺栓（精英） -->
+  <circle cx="4" cy="8" r="0.8" fill="#ffc61a"/>
+  <circle cx="14" cy="8" r="0.8" fill="#ffc61a"/>
+  <circle cx="4" cy="14" r="0.8" fill="#ffc61a"/>
+  <circle cx="14" cy="14" r="0.8" fill="#ffc61a"/>
+  <!-- 反应装甲小贴片（顶部） -->
+  <rect x="5" y="4" width="2" height="2" fill="#566c86" stroke="#1a1c2c" stroke-width="0.5"/>
+  <rect x="11" y="4" width="2" height="2" fill="#566c86" stroke="#1a1c2c" stroke-width="0.5"/>
+  <!-- 双管基座 -->
+  <rect x="16" y="7" width="6" height="8" fill="#1a1c2c"/>
+  <!-- 上炮管（粗） -->
+  <rect x="22" y="8" width="20" height="3" fill="#3a4658" stroke="#1a1c2c" stroke-width="1.2"/>
+  <rect x="22" y="11" width="20" height="0.5" fill="#1a1c2c"/>
+  <rect x="22" y="9" width="20" height="0.5" fill="#94b0c2" opacity=".6"/>
+  <!-- 下炮管 -->
+  <rect x="22" y="12" width="20" height="3" fill="#3a4658" stroke="#1a1c2c" stroke-width="1.2"/>
+  <rect x="22" y="15" width="20" height="0.5" fill="#1a1c2c"/>
+  <rect x="22" y="13" width="20" height="0.5" fill="#94b0c2" opacity=".6"/>
+  <!-- 炮口套（深色） -->
+  <rect x="42" y="7" width="4" height="5" rx="0.5" fill="#0a0e1a" stroke="#1a1c2c" stroke-width="1"/>
+  <rect x="42" y="12" width="4" height="5" rx="0.5" fill="#0a0e1a" stroke="#1a1c2c" stroke-width="1"/>
+  <!-- 炮口闪光槽 -->
+  <rect x="43" y="9" width="2" height="1" fill="#a95035"/>
+  <rect x="43" y="14" width="2" height="1" fill="#a95035"/>
+  <!-- 顶部天线/传感器 -->
+  <rect x="6" y="3" width="1" height="3" fill="#1a1c2c"/>
+  <circle cx="6.5" cy="3" r="0.8" fill="#ffc61a"/>
+</svg>

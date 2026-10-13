@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="48" viewBox="0 0 64 48" shape-rendering="crispEdges">
+  <!-- 武装直升机 俯视：机身 + 尾梁（左）+ 短翼 + 尾旋翼 + 主旋翼轴座 -->
+  <!-- 阴影（地面投影） -->
+  <ellipse cx="32" cy="44" rx="22" ry="2" fill="#1a1c2c" opacity=".2"/>
+  <!-- 尾梁（左延：x=2-18） -->
+  <rect x="2" y="22.5" width="16" height="3" fill="#3a4658" stroke="#1a1c2c" stroke-width="0.8"/>
+  <!-- 尾梁加强筋 -->
+  <g stroke="#1a1c2c" stroke-width="0.4" opacity=".7">
+    <path d="M5 22.5v3M8 22.5v3M11 22.5v3M14 22.5v3"/>
+  </g>
+  <!-- 尾旋翼（俯视：小圆） -->
+  <circle cx="2" cy="24" r="3" fill="#1a1c2c"/>
+  <circle cx="2" cy="24" r="1.2" fill="#3a4658"/>
+  <!-- 尾旋翼叶片（横竖 2 短片，固定） -->
+  <g stroke="#1a1c2c" stroke-width="0.4" opacity=".7">
+    <path d="M-1 24h6M2 21v6"/>
+  </g>
+  <!-- 短翼（垂直于机身，上下各一） -->
+  <g fill="#3a4658" stroke="#1a1c2c" stroke-width="0.8">
+    <rect x="20" y="14" width="20" height="3"/>
+    <rect x="20" y="31" width="20" height="3"/>
+  </g>
+  <!-- 短翼顶受光 -->
+  <g fill="#94b0c2" opacity=".55">
+    <rect x="20" y="14" width="20" height="0.6"/>
+    <rect x="20" y="31" width="20" height="0.6"/>
+  </g>
+  <!-- 导弹挂架 -->
+  <g fill="#1a1c2c">
+    <rect x="22" y="18" width="3" height="2"/>
+    <rect x="22" y="28" width="3" height="2"/>
+    <rect x="36" y="18" width="3" height="2"/>
+    <rect x="36" y="28" width="3" height="2"/>
+  </g>
+  <!-- 导弹（4 枚：上下翼各 2 枚，红色头朝右 = 前方） -->
+  <g fill="#94b0c2" stroke="#1a1c2c" stroke-width="0.5">
+    <rect x="22" y="17" width="6" height="1.4"/>
+    <rect x="22" y="19" width="6" height="1.4"/>
+    <rect x="22" y="28" width="6" height="1.4"/>
+    <rect x="22" y="30" width="6" height="1.4"/>
+  </g>
+  <g fill="#a95035">
+    <rect x="28" y="17" width="0.8" height="1.4"/>
+    <rect x="28" y="19" width="0.8" height="1.4"/>
+    <rect x="28" y="28" width="0.8" height="1.4"/>
+    <rect x="28" y="30" width="0.8" height="1.4"/>
+  </g>
+  <!-- 主机身（驾驶舱 + 引擎舱，俯视：左窄右宽梯形） -->
+  <path d="M18 22L22 20H46L50 24L46 28H22L18 26Z" fill="#0a0e1a" opacity=".5"/>
+  <path d="M19 22L23 21H45L49 24L45 27H23L19 26Z" fill="#3a4658" stroke="#1a1c2c" stroke-width="1.2"/>
+  <!-- 驾驶舱风挡（俯视：右端梯形，深色 + 亮蓝高光） -->
+  <path d="M49 24L45 22H47L51 24L49 24Z" fill="#1a1c2c"/>
+  <path d="M48 24L45 22.5H46.5L49.5 24L48 24Z" fill="#94b0c2" opacity=".7"/>
+  <!-- 机身顶受光 -->
+  <path d="M19 21H45L46 22H20Z" fill="#566c86"/>
+  <!-- 机身底受光 -->
+  <path d="M19 26H45V27H19Z" fill="#1a1c2c"/>
+  <!-- 危险黄警示（机头/机尾） -->
+  <rect x="46" y="20" width="1" height="1" fill="#ffc61a"/>
+  <rect x="2" y="20" width="1" height="1" fill="#ffc61a"/>
+  <!-- 信号灯（机身） -->
+  <rect x="22" y="22" width="1.5" height="1" fill="#a95035"/>
+  <rect x="38" y="22" width="1.5" height="1" fill="#7fd0c6"/>
+  <!-- 铆钉 -->
+  <g fill="#1a1c2c">
+    <circle cx="22" cy="24" r="0.5"/>
+    <circle cx="28" cy="24" r="0.5"/>
+    <circle cx="34" cy="24" r="0.5"/>
+    <circle cx="40" cy="24" r="0.5"/>
+  </g>
+  <!-- 主旋翼轴座（俯视：小圆，会被主旋翼覆盖） -->
+  <circle cx="32" cy="24" r="2.5" fill="#0a0e1a"/>
+  <circle cx="32" cy="24" r="1.5" fill="#1a1c2c"/>
+  <circle cx="32" cy="24" r="0.6" fill="#3a4658"/>
+</svg>

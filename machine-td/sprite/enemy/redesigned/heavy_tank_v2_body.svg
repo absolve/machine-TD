@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">
+  <defs>
+    <clipPath id="htTrackClip">
+      <rect x="1" y="3" width="62" height="11" rx="5" ry="5"/>
+      <rect x="1" y="50" width="62" height="11" rx="5" ry="5"/>
+    </clipPath>
+  </defs>
+  <!-- 重型坦克 帧1：箱式炮塔 + 长车体 + 双层装甲（更暗一档） -->
+  <g clip-path="url(#htTrackClip)">
+    <rect x="1" y="3" width="62" height="11" fill="#1a1c2c"/>
+    <rect x="1" y="3" width="62" height="1.5" fill="#333c57"/>
+    <rect x="1" y="12.5" width="62" height="1.5" fill="#333c57"/>
+    <g fill="#3d4964">
+      <rect x="1" y="3" width="5" height="2"/>
+      <rect x="7" y="3" width="5" height="2"/>
+      <rect x="13" y="3" width="5" height="2"/>
+      <rect x="19" y="3" width="5" height="2"/>
+      <rect x="25" y="3" width="5" height="2"/>
+      <rect x="31" y="3" width="5" height="2"/>
+      <rect x="37" y="3" width="5" height="2"/>
+      <rect x="43" y="3" width="5" height="2"/>
+      <rect x="49" y="3" width="5" height="2"/>
+      <rect x="55" y="3" width="5" height="2"/>
+      <rect x="61" y="3" width="2" height="2"/>
+      <rect x="4" y="6" width="5" height="2"/>
+      <rect x="10" y="6" width="5" height="2"/>
+      <rect x="16" y="6" width="5" height="2"/>
+      <rect x="22" y="6" width="5" height="2"/>
+      <rect x="28" y="6" width="5" height="2"/>
+      <rect x="34" y="6" width="5" height="2"/>
+      <rect x="40" y="6" width="5" height="2"/>
+      <rect x="46" y="6" width="5" height="2"/>
+      <rect x="52" y="6" width="5" height="2"/>
+      <rect x="58" y="6" width="5" height="2"/>
+    </g>
+  </g>
+  <g clip-path="url(#htTrackClip)">
+    <rect x="1" y="50" width="62" height="11" fill="#1a1c2c"/>
+    <rect x="1" y="50" width="62" height="1.5" fill="#333c57"/>
+    <rect x="1" y="59.5" width="62" height="1.5" fill="#333c57"/>
+    <g fill="#3d4964">
+      <rect x="1" y="56" width="5" height="2"/>
+      <rect x="7" y="56" width="5" height="2"/>
+      <rect x="13" y="56" width="5" height="2"/>
+      <rect x="19" y="56" width="5" height="2"/>
+      <rect x="25" y="56" width="5" height="2"/>
+      <rect x="31" y="56" width="5" height="2"/>
+      <rect x="37" y="56" width="5" height="2"/>
+      <rect x="43" y="56" width="5" height="2"/>
+      <rect x="49" y="56" width="5" height="2"/>
+      <rect x="55" y="56" width="5" height="2"/>
+      <rect x="61" y="56" width="2" height="2"/>
+      <rect x="4" y="59" width="5" height="2"/>
+      <rect x="10" y="59" width="5" height="2"/>
+      <rect x="16" y="59" width="5" height="2"/>
+      <rect x="22" y="59" width="5" height="2"/>
+      <rect x="28" y="59" width="5" height="2"/>
+      <rect x="34" y="59" width="5" height="2"/>
+      <rect x="40" y="59" width="5" height="2"/>
+      <rect x="46" y="59" width="5" height="2"/>
+      <rect x="52" y="59" width="5" height="2"/>
+      <rect x="58" y="59" width="5" height="2"/>
+    </g>
+  </g>
+  <!-- 装甲（深一档：#3a4658，比 ion_tank 更暗） -->
+  <path d="M7 8H57L61 14V50L57 56H7L3 50V14Z" fill="#0a0e1a" opacity=".5"/>
+  <path d="M8 8H56L60 14V50L56 56H8L4 50V14Z" fill="#3a4658" stroke="#1a1c2c" stroke-width="2"/>
+  <path d="M11 12H53L57 16V48L53 52H11L9 20V16Z" fill="#46536a" stroke="#1a1c2c" stroke-width="1"/>
+  <!-- V 形撞角（重型：更长） -->
+  <path d="M3 50L13 53L3 55Z" fill="#1a1c2c"/>
+  <path d="M3 50L13 50L13 53Z" fill="#2a3344"/>
+  <!-- 顶部受光 -->
+  <path d="M8 8H56L57 12H7Z" fill="#94b0c2" opacity=".45"/>
+  <!-- 底部阴影 -->
+  <path d="M7 53L13 54H51L57 53V54H7Z" fill="#0a0e1a" opacity=".7"/>
+  <!-- 箱式炮塔（大块） -->
+  <rect x="20" y="13" width="24" height="14" fill="#2a3344" stroke="#1a1c2c" stroke-width="1.2"/>
+  <rect x="22" y="14" width="20" height="2" fill="#566c86"/>
+  <rect x="22" y="24" width="20" height="2" fill="#1a1c2c"/>
+  <!-- 炮塔顶观察窗 -->
+  <rect x="29" y="16" width="6" height="2" fill="#1a1c2c"/>
+  <rect x="30" y="16.5" width="4" height="1" fill="#94b0c2" opacity=".7"/>
+  <!-- 炮塔炮口基座（双管） -->
+  <rect x="20" y="20" width="3" height="6" fill="#1a1c2c"/>
+  <rect x="17" y="21" width="3" height="4" fill="#3a4658" stroke="#1a1c2c" stroke-width="0.8"/>
+  <!-- 散热格栅（左） -->
+  <g fill="#1a1c2c">
+    <rect x="11" y="30" width="9" height="1.5"/>
+    <rect x="11" y="33" width="9" height="1.5"/>
+    <rect x="11" y="36" width="9" height="1.5"/>
+    <rect x="11" y="39" width="9" height="1.5"/>
+  </g>
+  <g fill="#3a4658">
+    <rect x="11" y="30" width="9" height="0.5"/>
+    <rect x="11" y="33" width="9" height="0.5"/>
+    <rect x="11" y="36" width="9" height="0.5"/>
+    <rect x="11" y="39" width="9" height="0.5"/>
+  </g>
+  <!-- 散热格栅（右） -->
+  <g fill="#1a1c2c">
+    <rect x="44" y="30" width="9" height="1.5"/>
+    <rect x="44" y="33" width="9" height="1.5"/>
+    <rect x="44" y="36" width="9" height="1.5"/>
+    <rect x="44" y="39" width="9" height="1.5"/>
+  </g>
+  <g fill="#3a4658">
+    <rect x="44" y="30" width="9" height="0.5"/>
+    <rect x="44" y="33" width="9" height="0.5"/>
+    <rect x="44" y="36" width="9" height="0.5"/>
+    <rect x="44" y="39" width="9" height="0.5"/>
+  </g>
+  <!-- 装甲分隔线 -->
+  <g stroke="#1a1c2c" stroke-width="1" opacity=".8">
+    <path d="M11 30h42M11 44h42"/>
+  </g>
+  <!-- 锈红信号灯（重） -->
+  <rect x="3" y="14" width="3" height="2" fill="#a95035"/>
+  <rect x="3" y="17" width="3" height="2" fill="#a95035" opacity=".6"/>
+  <rect x="58" y="14" width="3" height="2" fill="#a95035"/>
+  <rect x="58" y="17" width="3" height="2" fill="#a95035" opacity=".6"/>
+  <!-- 铆钉（深色，更密） -->
+  <g fill="#1a1c2c">
+    <circle cx="13" cy="11" r="1.2"/>
+    <circle cx="32" cy="11" r="1.2"/>
+    <circle cx="51" cy="11" r="1.2"/>
+    <circle cx="13" cy="53" r="1.2"/>
+    <circle cx="32" cy="53" r="1.2"/>
+    <circle cx="51" cy="53" r="1.2"/>
+  </g>
+  <!-- 高光斜面（少一点） -->
+  <path d="M50 12l7 7v3l-7-7Z" fill="#94b0c2" opacity=".3"/>
+</svg>

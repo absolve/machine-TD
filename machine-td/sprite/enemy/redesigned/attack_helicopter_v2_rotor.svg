@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="48" viewBox="0 0 64 48" shape-rendering="crispEdges">
+  <!-- 武装直升机 主旋翼 帧1：水平主轴 + 4 叶 X 形（俯视） -->
+  <g transform="translate(32,24)">
+    <circle r="2" fill="#1a1c2c"/>
+    <circle r="1.2" fill="#3a4658"/>
+    <!-- 4 叶主旋翼（X 形） -->
+    <g fill="#566c86" stroke="#1a1c2c" stroke-width="0.6" opacity=".9">
+      <rect x="-30" y="-1" width="28" height="2"/>
+      <rect x="2" y="-1" width="28" height="2"/>
+      <rect x="-1" y="-30" width="2" height="28"/>
+      <rect x="-1" y="2" width="2" height="28"/>
+    </g>
+    <!-- 翼尖高光 -->
+    <g fill="#94b0c2" opacity=".6">
+      <rect x="-30" y="-1" width="6" height="0.5"/>
+      <rect x="24" y="0" width="6" height="0.5"/>
+      <rect x="-1" y="-30" width="0.5" height="6"/>
+      <rect x="0" y="24" width="0.5" height="6"/>
+    </g>
+    <!-- 桨毂 -->
+    <circle r="2.5" fill="#0a0e1a"/>
+    <circle r="1.5" fill="#1a1c2c"/>
+  </g>
+</svg>
