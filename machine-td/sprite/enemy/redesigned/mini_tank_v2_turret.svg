@@ -1,20 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="50" height="22" viewBox="0 0 50 22" shape-rendering="crispEdges">
+<svg xmlns="http://www.w3.org/2000/svg" width="46" height="20" viewBox="0 0 46 20" shape-rendering="crispEdges">
   <!-- 迷你坦克 炮塔：小圆 + 短小单管炮 -->
-  <circle cx="8" cy="11" r="5" fill="#0a0e1a"/>
-  <circle cx="8" cy="11" r="4" fill="#3a4658" stroke="#1a1c2c" stroke-width="1"/>
-  <circle cx="8" cy="11" r="3" fill="#566c86"/>
+  <circle cx="7.4" cy="10" r="4.5" fill="#0a0e1a"/>
+  <circle cx="7.4" cy="10" r="3.6" fill="#3a4658" stroke="#1a1c2c" stroke-width="1"/>
+  <circle cx="7.4" cy="10" r="2.7" fill="#566c86"/>
   <g stroke="#1a1c2c" stroke-width="0.6" opacity=".7">
-    <path d="M3 11h1M12 11h1M8 6v1M8 15v1"/>
+    <path d="M 2.8 10 h 0.9 M 11 10 h 0.9 M 7.4 5.4 v 0.9 M 7.4 13.7 v 0.9"/>
   </g>
   <!-- 短小炮身 -->
-  <rect x="12" y="10" width="14" height="2" fill="#3a4658" stroke="#1a1c2c" stroke-width="1"/>
-  <rect x="12" y="10.3" width="14" height="0.4" fill="#94b0c2" opacity=".6"/>
+  <rect x="11" y="9.1" width="12.9" height="1.8" fill="#3a4658" stroke="#1a1c2c" stroke-width="1"/>
+  <rect x="11" y="9.3" width="12.9" height="0.3" fill="#94b0c2" opacity=".6"/>
   <!-- 炮口套（小） -->
-  <rect x="26" y="9" width="3" height="4" rx="0.4" fill="#1a1c2c" stroke="#1a1c2c" stroke-width="0.8"/>
-  <rect x="27" y="10" width="1.5" height="2" fill="#0a0e1a"/>
+  <rect x="23.9" y="8.2" width="2.8" height="3.7" rx="0.3" fill="#1a1c2c" stroke="#1a1c2c" stroke-width="0.8"/>
+  <rect x="24.8" y="9.1" width="1.4" height="1.8" fill="#0a0e1a"/>
   <!-- 顶部受光 -->
-  <path d="M8 6L10 7H6Z" fill="#dceaf2" opacity=".5"/>
+  <path d="M 7.4 5.4 L 9.2 6.3 H 5.5 Z" fill="#dceaf2" opacity=".5"/>
   <!-- 顶部天线（短） -->
-  <rect x="7" y="4" width="1" height="2" fill="#1a1c2c"/>
-  <circle cx="7.5" cy="4" r="0.5" fill="#94b0c2"/>
+  <rect x="6.4" y="3.7" width="0.9" height="1.8" fill="#1a1c2c"/>
+  <circle cx="6.9" cy="3.7" r="0.5" fill="#94b0c2"/>
 </svg>

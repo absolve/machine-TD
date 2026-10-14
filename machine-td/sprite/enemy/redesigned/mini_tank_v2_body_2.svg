@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">
   <defs>
     <clipPath id="miniTrackClip">
-      <rect x="1" y="3" width="62" height="11" rx="5" ry="5"/>
-      <rect x="1" y="50" width="62" height="11" rx="5" ry="5"/>
+      <rect x="1" y="2" width="62" height="16" rx="6" ry="6"/>
+      <rect x="1" y="46" width="62" height="16" rx="6" ry="6"/>
     </clipPath>
   </defs>
   <!-- 迷你坦克 帧1：紧凑型 + 锥形车体 + 单管小炮 -->
   <g clip-path="url(#miniTrackClip)">
-    <rect x="1" y="3" width="62" height="11" fill="#1a1c2c"/>
-    <rect x="1" y="3" width="62" height="1.5" fill="#333c57"/>
-    <rect x="1" y="12.5" width="62" height="1.5" fill="#333c57"/>
+    <rect x="1" y="2" width="62" height="16" fill="#1a1c2c"/>
+    <rect x="1" y="2" width="62" height="2" fill="#333c57"/>
+    <rect x="1" y="16" width="62" height="2" fill="#333c57"/>
     <g fill="#3d4964">
       <rect x="-1" y="3" width="5" height="2"/>
       <rect x="5" y="3" width="5" height="2"/>
@@ -35,9 +35,9 @@
     </g>
   </g>
   <g clip-path="url(#miniTrackClip)">
-    <rect x="1" y="50" width="62" height="11" fill="#1a1c2c"/>
-    <rect x="1" y="50" width="62" height="1.5" fill="#333c57"/>
-    <rect x="1" y="59.5" width="62" height="1.5" fill="#333c57"/>
+    <rect x="1" y="46" width="62" height="16" fill="#1a1c2c"/>
+    <rect x="1" y="46" width="62" height="2" fill="#333c57"/>
+    <rect x="1" y="60" width="62" height="2" fill="#333c57"/>
     <g fill="#3d4964">
       <rect x="-1" y="56" width="5" height="2"/>
       <rect x="5" y="56" width="5" height="2"/>
@@ -63,51 +63,51 @@
     </g>
   </g>
   <!-- 底盘外壳（与坦克一致：盖住履带内沿） -->
-  <path d="M7 8H57L61 14V50L57 56H7L3 50V14Z" fill="#0a0e1a" opacity=".5"/>
-  <path d="M8 8H56L60 14V50L56 56H8L4 50V14Z" fill="#566c86" stroke="#1a1c2c" stroke-width="2"/>
-  <path d="M11 12H53L57 16V48L53 52H11L9 20V16Z" fill="#5f7794" stroke="#1a1c2c" stroke-width="1"/>
+  <path d="M10 14 H54 L58 18.5 V45.5 L54 50 H10 L6 45.5 V18.5 Z" fill="#0a0e1a" opacity=".5"/>
+  <path d="M8 14 H56 L60 18.5 V45.5 L56 50 H8 L4 45.5 V18.5 Z" fill="#566c86" stroke="#1a1c2c" stroke-width="2"/>
+  <path d="M14 17 H50 L54 20 V44 L50 47 H14 L12 44 V20 Z" fill="#5f7794" stroke="#1a1c2c" stroke-width="1"/>
   <!-- 顶部受光 -->
-  <path d="M8 8H56L57 12H7Z" fill="#dceaf2" opacity=".5"/>
+  <path d="M8 14 H56 L57 17 H7 Z" fill="#dceaf2" opacity=".5"/>
   <!-- 底部阴影 -->
-  <path d="M7 53L11 54H53L57 53V54H7Z" fill="#1a1c2c" opacity=".6"/>
+  <path d="M7 47.75 L11 48.5 H53 L57 47.75 V48.5 H7 Z" fill="#1a1c2c" opacity=".6"/>
   <!-- 装甲（紧凑：y=14-50，更小） -->
-  <path d="M11 14H53L57 18V46L53 50H11L7 46V18Z" fill="#0a0e1a" opacity=".5"/>
-  <path d="M12 14H52L56 18V46L52 50H12L8 46V18Z" fill="#6e8499" stroke="#1a1c2c" stroke-width="2"/>
-  <path d="M14 17H50L54 20V44L50 47H14L11 20V20Z" fill="#94b0c2" stroke="#1a1c2c" stroke-width="0.8"/>
+  <path d="M11 18.5 H53 L57 21.5 V42.5 L53 45.5 H11 L7 42.5 V21.5 Z" fill="#0a0e1a" opacity=".5"/>
+  <path d="M12 18.5 H52 L56 21.5 V42.5 L52 45.5 H12 L8 42.5 V21.5 Z" fill="#6e8499" stroke="#1a1c2c" stroke-width="2"/>
+  <path d="M14 20.75 H50 L54 23 V41 L50 43.25 H14 L11 23 V23 Z" fill="#94b0c2" stroke="#1a1c2c" stroke-width="0.8"/>
   <!-- 顶部受光（明显） -->
-  <path d="M12 14H52L53 18H11Z" fill="#dceaf2" opacity=".6"/>
+  <path d="M12 18.5 H52 L53 21.5 H11 Z" fill="#dceaf2" opacity=".6"/>
   <!-- 底部阴影 -->
-  <path d="M11 47L14 48H50L53 47V48H11Z" fill="#1a1c2c" opacity=".6"/>
+  <path d="M11 43.25 L14 44 H50 L53 43.25 V44 H11 Z" fill="#1a1c2c" opacity=".6"/>
   <!-- 小炮塔（居中偏前） -->
   <circle cx="28" cy="32" r="6" fill="#0a0e1a"/>
   <circle cx="28" cy="32" r="5" fill="#3a4658" stroke="#1a1c2c" stroke-width="1"/>
   <circle cx="28" cy="32" r="3.5" fill="#566c86"/>
   <!-- 小单管炮 -->
-  <rect x="20" y="31" width="8" height="2" fill="#1a1c2c"/>
-  <rect x="20" y="31" width="6" height="1" fill="#94b0c2"/>
+  <rect x="20" y="31.25" width="8" height="2" fill="#1a1c2c"/>
+  <rect x="20" y="31.25" width="6" height="1" fill="#94b0c2"/>
   <!-- 观察窗（开放驾驶） -->
-  <rect x="40" y="20" width="6" height="3" fill="#1a1c2c"/>
-  <rect x="41" y="21" width="4" height="1" fill="#94b0c2" opacity=".7"/>
+  <rect x="40" y="23" width="6" height="3" fill="#1a1c2c"/>
+  <rect x="41" y="23.75" width="4" height="1" fill="#94b0c2" opacity=".7"/>
   <!-- 引擎盖（带条纹） -->
-  <rect x="40" y="26" width="8" height="18" fill="#3a4658" stroke="#1a1c2c" stroke-width="0.8"/>
+  <rect x="40" y="27.5" width="8" height="18" fill="#3a4658" stroke="#1a1c2c" stroke-width="0.8"/>
   <g stroke="#1a1c2c" stroke-width="0.6" opacity=".7">
-    <path d="M40 30h8M40 34h8M40 38h8"/>
+    <path d="M40 30.5 h8 M40 33.5 h8 M40 36.5 h8"/>
   </g>
   <!-- 排气管（小） -->
-  <rect x="48" y="17" width="2" height="3" fill="#1a1c2c"/>
-  <rect x="48" y="16" width="2" height="1" fill="#3a4658"/>
+  <rect x="48" y="20.75" width="2" height="3" fill="#1a1c2c"/>
+  <rect x="48" y="20" width="2" height="1" fill="#3a4658"/>
   <!-- 信号灯（小，单一） -->
-  <rect x="10" y="22" width="2" height="2" fill="#94b0c2" opacity=".95"/>
-  <rect x="10" y="25" width="2" height="2" fill="#94b0c2" opacity=".5"/>
-  <rect x="52" y="22" width="2" height="2" fill="#a95035"/>
-  <rect x="52" y="25" width="2" height="2" fill="#a95035" opacity=".5"/>
+  <rect x="10" y="24.5" width="2" height="2" fill="#94b0c2" opacity=".95"/>
+  <rect x="10" y="26.75" width="2" height="2" fill="#94b0c2" opacity=".5"/>
+  <rect x="52" y="24.5" width="2" height="2" fill="#a95035"/>
+  <rect x="52" y="26.75" width="2" height="2" fill="#a95035" opacity=".5"/>
   <!-- 铆钉（少） -->
   <g fill="#1a1c2c">
-    <circle cx="14" cy="17" r="0.8"/>
-    <circle cx="50" cy="17" r="0.8"/>
-    <circle cx="14" cy="47" r="0.8"/>
-    <circle cx="50" cy="47" r="0.8"/>
+    <circle cx="14" cy="20.75" r="0.8"/>
+    <circle cx="50" cy="20.75" r="0.8"/>
+    <circle cx="14" cy="43.25" r="0.8"/>
+    <circle cx="50" cy="43.25" r="0.8"/>
   </g>
   <!-- 高光斜面 -->
-  <path d="M48 17l5 5v3l-5-5Z" fill="#dceaf2" opacity=".35"/>
+  <path d="M48 20.75 l5 5 v3 l-5 -5 Z" fill="#dceaf2" opacity=".35"/>
 </svg>

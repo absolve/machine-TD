@@ -1,14 +1,14 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene format=3 uid="uid://vog05pl4ci8k"]
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://nlpg2kpom2rd" path="res://script/enemy/medic.gd" id="2_script"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_v2_body.svg" id="3_body"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_v2_body_2.svg" id="3_body2"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_v2_body_3.svg" id="3_body3"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/medic_v2_body_4.svg" id="3_body4"]
+[ext_resource type="Texture2D" uid="uid://dq26ck8efblgl" path="res://sprite/enemy/redesigned/medic_v2_body.svg" id="3_body"]
+[ext_resource type="Texture2D" uid="uid://buf35oswenlt7" path="res://sprite/enemy/redesigned/medic_v2_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D" uid="uid://b1j2eimdl2sno" path="res://sprite/enemy/redesigned/medic_v2_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D" uid="uid://cyo50l2402p5k" path="res://sprite/enemy/redesigned/medic_v2_body_4.svg" id="3_body4"]
 [ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_gtpx3"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_0roa5"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s76pb"]
 resource_local_to_scene = true
 shader = ExtResource("3_gtpx3")
 shader_parameter/flash = 0.0
@@ -40,17 +40,17 @@ radius = 180.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(35, 28)
 
-[node name="medic" instance=ExtResource("1_base")]
-
+[node name="medic" unique_id=2085938425 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 5
 muzzleOffset = 24.0
 
 [node name="base" parent="." index="0" unique_id=1108324432]
-material = SubResource("ShaderMaterial_0roa5")
+material = SubResource("ShaderMaterial_s76pb")
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="radar" parent="." index="1" unique_id=1066952876]
+visible = false
 collision_mask = 2
 
 [node name="shape" parent="radar" index="0" unique_id=1238677921]
@@ -58,8 +58,7 @@ shape = SubResource("CircleShape2D_radar")
 
 [node name="turret" parent="." index="2" unique_id=108539921]
 visible = false
-material = SubResource("ShaderMaterial_0roa5")
+material = SubResource("ShaderMaterial_s76pb")
 
 [node name="shape" parent="." index="3" unique_id=359688443]
 shape = SubResource("RectangleShape2D_body")
-

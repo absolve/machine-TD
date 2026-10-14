@@ -2,14 +2,14 @@
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://c2n8wqmvtx4ka" path="res://script/enemy/experimentalTank.gd" id="2_script"]
-[ext_resource type="Texture2D" uid="uid://dmk170m8igfr1" path="res://sprite/enemy/redesigned/experimental_tank_v4_body.svg" id="3_body"]
-[ext_resource type="Texture2D" uid="uid://cibcmxbehqsaw" path="res://sprite/enemy/redesigned/experimental_tank_v4_body_2.svg" id="3_body2"]
-[ext_resource type="Texture2D" uid="uid://c6bkhb4dymca" path="res://sprite/enemy/redesigned/experimental_tank_v4_body_3.svg" id="3_body3"]
-[ext_resource type="Texture2D" uid="uid://5t1lgf2usm1a" path="res://sprite/enemy/redesigned/experimental_tank_v4_body_4.svg" id="3_body4"]
+[ext_resource type="Texture2D" uid="uid://dmk170m8igfr1" path="res://sprite/enemy/redesigned/experimental_tank_body.svg" id="3_body"]
+[ext_resource type="Texture2D" uid="uid://cibcmxbehqsaw" path="res://sprite/enemy/redesigned/experimental_tank_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D" uid="uid://c6bkhb4dymca" path="res://sprite/enemy/redesigned/experimental_tank_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D" uid="uid://5t1lgf2usm1a" path="res://sprite/enemy/redesigned/experimental_tank_body_4.svg" id="3_body4"]
 [ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_omc4h"]
 [ext_resource type="PackedScene" path="res://scene/turret/base_turret.tscn" id="4_turret"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_t2s1u"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_omc4h"]
 resource_local_to_scene = true
 shader = ExtResource("3_omc4h")
 shader_parameter/flash = 0.0
@@ -44,12 +44,12 @@ enemyType = 10
 muzzleOffset = 46.0
 
 [node name="base" parent="." index="0" unique_id=1108324432]
-material = SubResource("ShaderMaterial_t2s1u")
+material = SubResource("ShaderMaterial_omc4h")
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="turret" parent="." index="2" unique_id=108539921]
 visible = false
-material = SubResource("ShaderMaterial_t2s1u")
+material = SubResource("ShaderMaterial_omc4h")
 
 [node name="shape" parent="." index="3" unique_id=359688443]
 shape = SubResource("RectangleShape2D_body")

@@ -18,51 +18,51 @@
   </g>
   <!-- 旋翼座（4 个小圆，在臂端） -->
   <g fill="#1a1c2c">
-    <circle cx="4" cy="24" r="1.5"/>
-    <circle cx="44" cy="24" r="1.5"/>
+    <circle cx="4" cy="26" r="1.5"/>
+    <circle cx="44" cy="26" r="1.5"/>
     <circle cx="24" cy="4" r="1.5"/>
-    <circle cx="24" cy="44" r="1.5"/>
+    <circle cx="24" cy="41" r="1.5"/>
   </g>
   <g fill="#566c86">
-    <circle cx="4" cy="24" r="0.7"/>
-    <circle cx="44" cy="24" r="0.7"/>
+    <circle cx="4" cy="26" r="0.7"/>
+    <circle cx="44" cy="26" r="0.7"/>
     <circle cx="24" cy="4" r="0.7"/>
-    <circle cx="24" cy="44" r="0.7"/>
+    <circle cx="24" cy="41" r="0.7"/>
   </g>
   <!-- 中央吊舱（圆角方形，俯视） -->
-  <rect x="16" y="16" width="16" height="16" rx="2" fill="#0a0e1a" opacity=".5"/>
-  <rect x="17" y="17" width="14" height="14" rx="1.5" fill="#3a4658" stroke="#1a1c2c" stroke-width="1.2"/>
+  <rect x="16" y="20" width="16" height="16" rx="2" fill="#0a0e1a" opacity=".5"/>
+  <rect x="17" y="20.75" width="14" height="14" rx="1.5" fill="#3a4658" stroke="#1a1c2c" stroke-width="1.2"/>
   <!-- 吊舱顶受光 -->
-  <rect x="17" y="17" width="14" height="3" rx="1" fill="#566c86"/>
+  <rect x="17" y="20.75" width="14" height="3" rx="1" fill="#566c86"/>
   <!-- 摄像头/传感器镜头（深色 + 青色光点，俯视：正圆） -->
-  <circle cx="24" cy="24" r="3.5" fill="#0a0e1a" stroke="#94b0c2" stroke-width="0.8"/>
-  <circle cx="24" cy="24" r="2.5" fill="#1a1c2c"/>
-  <circle cx="24" cy="24" r="1.2" fill="#7fd0c6"/>
-  <circle cx="24" cy="24" r="0.5" fill="#dceaf2"/>
+  <circle cx="24" cy="26" r="3.5" fill="#0a0e1a" stroke="#94b0c2" stroke-width="0.8"/>
+  <circle cx="24" cy="26" r="2.5" fill="#1a1c2c"/>
+  <circle cx="24" cy="26" r="1.2" fill="#7fd0c6"/>
+  <circle cx="24" cy="26" r="0.5" fill="#dceaf2"/>
   <!-- 镜头十字分割线 -->
   <g stroke="#1a1c2c" stroke-width="0.3" opacity=".7">
-    <path d="M21 24h6M24 21v6"/>
+    <path d="M21 26 h6 M24 23.75 v6"/>
   </g>
   <!-- 天线（短，俯视：4 角 4 短针） -->
   <g fill="#1a1c2c">
-    <rect x="17" y="14" width="0.6" height="3"/>
-    <rect x="30.4" y="14" width="0.6" height="3"/>
-    <rect x="17" y="31" width="0.6" height="3"/>
-    <rect x="30.4" y="31" width="0.6" height="3"/>
+    <rect x="17" y="18.5" width="0.6" height="3"/>
+    <rect x="30.4" y="18.5" width="0.6" height="3"/>
+    <rect x="17" y="31.25" width="0.6" height="3"/>
+    <rect x="30.4" y="31.25" width="0.6" height="3"/>
   </g>
   <g fill="#a95035">
-    <circle cx="17.3" cy="14" r="0.5"/>
+    <circle cx="17.3" cy="18.5" r="0.5"/>
   </g>
   <g fill="#7fd0c6">
-    <circle cx="30.7" cy="14" r="0.5"/>
+    <circle cx="30.7" cy="18.5" r="0.5"/>
   </g>
   <g fill="#ffc61a">
-    <circle cx="17.3" cy="34" r="0.5"/>
-    <circle cx="30.7" cy="34" r="0.5"/>
+    <circle cx="17.3" cy="33.5" r="0.5"/>
+    <circle cx="30.7" cy="33.5" r="0.5"/>
   </g>
   <!-- 警示黄（机臂端） -->
-  <rect x="2" y="25" width="2" height="1" fill="#ffc61a"/>
-  <rect x="44" y="25" width="2" height="1" fill="#ffc61a"/>
+  <rect x="2" y="26.75" width="2" height="1" fill="#ffc61a"/>
+  <rect x="44" y="26.75" width="2" height="1" fill="#ffc61a"/>
   <rect x="25" y="2" width="1" height="2" fill="#ffc61a"/>
-  <rect x="25" y="44" width="1" height="2" fill="#ffc61a"/>
+  <rect x="25" y="41" width="1" height="2" fill="#ffc61a"/>
 </svg>
