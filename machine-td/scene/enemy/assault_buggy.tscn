@@ -29,7 +29,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(32, 26)
+size = Vector2(24, 18)
 
 [node name="assault_buggy" instance=ExtResource("1_base")]
 
@@ -38,6 +38,7 @@ enemyType = 4
 muzzleOffset = 23.0
 
 [node name="base" parent="." index="0"]
+scale = Vector2(0.726, 0.726)
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="turret" parent="." index="2"]

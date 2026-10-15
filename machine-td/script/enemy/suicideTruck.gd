@@ -27,8 +27,10 @@ func triggerSelfExplode() -> void:
 	bomb.targetMask = 1 << 0 # 只命中塔 layer 1
 	Game.addObj(bomb)
 	freeSelf()
+	return
 
 func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
 	if points.size() == 0:
 		return
 	parent.progress += speed * delta

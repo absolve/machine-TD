@@ -333,23 +333,40 @@ func _physics_process(delta: float) -> void:
 	queue_redraw()
 
 
-## 找一坨射程内**最近的**残骸。
+## 找一坨射程内**最近的、且没被别的机甲认领的**残骸。
 ##
 ## 距离优先（§10.5）：玩家把残骸放得离机甲更近，就能让它先收那一坨 ——
 ## 不再额外做"手动指定优先级"的 UI。
+##
+## ⚠️ 必须跳过已经被别的机甲认领的残骸。第一版只按距离挑，没有认领概念，
+##    结果两台机甲会一起对着同一坨残骸干活：进度存在残骸身上（谁写谁覆盖），
+##    先干完的那台把钱收走，另一台白跑。玩家看到的就是"两台机甲抢同一坨"。
 func pickSalvageTarget() -> Node2D:
 	var best: Node2D = null
 	var bestDist: float = INF
 	for w in get_tree().get_nodes_in_group("wreckage"):
 		if not is_instance_valid(w) or not (w is Node2D):
 			continue
-		var d: float = global_position.distance_to((w as Node2D).global_position)
+		var wreck: Node2D = w
+		# 别人占着的跳过（claimedBy 对"自己占的"返回 false，所以自己的目标不会被跳过）
+		if wreck.has_method("claimedBy") and wreck.call("claimedBy", self):
+			continue
+		var d: float = global_position.distance_to(wreck.global_position)
 		if d > salvageScope:
 			continue
 		if d < bestDist:
 			bestDist = d
-			best = w
+			best = wreck
 	return best
+
+
+## 认领一坨残骸。已经被别人占着 -> 返回 false。
+func claimWreckage(wreck: Node2D) -> bool:
+	if wreck == null or not is_instance_valid(wreck):
+		return false
+	if wreck.has_method("tryClaim"):
+		return bool(wreck.call("tryClaim", self))
+	return true # 没有认领机制的对象（理论上不会有）就当认领成功
 
 
 ## 推进回收作业：累计时长，够了就收走。
@@ -357,7 +374,20 @@ func pickSalvageTarget() -> Node2D:
 ## ⚠️ 进度写在**残骸自己**身上（`salvageProgress`），不是机甲身上 ——
 ##    进度环要画在残骸头顶（§11.5），写在残骸上它自己就能重绘，
 ##    机甲换目标时也不用先去把旧目标的进度清干净（abortSalvage 会清）。
+##
+## ⚠️ 有目标期间**不要每帧重挑**。第一版每帧调一次 pickSalvageTarget()，
+##    一旦出现"当前目标不再是最近"的抖动（残骸快消失、机甲边走边动），
+##    目标就会在两坨之间来回横跳，进度反复清零、永远收不完。
+##    现在只在"没目标 / 目标失效 / 目标出射程"时才重挑。
 func updateSalvage(delta: float) -> void:
+	# 当前目标还有效、还在射程内 -> 锁定它，什么都不用重算
+	if salvageTarget != null and is_instance_valid(salvageTarget):
+		var dist: float = global_position.distance_to(salvageTarget.global_position)
+		if dist <= salvageScope:
+			advanceSalvage(delta)
+			return
+
+	# 需要（重新）选目标
 	var t: Node2D = pickSalvageTarget()
 	if t == null:
 		abortSalvage()
@@ -365,8 +395,19 @@ func updateSalvage(delta: float) -> void:
 	if t != salvageTarget:
 		# 换了目标：旧的重头再来
 		abortSalvage()
+		if not claimWreckage(t):
+			# 刚好被别人抢走了，这一帧先不做，下一帧再挑
+			return
 		salvageTarget = t
 		salvageElapsed = 0.0
+	advanceSalvage(delta)
+
+
+## 推进当前目标的回收进度
+func advanceSalvage(delta: float) -> void:
+	if salvageTarget == null or not is_instance_valid(salvageTarget):
+		abortSalvage()
+		return
 	salvageBeamOn = true
 	salvageElapsed += delta
 	var ratio: float = clampf(salvageElapsed / maxf(0.05, salvageSeconds), 0.0, 1.0)
@@ -384,13 +425,16 @@ func updateSalvage(delta: float) -> void:
 
 
 ## 中断回收（换目标 / 切去修塔 / 开始移动都要调）。
-## 会把残骸身上的进度与"正在被回收"标记清掉，避免它卡在"永远在回收中"而不淡出。
+## 会把残骸身上的进度与"正在被回收"标记清掉，避免它卡在"永远在回收中"而不淡出，
+## 同时**释放认领**，让别的机甲可以接手。
 func abortSalvage() -> void:
 	if salvageTarget != null and is_instance_valid(salvageTarget):
 		if "salvageProgress" in salvageTarget:
 			salvageTarget.set("salvageProgress", 0.0)
 			salvageTarget.set("salvaging", false)
 			salvageTarget.queue_redraw()
+		if salvageTarget.has_method("releaseClaim"):
+			salvageTarget.call("releaseClaim", self)
 	salvageTarget = null
 	salvageElapsed = 0.0
 	salvageBeamOn = false

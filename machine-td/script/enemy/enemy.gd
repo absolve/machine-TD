@@ -534,4 +534,15 @@ func _draw() -> void:
 	)
 	if lifeBar == null or not is_instance_valid(lifeBar):
 		return
-	lifeBar.global_position =parent.global_position+LIFE_BAR_OFFSET
+	# ⚠️ parent 可能为 null：`parent` 是各子类 `_ready()` 里
+	#    `get_parent() as PathFollow2D` 拿到的。只要敌人不是挂在 PathFollow2D 下
+	#    （编辑器里预览、单独实例化、测试场景里直接 add_child 到地图），它就会是 null。
+	#
+	#    这一行原本是无保护的 `lifeBar.global_position = parent.global_position + ...`，
+	#    一旦 parent 为 null，**整个 _draw() 在最后一行抛异常**。射程圈是在这行之前画的，
+	#    所以表现就是"圈画出来了但不会更新"—— 重绘每次都中断在半路。
+	if parent == null or not is_instance_valid(parent):
+		# 没挂在路径上：直接用自己的位置，射程圈和血条都还能正常显示
+		lifeBar.global_position = global_position + LIFE_BAR_OFFSET
+		return
+	lifeBar.global_position = parent.global_position + LIFE_BAR_OFFSET

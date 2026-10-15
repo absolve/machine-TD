@@ -32,7 +32,7 @@ animations = [{
 radius = 150
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(36, 26)
+size = Vector2(32, 22)
 
 [node name="suicide_truck" instance=ExtResource("1_base")]
 
@@ -41,6 +41,7 @@ enemyType = 6
 muzzleOffset = 27.0
 
 [node name="base" parent="." index="0"]
+scale = Vector2(0.871, 0.871)
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="shape" parent="radar" index="0"]

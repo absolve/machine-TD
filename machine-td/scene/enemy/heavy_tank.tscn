@@ -2,12 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://diw3xtwr1wxoy" path="res://script/enemy/heavyTank.gd" id="2_script"]
-[ext_resource type="Texture2D" uid="uid://mjrgif58hwh6" path="res://sprite/enemy/redesigned/heavy_tank_v2_body.svg" id="3_body"]
-[ext_resource type="Texture2D" uid="uid://clk55jst2t08x" path="res://sprite/enemy/redesigned/heavy_tank_v2_body_2.svg" id="3_body2"]
-[ext_resource type="Texture2D" uid="uid://oi62suysdjl" path="res://sprite/enemy/redesigned/heavy_tank_v2_body_3.svg" id="3_body3"]
-[ext_resource type="Texture2D" uid="uid://cqu08oecxio3w" path="res://sprite/enemy/redesigned/heavy_tank_v2_body_4.svg" id="3_body4"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/heavy_tank_v2_body.svg" id="3_body"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/heavy_tank_v2_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/heavy_tank_v2_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/heavy_tank_v2_body_4.svg" id="3_body4"]
 [ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_fwmxp"]
-[ext_resource type="Texture2D" uid="uid://3kl2w1qwgr4y" path="res://sprite/enemy/redesigned/heavy_tank_v2_turret.svg" id="4_turret"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/heavy_tank_v2_turret.svg" id="4_turret"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_n66hx"]
 resource_local_to_scene = true
@@ -47,19 +47,21 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(44, 32)
+size = Vector2(42, 30)
 
 [node name="heavy_tank" instance=ExtResource("1_base")]
 
 script = ExtResource("2_script")
 enemyType = 2
-muzzleOffset = 33.0
+muzzleOffset = 29.0
 
 [node name="base" parent="." index="0" unique_id=1108324432]
+scale = Vector2(0.968, 0.968)
 material = SubResource("ShaderMaterial_n66hx")
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="turret" parent="." index="2" unique_id=108539921]
+scale = Vector2(1.023, 1.023)
 material = SubResource("ShaderMaterial_n66hx")
 sprite_frames = SubResource("SpriteFrames_turret")
 offset = Vector2(7, 0)

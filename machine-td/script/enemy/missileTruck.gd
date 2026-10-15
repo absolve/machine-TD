@@ -30,12 +30,14 @@ func fire(towerTarget: Node2D) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
 	if points.size() == 0:
 		return
 	parent.progress += speed * delta
 	if parent.progress_ratio >= 1:
 		Game.enemyEscaped.emit(lossPoints)
 		freeSelf()
+		return
 	var temp = pickTarget()
 	if temp != null and aimAt(temp, delta):
 		fire(temp)

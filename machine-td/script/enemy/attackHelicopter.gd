@@ -34,12 +34,14 @@ func fire(towerTarget: Node2D) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
 	if points.size() == 0:
 		return
 	parent.progress += speed * delta
 	if parent.progress_ratio >= 1:
 		Game.enemyEscaped.emit(lossPoints)
 		freeSelf()
+		return
 	# 取最近的**有效**目标，并把炮塔转过去；到位了才开火。
 	# 原来这里既不看最近、也不转炮塔，子弹顺着炮塔当时的朝向飞 —— 就是"胡乱攻击"。
 	var temp = pickTarget()

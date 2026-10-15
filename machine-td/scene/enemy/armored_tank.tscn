@@ -48,19 +48,21 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(48, 34)
+size = Vector2(46, 32)
 
 [node name="armored_tank" instance=ExtResource("1_base")]
 
 script = ExtResource("2_script")
 enemyType = 3
-muzzleOffset = 35.0
+muzzleOffset = 38.9
 
 [node name="base" parent="." index="0"]
+scale = Vector2(0.968, 0.968)
 material = SubResource("ShaderMaterial_mugqh")
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="turret" parent="." index="2"]
+scale = Vector2(1.214, 1.214)
 material = SubResource("ShaderMaterial_mugqh")
 sprite_frames = SubResource("SpriteFrames_turret")
 offset = Vector2(17, 0)

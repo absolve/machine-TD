@@ -2,12 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://de1xh8lbgnoye" path="res://script/enemy/mini_tank.gd" id="2_script"]
-[ext_resource type="Texture2D" uid="uid://bx27x5rjdrcj1" path="res://sprite/enemy/redesigned/mini_tank_v2_body.svg" id="3_body"]
-[ext_resource type="Texture2D" uid="uid://wfbauaoreity" path="res://sprite/enemy/redesigned/mini_tank_v2_body_2.svg" id="3_body2"]
-[ext_resource type="Texture2D" uid="uid://drvnv5478q7x3" path="res://sprite/enemy/redesigned/mini_tank_v2_body_3.svg" id="3_body3"]
-[ext_resource type="Texture2D" uid="uid://d1kci854birpq" path="res://sprite/enemy/redesigned/mini_tank_v2_body_4.svg" id="3_body4"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/mini_tank_v2_body.svg" id="3_body"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/mini_tank_v2_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/mini_tank_v2_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/mini_tank_v2_body_4.svg" id="3_body4"]
 [ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_qanbx"]
-[ext_resource type="Texture2D" uid="uid://cwajiv17o2iu5" path="res://sprite/enemy/redesigned/mini_tank_v2_turret.svg" id="4_turret"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/mini_tank_v2_turret.svg" id="4_turret"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_bhtvl"]
 resource_local_to_scene = true
@@ -50,13 +50,14 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(36, 26)
+size = Vector2(32, 22)
 
 [node name="miniTank" unique_id=2025415096 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
-muzzleOffset = 26.0
+muzzleOffset = 12.2
 
 [node name="base" parent="." index="0" unique_id=1108324432]
+scale = Vector2(0.871, 0.871)
 material = SubResource("ShaderMaterial_bhtvl")
 sprite_frames = SubResource("SpriteFrames_body")
 
@@ -67,6 +68,7 @@ visible = false
 shape = SubResource("CircleShape2D_radar")
 
 [node name="turret" parent="." index="2" unique_id=108539921]
+scale = Vector2(1.385, 1.385)
 material = SubResource("ShaderMaterial_bhtvl")
 sprite_frames = SubResource("SpriteFrames_turret")
 offset = Vector2(6, 0)

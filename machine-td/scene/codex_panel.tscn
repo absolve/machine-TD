@@ -4,7 +4,10 @@
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_btn"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lunp2"]
+
 [node name="CodexPanel" type="Control" unique_id=1443458816]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 1920.0
@@ -78,6 +81,7 @@ layout_mode = 2
 text = "_CodexTowers"
 
 [node name="Scroll" type="ScrollContainer" parent="Frame/PanelContainer/VBox/Columns/Left" unique_id=1168103173]
+custom_maximum_size = Vector2(-1, 720)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
@@ -98,6 +102,7 @@ columns = 4
 [node name="DetailBox" type="PanelContainer" parent="Frame/PanelContainer/VBox/Columns" unique_id=134651597]
 custom_minimum_size = Vector2(430, 0)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_lunp2")
 
 [node name="DetailVBox" type="VBoxContainer" parent="Frame/PanelContainer/VBox/Columns/DetailBox" unique_id=421947337]
 layout_mode = 2

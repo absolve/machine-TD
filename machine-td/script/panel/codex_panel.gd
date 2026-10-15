@@ -91,6 +91,9 @@ var TOWERICONS: Dictionary = {
 	Game.towerType.teslaCoilTower: "res://sprite/icon/unit/teslaCoilTower.png",
 	Game.towerType.laserTower: "res://sprite/icon/unit/laserTower.png",
 	Game.towerType.ironBox: "res://sprite/icon/unit/ironBox.png",
+	# 机甲是后加的塔，最初漏了这张表 -> 图鉴里它的卡片是空白的。
+	# 图标由 .td_verify/gen_mech_codex_icon.py 用 base + turret 合成（和别的图标同一套做法）。
+	Game.towerType.mech: "res://sprite/icon/unit/mechTower.png",
 }
 
 # ---------- 节点 ----------

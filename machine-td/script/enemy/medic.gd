@@ -16,11 +16,13 @@ func fire(targets: Array) -> void:
 		delayTimer.start()
 		
 func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
 	if points.size() == 0:
 		return
 	parent.progress += speed * delta
 	if parent.progress_ratio >= 1:
 		Game.enemyEscaped.emit(lossPoints)
 		freeSelf()
+		return
 	if target.size() > 0:
 		fire(target)

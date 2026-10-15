@@ -2,10 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://c2n8wqmvtx4ka" path="res://script/enemy/experimentalTank.gd" id="2_script"]
-[ext_resource type="Texture2D" uid="uid://dmk170m8igfr1" path="res://sprite/enemy/redesigned/experimental_tank_body.svg" id="3_body"]
-[ext_resource type="Texture2D" uid="uid://cibcmxbehqsaw" path="res://sprite/enemy/redesigned/experimental_tank_body_2.svg" id="3_body2"]
-[ext_resource type="Texture2D" uid="uid://c6bkhb4dymca" path="res://sprite/enemy/redesigned/experimental_tank_body_3.svg" id="3_body3"]
-[ext_resource type="Texture2D" uid="uid://5t1lgf2usm1a" path="res://sprite/enemy/redesigned/experimental_tank_body_4.svg" id="3_body4"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/experimental_tank_v4_body.svg" id="3_body"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/experimental_tank_v4_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/experimental_tank_v4_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/experimental_tank_v4_body_4.svg" id="3_body4"]
 [ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_omc4h"]
 [ext_resource type="PackedScene" path="res://scene/turret/base_turret.tscn" id="4_turret"]
 
@@ -36,18 +36,20 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(80, 40)
+size = Vector2(122, 60)
 
 [node name="experimental_tank" unique_id=852443066 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 10
-muzzleOffset = 46.0
+muzzleOffset = 19.5
 
 [node name="base" parent="." index="0" unique_id=1108324432]
+scale = Vector2(1.516, 1.516)
 material = SubResource("ShaderMaterial_omc4h")
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="turret" parent="." index="2" unique_id=108539921]
+scale = Vector2(0.950, 0.950)
 visible = false
 material = SubResource("ShaderMaterial_omc4h")
 
@@ -55,6 +57,7 @@ material = SubResource("ShaderMaterial_omc4h")
 shape = SubResource("RectangleShape2D_body")
 
 [node name="TurretFL" parent="." index="6" unique_id=1084228689 instance=ExtResource("4_turret")]
+scale = Vector2(0.950, 0.950)
 visible = false
 z_index = -1
 position = Vector2(-20, -10)
@@ -62,9 +65,10 @@ atk = 16
 shootDelay = 0.8
 radarScope = 300.0
 rotationSpeed = 8.0
-muzzleOffset = 24.0
+muzzleOffset = 19.5
 
 [node name="TurretFR" parent="." index="7" unique_id=1310704841 instance=ExtResource("4_turret")]
+scale = Vector2(0.950, 0.950)
 visible = false
 z_index = -1
 position = Vector2(20, -10)
@@ -72,9 +76,10 @@ atk = 16
 shootDelay = 0.8
 radarScope = 300.0
 rotationSpeed = 8.0
-muzzleOffset = 24.0
+muzzleOffset = 19.5
 
 [node name="TurretBL" parent="." index="8" unique_id=1190708134 instance=ExtResource("4_turret")]
+scale = Vector2(0.950, 0.950)
 visible = false
 z_index = -1
 position = Vector2(-20, 10)
@@ -82,9 +87,10 @@ atk = 16
 shootDelay = 0.8
 radarScope = 300.0
 rotationSpeed = 8.0
-muzzleOffset = 24.0
+muzzleOffset = 19.5
 
 [node name="TurretBR" parent="." index="9" unique_id=1315719934 instance=ExtResource("4_turret")]
+scale = Vector2(0.950, 0.950)
 visible = false
 z_index = -1
 position = Vector2(20, 10)
@@ -92,4 +98,4 @@ atk = 16
 shootDelay = 0.8
 radarScope = 300.0
 rotationSpeed = 8.0
-muzzleOffset = 24.0
+muzzleOffset = 19.5

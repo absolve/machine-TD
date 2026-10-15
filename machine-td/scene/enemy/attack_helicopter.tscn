@@ -30,9 +30,11 @@ enemyType = 9
 muzzleOffset = 26.0
 
 [node name="base" parent="." index="0"]
+scale = Vector2(0.981, 0.981)
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="Rotor" type="Sprite2D" parent="."]
+scale = Vector2(0.968, 0.968)
 texture = ExtResource("4_rotor")
 z_index = 0
 

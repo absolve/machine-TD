@@ -51,6 +51,35 @@ var salvaging: bool = false
 ## 淡出中标记，避免重复触发
 var fading: bool = false
 
+## 谁认领了这坨残骸（机甲节点），没人认领时是 null。
+##
+## ★ 为什么要认领：机甲的选目标逻辑只按"离我最近"挑，不看别人在干什么。
+##   两台机甲各自走到自己射程内最近的同一坨残骸前，就会一起对着它干活 ——
+##   两台机的进度各算各的（进度存在残骸身上，谁写谁覆盖），先干完的那台把钱收走，
+##   另一台白跑一趟。玩家看到的就是"两台机甲抢同一坨，回收效率还变低了"。
+##
+##   认领之后 pickSalvageTarget 会跳过别人占着的残骸，机甲自动换下一坨。
+var salvager: Node2D = null
+
+
+## 被谁认领了（没人认领就返回 false）
+func claimedBy(other: Node2D) -> bool:
+	return salvager != null and is_instance_valid(salvager) and salvager != other
+
+
+## 尝试认领。已经被别人占着就返回 false（调用方应该换目标）。
+func tryClaim(who: Node2D) -> bool:
+	if claimedBy(who):
+		return false
+	salvager = who
+	return true
+
+
+## 释放认领。只有认领者自己能释放，避免 A 把 B 的认领顶掉。
+func releaseClaim(who: Node2D) -> void:
+	if salvager == who:
+		salvager = null
+
 var sprite: Sprite2D
 ## 冒烟粒子（场景里那个 CPUParticles2D）
 var smoke: CPUParticles2D

@@ -18,7 +18,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(30, 30)
+size = Vector2(36, 36)
 
 [node name="scout_drone" instance=ExtResource("1_base")]
 
@@ -27,7 +27,7 @@ enemyType = 8
 muzzleOffset = 15.0
 
 [node name="base" parent="." index="0"]
-scale = Vector2(0.8, 0.8)
+scale = Vector2(0.974, 0.974)
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="turret" parent="." index="2"]
@@ -39,20 +39,20 @@ shape = SubResource("RectangleShape2D_body")
 [node name="RotorFL" type="Sprite2D" parent="."]
 texture = ExtResource("4_rotor")
 position = Vector2(-14.4, -14.4)
-scale = Vector2(0.8, 0.8)
+scale = Vector2(0.333, 0.333)
 
 [node name="RotorFR" type="Sprite2D" parent="."]
 texture = ExtResource("4_rotor")
 position = Vector2(14.4, -14.4)
-scale = Vector2(0.8, 0.8)
+scale = Vector2(0.333, 0.333)
 
 [node name="RotorBL" type="Sprite2D" parent="."]
 texture = ExtResource("4_rotor")
 position = Vector2(-14.4, 14.4)
-scale = Vector2(0.8, 0.8)
+scale = Vector2(0.333, 0.333)
 
 [node name="RotorBR" type="Sprite2D" parent="."]
 texture = ExtResource("4_rotor")
 position = Vector2(14.4, 14.4)
-scale = Vector2(0.8, 0.8)
+scale = Vector2(0.333, 0.333)
 

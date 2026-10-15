@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_x4oq0"]
 [ext_resource type="Script" uid="uid://dnaqsi3rmg555" path="res://script/tower/tesla_coil_tower.gd" id="2_5fmby"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_427bq"]
-[ext_resource type="Texture2D" uid="uid://c5cu77rxd8jty" path="res://sprite/tower/tower_tesla.png" id="99_turret"]
+[ext_resource type="Texture2D"  path="res://sprite/tower/tower_tesla.png" id="99_turret"]
 [ext_resource type="Texture2D" uid="uid://d007qyjl2hj8g" path="res://sprite/tower/tower_tesla_f1.png" id="f1"]
 [ext_resource type="Texture2D" uid="uid://d0usqajra2hj7" path="res://sprite/tower/tower_tesla_f2.png" id="f2"]
 [ext_resource type="Texture2D" uid="uid://ohg1jbbdutmx" path="res://sprite/tower/tower_tesla_f3.png" id="f3"]

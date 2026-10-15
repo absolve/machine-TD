@@ -2,12 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://hk0icww3xlg" path="res://script/enemy/missileTruck.gd" id="2_script"]
-[ext_resource type="Texture2D" uid="uid://db3tvfu4fy6dw" path="res://sprite/enemy/redesigned/missile_truck_v2_body.svg" id="3_body"]
-[ext_resource type="Texture2D" uid="uid://fqdc7im2nmpe" path="res://sprite/enemy/redesigned/missile_truck_v2_body_2.svg" id="3_body2"]
-[ext_resource type="Texture2D" uid="uid://cvl5png2x2rda" path="res://sprite/enemy/redesigned/missile_truck_v2_body_3.svg" id="3_body3"]
-[ext_resource type="Texture2D" uid="uid://wphlgyxep4v" path="res://sprite/enemy/redesigned/missile_truck_v2_body_4.svg" id="3_body4"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/missile_truck_v2_body.svg" id="3_body"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/missile_truck_v2_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/missile_truck_v2_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/missile_truck_v2_body_4.svg" id="3_body4"]
 [ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_jmd2k"]
-[ext_resource type="Texture2D" uid="uid://wqnkhi436ae" path="res://sprite/enemy/redesigned/missile_truck_v2_turret.svg" id="8_71rur"]
+[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/missile_truck_v2_turret.svg" id="8_71rur"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5rkl6"]
 resource_local_to_scene = true
@@ -50,14 +50,15 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(39, 28)
+size = Vector2(34, 24)
 
 [node name="missile_truck" unique_id=529434244 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 7
-muzzleOffset = 27.0
+muzzleOffset = 21.5
 
 [node name="base" parent="." index="0" unique_id=1108324432]
+scale = Vector2(0.871, 0.871)
 material = SubResource("ShaderMaterial_5rkl6")
 sprite_frames = SubResource("SpriteFrames_body")
 
@@ -68,6 +69,7 @@ visible = false
 shape = SubResource("CircleShape2D_radar")
 
 [node name="turret" parent="." index="2" unique_id=108539921]
+scale = Vector2(1.000, 1.000)
 material = SubResource("ShaderMaterial_5rkl6")
 sprite_frames = SubResource("SpriteFrames_qn4rx")
 

@@ -44,21 +44,23 @@ animations = [{
 radius = 240
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(40, 30)
+size = Vector2(38, 28)
 
 [node name="medium_tank" instance=ExtResource("1_base")]
 
 script = ExtResource("2_script")
 enemyType = 1
-muzzleOffset = 29.0
+muzzleOffset = 23.5
 
 [node name="base" parent="." index="0"]
+scale = Vector2(0.935, 0.935)
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="shape" parent="radar" index="0"]
 shape = SubResource("CircleShape2D_radar")
 
 [node name="turret" parent="." index="2"]
+scale = Vector2(1.000, 1.000)
 sprite_frames = SubResource("SpriteFrames_turret")
 offset = Vector2(6, 0)
 

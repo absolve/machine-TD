@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://h5w308vyc8yt" path="res://script/tower/machineGunTower.gd" id="2_nmv2o"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_nmv2o"]
 [ext_resource type="AudioStream" uid="uid://dbj08y2b88e5d" path="res://sound/sfx/mg_fire.ogg" id="5_shot"]
-[ext_resource type="Texture2D" uid="uid://d0nx7p1qhfx3d" path="res://sprite/fx/circle_05_a.png" id="6_i2h4l"]
+[ext_resource type="Texture2D"  path="res://sprite/fx/circle_05_a.png" id="6_i2h4l"]
 [ext_resource type="Texture2D" uid="uid://dyluyv2imdos1" path="res://sprite/tower/base_round.png" id="99_base"]
 [ext_resource type="Texture2D" uid="uid://dlleor6e3o1ej" path="res://sprite/tower/turret_machinegun.png" id="99_turret"]
 

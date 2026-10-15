@@ -4,6 +4,8 @@
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_lunp2"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_shb8y"]
+
 [node name="AchievementPanel" type="Control" unique_id=1920206854]
 visible = false
 layout_mode = 3
@@ -69,6 +71,7 @@ columns = 3
 [node name="DetailBox" type="PanelContainer" parent="PanelContainer/VBoxContainer/Columns" unique_id=1920206858]
 custom_minimum_size = Vector2(430, 0)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_shb8y")
 
 [node name="DetailVBox" type="VBoxContainer" parent="PanelContainer/VBoxContainer/Columns/DetailBox" unique_id=1920206862]
 layout_mode = 2
