@@ -83,6 +83,10 @@ const RADAR_SCAN_SPEED := 1.8
 ## 详见 [method playTurretRecoil]。
 @export var turretRecoil: float = 5.0
 const LIFE_BAR_OFFSET := Vector2(0.0, -50.0)
+## 被击中后血条亮多久（秒）。数值沿用血条场景里 Timer 原本的 3.0，改这里就够。
+## 选中敌人期间血条一律不显示（见 setSelected），选中前被打过的话，
+## 取消选中时若还没到点会重新亮起来。
+const HIT_SHOW_SECONDS := 3.0
 
 ## ── 开火后坐（炮塔贴图往后一顿再弹回）──
 ## 防御塔是在 player 的 "fire" 动画里把 `turret:offset` 从 (0,0) 推到 (-5,0) 再弹回、
@@ -154,8 +158,8 @@ func setupEnemyInfo():
 	if shootDelay > 0:
 		delayTimer.wait_time = shootDelay
 	if lifeBar:
-		lifeBar.maxHp = hp
-		lifeBar.value = hp
+		lifeBar.setMax(hp)
+		lifeBar.setValue(hp)
 	# 炮口标记的位置也在这里写（理由见 muzzleOffset 的注释：场景里改会被编辑器丢掉）
 	if muzzleMarker != null:
 		muzzleMarker.position = Vector2(muzzleOffset, 0.0)
@@ -303,9 +307,12 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 	hp -= int(max(0.0, ceil(actualDamage)))
 	# 被击中亮一下（所有敌人通用，材质在基场景上）
 	playHitFlash()
-	if lifeBar:
-		lifeBar.visible = true
-		lifeBar.value = hp
+	# ---- 血条可见性：全部由敌人这边决定（life_bar.gd 只负责画）----
+	#  · 被击中 -> 强制亮 HIT_SHOW_SECONDS 秒（即使此刻正被选中）
+	#  · 被选中 -> 一律不显示（攻击范围圈已经说明了他是谁）
+	#  · 取消选中 -> 若还在展示窗口内就恢复显示，否则继续藏着
+	lifeBar.setValue(hp)
+	lifeBar.flashFor(HIT_SHOW_SECONDS)
 	if hp <= 0:
 		# 先立旗再发奖励：奖励信号与 queue_free() 之外还有别的监听者，
 		# 万一其中有人回调 hurt()，dead 已经为 true 就不会二次结算。
@@ -444,7 +451,7 @@ func addHp(_num: int):
 	hp += _num
 	if hp > maxHp:
 		hp = maxHp
-	lifeBar.value = hp
+	lifeBar.setValue(hp)
 	if not wasFull:
 		var fx: Node = (load(HEAL_FX) as PackedScene).instantiate()
 		fx.position = global_position + Vector2(0, -26)
@@ -472,6 +479,14 @@ func setSelected(on: bool) -> void:
 	# 取消选中时把扫描线归零，下次选中的观感每次都一样
 	if not selected:
 		radarSweepAngle = 0.0
+	# 选中期间**不显示血条**：攻击范围圈已经在说"我选中了谁"，再叠一条血条只会让画面更乱。
+	# 取消选中时，如果还处在"被击中"的展示窗口里就恢复显示，否则继续藏着 ——
+	# 展示窗口本身由 lifeBar 的计时器记着，这里不用再存一份状态。
+	if lifeBar:
+		if selected:
+			lifeBar.conceal()
+		elif lifeBar.isShowing():
+			lifeBar.flashFor(lifeBar.remaining())
 	queue_redraw()
 
 

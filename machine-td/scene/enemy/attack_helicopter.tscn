@@ -1,10 +1,16 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene format=3 uid="uid://dyf5ay7vcnh1y"]
 
-[ext_resource type="PackedScene" path="res://scene/enemy/enemy.tscn" id="1_base"]
-[ext_resource type="Script" path="res://script/enemy/attackHelicopter.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
+[ext_resource type="Script" uid="uid://cob11qts6pxo8" path="res://script/enemy/attackHelicopter.gd" id="2_script"]
+[ext_resource type="Texture2D" uid="uid://0pwegi44woii" path="res://sprite/enemy/redesigned/attack_helicopter_v2_body.svg" id="3_body"]
+[ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_s7gvn"]
+[ext_resource type="Texture2D" uid="uid://dyg2c3svt57lj" path="res://sprite/enemy/redesigned/attack_helicopter_v2_rotor.svg" id="4_rotor"]
 
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/attack_helicopter_v2_body.svg" id="3_body"]
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/attack_helicopter_v2_rotor.svg" id="4_rotor"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8sp34"]
+resource_local_to_scene = true
+shader = ExtResource("3_s7gvn")
+shader_parameter/flash = 0.0
+shader_parameter/brighten = 0.85
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_body"]
 animations = [{
@@ -18,32 +24,34 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_radar"]
-radius = 300
+radius = 300.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(46, 34)
 
-[node name="attack_helicopter" instance=ExtResource("1_base")]
-
+[node name="attack_helicopter" unique_id=711489038 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 9
 muzzleOffset = 26.0
 
-[node name="base" parent="." index="0"]
+[node name="base" parent="." index="0" unique_id=1108324432]
+material = SubResource("ShaderMaterial_8sp34")
 scale = Vector2(0.981, 0.981)
 sprite_frames = SubResource("SpriteFrames_body")
 
-[node name="Rotor" type="Sprite2D" parent="."]
-scale = Vector2(0.968, 0.968)
-texture = ExtResource("4_rotor")
-z_index = 0
-
-[node name="shape" parent="radar" index="0"]
-shape = SubResource("CircleShape2D_radar")
-
-[node name="turret" parent="." index="2"]
+[node name="radar" parent="." index="1" unique_id=1066952876]
 visible = false
 
-[node name="shape" parent="." index="3"]
+[node name="shape" parent="radar" index="0" unique_id=1238677921]
+shape = SubResource("CircleShape2D_radar")
+
+[node name="turret" parent="." index="2" unique_id=108539921]
+visible = false
+material = SubResource("ShaderMaterial_8sp34")
+
+[node name="shape" parent="." index="3" unique_id=359688443]
 shape = SubResource("RectangleShape2D_body")
 
+[node name="Rotor" type="Sprite2D" parent="." index="6" unique_id=1682056133]
+scale = Vector2(0.968, 0.968)
+texture = ExtResource("4_rotor")

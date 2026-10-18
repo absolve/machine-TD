@@ -118,7 +118,8 @@ func onSelfHealTimeout() -> void:
 	var amount: int = maxi(1, int(round(float(maxHp) * selfHealRatio)))
 	hp = mini(maxHp, hp + amount)
 	if lifeBar:
-		lifeBar.value = hp
+		lifeBar.setValue(hp)
+		lifeBar.flashFor(lifeBar.showSeconds)
 	updateStatusUi()
 	# 复用现成的"治疗"音；位置音效，听得出发自哪台机甲
 	SoundManage.playAt("tower_healed", global_position, -8.0, randf_range(0.95, 1.05))

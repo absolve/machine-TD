@@ -178,9 +178,9 @@ func updateStatusUi() -> void:
 	flameParticles.emitting = isLowHealth
 	smokeParticles.emitting = isLowHealth
 	if lifeBar:
-		lifeBar.visible = true
-		lifeBar.maxHp = maxHp
-		lifeBar.value = hp
+		lifeBar.setMax(maxHp)
+		lifeBar.setValue(hp)
+		lifeBar.flashFor(lifeBar.showSeconds)
 	# 修理按钮依赖血量状态刷新（右侧信息面板每帧调用 refresh）
 	
 func levelUp() -> void:
@@ -326,8 +326,9 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 	if maxHp <= 0:
 		maxHp = max(hp, 1)
 	if lifeBar:
-		lifeBar.maxHp = maxHp
-		lifeBar.value = hp
+		lifeBar.setMax(maxHp)
+		lifeBar.setValue(hp)
+		lifeBar.flashFor(lifeBar.showSeconds)
 	updateStatusUi()
 	if hp <= 0:
 		# 塔被打爆：
@@ -358,8 +359,9 @@ func addHp(num: int) -> int:
 	hp = mini(maxHp, hp + num)
 	if hp != before:
 		if lifeBar:
-			lifeBar.maxHp = maxHp
-			lifeBar.value = hp
+			lifeBar.setMax(maxHp)
+			lifeBar.setValue(hp)
+			lifeBar.flashFor(lifeBar.showSeconds)
 		updateStatusUi()
 	return hp - before
 

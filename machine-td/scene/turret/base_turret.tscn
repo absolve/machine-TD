@@ -1,10 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://co8qbb4ak6gxx"]
 
-[ext_resource type="Script" path="res://script/turret/base_turret.gd" id="1_script"]
-
-[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/experimental_tank_v3_turret.svg" id="2_turret_tex"]
-[sub_resource type="CircleShape2D" id="CircleShape2D_radar"]
-radius = 240.0
+[ext_resource type="Script" uid="uid://b11mai2mkd0ge" path="res://script/turret/base_turret.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bu3wyepb3vsp7" path="res://sprite/enemy/redesigned/experimental_tank_v3_turret.svg" id="2_turret_tex"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_turret"]
 animations = [{
@@ -17,22 +14,26 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="BaseTurret" type="Node2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_radar"]
+radius = 240.0
+
+[node name="BaseTurret" type="Node2D" unique_id=1479783751]
 script = ExtResource("1_script")
 
-[node name="Turret" type="AnimatedSprite2D" parent="."]
+[node name="Turret" type="AnimatedSprite2D" parent="." unique_id=528744685]
 sprite_frames = SubResource("SpriteFrames_turret")
 offset = Vector2(6, 0)
 
-[node name="Muzzle" type="Marker2D" parent="Turret"]
+[node name="Muzzle" type="Marker2D" parent="Turret" unique_id=520669352]
 
-[node name="Radar" type="Area2D" parent="."]
+[node name="Radar" type="Area2D" parent="." unique_id=1745810834]
+visible = false
 collision_layer = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Radar"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Radar" unique_id=796889946]
 shape = SubResource("CircleShape2D_radar")
 
-[node name="Delay" type="Timer" parent="."]
+[node name="Delay" type="Timer" parent="." unique_id=1680281970]
 one_shot = true
 
 [connection signal="area_entered" from="Radar" to="." method="onRadarAreaEntered"]

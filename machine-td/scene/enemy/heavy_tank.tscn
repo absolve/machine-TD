@@ -1,13 +1,13 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene format=3 uid="uid://4prqje7k0tmp"]
 
 [ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
 [ext_resource type="Script" uid="uid://diw3xtwr1wxoy" path="res://script/enemy/heavyTank.gd" id="2_script"]
-[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/heavy_tank_v2_body.svg" id="3_body"]
-[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/heavy_tank_v2_body_2.svg" id="3_body2"]
-[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/heavy_tank_v2_body_3.svg" id="3_body3"]
-[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/heavy_tank_v2_body_4.svg" id="3_body4"]
+[ext_resource type="Texture2D" uid="uid://ber4i53p8hykr" path="res://sprite/enemy/redesigned/heavy_tank_v2_body.svg" id="3_body"]
+[ext_resource type="Texture2D" uid="uid://bg5xa15r4wy3t" path="res://sprite/enemy/redesigned/heavy_tank_v2_body_2.svg" id="3_body2"]
+[ext_resource type="Texture2D" uid="uid://bicolnbaq2no6" path="res://sprite/enemy/redesigned/heavy_tank_v2_body_3.svg" id="3_body3"]
+[ext_resource type="Texture2D" uid="uid://dbdlpx35usc2b" path="res://sprite/enemy/redesigned/heavy_tank_v2_body_4.svg" id="3_body4"]
 [ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="3_fwmxp"]
-[ext_resource type="Texture2D"  path="res://sprite/enemy/redesigned/heavy_tank_v2_turret.svg" id="4_turret"]
+[ext_resource type="Texture2D" uid="uid://c3dqg2kgksrko" path="res://sprite/enemy/redesigned/heavy_tank_v2_turret.svg" id="4_turret"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_n66hx"]
 resource_local_to_scene = true
@@ -49,23 +49,22 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(42, 30)
 
-[node name="heavy_tank" instance=ExtResource("1_base")]
-
+[node name="heavy_tank" unique_id=1348175977 instance=ExtResource("1_base")]
 script = ExtResource("2_script")
 enemyType = 2
-muzzleOffset = 29.0
+muzzleOffset = 28.3
 
 [node name="base" parent="." index="0" unique_id=1108324432]
-scale = Vector2(0.968, 0.968)
 material = SubResource("ShaderMaterial_n66hx")
+scale = Vector2(0.968, 0.968)
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="turret" parent="." index="2" unique_id=108539921]
-scale = Vector2(1.023, 1.023)
 material = SubResource("ShaderMaterial_n66hx")
+scale = Vector2(0.99, 0.99)
 sprite_frames = SubResource("SpriteFrames_turret")
-offset = Vector2(7, 0)
+offset = Vector2(15, 0)
 
 [node name="shape" parent="." index="3" unique_id=359688443]
+visible = false
 shape = SubResource("RectangleShape2D_body")
-

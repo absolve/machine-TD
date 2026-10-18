@@ -54,7 +54,7 @@ size = Vector2(46, 32)
 
 script = ExtResource("2_script")
 enemyType = 3
-muzzleOffset = 38.9
+muzzleOffset = 38.2
 
 [node name="base" parent="." index="0"]
 scale = Vector2(0.968, 0.968)
@@ -62,7 +62,7 @@ material = SubResource("ShaderMaterial_mugqh")
 sprite_frames = SubResource("SpriteFrames_body")
 
 [node name="turret" parent="." index="2"]
-scale = Vector2(1.214, 1.214)
+scale = Vector2(1.175, 1.175)
 material = SubResource("ShaderMaterial_mugqh")
 sprite_frames = SubResource("SpriteFrames_turret")
 offset = Vector2(17, 0)

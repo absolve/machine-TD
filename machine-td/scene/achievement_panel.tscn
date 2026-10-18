@@ -64,6 +64,7 @@ horizontal_scroll_mode = 0
 [node name="GridContainer" type="GridContainer" parent="PanelContainer/VBoxContainer/Columns/ScrollContainer" unique_id=1242284189]
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 20
 columns = 3
@@ -92,6 +93,7 @@ layout_mode = 2
 theme_override_constants/separation = 12
 
 [node name="detailName" type="Label" parent="PanelContainer/VBoxContainer/Columns/DetailBox/DetailVBox/DetailHeader" unique_id=1920206864]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 34
@@ -105,11 +107,13 @@ theme_override_font_sizes/font_size = 24
 vertical_alignment = 1
 
 [node name="detailDesc" type="Label" parent="PanelContainer/VBoxContainer/Columns/DetailBox/DetailVBox" unique_id=1920206866]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 26
 autowrap_mode = 3
 
 [node name="detailProgress" type="Label" parent="PanelContainer/VBoxContainer/Columns/DetailBox/DetailVBox" unique_id=1920206867]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 26
 autowrap_mode = 3
