@@ -38,6 +38,94 @@ var endlessMode: bool = false
 var enemyScale: float = 1.0
 var enemyAtkScale: float = 1.0
 
+## ── 战斗模式（设计见 feature_design.md §十七）──
+##
+## 玩家在关卡选择页选一个模式，同一张图换一套倍数重打。
+##
+## ⚠️ 这些倍数**独立于 enemyScale / enemyAtkScale**，不要复用它们 ——
+##    那两个被无尽模式每波重写（endless_level.gd），复用会互相覆盖。
+##    enemy.gd 里是"两个相乘"，所以倍速的语义是叠加的。
+##
+## ⚠️ **绝对不要改出怪间隔**（曾经有过 `delayScale`，已删除）。
+##    间隔一缩短，同一条路径上后一个敌人会追上前一个、**视觉上叠在一起**，
+##    看起来像一坨、也分不清谁是谁。需要调节奏时**改移动速度**（`speedScale`）：
+##    速度只影响"每个敌人在塔的射程里待多久"，不会让它们挤成一团。
+##
+## ⚠️ 离开关卡必须调 resetBattleMode()（code_design.md §7.6）：这是全局状态，
+##    不复位会把"蜂群"带到下一局甚至主菜单。
+const battleModeDefs = {
+	"normal": {
+		"name": "_Mode_normal",
+		"desc": "_Mode_normal_desc",
+		"countScale": 1.0,
+		"hpScale": 1.0,
+		"atkScale": 1.0,
+		"speedScale": 1.0,
+		"rewardScale": 1.0,
+		"expScale": 1.0,
+		"gemScale": 1.0,
+		"recordsProgress": true,
+	},
+	# 蜂群：数量翻倍、个体变脆。总血量不变，但密度翻倍 —— 考验溅射/攻速。
+	# 每杀收益必须跟着 ×0.5，否则击杀数翻倍会让金币与塔经验也翻倍，
+	# 「困难模式」反而变成最容易的模式（详见设计文档 17.5）。
+	# 数量翻倍但**出怪间隔不变** → 一波的敌人数是多了一倍、排成的队列也更长。
+	# 所以这里把移速提到 ×1.2：队列走得快一点，不至于一波打两倍时间；
+	# 代价是每个敌人在射程里待的时间变短（更难），正好符合挑战模式的定位。
+	"swarm": {
+		"name": "_Mode_swarm",
+		"desc": "_Mode_swarm_desc",
+		"countScale": 2.0,
+		"hpScale": 0.5,
+		"atkScale": 0.8,
+		"speedScale": 1.2,
+		"rewardScale": 0.5,
+		"expScale": 0.5,
+		"gemScale": 1.3,
+		"recordsProgress": false,
+	},
+	# 铁流：数量不变、单个硬一倍 —— 考验破甲与持续输出。
+	# 收益按"血量"结算：血量 ×2 → 每杀收益 ×2，做到"每点血的收入恒定"。
+	# 移速不动：这一模式的"慢"来自敌人本身更耐打，不是靠拉长队列。
+	"armor": {
+		"name": "_Mode_armor",
+		"desc": "_Mode_armor_desc",
+		"countScale": 1.0,
+		"hpScale": 2.0,
+		"atkScale": 1.0,
+		"speedScale": 1.0,
+		"rewardScale": 2.0,
+		"expScale": 2.0,
+		"gemScale": 1.4,
+		"recordsProgress": false,
+	},
+	# 精锐：血量略高、攻击显著提高 —— 考验塔的血量管理（对抗型敌人会真的拆塔）。
+	"elite": {
+		"name": "_Mode_elite",
+		"desc": "_Mode_elite_desc",
+		"countScale": 1.0,
+		"hpScale": 1.3,
+		"atkScale": 1.5,
+		"speedScale": 1.1,
+		"rewardScale": 1.3,
+		"expScale": 1.3,
+		"gemScale": 1.5,
+		"recordsProgress": false,
+	},
+}
+
+## 当前战斗模式 id（`battleModeDefs` 的 key）。
+var battleMode: String = "normal"
+## 从当前模式解出来的实际倍数；由 setBattleMode() / resetBattleMode() 统一维护。
+var modeCountScale: float = 1.0
+var modeHpScale: float = 1.0
+var modeAtkScale: float = 1.0
+## 敌人**移动速度**倍数（不是出怪间隔 —— 间隔不允许被模式改，见文件顶部说明）
+var modeSpeedScale: float = 1.0
+var modeRewardScale: float = 1.0
+var modeExpScale: float = 1.0
+var modeGemScale: float = 1.0
+
 # 塔信息
 #
 # ★ 数值规范（2026-09-26 全表重做）：
@@ -160,6 +248,104 @@ const towerInfo = {
 	"desc": "_mechDesc",
 	"gridSize": Vector2i(1, 1)
 	}
+}
+
+
+## ── 防御塔主动技能（设计见 feature_design.md §十八）──
+##
+## 三种 kind：
+##   · `toggle`  —— 功能切换：切过去一直生效，再按一次切回来。`switchCooldown` 只防连点。
+##   · `timed`   —— 限时增益：持续 `duration` 秒，结束后进入 `cooldown` 冷却。
+##   · `instant` —— 瞬发：点一下立刻生效。机甲额外带一段 `shutdown`（整机停止）。
+##
+## ⚠️ **技能只影响"派生值"**（`tower.gd` 的 `effectiveAtk / effectiveDelay / effectiveScope`），
+##    绝对不要写回 `atk` / `delay` / `radarScope`。
+##    那三个是**升级系统的基值**（`tower.gd::levelUp` 会整体覆盖它们）——
+##    技能写进去之后，升级一次就被覆盖，或者出现"技能×升级"双倍叠加。
+##    这是本模块与升级功能不冲突的唯一保证。
+const towerSkills = {
+	towerType.machineGunTower: {
+		"kind": "timed",
+		"name": "_Skill_overheat",
+		"desc": "_Skill_overheat_desc",
+		"duration": 3.0,
+		"cooldown": 18.0,
+		"atkMul": 2.0,          # atk ×2（配合 delayMul 0.5 ≈ DPS ×4）
+		"delayMul": 0.5,
+		"selfHpPerSec": 6.0,    # 每秒自损 6（3 秒共 18）
+		"minHpRatio": 0.25,     # 血量低于 25% 拒绝触发
+	},
+	towerType.cannonTower: {
+		"kind": "timed",
+		"name": "_Skill_pierce",
+		"desc": "_Skill_pierce_desc",
+		"duration": 3.0,
+		"cooldown": 20.0,
+		"delayMul": 1.4,        # 射速 ×0.7 —— 破甲的代价
+		"pierceArmor": true,    # 子弹按能量伤害结算（enemy.hurt 的 "energy" 通道无视 armor）
+	},
+	towerType.rocketTower: {
+		"kind": "toggle",
+		"name": "_Skill_missile",
+		"desc": "_Skill_missile_desc",
+		"switchCooldown": 3.0,
+		"atkMul": 1.25,         # 40 → 50（Lv3 78 → 98，仍守住 atk < 100 的规范）
+		"sightMul": 1.6,        # 200 → 320
+		"noSplash": true,       # ⚠️ 核心代价：不再有爆炸范围
+		"bulletSpeed": 520.0,   # 300 → 520
+		"turnSpeed": 6.5,       # 5.0 → 6.5（速度更快，转向要跟上）
+	},
+	towerType.EMPTower: {
+		"kind": "timed",
+		"name": "_Skill_overload",
+		"desc": "_Skill_overload_desc",
+		"duration": 5.0,
+		"cooldown": 25.0,
+		"slowMul": 2.0,         # 减速强度 ×2
+		"disableAfter": 3.0,    # 结束后停转 3 秒（这 3 秒不提供减速）
+	},
+	towerType.laserTower: {
+		"kind": "toggle",
+		"name": "_Skill_singular",
+		"desc": "_Skill_singular_desc",
+		"switchCooldown": 3.0,
+		"atkMul": 2.2,          # 38 → 84（Lv3 44 → 97，仍守住 atk < 100）
+		"maxTargets": 1,        # 3 → 1
+	},
+	towerType.teslaCoilTower: {
+		"kind": "timed",
+		"name": "_Skill_chain",
+		"desc": "_Skill_chain_desc",
+		"duration": 3.0,
+		"cooldown": 20.0,
+		"chainExtra": 2,        # 电弧多跳 2 个目标
+		"selfHpPerSec": 5.0,
+		"minHpRatio": 0.2,
+	},
+	towerType.droneBase: {
+		"kind": "timed",
+		"name": "_Skill_scramble",
+		"desc": "_Skill_scramble_desc",
+		"duration": 4.0,
+		"cooldown": 24.0,
+		"delayMul": 0.667,      # 射速 ×1.5
+	},
+	towerType.ironBox: {
+		"kind": "timed",
+		"name": "_Skill_armor",
+		"desc": "_Skill_armor_desc",
+		"duration": 4.0,
+		"cooldown": 20.0,
+		"damageTakenMul": 0.3,  # 受到伤害 ×0.3
+	},
+	towerType.mech: {
+		"kind": "instant",
+		"name": "_Skill_emergency_repair",
+		"desc": "_Skill_emergency_repair_desc",
+		"healRatio": 0.30,      # 治疗 30% 各自最大血量（自身 + 范围内所有塔）
+		"healScope": 180.0,
+		"shutdown": 3.0,        # ⚠️ 用完后整机停止 3 秒：不能移动 / 维修 / 回收
+	},
 }
 
 
@@ -355,3 +541,56 @@ func t(key: String, fallback: String) -> String:
 		return fallback
 	var translated: String = tr(key)
 	return fallback if translated == key else translated
+
+
+## ── 战斗模式 ──
+
+## 取某个模式的定义；id 无效时退回 normal 的定义（永远返回可用字典）。
+func getBattleModeDef(modeId: String = "") -> Dictionary:
+	var key: String = modeId if not modeId.is_empty() else battleMode
+	var def = battleModeDefs.get(key, null)
+	if def is Dictionary:
+		return def
+	return battleModeDefs["normal"]
+
+
+## 切换模式：写 id，并把倍数解出来。
+## 这是**唯一**该改 battleMode + 倍数的入口 —— 调用方不要自己写 modeXxxScale。
+func setBattleMode(modeId: String) -> void:
+	battleMode = modeId if battleModeDefs.has(modeId) else "normal"
+	applyBattleModeScales()
+
+
+## 把 battleMode 对应的倍数写进 modeXxxScale。重复调用是幂等的。
+func applyBattleModeScales() -> void:
+	var def: Dictionary = getBattleModeDef()
+	modeCountScale = float(def.get("countScale", 1.0))
+	modeHpScale = float(def.get("hpScale", 1.0))
+	modeAtkScale = float(def.get("atkScale", 1.0))
+	modeSpeedScale = float(def.get("speedScale", 1.0))
+	modeRewardScale = float(def.get("rewardScale", 1.0))
+	modeExpScale = float(def.get("expScale", 1.0))
+	modeGemScale = float(def.get("gemScale", 1.0))
+
+
+## 复位成正常模式。离开关卡时必须调（_exit_tree），否则模式会漏到下一局。
+func resetBattleMode() -> void:
+	setBattleMode("normal")
+
+
+## 当前模式是否"挑战模式"（不记录星级 / 成就进度）。
+func isChallengeMode() -> bool:
+	return not bool(getBattleModeDef().get("recordsProgress", true))
+
+
+## 当前模式的显示名 / 说明（已翻译）。
+func getBattleModeName(modeId: String = "") -> String:
+	var def: Dictionary = getBattleModeDef(modeId)
+	var key: String = str(def.get("name", ""))
+	return t(key, key)
+
+
+func getBattleModeDesc(modeId: String = "") -> String:
+	var def: Dictionary = getBattleModeDef(modeId)
+	var key: String = str(def.get("desc", ""))
+	return t(key, key)

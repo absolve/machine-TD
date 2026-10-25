@@ -309,7 +309,12 @@ func fire() -> void:
 	b.global_position = global_position + Vector2.from_angle(rotation) * MUZZLE_OFFSET
 	b.angle = (currentTarget.global_position - global_position).angle()
 	b.sourceTower = homeBase
-	b.damage = bulletDamage
+	# 伤害走基地的派生攻击力：基地的主动技能（紧急升空）才作用得到全部无人机。
+	# homeBase 无效时退回自己的基础值，保证单机测试也不炸。
+	var dmg: int = bulletDamage
+	if homeBase != null and is_instance_valid(homeBase) and homeBase.has_method("effectiveAtk"):
+		dmg = int(homeBase.call("effectiveAtk"))
+	b.damage = dmg
 	Game.addObj(b)
 
 

@@ -229,6 +229,25 @@ theme_override_styles/pressed = ExtResource("11_sellh")
 theme_override_styles/hover = ExtResource("11_sellh")
 text = "Sell"
 
+[node name="SkillRow" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="btnSkill" type="Button" parent="Margin/VBox/SkillRow"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+theme_override_colors/font_color = Color(0.6784314, 0.8980392, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.56078434, 0.80784315, 0.92156863, 1)
+theme_override_colors/font_hover_color = Color(0.83137256, 0.9607843, 1, 1)
+theme_override_colors/font_disabled_color = Color(0.62352943, 0.7058824, 0.76862746, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("8_repairn")
+theme_override_styles/pressed = ExtResource("9_repairh")
+theme_override_styles/hover = ExtResource("9_repairh")
+text = "Skill"
+
 [node name="hintLabel" type="Label" parent="Margin/VBox" unique_id=346373248]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2

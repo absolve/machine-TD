@@ -23,7 +23,7 @@ func fire(t):
 		temp.position = marker.global_position
 		temp.angle = (t.global_position - marker.global_position).angle()
 		temp.sourceTower = self
-		temp.damage = atk
+		temp.damage = effectiveAtk()
 		Game.addObj(temp)
 		canShot = false
 		delayTimer.start()

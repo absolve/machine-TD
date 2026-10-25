@@ -51,6 +51,23 @@ var aniSpeed = 1
 ## 1 级的 reload —— 算 aniSpeed 的基准；不参与升级的塔保持 0 表示"不用管"
 var baseDelay = 0
 
+## ── 主动技能（设计见 feature_design.md §十八）──
+##
+## ⚠️ 本模块与**升级系统**的边界（用户明确要求两者不能冲突）：
+##   `atk` / `delay` / `radarScope` 是**升级系统拥有的基值**，`levelUp()` 会整体覆盖它们。
+##   技能**只提供派生值**（effectiveAtk / effectiveDelay / effectiveScope），
+##   任何时候都不写回基值 —— 所以"升级把技能效果清掉"或"技能×升级双倍叠加"都不可能发生。
+##   同理，`delayTimer.wait_time` 与 `raderShape.shape.radius` 这两处派生写入也统一收口到
+##   `applyFireRate()` / `applySight()`，升级与技能都走这里。
+var skillKind: String = ""            # "" / "toggle" / "timed" / "instant"
+var skillDef: Dictionary = {}         # Game.towerSkills 里的那一条
+var skillActiveLeft: float = 0.0      # timed：剩余生效秒数
+var skillCooldownLeft: float = 0.0    # 冷却 / 切换 CD 剩余
+var skillOn: bool = false             # toggle：当前是否处于"第二种模式"
+var skillDisabledLeft: float = 0.0    # 停摆剩余（机甲用；>0 时整机失效）
+## timed 技能的自损累加器：按每秒折算，攒够 1 点才真的扣一次血
+var skillSelfDamageAcc: float = 0.0
+
 ## 炮口到轴心的像素距离 —— 代码里写 `marker.position`，**不要**去场景里改 Marker2D。
 ##
 ## ⚠️ 为什么放代码里：Marker2D 在基场景 Tower.tscn 里是 (0,0)，子场景就算覆盖了，
@@ -94,13 +111,13 @@ func _ready() -> void:
 	# 用组而不是遍历地图子节点 —— 塔是 map 的直接子节点，但组查询不受层级影响，
 	# 以后塔要是挪到别的容器下也不会悄悄失效。
 	add_to_group("tower")
+	setupSkill()
 	if raderShape.shape:
-		raderShape.shape.radius = radarScope
+		raderShape.shape.radius = effectiveScope()
 	if maxHp <= 0 and hp > 0:
 		maxHp = hp
 	if hp <= 0 and maxHp > 0:
 		hp = maxHp
-	delayTimer.wait_time = delay
 	# 炮口位置由代码写（原因见 muzzleOffset 的注释：场景里的覆盖会被编辑器丢掉）
 	if marker != null:
 		marker.position = Vector2(muzzleOffset, 0.0)
@@ -108,7 +125,9 @@ func _ready() -> void:
 	# ⚠️ 必须**建塔时**就抓一次 —— 升级会把 delay 改掉，之后再取就再也拿不到 1 级的值了。
 	#    towerInfo 里存的就是 1 级数值，所以直接查表，不依赖"此刻的 delay 恰好是 1 级"。
 	baseDelay = delay
-	refreshAniSpeed()
+	# 统一入口：既写 delayTimer.wait_time，也重算开火动画倍速
+	# （baseDelay 必须先就位，否则 refreshAniSpeed 会算出 0 倍速）
+	applyFireRate()
 	monitorable = false
 	set_physics_process(false)
 	#set_process(false) # 只有进入无敌状态才需要逐帧倒计时
@@ -190,18 +209,229 @@ func levelUp() -> void:
 		atk = levelConfig.atk
 	if levelConfig.has("reload"):
 		delay = levelConfig.reload
-		delayTimer.wait_time = delay
-		# 射速变了，开火动画倍速要跟着变（见 aniSpeed 的注释）
-		refreshAniSpeed()
+		# ⚠️ 这里**只改基值 delay**，实际生效值交给 applyFireRate() 派生。
+		#   如果在这里直接写 delayTimer.wait_time = delay，正在生效的限时技能
+		#   （比如机枪塔过热）就会被这一次升级静默清掉 —— 那正是"技能与升级冲突"。
 	if levelConfig.has("scope"):
 		radarScope = levelConfig.scope
-		if raderShape.shape:
-			raderShape.shape.radius = radarScope
+		# 同理：只改基值，碰撞体半径由 applySight() 按"基值 × 技能倍率"派生
+	applyFireRate()
+	applySight()
 	towerRank.setLevel(level)
 	playUpgradeGlow()
 	updateStatusUi()
 	TowerUpgradeManager.towerLeveledUp.emit(self, level)
 	
+
+## ── 主动技能 ──
+##
+## 对外只暴露这几件事，具体数值全部来自 `Game.towerSkills`：
+##   hasSkill() / canUseSkill() / useSkill() / isSkillActive() / isDisabled()
+##   面板按钮每帧读它们决定文案与可点状态。
+func setupSkill() -> void:
+	var def = Game.towerSkills.get(type, {})
+	skillDef = def if def is Dictionary else {}
+	skillKind = str(skillDef.get("kind", ""))
+	skillOn = false
+	skillActiveLeft = 0.0
+	skillCooldownLeft = 0.0
+	skillDisabledLeft = 0.0
+	skillSelfDamageAcc = 0.0
+
+
+func hasSkill() -> bool:
+	return not skillDef.is_empty() and not skillKind.is_empty()
+
+
+## 限时技能是否正在生效
+func isSkillActive() -> bool:
+	return skillKind == "timed" and skillActiveLeft > 0.0
+
+
+## 停摆中（机甲专用）：>0 时整个单位失效
+func isDisabled() -> bool:
+	return skillDisabledLeft > 0.0
+
+
+## 能不能用（冷却 / 停摆 / 已在生效 / 血量门槛）。
+## ⚠️ 这里只管"按钮"；子类真正干活前还要各自再问一次 `isDisabled()`。
+func canUseSkill() -> bool:
+	if not hasSkill():
+		return false
+	if isDisabled() or skillCooldownLeft > 0.0:
+		return false
+	if skillKind == "timed" and isSkillActive():
+		return false
+	var minRatio: float = float(skillDef.get("minHpRatio", 0.0))
+	if minRatio > 0.0 and maxHp > 0 and float(hp) / float(maxHp) < minRatio:
+		return false
+	return true
+
+
+## 统一入口：按 kind 分发。返回是否真的生效（失败时 UI 应当给反馈）。
+func useSkill() -> bool:
+	if not canUseSkill():
+		return false
+	match skillKind:
+		"toggle":
+			return toggleSkill()
+		"timed":
+			return startTimedSkill()
+		"instant":
+			return runInstantSkill()
+	return false
+
+
+## 功能切换：翻转模式 + 开始切换 CD（只防连点，不影响强度）
+func toggleSkill() -> bool:
+	skillOn = not skillOn
+	skillCooldownLeft = float(skillDef.get("switchCooldown", 3.0))
+	applyFireRate()
+	applySight()
+	onSkillModeChanged()
+	return true
+
+
+func startTimedSkill() -> bool:
+	skillActiveLeft = float(skillDef.get("duration", 0.0))
+	if skillActiveLeft <= 0.0:
+		return false
+	skillSelfDamageAcc = 0.0
+	applyFireRate()
+	applySight()
+	onSkillModeChanged()
+	return true
+
+
+func endTimedSkill() -> void:
+	skillActiveLeft = 0.0
+	skillCooldownLeft = float(skillDef.get("cooldown", 0.0))
+	# 有些技能结束后还要额外停一段（EMP 的"停转 3 秒"）
+	var after: float = float(skillDef.get("disableAfter", 0.0))
+	if after > 0.0:
+		skillDisabledLeft = after
+	applyFireRate()
+	applySight()
+	onSkillModeChanged()
+
+
+## 瞬发技能的默认实现：没有特殊效果的塔就当"无事发生"。
+## 机甲覆写它做群体治疗。
+func runInstantSkill() -> bool:
+	onSkillModeChanged()
+	return true
+
+
+## 模式/生效状态变化后的钩子（子类用来刷新自绘、渐变等）。默认什么也不做。
+func onSkillModeChanged() -> void:
+	queue_redraw()
+
+
+## 每物理帧推进技能计时。由 `_physics_process` 统一调用。
+func tickSkill(delta: float) -> void:
+	if not hasSkill():
+		return
+	if skillCooldownLeft > 0.0:
+		skillCooldownLeft = maxf(0.0, skillCooldownLeft - delta)
+	if skillDisabledLeft > 0.0:
+		skillDisabledLeft = maxf(0.0, skillDisabledLeft - delta)
+	if isSkillActive():
+		# 自损按"每秒多少点"折算，攒够 1 点再扣，避免每帧扣 0 点永远扣不动
+		var selfDps: float = float(skillDef.get("selfHpPerSec", 0.0))
+		if selfDps > 0.0:
+			skillSelfDamageAcc += selfDps * delta
+			if skillSelfDamageAcc >= 1.0:
+				var dmg: int = int(floor(skillSelfDamageAcc))
+				skillSelfDamageAcc -= float(dmg)
+				applySelfDamage(dmg)
+		skillActiveLeft -= delta
+		if skillActiveLeft <= 0.0:
+			endTimedSkill()
+
+
+## 技能自损。**故意绕过 `hurt()` 的无敌判定** —— 否则「无敌 + 过热」就是白送的组合。
+## 但死亡流程必须和被打爆完全一致，所以共用 `die()`。
+func applySelfDamage(amount: int) -> void:
+	if amount <= 0 or hp <= 0:
+		return
+	hp -= amount
+	if lifeBar:
+		lifeBar.setMax(maxHp)
+		lifeBar.setValue(hp)
+		lifeBar.flashFor(lifeBar.showSeconds)
+	updateStatusUi()
+	if hp <= 0:
+		die()
+
+
+## ── 派生值：技能只在这里叠加，不碰基值 ──
+
+func skillAtkMul() -> float:
+	if skillKind == "toggle" and skillOn:
+		return float(skillDef.get("atkMul", 1.0))
+	if isSkillActive():
+		return float(skillDef.get("atkMul", 1.0))
+	return 1.0
+
+
+func skillDelayMul() -> float:
+	if skillKind == "toggle" and skillOn:
+		return float(skillDef.get("delayMul", 1.0))
+	if isSkillActive():
+		return float(skillDef.get("delayMul", 1.0))
+	return 1.0
+
+
+func skillSightMul() -> float:
+	if skillKind == "toggle" and skillOn:
+		return float(skillDef.get("sightMul", 1.0))
+	if isSkillActive():
+		return float(skillDef.get("sightMul", 1.0))
+	return 1.0
+
+
+## 技能期间的攻击力。**所有子类的 fire() 都必须用它**，不要直接读 atk。
+func effectiveAtk() -> int:
+	var mul: float = skillAtkMul()
+	if is_equal_approx(mul, 1.0):
+		return atk
+	return maxi(1, int(round(float(atk) * mul)))
+
+
+func effectiveDelay() -> float:
+	return maxf(0.02, delay * skillDelayMul())
+
+
+func effectiveScope() -> float:
+	return radarScope * skillSightMul()
+
+
+## 受到伤害的倍率（铁箱塔的应急装甲用）。在 `hurt()` 里相乘。
+func damageTakenMul() -> float:
+	if isSkillActive():
+		return float(skillDef.get("damageTakenMul", 1.0))
+	return 1.0
+
+
+## 技能期间是否"整个失效"（机甲）。子类在行为入口调用。
+func canAct() -> bool:
+	return not isDisabled()
+
+
+## **唯一**写 `delayTimer.wait_time` 的地方（升级与技能都走这里）
+func applyFireRate() -> void:
+	if delayTimer != null:
+		delayTimer.wait_time = effectiveDelay()
+	refreshAniSpeed()
+
+
+## **唯一**写雷达碰撞体半径的地方。画圈用的是 effectiveScope()，两边必须同源。
+func applySight() -> void:
+	var scopeNow: float = effectiveScope()
+	if raderShape != null and raderShape.shape:
+		raderShape.shape.radius = scopeNow
+	queue_redraw()
+
 
 # 升级闪光: 启用 shader -> 亮度淡入 -> 闪烁 -> 淡出 -> 关闭
 func playUpgradeGlow() -> void:
@@ -261,9 +491,12 @@ func lookupBaseDelay() -> float:
 ##   火箭 1级 1.50 → lv2 1.111 / lv3 1.25
 ## 1 级时是 1.0（动画原速），升级后同步变快 —— 后坐和射速永远对得上。
 func refreshAniSpeed() -> void:
-	if delay <= 0.0:
+	var effective: float = effectiveDelay()
+	if effective <= 0.0:
 		return
-	aniSpeed = baseDelay / delay
+	# 用**派生后**的开火间隔：技能改射速时后坐动画也要跟着变快/变慢，
+	# 否则会出现"枪口都回位了子弹才出去"或者几个后坐叠在一起。
+	aniSpeed = baseDelay / effective
 	if player == null:
 		return
 	# 只有**真的有 "fire" 动画**的塔才写 speed_scale。
@@ -321,7 +554,9 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 		actualDamage = float(_num)
 	else:
 		actualDamage *= 1.0
-	
+	# 技能减伤（铁箱塔的应急装甲）。放在最后统一乘，物理/能量两条通道都覆盖。
+	actualDamage *= damageTakenMul()
+
 	hp -= int(max(0.0, ceil(actualDamage)))
 	if maxHp <= 0:
 		maxHp = max(hp, 1)
@@ -331,17 +566,18 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 		lifeBar.flashFor(lifeBar.showSeconds)
 	updateStatusUi()
 	if hp <= 0:
-		# 塔被打爆：
-		# ① 复用现成的爆炸（动画帧 + 粒子 + 音效三件套，和敌人/火箭弹同一个入口）
-		# ② 金属垮塌声再补一层，塔爆得比小怪"重"
-		# ③ ★ 把占用的格子归还 —— 否则那块地永远建不了新塔
-		# ④ 通知地图（归还格子 + 关掉右侧信息面板），最后释放自己
-		# 注意顺序：ExplosionManage 会把特效挂在 autoload 下，所以塔 free 掉特效还在；
-		# 音效也用 global_position 定位，必须在 queue_free 之前播。
-		ExplosionManage.playExplosion(global_position, "heavy")
-		SoundManage.playAt("tower_destroyed", global_position, -6.0, randf_range(0.95, 1.05))
-		releaseGrid()
-		queue_free()
+		die()
+
+
+## 塔被打爆。`hurt()` 与技能自损 `applySelfDamage()` **共用**这一条死亡流程，
+## 保证两条路死出来的结果完全一致（爆炸 / 音效 / 归还格子 / 释放自己）。
+## 注意顺序：ExplosionManage 把特效挂在 autoload 下，所以塔 free 掉特效还在；
+## 音效也用 global_position 定位，必须在 queue_free 之前播。
+func die() -> void:
+	ExplosionManage.playExplosion(global_position, "heavy")
+	SoundManage.playAt("tower_destroyed", global_position, -6.0, randf_range(0.95, 1.05))
+	releaseGrid()
+	queue_free()
 
 
 ## 恢复防御塔血量并限制在最大值内。返回**实际**回复了多少（满血时返回 0）。
@@ -454,6 +690,9 @@ func playRepairGlow() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	# 技能计时（冷却 / 限时生效 / 停摆 / 自损）每帧都要推进，
+	# 所以放在最前面 —— 不能挂在"选中"之后，否则没选中的塔技能永远走不完。
+	tickSkill(delta)
 	if invincible: # 无敌期间
 		invincibleLeft -= delta
 		if invincibleLeft <= 0.0:
@@ -469,10 +708,12 @@ func _draw():
 	if not selected:
 		return
 	var radarColor: Color = Color(0.25, 0.75, 1.0, 1.0)
-	draw_circle(Vector2.ZERO, radarScope, Color(radarColor.r, radarColor.g, radarColor.b, 0.12))
-	draw_arc(Vector2.ZERO, radarScope, 0.0, TAU, 64, Color(radarColor.r, radarColor.g, radarColor.b, 0.8), 2.0)
+	# 画圈用**派生后的**射程：toggle 改了射程时，圈和真实碰撞体（applySight 写的那个）必须一致
+	var scopeNow: float = effectiveScope()
+	draw_circle(Vector2.ZERO, scopeNow, Color(radarColor.r, radarColor.g, radarColor.b, 0.12))
+	draw_arc(Vector2.ZERO, scopeNow, 0.0, TAU, 64, Color(radarColor.r, radarColor.g, radarColor.b, 0.8), 2.0)
 	for i in range(1, 4):
-		var r = radarScope * (i / 4.0)
+		var r = scopeNow * (i / 4.0)
 		draw_arc(Vector2.ZERO, r, 0.0, TAU, 64, Color(radarColor.r, radarColor.g, radarColor.b, 0.15), 1.0)
 	var segments: int = 24
 	var tailSpan: float = PI / 3.0
@@ -481,8 +722,8 @@ func _draw():
 		var a = radarSweepAngle - tailSpan * t
 		var alpha = (1.0 - t) * 0.5
 		var nextA = radarSweepAngle - tailSpan * (float(s + 1) / segments)
-		var p1 = Vector2(cos(a), sin(a)) * radarScope
-		var p2 = Vector2(cos(nextA), sin(nextA)) * radarScope
+		var p1 = Vector2(cos(a), sin(a)) * scopeNow
+		var p2 = Vector2(cos(nextA), sin(nextA)) * scopeNow
 		draw_polygon(
 			PackedVector2Array([Vector2.ZERO, p1, p2]),
 			PackedColorArray([
@@ -493,7 +734,7 @@ func _draw():
 		)
 	draw_line(
 		Vector2.ZERO,
-		Vector2(cos(radarSweepAngle), sin(radarSweepAngle)) * radarScope,
+		Vector2(cos(radarSweepAngle), sin(radarSweepAngle)) * scopeNow,
 		Color(radarColor.r, radarColor.g, radarColor.b, 1.0),
 		2.0
 	)

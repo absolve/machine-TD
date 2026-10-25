@@ -38,6 +38,21 @@ var radarSweepAngle: float = 0.0
 var rotationSpeed = 10
 var canShot = true
 
+## ── 减速状态（EMP 塔用）──
+## 原始移动速度：`speed` 会被减速改写，这里永远保存"没被减速时"的值。
+## 由 setupEnemyInfo() 在读完 enemyInfo 之后写入。
+var baseSpeed: int = 0
+## 当前覆盖自己的减速来源：来源节点 -> 减速比例(0~1)。
+##
+## ⚠️ 为什么要在敌人身上记，而不是让每座 EMP 各改一次 `speed`：
+##    旧实现是 `speed *= (1 - ratio)`（进入时乘、离开时除回去）。
+##    两座 EMP 射程重叠时，先乘 A 再乘 B，离开时按各自比例除 —— 
+##    只要两座塔的 atk 不同（或整数取整累积误差），除回来就对不上原值，
+##    速度会漂移到一个既不是原速、也不是任一减速值的结果。
+##    现在改成"记录所有来源、取**最强的一条**生效"，多座塔重叠时只受最强的那座限制，
+##    离开一座自动回落到次强的那座，全部离开则精确恢复 baseSpeed。
+var slowSources: Dictionary = {}
+
 var parent: PathFollow2D
 
 const ENEMY_BULLET: PackedScene = preload("res://scene/bullet/enemy_bullet.tscn")
@@ -46,6 +61,10 @@ const HEAL_FX := "res://scene/fx/heal_particles.tscn"
 ## 雷达扫描线转速（弧度/秒）。与 tower.gd 的 RADAR_SCAN_SPEED 保持一致 ——
 ## 两种圈看起来才是同一个东西，而不是"我方一种、敌方另一种"。
 const RADAR_SCAN_SPEED := 1.8
+
+## 减速比例上限。留 10% 速度是为了避免"完全静止后敌人永远卡在同一格"，
+## 同时防止将来把 EMP 的 atk 调高后出现速度 0 的僵局。
+const MAX_SLOW_RATIO: float = 0.9
 
 @onready var base = $base
 ## ⚠️ 必须用 get_node_or_null：直升机/无人机这类**没有 turret 节点**，
@@ -138,6 +157,15 @@ func setupEnemyInfo():
 	hp = int(info.get("hp", hp))
 	maxHp = hp
 	speed = int(info.get("speed", speed))
+	# 战斗模式的**移动速度**倍数（feature_design.md §十七）。
+	# ⚠️ 模式不改出怪间隔，只改这里 —— 间隔一缩敌人会在路径上叠成一团。
+	# 放在记 baseSpeed **之前**：EMP 的减速是从"模式调整后的原速"往下减的，
+	# 否则蜂群的 ×1.2 会被 EMP 的恢复逻辑抹掉。
+	if not is_equal_approx(Game.modeSpeedScale, 1.0):
+		speed = maxi(1, int(round(float(speed) * Game.modeSpeedScale)))
+	# 记录原速：之后 EMP 塔减速只改 `speed`，恢复时永远以这个值为准，
+	# 不会因为"乘了两次、除回一次"而漂移。
+	baseSpeed = speed
 	reward = int(info.get("reward", reward))
 	lossPoints = int(info.get("lossPoints", lossPoints))
 	rewardExp = int(info.get("rewardExp", rewardExp))
@@ -147,12 +175,24 @@ func setupEnemyInfo():
 	flying = bool(info.get("flying", flying))
 	atk = int(info.get("atk", atk))
 	showsRange = bool(info.get("showsRange", showsRange))
-	# 无尽模式难度缩放：hp / atk 乘一个随波次上涨的系数（普通关卡恒为 1.0）
-	if Game.enemyScale != 1.0:
-		hp = int(ceil(float(hp) * Game.enemyScale))
+	# 难度缩放：**两套独立来源相乘**
+	#   · Game.enemyScale / enemyAtkScale —— 无尽模式按波次上涨（普通关卡恒为 1.0）
+	#   · Game.modeHpScale / modeAtkScale —— 战斗模式（feature_design.md §十七）
+	# 千万不要合并成一个变量：无尽模式每波会重写前者，合并会让两套互相覆盖。
+	var hpScale: float = Game.enemyScale * Game.modeHpScale
+	if not is_equal_approx(hpScale, 1.0):
+		hp = maxi(1, int(ceil(float(hp) * hpScale)))
 		maxHp = hp
-	if Game.enemyAtkScale != 1.0:
-		atk = int(ceil(float(atk) * Game.enemyAtkScale))
+	var atkScale: float = Game.enemyAtkScale * Game.modeAtkScale
+	if not is_equal_approx(atkScale, 1.0):
+		atk = int(ceil(float(atk) * atkScale))
+	# 击杀收益 / 塔经验按"总血量"折算（§17.5）：蜂群数量翻倍、每杀收益减半，
+	# 保证每点血量给的钱与经验恒定 —— 否则击杀数翻倍会让金币和塔等级也翻倍，
+	# 「困难模式」反而变成最容易的模式。
+	if not is_equal_approx(Game.modeRewardScale, 1.0):
+		reward = maxi(0, int(round(float(reward) * Game.modeRewardScale)))
+	if not is_equal_approx(Game.modeExpScale, 1.0):
+		rewardExp = maxi(0, int(round(float(rewardExp) * Game.modeExpScale)))
 	shootDelay = float(info.get("shootDelay", shootDelay))
 	radarScope = float(info.get("scope", radarScope))
 	if shootDelay > 0:
@@ -181,6 +221,64 @@ func applyRadarScope() -> void:
 		radarShape.shape = circle
 	circle.radius = radarScope
 	radar.monitoring = true
+
+
+## ── 减速（EMP 塔）──
+##
+## 调用约定：塔只在"进入雷达 / 离开雷达 / 自己被卖掉"这三个时机调一次，
+## 敌人自己负责把多座塔的影响合并成**一条**结果。
+## 这样塔不需要知道别的塔存在，也不需要保存"我把它减了多少"（那个数字会因为叠加而失去意义）。
+
+## 登记一个减速来源。ratio 是减速比例（0.3 = 移动速度 -30%）。
+## 同一来源重复登记会覆盖（例如以后塔升级改了 atk）。
+func addSlow(source: Object, ratio: float) -> void:
+	if source == null:
+		return
+	var clamped: float = clampf(ratio, 0.0, MAX_SLOW_RATIO)
+	if clamped <= 0.0:
+		removeSlow(source)
+		return
+	if baseSpeed <= 0:
+		baseSpeed = speed
+	slowSources[source] = clamped
+	refreshSpeed()
+
+
+## 注销一个减速来源（敌人离开该塔雷达，或塔被卖掉/销毁）。
+func removeSlow(source: Object) -> void:
+	if source == null or not slowSources.has(source):
+		return
+	slowSources.erase(source)
+	refreshSpeed()
+
+
+## 按"最强的一条减速"重算速度。
+##
+## ⚠️ 取最大值而不是连乘：
+##   · 连乘会让 N 座 EMP 把敌人叠成近乎静止，且"离开一座"无法精确还原（旧实现的漂移就来自这里）
+##   · 取最大值语义也符合玩家直觉 —— 被更强的场覆盖时，弱的那个不再起作用
+func refreshSpeed() -> void:
+	if baseSpeed <= 0:
+		baseSpeed = speed
+	var strongest: float = 0.0
+	var stale: Array = []
+	for src in slowSources:
+		# 塔已被卖掉/销毁：清掉，避免字典越攒越大、也避免调用已释放对象
+		if not is_instance_valid(src):
+			stale.append(src)
+			continue
+		strongest = maxf(strongest, float(slowSources[src]))
+	if not stale.is_empty():
+		for key in stale:
+			slowSources.erase(key)
+	speed = maxi(1, int(round(float(baseSpeed) * (1.0 - strongest))))
+
+
+## 当前生效的减速比例（0 表示没被减速）。调试/探针用。
+func currentSlowRatio() -> float:
+	if baseSpeed <= 0:
+		return 0.0
+	return 1.0 - float(speed) / float(baseSpeed)
 
 
 # 点击敌人：通知地图选中它

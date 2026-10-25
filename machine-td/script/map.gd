@@ -52,6 +52,23 @@ var mech = preload("res://scene/tower/mech.tscn")
 const MECH_MAX_COUNT: int = 10
 ## 建造 CD（秒）：刚放下后这段时间内不能再放（防止一路连点刷满）
 const MECH_BUILD_COOLDOWN: float = 3.0
+
+## ── 游戏倍速（Engine.time_scale）──
+## 顶栏倍速按钮的两个档位。2 倍速是目前唯一的加速档（需求：正常速度 / 2 倍速）。
+## ⚠️ Engine.time_scale 是全局的，离开关卡必须复位 —— 见 resetGameSpeed()。
+const NORMAL_TIME_SCALE: float = 1.0
+const FAST_TIME_SCALE: float = 2.0
+
+## ── 星级评价门槛（按基地剩余血量比例）──
+## 三星是 **90% 而不是 100%** —— 允许漏 1~2 个敌人也能拿满星。
+## 原因：三星会发额外宝石（见 userData.recordStageCompletion），
+## 而"一滴血都不掉"在各关难度差异极大（基地血量 10 和 20 的关，100% 意味着一个都不能漏），
+## 作为奖励条件太苛刻、也劝退。
+##
+## ⚠️ 这与成就「零损防线」（`perfect_base`）**不是同一件事**：那个成就仍然要求真·零损
+##    （`hp >= level.health`，见 recordAchievements()）。星级放宽，成就门槛不放宽。
+const THREE_STAR_HEALTH_RATIO: float = 0.9
+const TWO_STAR_HEALTH_RATIO: float = 0.5
 ## 上一次成功建造机甲的时刻（秒）。用 Time.get_ticks_msec() 换算，不依赖帧率。
 var mechLastBuiltMsec: int = -999999
 
@@ -121,6 +138,10 @@ func _ready():
 		titleNode.levelName = Game.t("_Endless", "Endless Mode")
 	else:
 		titleNode.levelName = StageData.getLevelDisplayName(StageData.currentStageId)
+	# 挑战模式：在关卡名右边**单独**挂一个模式徽章（正常模式不显示），带悬停说明。
+	# 做成独立徽章而不是拼进 levelName 字符串 —— 拼字符串没法带 tooltip，也没法单独上色。
+	if titleNode.has_method("setBattleMode"):
+		titleNode.setBattleMode(Game.battleMode)
 	# 波次进度条暂时用不上（无尽模式没有总波数），先整条隐藏 ——
 	# 需要恢复时把下面这行删掉，并还原 syncWaveProgressBar() 的调用即可。
 	if waveProgressBar:
@@ -133,8 +154,9 @@ func _ready():
 	titleNode.musicOnPressed.connect(onMusicOnPressed)
 	titleNode.musicOffPressed.connect(onMusicOffPressed)
 	titleNode.homePressed.connect(onHomePressed)
-	#titleNode.speedOnPressed.connect(onSpeedOnPressed)
-	#titleNode.speedOffPressed.connect(onSpeedOffPressed)
+	# 倍速：按钮在 title.tscn 的顶栏里，这里只接信号、真正改 Engine.time_scale
+	titleNode.speedOnPressed.connect(onSpeedOnPressed)
+	titleNode.speedOffPressed.connect(onSpeedOffPressed)
 	#queue_redraw()
 	# print(int(1920.0 / cellSize))
 	font = ThemeDB.fallback_font
@@ -282,6 +304,11 @@ func onIntroClosed() -> void:
 	startToolboxHintNow()
 	
 func loadLevel():
+	# 战斗模式：把当前模式的倍数解出来。必须在**任何敌人生成之前**做 ——
+	# base_level.buildWaveSpawner() 与 enemy.setupEnemyInfo() 都会读这些倍数。
+	# 无条件调一次是幂等的，也覆盖了"不是从关卡选择页进来"的路径。
+	Game.applyBattleModeScales()
+
 	# 无尽模式：不走 allStage 查表，直接加载独立关卡场景
 	if Game.endlessMode:
 		loadEndlessLevel()
@@ -629,10 +656,25 @@ func onHomePressed():
 	pauseGame()
 
 func onSpeedOnPressed():
-	pass
-	
+	setGameSpeed(FAST_TIME_SCALE)
+
 func onSpeedOffPressed():
-	pass
+	setGameSpeed(1.0)
+
+
+## 游戏倍速。`Engine.time_scale` 是**全局**状态，不是本场景的局部变量 ——
+## 所以每一次离开关卡都必须复位，否则 2 倍速会漏到关卡选择、主菜单甚至下一局。
+## 复位点集中在本函数 + resetGameSpeed()，调用方只在 _exit_tree / finish 里各调一次。
+func setGameSpeed(scale: float) -> void:
+	Engine.time_scale = clampf(scale, 0.1, 4.0)
+	# 倍速和暂停是两套东西：暂停靠 get_tree().paused，不受 time_scale 影响，
+	# 所以这里不用管暂停状态，恢复运行时自然还是原来的倍速。
+
+
+func resetGameSpeed() -> void:
+	Engine.time_scale = 1.0
+	if titleNode != null and titleNode.has_method("resetSpeedButton"):
+		titleNode.resetSpeedButton()
 
 # 出售防御塔
 func onTowerSold(money, coverGrid: Array[Vector2i]):
@@ -702,6 +744,10 @@ func finish():
 		return
 	settled = true
 
+	# 结算一旦开始就退回 1 倍速：结算界面、宝石飘字、成就弹窗都按正常速度播放，
+	# 2 倍速下这些动画会一闪而过。_exit_tree 里还会再复位一次（那是最保险的一层）。
+	resetGameSpeed()
+
 	# 记录最高评分、奖励和下一关解锁状态
 	var rating = calculateStars()
 	# rating 为 0 表示基地已经被打爆，不算通关：不写星级、不解锁关卡、不发宝石
@@ -709,21 +755,24 @@ func finish():
 	if rating <= 0:
 		return
 	recordAchievements(rating)
-	var gemReward: int = UserData.recordStageCompletion(StageData.currentStageId, rating)
+	# 返回 {"gem": 本次总发放, "starBonus": 其中来自星级的差额}，两笔奖励在结算行里分开显示
+	# modeId 决定奖励规则：挑战模式不写星级/不解锁，宝石按 gemScale 发一次
+	var reward: Dictionary = UserData.recordStageCompletion(
+		StageData.currentStageId, rating, Game.battleMode)
 	titleNode.score = UserData.score
 	resultScreen.setResult(false)
 	resultScreen.levelRating.rating = rating
-	resultScreen.setGemReward(gemReward)
+	resultScreen.setGemReward(int(reward.get("gem", 0)), int(reward.get("starBonus", 0)))
 	resultScreen.show()
 
-# 根据基地剩余生命计算三档星级
+# 根据基地剩余生命计算三档星级（阈值见文件顶部 THREE_STAR_HEALTH_RATIO / TWO_STAR_HEALTH_RATIO）
 func calculateStars() -> int:
 	if titleNode.hp <= 0:
 		return 0
 	var healthRatio: float = float(titleNode.hp) / float(level.health)
-	if healthRatio >= 1.0:
+	if healthRatio >= THREE_STAR_HEALTH_RATIO:
 		return 3
-	if healthRatio >= 0.5:
+	if healthRatio >= TWO_STAR_HEALTH_RATIO:
 		return 2
 	return 1
 
@@ -832,12 +881,15 @@ func restart():
 	get_tree().reload_current_scene.call_deferred()
 
 func nextLevel():
+	# 淡入淡出也吃 time_scale，先退回 1 倍速再切场（_exit_tree 里还有一层兜底）
+	resetGameSpeed()
 	SceneTransition.changeScene("res://scene/level_select.tscn")
 
 func returnHome():
 	# 离开无尽模式：清掉标记，避免下一局/下一关被当成无尽
 	Game.endlessMode = false
 	get_tree().paused = false
+	resetGameSpeed()
 	SceneTransition.changeScene("res://scene/welcome.tscn")
 
 func onAbilitySelectionChanged(_ability_id: String) -> void:
@@ -1041,6 +1093,12 @@ func _draw() -> void:
 ##   就能覆盖全部出口，不用在每个按钮回调里重复写一遍、也不会漏。
 func _exit_tree() -> void:
 	SoundManage.stopBgm()
+	# 倍速是全局状态，任何离开关卡的路径（回主菜单 / 下一关 / 重开 / 切场景）都从这里复位。
+	# 放在 _exit_tree 而不是各个按钮回调里 —— 出口有好几个，这样不会漏。
+	resetGameSpeed()
+	# 战斗模式同理：不复位的话，「蜂群」会被带进下一局甚至主菜单。
+	# 模式本身由关卡选择页重新设置，这里只负责把它清回正常。
+	Game.resetBattleMode()
 	# 工具箱提示的 tween 挂在 tower_ui 上，场景一起走，这里不必额外清理；
 	# 但把待办标记复位，避免同一实例被复用（reload_current_scene）时残留。
 	pendingToolboxHint = false

@@ -6,9 +6,12 @@
 | 项目 | 内容 |
 | --- | --- |
 | 适用项目 | Machine-TD（Godot 4.7，GDScript） |
-| 文档版本 | v2.0 |
-| 更新日期 | 2026-09-29 |
+| 文档版本 | v2.1 |
+| 更新日期 | 2026-10-23 |
 | 主要依据 | Godot 官方《GDScript style guide》《Static typing in GDScript》+ 本项目既定约定 |
+
+> **v2.1 变更**：新增 §7.6「全局引擎状态必须由进入它的那层负责复位」（`Engine.time_scale` 这类状态漏出场景的真实踩坑）。
+> 其余条目未改动。
 
 > ⚠️ **务必注意**：文中标注「**本项目约定**」的条目，是对 Godot 官方风格的**有意偏离**。
 > 生成或审查代码时**不要**按官方默认风格去“纠正”它（例如把 camelCase 改回 snake_case、把内置函数挪到文件开头、把显式类型改成 `:=`），否则会破坏全文一致性。
@@ -546,6 +549,25 @@ func _ready() -> void:
 - 释放节点用 `queue_free()`，不要直接 `free()`（除非确定当帧不再使用）。
 - 需要下一帧再执行用 `call_deferred()`。
 
+### 7.6 全局引擎状态必须由"进入它的那层"负责复位（本项目约定，强制）
+
+`Engine.time_scale`、`Engine.max_fps`、`AudioServer` 总线音量、`Input` 映射这类**不属于某个场景**的状态，
+一旦在关卡里改过，**不会随场景卸载而自动恢复**，会漏到主菜单、下一关甚至下一局。
+
+规则：
+
+1. **统一入口**：所有写入集中到一个函数（如 `map.gd::setGameSpeed()`），不要在按钮回调里直接写 `Engine.xxx`。
+2. **统一复位**：同一个函数名加 `reset` 前缀提供复位（如 `resetGameSpeed()`），**复位里同时把 UI 外观掰回去**，
+   否则会出现"引擎已经 1 倍速，按钮还写着 2X"。
+3. **覆盖所有出口**：至少挂在场景的 `_exit_tree()`（兜底）+ 每条显式退出路径（`nextLevel` / `returnHome` / 结算 `finish`）。
+   `_exit_tree()` 单独一层不够 —— 场景淡入淡出、结算动画这些**发生在退出之前**的表现，仍然会吃旧值。
+4. **不要用 `_` 前缀命名**：按 §2.1，私有函数 camelCase、不加 `_`；只有 Godot 引擎回调保留 `_`。
+
+> 反例（2026-10 踩过）：倍速按钮只写了 `onSpeedOnPressed()` 改 `Engine.time_scale`，
+> 回主菜单后整个菜单都以 2 倍速播放；结算界面的宝石飘字一闪而过。
+> 修法就是上面四条 —— 复位集中在 `resetGameSpeed()`，挂到 `_exit_tree` / `finish` / `nextLevel` / `returnHome`。
+
+
 ---
 
 ## 8. 提交前审查清单
@@ -563,6 +585,7 @@ func _ready() -> void:
 - [ ] 模块间用信号通信；信号在 `_ready` 中连接。
 - [ ] 无 `get_node()` 出现在 `_process`；无用回调已 `set_process(false)`。
 - [ ] 节点释放 / `await` 之后访问做了有效性判断。
+- [ ] 改过 `Engine.time_scale` / 全局音频总线等**场景外状态**的，已在 `_exit_tree()` 与每条显式退出路径上复位（§7.6）。
 - [ ] 移动或改名文件后，所有引用（`preload` / `.tscn` / autoload / 图鉴路径）已同步更新。
 - [ ] `.tscn` / `.tres` 里**没有 `#` 注释**（Godot 文本资源不支持注释，会 Parse Error）。
 - [ ] 改过关卡场景后跑 `python3 tools/level_tools/analyze.py -q scene/level/level_N.tscn`，

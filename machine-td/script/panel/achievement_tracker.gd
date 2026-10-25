@@ -27,8 +27,22 @@ func _ready() -> void:
 	TowerUpgradeManager.towerLeveledUp.connect(onTowerLeveledUp)
 
 
+## 挑战模式（蜂群 / 铁流 / 精锐）**不累计任何成就进度**。
+##
+## 原因：蜂群把敌人数量翻倍，而 legion_slayer（累计 3000 杀）/ ground_breaker 这类
+## 都是按"击杀个数"计数的 —— 不隔离的话，最"难"的模式反而成了刷成就最快的模式。
+## 见 feature_design.md §17.6。
+##
+## 放在记录器内部统一判断，而不是让每个调用方各写一遍：调用点有 4 处
+## （击杀 / 建造 / 升级 / 通关），分散判断必然漏。
+func trackingEnabled() -> bool:
+	return not Game.isChallengeMode()
+
+
 func onEnemyDefeated(enemy, source) -> void:
 	if enemy == null or not is_instance_valid(enemy):
+		return
+	if not trackingEnabled():
 		return
 
 	# 天空守卫 / 地面清扫者：按是否飞行分流
@@ -61,6 +75,8 @@ func onEnemyDefeated(enemy, source) -> void:
 
 # 由 map.placeTower 在塔真正放置成功后调用
 func recordTowerBuilt(tower_type) -> void:
+	if not trackingEnabled():
+		return
 	towerTypesUsed[tower_type] = true
 	submitRunBest("full_armory", towerTypesUsed.size())
 
@@ -68,6 +84,8 @@ func recordTowerBuilt(tower_type) -> void:
 # ---------- 成长类 ----------
 
 func onTowerLeveledUp(_tower, level: int) -> void:
+	if not trackingEnabled():
+		return
 	# 老兵塔：任意一座塔升到满级
 	if level >= TowerUpgradeManager.MAX_LEVEL:
 		AchievementManager.setProgress("veteran_tower", TowerUpgradeManager.MAX_LEVEL, false)
@@ -79,6 +97,8 @@ func onTowerLeveledUp(_tower, level: int) -> void:
 # flawless: 基地全程没掉血（等价于没有任何敌人逃脱）
 # _multi_route: 保留参数以兼容调用方（原先的 route_master 成就已删除，不再读它）
 func recordStageCleared(stageId: int, flawless: bool, _multi_route: bool) -> void:
+	if not trackingEnabled():
+		return
 	if stageId == 1:
 		AchievementManager.setProgress("first_defense", 1, false)
 	if flawless:

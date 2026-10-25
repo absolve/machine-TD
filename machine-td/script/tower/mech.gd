@@ -265,6 +265,13 @@ func updateCrawlSound() -> void:
 
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
+	# ── 停止（紧急维修的代价）──
+	# 整机失效：不能移动、不发维修脉冲、不能回收残骸。
+	# ⚠️ 必须挡在**行为入口**，不能只在技能按钮上判断 —— 那样机甲照样会走路、修塔、捡残骸，
+	#    这条代价就等于不存在。super 已经先跑过，所以技能计时/停摆倒计时仍会推进。
+	if isDisabled():
+		stopAllWork()
+		return
 	if not deployed:
 		return
 
@@ -439,6 +446,47 @@ func abortSalvage() -> void:
 	salvageTarget = null
 	salvageElapsed = 0.0
 	salvageBeamOn = false
+
+
+## 立刻执行"紧急维修"：治疗自身 + 半径内所有塔 30% 各自最大血量，然后整机停止。
+func runInstantSkill() -> bool:
+	var ratio: float = float(skillDef.get("healRatio", 0.3))
+	var radius: float = float(skillDef.get("healScope", radarScope))
+	var selfHeal: int = int(ceil(float(maxHp) * ratio))
+	addHp(selfHeal)
+	for t in get_tree().get_nodes_in_group("tower"):
+		if t == self or not is_instance_valid(t) or not (t is Tower):
+			continue
+		if global_position.distance_to(t.global_position) > radius:
+			continue
+		# 用 addHp 而不是 hurt(-n)：hurt 会把负伤害夹成 0，治疗根本不会生效
+		t.addHp(int(ceil(float(t.maxHp) * ratio)))
+	playRepairGlow()
+	SoundManage.playAt("tower_healed", global_position, -6.0, 1.0)
+	skillDisabledLeft = float(skillDef.get("shutdown", 3.0))
+	stopAllWork()
+	onSkillModeChanged()
+	return true
+
+
+## 停止 / 移动 / 出售前统一收尾：把"正在做的事"全部清干净。
+##
+## ⚠️ `abortSalvage()` 不能省：它会 `releaseClaim()` 释放残骸认领，
+##    否则停止的这几秒里别的机甲也捡不了那坨残骸，等于把资源锁死。
+func stopAllWork() -> void:
+	if not moving and repairTarget == null and beamOn == false \
+			and salvageTarget == null and muzzleBurstLeft <= 0.0:
+		return
+	moving = false
+	moveTarget = position
+	repairTarget = null
+	beamOn = false
+	muzzleBurstLeft = 0.0
+	abortSalvage()
+	updateCrawlSound()
+	if muzzleFx != null:
+		muzzleFx.emitting = false
+	queue_redraw()
 
 
 ## 冷却结束：复位，允许下一发脉冲。

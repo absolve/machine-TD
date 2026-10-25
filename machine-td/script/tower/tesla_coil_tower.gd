@@ -66,8 +66,15 @@ func fireLightning(initial_target):
 	regenerateJaggedPoints()
 	queue_redraw()
 
+## 链式放电技能：生效期间多跳几个目标。
+## 用"基础常量 + 技能增量"而不是直接改 const —— MAX_CHAIN 是设计常量，技能只是临时加成。
+func maxChain() -> int:
+	if isSkillActive():
+		return MAX_CHAIN + int(skillDef.get("chainExtra", 0))
+	return MAX_CHAIN
+
 func applyChainDamage() -> void:
-	var damage: float = float(atk)
+	var damage: float = float(effectiveAtk())
 	# 命中弧线的父节点（map）。用它做 to_local 换算，比直接写 global_position 稳：
 	# 万一 map 带缩放/偏移，global_position 会偏。
 	var parent2d: Node2D = Game.map if Game.map is Node2D else null
@@ -114,7 +121,7 @@ func collectChain(first) -> Array:
 	var result: Array = [first]
 	var used: Dictionary = {first: true}
 	var current = first
-	while result.size() < MAX_CHAIN:
+	while result.size() < maxChain():
 		var next = null
 		var bestDist = CHAIN_MAX_DIST
 		for t in target:

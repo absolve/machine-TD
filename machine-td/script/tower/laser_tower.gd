@@ -55,7 +55,7 @@ func fireLasers():
 	playMuzzleFx(getMuzzlePosition())
 	for enemy in laserTargets:
 		if is_instance_valid(enemy) and enemy.has_method("hurt"):
-			enemy.hurt(atk,self)
+			enemy.hurt(effectiveAtk(),self)
 			# 命中视觉交给场景里那几组 hitFx*（持续喷溅火花，见 _update_hit_fx）。
 			# 这里**故意不叫** ExplosionManage.playHit —— 那是通用的一次性爆闪，
 			# 激光每来一发脉冲就砸上去一颗，会把持续火花整个盖成一团火球，
@@ -76,13 +76,31 @@ func playMuzzleFx(pos: Vector2) -> void:
 	muzzleFx.emitting = true
 
 
-# 收集最多MAX_TARGETS个有效目标
+## 当前允许锁定的目标数：默认 MAX_TARGETS，切到"单体打击"后读技能配置。
+## ⚠️ 必须是函数而不是 const —— 技能切换要能改它。
+func maxTargets() -> int:
+	if skillKind == "toggle" and skillOn:
+		return maxi(1, int(skillDef.get("maxTargets", MAX_TARGETS)))
+	return MAX_TARGETS
+
+
+## 切到单体模式时，把多出来的锁定**立刻释放**并关掉对应喷溅粒子。
+## 不做这一步的话：激光只打一个，但三条光束还挂在敌人身上（视觉与伤害不一致）。
+func onSkillModeChanged() -> void:
+	super.onSkillModeChanged()
+	var cap: int = maxTargets()
+	while laserTargets.size() > cap:
+		laserTargets.pop_back()
+	updateHitFx()
+
+
+# 收集最多 MAX_TARGETS 个有效目标
 func collectTargets() -> Array:
 	var result: Array = []
 	for t in target:
 		if is_instance_valid(t):
 			result.append(t)
-			if result.size() >= MAX_TARGETS:
+			if result.size() >= maxTargets():
 				break
 	return result
 

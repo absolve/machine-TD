@@ -23,11 +23,31 @@ var achievementProgress: Dictionary = {} # 成就进度
 var endlessBestWave: int = 0 # 历史最高波数
 var endlessBestKills: int = 0 # 对应那局的击杀数（M3 补）
 var endlessRuns: int = 0 # 无尽累计游玩次数
+
+## ── 挑战模式通关记账 ──
+## 存 "模式id:关卡id" 形式的键（如 "swarm:3"），表示该模式该关的宝石**已经发过**。
+## 挑战模式不写 stageRatings（不记录星级，见 feature_design.md §17.6），
+## 所以"是否首通"不能再靠 stageRatings 判断 —— 否则同一关每打一次都会被当成首通，
+## 可以把宝石无限刷出来。用这张表单独记账。
+var challengeCleared: Array[String] = []
 #############
 
 const SETTINGS_FILE_NAME := "user_settings.cfg"
 const SETTINGS_SCHEMA := 2 # 设置架构版本
 const PLAYER_DATA_FILE_NAME := "player_data.cfg"
+
+## ── 星级奖励 ──
+## 在「首次通关宝石」（`StageData` 的 `gemReward`）之外，按**最高星级**额外发放的宝石比例。
+## 用比例而不是固定值：后期关卡基础奖励大（第 1 关 3、第 16 关 20），固定值会把高关卡奖励稀释掉。
+## 1 星是保底通关，不给额外奖励 —— 否则等于把基础奖励白涨一档。
+##
+## ⚠️ 只按「最高星级的**提升**」结算差额（见 recordStageCompletion），
+##    所以同一关反复打不会重复领、掉星也不会扣回去。这两个数值可以直接调，不影响存档结构。
+const STAR_BONUS_RATIO: Dictionary = {
+	2: 0.25, # 2 星：额外 25%
+	3: 0.50, # 3 星：额外 50%
+}
+
 var settingsPath: String
 var playerDataPath: String
 # 旧 schema 的设置被迁移过，需要回写一次（否则每次启动都要重新判定语言）
@@ -165,6 +185,12 @@ func loadPlayerData() -> bool:
 	endlessBestWave = int(config.get_value("endless", "bestWave", endlessBestWave))
 	endlessBestKills = int(config.get_value("endless", "bestKills", endlessBestKills))
 	endlessRuns = int(config.get_value("endless", "runs", endlessRuns))
+	# 挑战模式记账：老存档没有这一项，缺了就用空数组（不报错）
+	var savedChallenge = config.get_value("player", "challengeCleared", [])
+	if savedChallenge is Array:
+		challengeCleared.clear()
+		for key in savedChallenge:
+			challengeCleared.append(str(key))
 	return true
 
 
@@ -183,6 +209,7 @@ func savePlayerData() -> bool:
 	config.set_value("endless", "bestWave", endlessBestWave)
 	config.set_value("endless", "bestKills", endlessBestKills)
 	config.set_value("endless", "runs", endlessRuns)
+	config.set_value("player", "challengeCleared", challengeCleared)
 	var error: int = config.save(playerDataPath)
 	if error != OK:
 		push_warning("无法保存玩家进度: %s (%s)" % [playerDataPath, error])
@@ -210,12 +237,53 @@ func isStageUnlocked(stageId: int) -> bool:
 func getStageRating(stageId: int) -> int:
 	return int(stageRatings.get(str(stageId), stageRatings.get(stageId, 0)))
 
-func recordStageCompletion(stageId: int, rating: int) -> int:
+## 某关的**累计**星级奖励：该关基础宝石 × 星级对应比例。
+## `baseGem` 由调用方查 `StageData` 传入（避免这里再扫一遍表）。
+## 1 星及以下返回 0 —— 保底通关不额外奖励。
+func starBonusTotal(baseGem: int, rating: int) -> int:
+	if rating <= 1 or baseGem <= 0:
+		return 0
+	var ratio: float = float(STAR_BONUS_RATIO.get(rating, 0.0))
+	# ceil 而非 round：3 关 baseGem=3 时 25% = 0.75，向下取整会变成 0，等于白给
+	return int(ceil(float(baseGem) * ratio))
+
+
+## 记录一次通关，返回**本次实际发放**的宝石：
+## `{"gem": 总发放, "starBonus": 其中来自星级的差额}`
+##
+## 两种战斗模式的行为不同（见 feature_design.md §17.6）：
+##
+## **正常模式**（`recordsProgress = true`）—— 两笔奖励的规则不同，不要混为一谈：
+##   · **首次通关宝石**（`StageData.gemReward`）：只在第一次通关发，防止反复刷关刷宝石。
+##   · **星级奖励**（`STAR_BONUS_RATIO`）：按"最高星级的提升"发**差额**。
+##     例：首次 1 星 → 只发基础；之后打出 3 星 → 只补 3 星与 1 星之间的差额。
+##     所以「同一关反复打」不会重复领，「掉星重打」也不会扣回去（差额被夹到 0）。
+##
+## **挑战模式**（蜂群 / 铁流 / 精锐）—— **不写星级、不解锁下一关**，因此也不触发星级奖励。
+##   回报改为：每个（模式, 关卡）**首次通关**发一次 `基础宝石 × gemScale`。
+##   用 `challengeCleared` 单独记账 —— 不能用 stageRatings 判断"首通"，
+##   因为挑战模式根本不写它，否则每次都会被当成首通、宝石可以无限刷。
+##
+## `modeId` 缺省为 "normal"，保证既有调用方（以及旧存档）行为不变。
+func recordStageCompletion(stageId: int, rating: int, modeId: String = "normal") -> Dictionary:
 	rating = clampi(rating, 0, 3)
 	# rating 为 0 表示基地被打爆，不算通关：
 	# 不记星级、不解锁关卡、不发宝石（这里兜底，防止调用方漏判）
 	if rating <= 0:
-		return 0
+		return {"gem": 0, "starBonus": 0}
+
+	# 查本关基础宝石（星级奖励与挑战倍率都以它为基数）
+	var baseGem: int = 0
+	for stage in StageData.allStage:
+		if int(stage.get("id", -1)) == stageId:
+			baseGem = int(stage.get("gemReward", 0))
+			break
+
+	var def: Dictionary = Game.getBattleModeDef(modeId)
+	var recordsProgress: bool = bool(def.get("recordsProgress", true))
+	if not recordsProgress:
+		return recordChallengeClear(stageId, modeId, baseGem, float(def.get("gemScale", 1.0)), rating)
+
 	var oldRating: int = getStageRating(stageId)
 	var firstCompletion: bool = not stageRatings.has(str(stageId)) and not stageRatings.has(stageId)
 	if rating > oldRating:
@@ -228,12 +296,25 @@ func recordStageCompletion(stageId: int, rating: int) -> int:
 			if nextStageId not in unlockedStages:
 				unlockedStages.append(nextStageId)
 			break
+	var rewardGem: int = baseGem if firstCompletion else 0
+	# 星级奖励只发"提升的部分"；掉星时差值为负，夹到 0
+	var starBonus: int = maxi(starBonusTotal(baseGem, rating) - starBonusTotal(baseGem, oldRating), 0)
+	gem += rewardGem + starBonus
+	score += rating * 100
+	savePlayerData()
+	return {"gem": rewardGem + starBonus, "starBonus": starBonus}
+
+
+## 挑战模式通关：只发一次"模式 × 关卡"的宝石，**不写星级、不解锁关卡**。
+## 单独拆出来是为了让两条分支都短到能一眼看完（原函数混在一起会很难读）。
+func recordChallengeClear(
+	stageId: int, modeId: String, baseGem: int, gemScale: float, rating: int) -> Dictionary:
+	var key: String = "%s:%d" % [modeId, stageId]
 	var rewardGem: int = 0
-	for stage in StageData.allStage:
-		if int(stage.get("id", -1)) == stageId:
-			rewardGem = int(stage.get("gemReward", 0)) if firstCompletion else 0
-			break
+	if key not in challengeCleared:
+		challengeCleared.append(key)
+		rewardGem = int(ceil(float(baseGem) * gemScale))
 	gem += rewardGem
 	score += rating * 100
 	savePlayerData()
-	return rewardGem
+	return {"gem": rewardGem, "starBonus": 0}

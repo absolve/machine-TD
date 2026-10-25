@@ -237,8 +237,16 @@ func start():
 func buildWaveSpawner(waveNo: int) -> Array:
 	var rows: Array = []
 	for spawnInfo in enemyList:
-		if int(spawnInfo.get("time", 0)) == waveNo:
-			rows.append(spawnInfo.duplicate())
+		if int(spawnInfo.get("time", 0)) != waveNo:
+			continue
+		var row: Dictionary = spawnInfo.duplicate()
+		# 战斗模式的敌人数倍数（feature_design.md §十七）。
+		# ⚠️ **只在这里乘一次**。onSpawnerTimerTimeout() 只会对 number 做减一，
+		#    不能再乘 —— 否则会变成 4 倍。
+		# duplicate() 保证了改的是副本，不会污染 StageData 里的原始编排。
+		if not is_equal_approx(Game.modeCountScale, 1.0):
+			row["number"] = maxi(1, int(ceil(float(row.get("number", 0)) * Game.modeCountScale)))
+		rows.append(row)
 	return rows
 
 
@@ -309,6 +317,11 @@ func onSpawnerTimerTimeout():
 ##
 ## 查表拿不到的类型，回落到本关兜底间隔 _spawn_interval（教程关 1.0，
 ## 其它关卡走 DEFAULT_SPAWN_INTERVAL）—— 保证永远不会出现"漏配 → 瞬间刷一堆"。
+##
+## ⚠️ **战斗模式不允许改出怪间隔。** 早先有过 `Game.modeDelayScale`（蜂群把间隔减半），
+##    实测会让后一个敌人追上前一个、在路径上**叠成一团**。
+##    调节奏一律走 `Game.modeSpeedScale`（改敌人在射程里待多久），不动这里。
+##    唯一保留的缩放是 `spawnDelayScale`，它只属于**无尽模式**（随波次压缩，与模式无关）。
 func nextSpawnDelay() -> float:
 	if currentSpawner.is_empty():
 		return spawnInterval

@@ -20,7 +20,9 @@ func fire(t):
 		temp.position = getMuzzlePosition()
 		temp.angle = (t.global_position - getMuzzlePosition()).angle()
 		temp.sourceTower = self
-		temp.damage = atk
+		temp.damage = effectiveAtk()
+		# 破甲弹：技能生效期间用能量伤害，绕过敌人的 armor
+		temp.damageType = "energy" if isSkillActive() else "physical"
 		Game.addObj(temp)
 		canShot = false
 		delayTimer.start()

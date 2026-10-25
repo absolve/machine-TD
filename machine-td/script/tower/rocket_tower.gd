@@ -24,7 +24,12 @@ func fire(t):
 		temp.position = getMuzzlePosition()
 		temp.angle = (t.global_position - getMuzzlePosition()).angle()
 		temp.sourceTower = self
-		temp.damage = atk
+		temp.damage = effectiveAtk()
+		# 导弹模式（toggle）：单体直击、不溅射、弹速更快
+		if skillKind == "toggle" and skillOn:
+			temp.noSplash = bool(skillDef.get("noSplash", false))
+			temp.bulletSpeed = float(skillDef.get("bulletSpeed", temp.bulletSpeed))
+			temp.turnSpeed = float(skillDef.get("turnSpeed", temp.turnSpeed))
 		Game.addObj(temp)
 		canShot = false
 		delayTimer.start()

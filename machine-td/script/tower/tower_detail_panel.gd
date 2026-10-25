@@ -19,12 +19,16 @@ extends PanelContainer
 @onready var costValueLabel: Label = $Margin/VBox/Economy/costRow/Value
 @onready var btnRepair: Button = $Margin/VBox/ActionRow/btnRepair
 @onready var btnSell: Button = $Margin/VBox/ActionRow/btnSell
+## 主动技能单独占一行（需求：技能按钮不和修理/出售挤在同一行）
+@onready var skillRow: HBoxContainer = $Margin/VBox/SkillRow
+@onready var btnSkill: Button = $Margin/VBox/SkillRow/btnSkill
 @onready var hintLabel: Label = $Margin/VBox/hintLabel
 
 var tower: Node = null # 当前选中的塔
 # 缓存按钮文案，避免每帧刷新时反复触发布局重算
 var lastRepairText: String = ""
 var lastSellText: String = ""
+var lastSkillText: String = ""
 
 
 func _ready() -> void:
@@ -38,6 +42,8 @@ func _ready() -> void:
 	hintLabel.text = Game.t("_PanelHint", "Click the tower again or empty ground to deselect.")
 	btnRepair.pressed.connect(onRepairPressed)
 	btnSell.pressed.connect(onSellPressed)
+	btnSkill.pressed.connect(onSkillPressed)
+	skillRow.visible = false
 	refreshActionText()
 
 
@@ -71,6 +77,16 @@ func onSellPressed() -> void:
 	if t == null or not is_instance_valid(t):
 		return
 	t.sell()
+
+
+## 技能按钮。真正的判定在塔自己那边（`useSkill()` 会再走一遍 canUseSkill），
+## 这里不做业务判断，避免"按钮看着能点、实际上被拒"这种两套逻辑不同步的问题。
+func onSkillPressed() -> void:
+	var t: Tower = tower as Tower
+	if t == null or not is_instance_valid(t):
+		return
+	t.useSkill()
+	refreshSkillButton(t)
 
 
 # 选中塔 -> 显示该塔信息
@@ -116,10 +132,11 @@ func refresh() -> void:
 		expBar.value = clampi(t.towerExp, 0, needed)
 		expValueLabel.text = "%d/%d" % [t.towerExp, needed]
 
-	# 属性与价格
-	atkValueLabel.text = str(t.atk)
-	reloadValueLabel.text = fmtFireRate(t.delay)
-	scopeValueLabel.text = str(t.radarScope)
+	# 属性与价格。**显示派生值**：技能切换/生效时面板要跟着变，
+	# 否则玩家切到"单体打击"却看到攻击力没涨，会以为技能没生效。
+	atkValueLabel.text = str(t.effectiveAtk())
+	reloadValueLabel.text = fmtFireRate(t.effectiveDelay())
+	scopeValueLabel.text = str(int(round(t.effectiveScope())))
 	costValueLabel.text = str(t.money)
 
 	# 操作按钮：满血时修理按钮不可点，其余状态实时显示修理费与出售价
@@ -127,6 +144,48 @@ func refresh() -> void:
 	btnRepair.disabled = repairCost <= 0
 	btnSell.disabled = false
 	refreshActionText()
+	refreshSkillButton(t)
+
+
+## 技能按钮：单独一行、文案随三种 kind 变、冷却/生效/停摆都显示倒计时。
+func refreshSkillButton(t: Tower) -> void:
+	if t == null:
+		skillRow.visible = false
+		return
+	var has: bool = t.hasSkill()
+	skillRow.visible = has
+	if not has:
+		return
+	var skillName: String = tr(str(t.skillDef.get("name", "")))
+	var text: String = ""
+	if t.skillKind == "toggle":
+		text = Game.t("_SkillToggle", "Switch: %s") % skillName
+		btnSkill.button_pressed = t.skillOn
+	elif t.skillKind == "instant":
+		text = Game.t("_SkillUse", "Use: %s") % skillName
+		btnSkill.button_pressed = false
+	else:
+		text = Game.t("_SkillUse", "Use: %s") % skillName
+		btnSkill.button_pressed = t.isSkillActive()
+
+	# 倒计时：生效中显示剩余持续时间；停摆显示停摆剩余；否则显示冷却
+	if t.isSkillActive():
+		text = "%s  %ds" % [text, int(ceil(t.skillActiveLeft))]
+	elif t.isDisabled():
+		text = "%s  %ds" % [text, int(ceil(t.skillDisabledLeft))]
+	elif t.skillCooldownLeft > 0.0:
+		text = "%s  %ds" % [text, int(ceil(t.skillCooldownLeft))]
+
+	# 生效/启用时用安全黄强调，和"我方强化"的视觉约定一致
+	if t.isSkillActive() or (t.skillKind == "toggle" and t.skillOn):
+		btnSkill.modulate = Color(1.0, 0.86, 0.45, 1.0)
+	else:
+		btnSkill.modulate = Color(1, 1, 1, 1)
+
+	btnSkill.disabled = not t.canUseSkill()
+	if text != lastSkillText:
+		lastSkillText = text
+		btnSkill.text = text
 
 
 # reload 为开火间隔(秒)，换算成每秒攻击次数展示

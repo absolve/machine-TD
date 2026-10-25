@@ -38,9 +38,15 @@ func setResult(_isFailed: bool):
 ##    整行直接被隐藏 —— 看起来就是"结束菜单上没有奖励宝石"。
 ## 现在：通关时**始终显示这一行**，amount 为 0 就明确写"本关宝石已领取过"，
 ## 让玩家知道不是漏发了，而是这一关的宝石已经拿过。
-func setGemReward(amount: int) -> void:
+##
+## `starBonus` 是 amount 里**来自星级**的那部分（0 表示本次没有星级提升）。
+## 只在它大于 0 时才换用「含星级奖励」的文案 —— 平时不显示，避免每关都多出半句话。
+func setGemReward(amount: int, starBonus: int = 0) -> void:
 	if amount > 0:
-		gemRewardLabel.text = tr("_GemReward") % amount
+		if starBonus > 0:
+			gemRewardLabel.text = tr("_GemRewardWithStar") % [amount, starBonus]
+		else:
+			gemRewardLabel.text = tr("_GemReward") % amount
 		gemRewardRow.modulate = Color(1, 1, 1, 1)
 	else:
 		gemRewardLabel.text = tr("_GemRewardNone")

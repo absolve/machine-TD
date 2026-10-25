@@ -9,6 +9,10 @@ extends "res://script/bullet/bullet.gd"
 ##   ② 用有限的角速度 [member turnSpeed] 把飞行方向**逐渐**转过去（不是瞬间锁定）。
 ## 有目标就拐弯咬住，没有就保持直线；命中判定与爆炸逻辑完全不变。
 
+## 导弹模式（火箭塔的 toggle 技能）：**没有爆炸范围**，命中时直接对单个敌人结算伤害。
+## 由发射方 `rocket_tower.gd` 在实例化后设置。
+@export var noSplash: bool = false
+
 ## 转向角速度（弧度 / 秒）。越大拐弯越急：300 像素/秒 ÷ 5 弧度/秒 ≈ 60 像素转弯半径。
 @export var turnSpeed: float = 5.0
 
@@ -71,10 +75,21 @@ func steerToward(enemy: Enemy, delta: float) -> void:
 	vec = Vector2(bulletSpeed, 0).rotated(angle)
 
 
-func spawnBomb() -> void:
+## `hitEnemy`：本次命中的敌人（寿命耗尽时没有目标，传 null）。
+##
+## ⚠️ 导弹模式的"不溅射"**不能靠把 blastRadius 调小**实现：`bomb.tscn` 的伤害本来
+##    就是拿范围结算出来的，半径调到 0 只会变成一个打不到人的空爆。
+##    所以这里走一条完全独立的路径：直接 `hurt()` 单个目标，**不生成 bomb 场景**。
+func spawnBomb(hitEnemy: Node = null) -> void:
 	if is_queued_for_deletion():
 		return
 	spawnHitEffect()
+	if noSplash:
+		# 单体直击：有目标才结算；打空了就只留命中特效（不放空爆）
+		if is_instance_valid(hitEnemy) and hitEnemy.has_method("hurt"):
+			hitEnemy.hurt(damage, sourceTower)
+		queue_free()
+		return
 	# 爆炸的视觉由 bomb **自己的动画**负责（sprite/explosionSmoke1..5.png，见 bomb.gd），
 	# 所以这里**不要再调 ExplosionManage.playExplosion()** —— 会叠成两套爆炸。
 	var bomb = bombScene.instantiate()
@@ -105,5 +120,5 @@ func _physics_process(delta: float) -> void:
 		if area is Enemy and area.flying != targetFlying:
 			continue
 		if area.has_method("hurt"):
-			spawnBomb()
+			spawnBomb(area)
 			return

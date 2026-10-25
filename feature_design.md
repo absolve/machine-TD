@@ -2,9 +2,13 @@
 
 > 本文档用于记录后续功能模块的设计方案与更新计划，便于独立开发、维护和扩展。
 >
-> **文档版本**：v1.3
+> **文档版本**：v2.0
 > **创建日期**：2026-08-19
-> **最近更新**：2026-10-09（新增五个模块设计稿，**均未实现**：§九 敌人攻击范围显示 / §十 移动机甲 / §十一 敌人残骸与回收 / §十二 击杀金币飘字 / §十三 波次来袭横幅；§十四 汇总依赖与实施顺序）
+> **最近更新**：2026-10-24 —— **§十八 塔技能已实现**（9 座塔全覆盖）：三种形态 `toggle` / `timed` / `instant`；
+> 火箭塔=远距离导弹（无溅射）、激光塔=单体打击、机甲=群体维修 30% + 整机停止 3 秒。
+> **技能只提供派生值、不写基值，所以与升级系统互不覆盖**；技能按钮单独一行。
+> 探针 41 项断言全过。§十九 Boss 仍是设计稿。
+> **上一版**：2026-10-24（§十七 战斗模式已实现；§十八 技能表改为 v1.1）
 > **适用项目**：Machine-TD（Godot 4.7 塔防游戏）
 
 ---
@@ -25,7 +29,12 @@
 - [十二、击杀金币飘字（Kill Reward Floating Text）](#十二击杀金币飘字kill-reward-floating-text)
 - [十三、波次来袭横幅（Wave Incoming Banner）](#十三波次来袭横幅wave-incoming-banner)
 - [十四、五个新模块的总览与依赖](#十四五个新模块的总览与依赖)
-- [十五、后续可扩展模块（规划中）](#十五后续可扩展模块规划中)
+- [十五、后续可扩展模块（v2.x 待办）](#十五后续可扩展模块v2x-待办)
+- [十六、1X / 2X 倍速（Game Speed）](#十六1x--2x-倍速game-speed)
+- [十七、战斗模式（Battle Mode / Mutator）](#十七战斗模式battle-mode--mutator)
+- [十八、防御塔主动技能（Tower Active Skill）](#十八防御塔主动技能tower-active-skill)
+- [十九、Boss 波（Boss Wave）](#十九boss-波boss-wave)
+- [二十、三个模块的实施顺序建议](#二十三个模块的实施顺序建议)
 
 ---
 
@@ -289,9 +298,11 @@ func load() -> void:
 
 ## 三、成就系统（Achievement System）
 
-> **实现状态：✅ 已实现**（2026-09-12）—— 9 个成就全部接入实际事件，
+> **实现状态：✅ 已实现**（2026-09-12 首版，**2026-10-23 复核为 12 个成就**）
 > 含关卡内记录器、图标网格总览面板、右侧滑入获得提示；文案已全量中英双语。
-> 已知限制：成就「路线掌控者」依赖多路线关卡，当前内容下无法达成（见 `game_analysis.md` §4.3）。
+> 现有 12 条：`first_defense` / `ground_breaker` / `iron_hunter` / `sky_guardian` / `full_armory` /
+> `chain_reaction` / `veteran_tower` / `perfect_base` / `fortress_breaker` / `legion_slayer` + 无尽专属 `endless_10` / `endless_30`。
+> **已知限制**：`reward_gem` / `reward_title` 两个字段仍**只定义、无人读取** → 解锁成就不发宝石、也没有称号系统（见 §15.1）。
 
 ### 3.1 模块定位
 
@@ -538,9 +549,12 @@ func load() -> void:
 
 ## 四、能力技能系统（Ability / Active Skill System）
 
-> **实现状态：❌ 未实现** —— 本文档为设计稿，项目中尚无对应代码（`ability` / `skill` 相关文件数为 0）。
->
-> ⚠️ 该模块依赖地图侧的接口（区域选择、范围伤害、塔无敌），建议在 `game_analysis.md` §7 第一阶段的地图数据模型修好之后再落地。
+> **实现状态：✅ 已实现**（2026-10-23 校对）
+> 代码：`autoload/ability_manager.gd`（定义表 `ABILITIES` + 冷却/宝石/目标选择）、
+> `script/ui/ability_bar.gd` + `ability_slot.gd`（战斗内技能栏）、`map.gd` 的目标选择与效果落地。
+> 现有两个技能：**`bombard`**（区域轰炸：半径 100 / 伤害 200 / 6 秒冷却 / 1 宝石）、
+> **`invincible`**（防御塔无敌：半径 80 / 持续 8 秒 / 8 秒冷却 / 1 宝石）。
+> 本关启用哪些技能由 `StageData.stageAbilities` 配置，未配置即本关无技能。
 
 ### 4.1 模块定位
 
@@ -1453,6 +1467,29 @@ layer 100 的转场遮罩就永远盖不住它 —— 转场时会看到弹窗�
 | 2026-10-09 | §十三 波次来袭横幅 | v1.0 | 新增设计（**未实现**）：每波开始时弹横幅告知本波会来哪些敌人。现状是**悄悄开始**（只发 `Game.dataRefreshed`，顶栏数字变一下），玩家常在敌人上路后才发现。**外观与动画参数直接抄 `battle_start_banner`**（`fadeInSec 0.26` / `holdSec 1.15` / `outScale 0.86` / 复用 `hazard_strip` 危险条纹），新建独立 `wave_banner` 而不是改造开场横幅（后者 `play()` 签名与 `startGame()` 调用点已稳定，改造会牵动开场流程）；也可让新脚本 `extends battle_start_banner.gd` 只覆写清单排版，符合 §6.2「基础脚本 + 子类只覆盖差异」。**数据来源零新增**：`base_level.buildWaveSpawner(wave)` 本来就返回 `{time, type, number}` 记录数组。**两个实现要点**：① `dataRefreshed` 是在 `buildWaveSpawner()` **之前**发的，所以 `map.gd` 要自己调一次 `buildWaveSpawner()` 取编制（该方法只读数据、不会重复生成敌人）；② 同一兵种可能有多条记录（走不同路线/偏移），**必须先按 type 合并 `number`** 再排序。敌人名必须走 `tr()`（`enemyInfo.name` 里存的就是翻译键，见 v5.4）。横幅 `mouse_filter = IGNORE`、不暂停、连点可跳过 |
 | 2026-10-09 | §十四 五个新模块总览 | v1.0 | 补齐五个新模块（§九 / §十 / §十一 / §十二 / §十三）的依赖与建议顺序，并把原「十二、三个模块的相互依赖」并入本节：**前三个（§九 攻击范围 / §十二 金币飘字 / §十三 波次横幅）互相独立、都不改战斗逻辑**，可一次做完一起验；**§十一 残骸独立产生**、**§十 机甲依赖残骸**，按顺序做。同时把原「十三、后续可扩展模块」顺延为 §十五，目录与章节号同步 |
 
+> **以下为 2026-10 的实施与修正记录**：§九 ~ §十三 五个模块已全部落地（上面 v1.0 行里的"未实现"是设计当时的快照，保留原文以便追溯）。
+
+| 日期 | 模块 | 版本 | 说明 |
+|---|---|---|---|
+| 2026-10-23 | 文档全量校对 | v1.4 | 逐条核对实现状态并更正：§四 能力技能系统、§九~§十三 五个模块、无尽模式 全部**已实现**（此前均标❌未实现）。新增 §十六 倍速模块；§十五 改名为「v2.x 待办」并剥离已完成项，新增 §15.3 候选表指向 `roadmap.md`。所有计数按代码重新核实：**9 塔 / 12 敌人 / 12 成就 / 16 关 + 无尽 / 2 技能** |
+| 2026-10-23 | §十六 1X/2X 倍速 | v1.0 | **接通既有半成品**：`btnFast` 原为 `PanelContainer`（无 `toggled` 信号）且 `visible=false`、`title.gd` 的处理函数没有信号连到、`map.gd` 的连接被注释且函数是空 `pass` —— 三处都补上。类型改为 `Button`（`toggle_mode`），复用 `card_style`，加速时染安全黄让状态可见。`hboxButton` 宽度 304→392 容纳第 5 个按钮。核心约束：`Engine.time_scale` 是**全局**状态，复位集中在 `resetGameSpeed()`，覆盖 `_exit_tree` / `finish` / `nextLevel` / `returnHome` 四个出口。已知取舍：无尽「用时」与机甲建造 CD 走 `Time.get_ticks_msec()`（真实时间），2 倍速下与游戏内时长有偏差 |
+| 2026-10-23 | 星级奖励挂钩 | v1.0 | 需求：让星级**能兑换东西**（此前 `LevelRating` 只点亮三颗星，不解锁、不发奖，等于装饰）。设计：`userData.gd` 新增 `STAR_BONUS_RATIO`（2★=基础×0.25、3★=×0.50）与 `starBonusTotal(baseGem, rating)`；**奖励以该关 `gemReward` 为基数按比例给**，而不是固定值 —— 关卡基础奖励从 3 到 20 不等，固定值会把高关折扣掉。**防刷的关键**：`recordStageCompletion()` 改返回 `{"gem": 总发放, "starBonus": 其中来自星级的差额}`，星级奖励只发「最高星级提升」的差额（1★→只发基础；之后打 3★→只补 ceil(50%)−ceil(25%)），所以反复打同一关不会重复领、掉星重打也不会扣回去（差额夹到 0）。1 星是保底通关**不给**额外奖励，否则等于白涨基础奖励。`starBonusTotal` 用 `ceil` 而非 `round`：第 0 关 baseGem=3 时 25% = 0.75，向下取整会变成 0、等于白给。UI：`result_screen.setGemReward(amount, starBonus)` 只在 starBonus>0 时切换成新文案 `_GemRewardWithStar`（“获得宝石：+%d（含星级奖励 +%d）”），平时不多出半句话；`language.csv` 补 1 行。验证：数据探针 14 项断言全过（含 1★→3★ 累计应为 base+50%、掉星不减、rating 0 不发、未知关卡 id 不崩）；再走一遍真实 `finish()`（第 1 关满血三星）→ `获得宝石：+12（含星级奖励 +4）`，第二次 `finish()` 不再发放 |
+| 2026-10-25 | 战斗模式：**禁止改出怪间隔**，改用移动速度 | v1.1 | 需求：「这些模式当中，出怪的间隔不能修改，如果变少了，敌人会叠在一起，改移动速度是可以的」。**问题确认**：蜂群原本 `delayScale: 0.5`（出怪间隔减半），而敌人走的是同一条 `Path2D`，间隔一缩后一个就会追上前一个、**在路径上叠成一团**，既难看也分不清个体；铁流还用了 `delayScale: 1.25`（反向变慢）同样属于改间隔。**改法**：① 从 `battleModeDefs` 删掉 `delayScale` 字段、删掉全局 `Game.modeDelayScale`，`base_level.gd::nextSpawnDelay()` **不再读任何模式倍率**（只保留无尽模式自己的 `spawnDelayScale`，与战斗模式无关）；② 新增 `speedScale` + `Game.modeSpeedScale`，在 `enemy.gd::setupEnemyInfo()` 里乘到 `speed` 上，**并且必须在记录 `baseSpeed` 之前** —— 否则 EMP 的 `removeSlow()` 会按未加成的原速还原，把蜂群的 ×1.2 抹掉（这条有专门的断言）。③ 数值：蜂群 `speedScale 1.2`（数量 ×2 但间隔不变，一波队列更长，提速让节奏不至于拖成两倍；代价是每个敌人在射程里待的时间变短，符合挑战定位）、精锐 `1.1`、铁流 `1.0`（它的"慢"来自更耐打，不靠拉长队列）。④ 情报面板的**速度**列也乘模式倍率（之前只处理了血量），否则显示的是没加成的数值；`_Mode_swarm_desc` / `_Mode_elite_desc` 文案同步改为"移动速度 +20% / +10%"。验证：探针 11 项断言全过 —— **四种模式的 `nextSpawnDelay()` 全部 = 1.6000**、速度 normal 50 / swarm 60 / armor 50 / elite 55、EMP 对 60 减速到 48 且解除后回 60（不是 50）、情报面板速度列显示 60 / 54 |
+| 2026-10-25 | 战斗模式可见性（徽章 + 横幅 + tooltip） | v1.0 | 需求：「选了模式进入关卡后，开始游戏介绍界面要有个**醒目的提醒**；左上角可以加一个显示模式（正常模式不用写）；最好鼠标放上去有提醒」。① **左上角常驻徽章**：`title.gd` 新增 `setBattleMode(modeId)`，在 `hboxLevel` 里**由代码创建**一块 `PanelContainer`（锈红底 `#6B2419` + 橙红描边 + 圆角 + 30px 字号）承载模式名，**正常模式 `visible=false`**。之所以用代码建而不改 `title.tscn`：它只是"带底色的文字 + tooltip"，没有需要在 Inspector 里调的静态属性，而且只有挑战模式才存在。⚠️ `mouse_filter` 必须是 `STOP`（默认值）——设成 `IGNORE` 的控件不参与悬停，`tooltip_text` 永远不会出现。② **开场介绍面板的醒目横幅**：`level_intro_panel.gd` 新增 `modeBanner`（整宽 `PanelContainer` + 两行 Label，30px，锈红底），**插在副标题正下方**。之前的做法是把 `[蜂群]` 拼在副标题前面 —— 和关卡描述混成一句，等于没提醒，已删除该前缀。③ **悬停说明（改为自定义面板）**：起初用 `Control.tooltip_text` 挂在徽章 / 横幅 / 关卡选择按钮上 —— 实测**原生 tooltip 是能弹的**，但会「没反应」：它固定有 **0.5 秒延迟**、字号颜色跟随全局主题、还要鼠标精确停在 87×47 的徽章内，玩家往往以为没做。现改为 `mouse_entered` / `mouse_exited` 驱动的**自定义提示面板**（`title.gd::buildModeTip/showModeTip/hideModeTip`：深色底 + 橙红描边 + 金色标题「蜂群」+ 正文规则，挂在 title 根节点、贴徽章正下方、越界自动夹紧、`mouse_filter = IGNORE` 避免自己触发 `mouse_exited` 造成闪烁），**零延迟**。徽章内边距也从 14/2 加大到 18/6、字号 30→32，更好点中。④ `map.gd` 不再往 `levelName` 拼 `" · 蜂群"`（拼字符串既没法带 tooltip、也没法单独上色），改为调 `titleNode.setBattleMode(Game.battleMode)`；无尽模式走同一条路（mode=normal → 自动隐藏）。⑤ 新增翻译键 `_ModeChallengeTitle`。验证：探针 10 项断言全过（蜂群：徽章可见且文案为"蜂群"、横幅可见、副标题不再有 `[` 前缀；正常模式：徽章与横幅都隐藏、`levelName` 无后缀）；悬停提示另跑一轮 13 项断言（`mouse_entered`/`mouse_exited` 已接线、触发后**立即**可见、标题=模式名、正文含规则与"不记录星级成就"、面板在屏幕内且位于徽章下方、移出即隐藏、切回正常模式连提示一起消失）；截图确认介绍页横幅、战斗中徽章与悬停面板
+| 2026-10-24 | §十八 塔技能（实现） | v1.2 | 按 v1.1 设计落地，**9 座塔全部有技能**。① **框架在 `tower.gd`**：`skillKind / skillDef / skillActiveLeft / skillCooldownLeft / skillOn / skillDisabledLeft` + `setupSkill / hasSkill / canUseSkill / useSkill / toggleSkill / startTimedSkill / endTimedSkill / runInstantSkill / tickSkill / isSkillActive / isDisabled / canAct`。② **与升级不冲突的做法（用户明确要求）**：`atk / delay / radarScope` 是**升级系统拥有的基值**，技能只提供**派生值** `effectiveAtk / effectiveDelay / effectiveScope`，从不写回基值；同时把 `delayTimer.wait_time` 与 `raderShape.shape.radius` 两处派生写入收口到 `applyFireRate()` / `applySight()`，`levelUp()` 也改成调这两个入口。于是"技能生效中升级"= 基值更新 + 倍率仍然叠加，既不会被升级清掉，也不会双倍。③ **6 处伤害读取改为 `effectiveAtk()`**（机枪/加农/火箭/激光/特斯拉）与 `homeBase.effectiveAtk()`（无人机），`hurt()` 增加 `damageTakenMul()`（铁箱减伤），并抽出 `die()` 让`hurt()` 与技能自损 `applySelfDamage()` **共用同一条死亡流程**。④ 逐塔：机枪**过热**（atk×2、射速×2、自损 6/s、3s、CD18）；加农**破甲弹**（子弹新增 `damageType`，技能期间 `"energy"` 绕过 armor，射速×0.7）；火箭**导弹模式**（toggle：射程×1.6、伤害×1.25、弹速 520、转向 6.5，**`noSplash` 走独立分支直接 `enemy.hurt()`、不生成 bomb**）；EMP**强磁过载**（slowMul×2、5s、结束后 `disableAfter` 3s 停转且期间不提供减速）；激光**单体打击**（toggle：`maxTargets()` 3→1、atk×2.2、切换时释放多余锁定并关喷溅）；特斯拉**链式放电**（`maxChain()` +2、自损 5/s）；无人机**紧急升空**（伤害×1.5，`drone.gd` 读 `homeBase.effectiveAtk()`）；铁箱**应急装甲**（受伤×0.3）；机甲**紧急维修**（自身+半径180内各塔回 30% **各自** maxHp，用 `addHp` 不用负伤害，随后 `skillDisabledLeft=3` 整机停止：`mech.gd::_physics_process` 入口挡住 + `stopAllWork()` 收尾，含 `abortSalvage()` 释放残骸认领）。⑤ **UI**：`tower_detail_panel.tscn` 新增 `SkillRow`（**技能按钮单独一行**，用户要求）+ `btnSkill`；文案按 kind 区分（切换：/使用：）、显示冷却/生效/停止倒计时、生效时安全黄高亮；**面板数值改显示派生值**（否则切了模式看不出变化）。⑥ 文案 20 行。验证：探针 **41 项断言全过**，其中冲突相关的关键项 = 过热生效中 `levelUp()` → `atk 10 / effectiveAtk 20`、`delay 0.36 / effectiveDelay 0.18`、`delayTimer.wait_time == effectiveDelay`、`aniSpeed` 跟着派生值；toggle 生效中升级 → `base 210 / shape 336`；另验证自损 3s 恰好 18、切换 CD 拦截连点、激光 3→1、机甲回复 +72/+96 与停止 3s 后恢复；UI 截图确认按钮独立成行 |
+| 2026-10-24 | §十八 塔技能表（需求修订 v1.1） | v1.1 | 需求三条：① 火箭塔切成远距离导弹、**没有爆炸范围**，切换 CD 3s；② 激光塔切成单体打击、只锁一个、伤害增加，切换 CD 3s；③ 机甲改成立刻修复自身与范围内塔 30%，之后无法使用（最终确定为**整个机甲停止 3 秒**）。**设计变更**：技能从"只有限时大招"扩成三种形态 —— `toggle`（功能切换，持续生效，3s 切换 CD）/ `timed`（限时增益，长冷却）/ `instant`（瞬发）。新数值全部对着代码当前值写，并用"从多少改到多少"标注：**火箭塔** atk 40→50、scope 200→320、弹速 300→520、转向 5.0→6.5，**`blastRadius 90` → 不溅射**；**激光塔** `MAX_TARGETS` 3→1、对单 atk 38→**95（×2.5 而非 ×3，满编 114 的时候切过去必须有代价）**；**机甲** `healRatio 30%`（各塔**自身**最大血量的 30%）、`healScope` 180（复用现有维修半径）、**`shutdown` 3s** —— 用户明确确认是**整个机甲停止 3 秒**（不能移动 / 不能维修 / 不能回收残骸），不是"按钮冷却 5 秒"。这两个概念在 18.2 里专门分开了：冷却只挡按钮，停止让单位整体失效，必须在 `_physics_process` 里挡。**新增的坑（六条，都写进 18.6；前三条是 toggle 的，后三条是停止的）**：① 导弹模式的"不溅射"不能靠把半径调小 —— `rocketbullet.gd::spawnBomb()` 里 `bomb.blastRadius = 90.0` 是写死的、伤害由 bomb 的范围结算，必须改成命中时直接 `enemy.hurt(atk)`、不生成 bomb；② 激光塔从 3 目标切到 1 目标时必须**把多余锁定移除并停光束**，否则会出现"只锁一个但三条光束还挂着"；③ `toggle` 改射程要**同时改** `radarScope` 与 `raderShape.shape.radius`，只改前者会"圈变大但打不到"（因此新增 `applySight()` 作为唯一入口，与 `applyFireRate()` 同一套路）。实施顺序也调了：把"一座 toggle（火箭塔）"提到最前（M2），先趟完 toggle 的坑再照抄激光塔 |
+| 2026-10-24 | EMP 减速改为「取最强一条」（修叠加漂移） | v1.0 | 需求：「EMP 塔叠加的这个修改一下，敌人只能受到一个 EMP 塔的限制」。**旧实现的 bug**：`emp_tower.gd::applySlow` 直接改 `enemy.speed` —— 进入乘 `(1-ratio)`、离开除回去。两座 EMP 射程重叠时连乘两次；离开时按**各自**的比例除回，只要两座塔强度不同（或整数 `round` 累积误差）就除不回原值，敌人速度漂移到一个既不是原速、也不是任一减速值的结果。更糟的是"离开顺序"会影响结果。**修法**：把状态合并移到敌人身上（`enemy.gd`）—— 新增 `baseSpeed`（在 `setupEnemyInfo()` 读完 `enemyInfo` 后记下原速）与 `slowSources: Dictionary`（来源 → 比例），新增 `addSlow(source, ratio)` / `removeSlow(source)` / `refreshSpeed()` / `currentSlowRatio()`。`refreshSpeed()` **取最强的一条**而不是连乘：多座 EMP 重叠只受最强的那座限制（正好是需求要的语义），离开一座回落到次强，全部离开则精确恢复 `baseSpeed`；同时顺手剔除已释放的来源（塔被卖掉后 `is_instance_valid` 为假）。`emp_tower.gd` 去掉两处直接写 `enemy.speed`，改为 `enemy.addSlow(self, slowRatio())` / `enemy.removeSlow(self)`，`_exit_tree()` 也从"把速度除回去"改成"注销自己这个来源"（塔被卖掉 / 场景卸载必须注销，否则减速会永久残留）。上限 `MAX_SLOW_RATIO = 0.9`：留 10% 速度，避免将来把 EMP 的 atk 调高后出现速度 0、敌人卡在同一格的僵局。**行为变化**：以前 N 座 EMP 叠加能让敌人几乎静止，现在不行了 —— 这是需求明确要的。验证：探针 11 项断言全过（1 座 50→40、2 座仍 40 不叠加、移除一座仍 40、全部移除精确回 50、40% 与 20% 重叠时取 40%→30、离开强的回落到 20%→40、真实雷达 `area_entered` 路径生效、塔 `queue_free()` 后速度恢复） |
+| 2026-10-24 | §十七 战斗模式（实现） | v1.0 | 按设计稿落地，四个模式：**正常 / 蜂群 / 铁流 / 精锐**。① `game.gd` 新增 `battleModeDefs`（每个模式一组倍数）+ `battleMode` 状态 + **独立**的 `modeHpScale / modeAtkScale / modeCountScale / modeRewardScale / modeExpScale / modeGemScale`（v1.1 另加 `modeSpeedScale`，见 2026-10-25 条），以及 `setBattleMode / applyBattleModeScales / resetBattleMode / isChallengeMode / getBattleModeDef`。**关键：没有复用 `Game.enemyScale`** —— 那个被无尽模式每波重写（`endless_level.gd:291`），复用会互相覆盖；`enemy.gd::setupEnemyInfo` 里改成两者**相乘**。② `base_level.buildWaveSpawner()` 逐条 `maxi(1, ceil(number × countScale))`（`duplicate()` 保证不污染 `StageData`），`nextSpawnDelay()` **不动**（出怪间隔不允许被模式改 —— 早期曾乘 `modeDelayScale`，v1.1 已删除，见 2026-10-25 条）。③ 关卡选择页底部加一排互斥模式按钮（代码创建，不改场景 —— 标题 75~202 与卡片 215~905 之间没有余量，只有底栏左侧空着），选中的挑战模式染锈红 + 下方一行说明；`loadMap()` 里才 `Game.setBattleMode()`。④ 顶栏关卡名挂角标「第 1 关 · 蜂群」；情报面板副标题前置 `[蜂群]` 并注明不记星级/成就。⑤ **奖励隔离**：`userData.recordStageCompletion()` 新增 `modeId` 参数，挑战模式走 `recordChallengeClear()` —— 不写 `stageRatings`、不解锁、不发星级奖励，宝石按 `ceil(baseGem × gemScale)` 发一次并记进新增的 `challengeCleared`（`"swarm:3"` 形式，随存档持久化）。**这一步是必须的**：挑战模式既然不写星级，就不能再拿星级表判断"首通"，否则每打一次都是首通、宝石无限刷。⑥ `achievement_tracker` 加 `trackingEnabled()`，挑战模式下 4 个入口（击杀/建造/升级/通关）全部早退，否则蜂群的翻倍击杀会把 `legion_slayer`(3000 杀) 加速刷满。⑦ **顺手修了情报面板的数值**：它原本直接读 `StageData` 原始值，蜂群下显示 x94 / 血量 150 而实际刷 x188 / 75 —— 现在 `collectEnemyStats()` 与 `buildEnemyList()` 都按同一套算法换算，并在挑战模式隐藏「3★ 额外宝石」格与星级规则说明。验证：探针 18 项断言全过（count 16→32、delay 1.6→0.8、StageData 不被污染、hp 150→75、reward 5→3、exp 2→1、armor hp 300/reward 10、挑战模式首通宝石 `ceil(8×1.3)=11`、重打不发、**不写星级**、无星级奖励、正常模式仍是 8+4=12 且写 3★、离开关卡 mode 与倍数全部复位）；UI 截图确认模式条与情报面板显示正确 |
+| 2026-10-23 | 星级奖励：门槛放宽 + 可发现性 | v1.0 | 承接上一条。两个问题：① **3★ 要求"基地一滴血不掉"**（`calculateStars` 原本 `healthRatio >= 1.0`），在各关难度差异极大 —— 基地血量 10 和 20 的关，100% 意味着一个都不能漏；既然三星现在发宝石，这个门槛就过于苛刻。改为 **`>= 0.9`**（`THREE_STAR_HEALTH_RATIO`），允许漏 1~2 个。⚠️ 成就「零损防线」（`perfect_base`）**不受影响**，它走的是 `recordAchievements()` 里的 `flawless := hp >= level.health`（真·零损），星级放宽、成就门槛不放宽。② **玩家不知道星级能换宝石** —— 只有结算时看得到，而且是"已经拿到"之后。在**关卡开场情报面板**补了两处：`buildInfo()` 里新增一格 **「3★ 额外宝石 +N」**（金色 `COLOR_STAR_BONUS`，数值 = `UserData.starBonusTotal(gemReward, 3)`），以及 InfoBox 下方一行规则说明（`showStarHint()` 用代码创建 Label、插在 InfoBox 之后，不改场景文件）—— 同时交代"90% 即可"和"仅在刷新最高星级时发放"两件玩家猜不到的事。选择情报面板而不是关卡选择卡片：卡片只有 `num + 星级 + 锁标` 三样，塞说明会挤；情报面板在开打前弹出，时机也对。验证：门槛矩阵 7 项全过（20/20→3★、18/20=90%→3★、17/20=85%→2★、10/20=50%→2★、9/20=45%→1★、1/20→1★、0→0★）；情报面板复用测试通过（关卡页显示 → 无尽页隐藏 → 回关卡页恢复），无泄漏 |
+| 2026-10-23 | 图鉴图标按当前美术重出 | v1.0 | `sprite/icon/unit/*.png` 全部停留在 10-07，而敌人 `_v2` 素材是 10-13 换的、之后车身与炮塔又各缩过一次 → 图鉴一直在显示旧美术。`art_style.md` 提到的 `tools/codex_icon_gen.html` **并不在仓库里**，改为新写生成器（`.td_verify/gen_codex_icons.gd`）：**直接渲染敌人场景**而非手工拼 PNG（敌人结构已不统一：多数有 `turret`、实验坦克有 4 个 `TurretFL/FR/BL/BR`、无人机有 4 个 `Rotor`、战斗飞机只有车身）。构图对齐既有 21 个图标：最长绘制边 124px、居中。两处返工：① 按**贴图画布**算包围盒 → 图标过度放大只看到轮子（64×64 画布里只装约 40px 车）；② 在 1:1 上**放大**导致发糊 → 改为 4 倍渲染后缩小 |
+| 2026-10-23 | 成就图标居中修正 | v1.0 | 面板侧本来就已经居中（`CenterContainer` + `SHRINK_CENTER` + `STRETCH_KEEP_ASPECT_CENTERED`），问题在**素材本身**：8 个 PNG 的绘制内容在 128 画布里偏下 1~12px（`ground_breaker` 偏 12、`full_armory` 偏 10.5），放进圆形徽章再放大到 146px 后肉眼可见。修法：裁到绘制范围 → 居中贴回原尺寸画布（不缩放、不糊），残差 ≤0.5px。**4 个 SVG 本来就居中**（绘制框 1..126），未改动 |
+| 2026-10-23 | 敌人素材尺寸归位 + 炮塔比例 | v1.0 | `_v2` 素材的绘制内容占画布约 95%，而旧素材只占 60~70%，导致换图后整体偏大。按敌人逐个缩放车身（迷你 0.871 / 中型 0.935 / 重型 0.968 / 装甲 0.968 / 突击车 0.726 / 维修车 0.758 / 自爆车 0.871 / 导弹车 0.871 / 无人机 1.217 / 直升机 0.981 / 实验坦克 1.516），炮塔再按同一车身系数缩放并把 `muzzleOffset` 按 `off_x + (old_m - off_x) * bw` 重算。**踩过的坑**：`str.replace` 的 needle 退化成单字符 `'s'` 把 `miniTank.tscn` 从 76 行写成 171,610 行（已从备份恢复，后改用只走 `re.subn` + 预期计数、不匹配就整文件放弃的写法） |
+| 2026-10-23 | 敌人 `_physics_process` 缺 `super` | v1.0 | 9 个敌人子类各自重写了 `_physics_process` 却**没有调 `super`**，基类的雷达扫描与 `queue_redraw()` 从未执行 → 点击敌人后攻击范围圈**不旋转**。9 个文件全部补上 `super._physics_process(delta)` 作为首句；顺带补齐 4 处 `freeSelf()` 之后漏掉的 `return`。另修 `enemy.gd` 里 `lifeBar.global_position` 在 `parent == null` 时抛 Nil 中断 `_draw()` 的问题 |
+| 2026-10-23 | 实验坦克 4 座炮塔不可见 | v1.0 | `TurretFL/FR/BL/BR` 在场景里写死 `visible = false` 且**没有任何代码打开**，而 `enemy.gd` 用 `turret.visible` 作为"能否用共享炮口开火"的判据 → 这辆坦克既看不见炮塔也**打不出子弹**（图鉴却宣传"4 炮塔"）。改为可见；**主炮塔 `turret` 保持隐藏**（它是基类占位兼开火开关，打开会多打一发隐形子弹） |
+| 2026-10-23 | 生命条可见性改由持有者控制 | v1.0 | 原 `life_bar.gd` 的 `value` setter 里直接写 `visible = true`，而敌人信息面板每帧回写 `e.hp` → **只要点中敌人血条就被顶出来**，与"是否被击中"无关。拆成"数值只管数值"，新增 `flashFor/flash/conceal/isShowing/remaining`，由敌人/塔/机甲各自决定显隐。敌人规则：**选中不显示，被击中强制显示 3 秒**（`HIT_SHOW_SECONDS`）。踩坑：方法原本叫 `show`/`hide` 会**覆盖 `CanvasItem` 内建方法**导致解析失败，改为 `flash`/`conceal` |
+| 2026-10-23 | 机甲抢同一坨残骸 | v1.0 | `pickSalvageTarget()` 只按最近距离选，多台机甲会锁定同一坨并来回拉扯。新增残骸认领：`wreckage.gd` 加 `salvager` 字段与 `tryClaim/releaseClaim/claimedBy`，机甲选目标时跳过已被他人认领的；`updateSalvage()` 不再每帧重选（新增 `advanceSalvage(delta)`），放弃时 `abortSalvage()` 释放认领 |
+| 2026-10-23 | 图鉴补机甲图标 | v1.0 | 图鉴防御塔页原本只有 8 座塔，缺移动机甲。`codex_panel.gd` 的 `TOWERICONS` 补 `mechTower.png`（由 `mech_base_1.png` + `mech_turret_1.png` 合成，192×192），图鉴显示为 9 座 |
+
 ---
 
 ## 九、敌人攻击范围显示（Enemy Attack Range Indicator）
@@ -1949,15 +1986,659 @@ center (CenterContainer)
 
 ---
 
-## 十五、后续可扩展模块（规划中）
+## 十五、后续可扩展模块（v2.x 待办）
 
-以下模块为后续规划，待需求明确后补充详细设计：
+> **状态更新（2026-10-23）**：本节原列 5 项，其中**无尽模式已完成**（见 `endless_mode_design.md` v1.3，M1~M5 全部落地）。
+> 其余 4 项仍未开工。新的完整优先级排序、投入量与验收标准见 **[roadmap.md](roadmap.md)**，
+> 本节只保留与本文档其它模块有直接依赖关系的条目。
 
-1. **每日任务系统**：参考成就系统结构，每日刷新任务，完成奖励钻石/物品。
-2. **关卡星级与奖励**：基于 `level_rating.gd` 扩展，三星通关奖励宝石。
+### 15.1 仍未开工的存量项
+
+1. **每日任务系统**：参考成就系统结构（`achievement_manager.gd` 的 `ACHIEVEMENTS` 定义表 + `achievement_tracker.gd` 的进度累加写法），每日刷新任务，完成奖励钻石/物品。
+2. **关卡星级与奖励**：✅ **宝石部分已完成**（2026-10-23）—— 见 §八 同日条目，按最高星级的提升发差额。
+   **仍待接**：用星级解锁该关的无尽入口（目前无尽模式是全局可选，不按关卡解锁）。
 3. **装备系统**：为塔添加可装备的强化道具，与背包系统共用 `ItemData` 结构。
 4. **存档系统统一化**：将 `userData`、`backpack`、`achievement_manager` 的存档逻辑统一到一个 `SaveManager` 单例。
-5. **无尽模式**：见根目录 `endless_mode_design.md`（**设计稿 v1.1，未开工**）——独立关卡场景 + 复用 `map.tscn` 外壳；地图固定一张：**双传送带并排 U 形（只 2 个弯）**，用于把同屏敌人堆到 60~80；含难度曲线公式、性能上限与 M1~M5 里程碑。
+
+### 15.2 已完成（从本节移出）
+
+- ~~**无尽模式**~~ → ✅ **已实现**（v1.3）。独立关卡场景 `scene/level/endless.tscn` + `script/level/endless_level.gd` 复用 `map.tscn` 外壳；
+  地图双传送带并排 U 形，同屏上限 90、基地血量 10、每 10 波奖励宝石。见 `endless_mode_design.md`。
+
+### 15.3 v2.x 新增候选
+
+详细论证与排期见 [roadmap.md](roadmap.md)，此处只列名目，避免两份文档各写一套：
+
+| 候选 | 一句话 |
+|---|---|
+| 倍速档位 | ✅ **1X/2X 已实现**（见 §十六）；后续可扩 3X |
+| 状态效果系统 | 用"状态列表"替掉 EMP 直接改 `enemy.speed` 的写法，顺带修多座 EMP 重叠时的速度漂移 |
+| 塔联携 / 元素反应 | 依赖状态系统；不改美术，只改伤害计算 |
+| Boss 波 | 每 4~5 波一个带专属机制的强敌 + 独立血条 |
+| 关卡特殊规则（mutator） | 复用现有地图，只改规则（浓雾 / 蜂群 / 无射程提示） |
+| 每日挑战 | 固定种子 + 固定敌人构成 |
+
+---
+
+## 十六、1X / 2X 倍速（Game Speed）
+
+> **实现状态：✅ 已实现**（2026-10-23）。需求：**正常速度与 2 倍速两档**。
+
+### 16.1 背景
+
+这是一次**"把已有半成品接通"**的修复，不是从零新增。代码里早就躺着三样东西，但三处都没接上：
+
+| 位置 | 原状态 |
+|---|---|
+| `scene/title.tscn` 的 `btnFast` | `visible = false`，且类型是 **`PanelContainer`**（不是按钮，没有 `toggled` 信号，点不了） |
+| `script/menu/title.gd` | `onBtnSpeedToggled()` 已写好，但**没有任何信号连到它** |
+| `script/map.gd` | `speedOnPressed` / `speedOffPressed` 的连接**被注释掉**，两个处理函数是空的 `pass` |
+
+### 16.2 设计决定
+
+- **两档而非多档**：需求明确只要 1X / 2X，多档会让顶栏按钮变成需要循环切换的设计，收益不大。
+- **用 `Engine.time_scale`，不改各自的 delta**：`delta` 已被引擎按 `time_scale` 缩放，所以敌人的 `speed * delta`、
+  `Timer` 节点（射速、波次、冷却）都会自动变快，**不需要改任何一处游戏逻辑**。
+- **按钮状态必须肉眼可见**：70px 的小方块里只换 "1X"/"2X" 两个字符不显眼，所以加速时额外把按钮染成安全黄
+  （`#FFC61A`，与 `art_style.md` 的强调色一致）。
+
+### 16.3 关键约束：`time_scale` 是全局状态
+
+`Engine.time_scale` **不是场景局部变量**，漏出去会带到关卡选择、主菜单甚至下一局。因此复位点必须覆盖所有出口：
+
+| 复位点 | 覆盖的出口 |
+|---|---|
+| `map.gd::_exit_tree()` | 所有离开关卡的方式（回主菜单 / 下一关 / 重开 / 切场景）——这一层是兜底 |
+| `map.gd::finish()` | 结算开始就退回 1X，否则结算界面、宝石飘字、成就弹窗会以 2 倍速一闪而过 |
+| `map.gd::nextLevel()` / `returnHome()` | 场景淡入淡出本身也吃 `time_scale`，切场前先退回 |
+
+统一走 `resetGameSpeed()`（同时把按钮外观掰回 1X），**不在各按钮回调里各写一遍**，避免以后新增出口时漏掉。
+
+### 16.4 已知取舍：真实时间 vs 游戏时间
+
+有两处计时用 `Time.get_ticks_msec()`（**真实时间，不受 `time_scale` 影响**），开 2 倍速时会出现相对偏差：
+
+- `endless_level.gd::elapsedSeconds()` —— 无尽模式结算的"用时"是真实时间。2 倍速玩 10 分钟，显示"用时 10 分钟"，但游戏内实际跑了 20 分钟。
+- `map.gd` 的机甲建造冷却（`mechLastBuiltMsec`，3 秒）—— 2 倍速下相当于游戏内 6 秒，即**加速时能相对更频繁地造机甲**。
+
+两者都不影响正常游玩；若以后要做无尽排行榜，需要统一成"游戏内时长"。
+
+### 16.5 验证
+
+走**真实点击路径**（`button_pressed = true/false`，而非直接调处理函数）验证，因此同时证明了 `toggled` 连接确实存在：
+
+```
+按钮:  visible=true  toggle_mode=true  text=1X  rect=(1600,10) 70x78
+起始:  time_scale = 1.00   text = 1X
+按下:  time_scale = 2.00   text = 2X   modulate = 金色
+弹起:  time_scale = 1.00   text = 1X   modulate = 白色
+复位:  time_scale = 1.00   text = 1X
+```
+
+`run_in_project -Scene scene/map` → `run exit: 0`，无 SCRIPT ERROR。
+
+---
+
+> **以下 §十七 ~ §十九 均为设计稿，尚未实现**（2026-10-24）。
+> 实现后请把各节的「实现状态」改成 ✅，并在 §八 补一条实施记录（含踩到的坑）。
+> 三节的共同前提：遵守 `code_design.md` §7.6 —— 任何改到全局状态（`Engine.time_scale`、`Game.xxx` 缩放）的，
+> 都必须在 `_exit_tree()` + 每条显式退出路径上复位。
+
+---
+
+## 十七、战斗模式（Battle Mode / Mutator）
+
+> **实现状态：✅ 已实现**（2026-10-24）
+> 需求原话：「在点击开始游戏的时候可以选择游戏模式，正常和蜂群或者还有其他的，
+> 选了蜂群后敌人数 ×2，血量 −50%，这种的模式」
+>
+> **实现与设计稿的三点差异**（实现时按现实调整；下面 17.1~17.9 保留设计原样）：
+> 1. **挑战模式的宝石改用 `challengeCleared` 记账**，不再靠 `stageRatings`。
+>    因为挑战模式按设计不写星级，"是否首通"就无法再用星级表判断 ——
+>    否则每打一次都会被当成首通，宝石可以无限刷。
+>    存档新增 `[player] challengeCleared`（形如 `"swarm:3"`）。
+> 2. **情报面板的数值也必须乘模式倍数**。设计稿只提到 `buildWaveSpawner` 与 `enemy.gd`，
+>    但 `level_intro_panel` 是**直接读 `StageData` 原始值**的 —— 不改的话蜂群模式下
+>    面板显示"x94、血量 150"，实际刷的是"x188、血量 75"，等于在骗玩家。
+>    现在 `collectEnemyStats()` / `buildEnemyList()` 都按同一套算法
+>    （逐条 `maxi(1, ceil(n × scale))`）换算。
+> 3. **挑战模式下隐藏「3★ 额外宝石」格与星级规则说明**，并把「宝石奖励」显示成
+>    实际会发的 `ceil(base × gemScale)` —— 挑战模式不记星级，摆着这两项会误导。
+
+### 17.1 目标
+
+同一张关卡，换一套**规则**重打。不新增地图、不改路线、不新增关卡场景 ——
+纯靠倍数把既有内容重新组合，用最低成本换重玩价值。
+
+### 17.2 非目标
+
+- **不做**随机词条（那是无尽模式的后续玩法，和"玩家主动选模式"是两件事）
+- **不做**新模式专属美术
+- **不动** `StageData.allStage` 里既有的波次编排（只做倍数，不改兵种构成）
+
+### 17.3 数据结构
+
+模式表放 `autoload/game.gd`（沿用"数据与逻辑分离"，**不新增 autoload** —— 已经 10 个了）：
+
+```gdscript
+## 当前战斗模式 id。离开关卡必须复位成 "normal"（见 code_design.md §7.6）
+var battleMode: String = "normal"
+
+const battleModeDefs = {
+	"normal": {
+		"name": "_Mode_normal", "desc": "_Mode_normal_desc",
+		"countScale": 1.0, "hpScale": 1.0, "atkScale": 1.0, "speedScale": 1.0,
+		"rewardScale": 1.0, "expScale": 1.0, "gemScale": 1.0,
+		"recordsProgress": true,
+	},
+	"swarm": {
+		"name": "_Mode_swarm", "desc": "_Mode_swarm_desc",
+		"countScale": 2.0,   # 敌人数 ×2
+		"hpScale": 0.5,      # 血量 −50%
+		"atkScale": 0.8,
+		"speedScale": 1.2,   # 移动速度 +20%（⚠️ 不是出怪间隔！见 17.4 的说明）
+		"rewardScale": 0.5,  # 每杀金币 ×0.5（见 17.5 收益守恒）
+		"expScale": 0.5,     # 塔经验 ×0.5（同上）
+		"gemScale": 1.3,
+		"recordsProgress": false,
+	},
+	# …铁流 / 精锐 见 17.4
+}
+```
+
+> ⚠️ **战斗模式禁止修改出怪间隔。**
+> 早先实现过 `delayScale`（蜂群把间隔减半），实测**后一个敌人会追上前一个、在路径上叠成一团**，
+> 看起来像一坨、也分不清谁是谁。现在只保留 `speedScale`（改敌人在射程里待多久），
+> `base_level.gd::nextSpawnDelay()` 里**不再读任何模式倍率**（只保留无尽模式自己的 `spawnDelayScale`）。
+
+### 17.4 模式表
+
+| 模式 | 敌人数 | 血量 | 攻击 | 移动速度 | 每杀金币 | 塔经验 | 首通宝石 | 记录星级/成就 |
+|---|---|---|---|---|---|---|---|---|
+| **正常** `normal` | ×1 | ×1 | ×1 | ×1 | ×1 | ×1 | ×1 | ✅ |
+| **蜂群** `swarm` | **×2** | **×0.5** | ×0.8 | **×1.2** | ×0.5 | ×0.5 | ×1.3 | ❌ |
+| **铁流** `armor` | ×1 | ×2.0 | ×1.0 | ×1.0 | ×2.0 | ×2.0 | ×1.4 | ❌ |
+| **精锐** `elite` | ×1 | ×1.3 | ×1.5 | ×1.1 | ×1.3 | ×1.3 | ×1.5 | ❌ |
+
+三种挑战模式的定位差异：
+
+- **蜂群**：总量不变（×2 数量 ×0.5 血量 = 总血量一样），但**个体变脆、密度翻倍** ——
+  考验溅射/攻速，单体高伤塔反而吃亏。
+- **铁流**：数量不变、单个硬一倍 —— 考验破甲与持续输出。
+- **精锐**：数量不变、血略高、**攻击 ×1.5** —— 考验塔的血量管理（对抗型敌人会真的拆掉你的塔）。
+
+### 17.5 关键：收益必须守恒（否则蜂群是白送的强化）
+
+**这是本节最重要的一条。** 蜂群把击杀数翻倍，而 `enemyInfo` 里每条都有
+`reward`（金币）与 `rewardExp`（塔经验）。如果照原样发放：
+
+- 同一关的金币收入 **×2**
+- 塔的升级速度 **×2**（塔靠击杀升级，见 §六）
+- 成就 `legion_slayer`（累计 3000 杀）被加速刷满
+
+结果「困难模式」反而成了**更容易**的模式。
+
+所以 `rewardScale` / `expScale` 必须与 `countScale` 成反比，保证"每关总收益 ≈ 不变"。
+挑战模式的额外回报改由 `gemScale`（首次通关宝石）体现 —— 一次性的、无法刷。
+
+### 17.6 集成点
+
+| 位置 | 改动 |
+|---|---|
+| `script/menu/level_select.gd` | 顶部加一条模式切换条；`loadMap()` 里写 `Game.battleMode = 选中模式` |
+| `script/panel/level_intro_panel.gd` | 加一格显示当前模式；挑战模式用警示色（锈红）而不是青色 |
+| `script/map.gd::loadLevel()` | 进入时把模式倍数写进 `Game.modeHpScale / modeAtkScale`；`_exit_tree()` 复位模式与倍数 |
+| `script/level/base_level.gd::buildWaveSpawner()` | 对返回的每条记录 `number = maxi(1, ceil(number * countScale))` |
+| `script/level/base_level.gd::nextSpawnDelay()` | **不改**（战斗模式不许动出怪间隔） |
+| `script/enemy/enemy.gd::setupEnemyInfo()` | `hp *= Game.enemyScale * Game.modeHpScale`；`atk` 同理；**`speed *= Game.modeSpeedScale`（必须在记 `baseSpeed` 之前）**；`reward`/`rewardExp` 乘 `modeRewardScale`/`modeExpScale` |
+| `autoload/userData.gd::recordStageCompletion()` | `recordsProgress == false` 时**不写 `stageRatings`**、不发星级奖励；首通宝石乘 `gemScale`。⚠️ 需要新增"当前模式"参数或直接读 `Game`（推荐传参，数据层不依赖全局） |
+| `script/panel/achievement_tracker.gd` | 挑战模式不累加进度（与上一条同一判据） |
+
+### 17.7 边界与坑
+
+1. **绝对不要复用 `Game.enemyScale` 来实现模式血量。** 那个变量已经被无尽模式占用
+   （`endless_level.gd:291` 每波重写），两边会互相覆盖。必须新增独立的
+   `Game.modeHpScale` / `modeAtkScale`，在 `enemy.gd` 里**相乘**。
+2. `currentSpawner` 里的记录是 `buildWaveSpawner()` 返回的 **`duplicate()` 副本**，
+   改它的 `number` 不会污染 `StageData`。反之，若直接改 `enemyList` 就永久坏了。
+3. **出怪间隔绝对不能被模式改（这条是实测踩出来的）。**
+   曾经用 `delayScale: 0.5` 让蜂群"出怪翻倍"—— 结果是**后一个敌人会追上前一个、
+   在路径上叠成一团**，看起来像一坨、也分不清谁是谁。
+   间隔是"空间节奏"，一缩就必然重叠；要调节奏只能改**移动速度**（`speedScale`），
+   它只影响敌人在射程里待多久，不会让它们挤在一起。
+   `nextSpawnDelay()` 里因此**不再读任何模式倍率**。
+4. 结算 `finish()` 的条件是"生产队列空 + 场上无敌人"，翻倍只影响时长、不影响逻辑 —— 但
+   注意别把 `countScale` 应用两次（`buildWaveSpawner` 一次 + `onSpawnerTimerTimeout` 再一次）。
+5. **挑战模式不记录星级**，因此也不触发 §十六 的星级奖励；它的额外回报走 `gemScale`。
+   这条要写进 UI 文案，否则玩家会以为"我打了困难却没涨星"是 bug。
+6. 顶栏要有**常驻**的模式标识，否则玩家分不清当前是哪个模式。
+   ✅ 已实现：关卡名右边一块锈红**模式徽章**（正常模式不显示），带悬停说明；
+   进场介绍面板另有一条整宽**挑战模式横幅**。详见 §八 2026-10-25 条。
+
+### 17.8 分阶段
+
+| 阶段 | 内容 | 可独立验证 |
+|---|---|---|
+| M1 | 模式表 + `Game.battleMode` + 倍数接线（先只做 normal / swarm） | 是（探针直接改 `Game.battleMode`） |
+| M2 | 关卡选择 UI + 情报面板显示模式 | 是（截图） |
+| M3 | 铁流 / 精锐 + 记录隔离（星级、成就） | 是 |
+| M4 | 后续：自定义倍率 / 每日挑战 | — |
+
+### 17.9 验收探针
+
+- 同一关分别用 normal / swarm 跑，断言：敌人总数 **×2**、单只 hp **×0.5**、
+  每杀金币 **×0.5**、塔经验 **×0.5**、移动速度 **×1.2**
+- **四种模式的 `nextSpawnDelay()` 必须完全相等**（战斗模式不许动出怪间隔）
+- EMP 减速要作用在"模式加成后的原速"上，解除后回到 60 而不是 50
+- 挑战模式通关后 `UserData.getStageRating(stageId)` **不变**
+- 挑战模式通关发的宝石 = `gemReward * gemScale`
+- 退出关卡后 `Game.battleMode == "normal"`、`modeHpScale == 1.0`
+
+---
+
+## 十八、防御塔主动技能（Tower Active Skill）
+
+> **实现状态：✅ 已实现**（2026-10-24）
+> 需求原话（第一版）：「每个塔有个主动技能，机枪塔为过热扫射 3 秒，伤害增加但是为持续掉血，其他塔也都有相应的技能」
+>
+> **实现与设计稿的偏差**（实现时按代码现状调整，17.x/18.x 正文保留设计原样）：
+> 1. **激光塔单体伤害 ×2.5 → ×2.2**。×2.5 在 Lv3 会到 `44×2.5 = 110`，破了项目
+>    "atk 必须 < 100" 的数值规范（见 `game.gd` 的数值说明）。×2.2 得到 Lv1 84 / Lv3 97。
+> 2. **加农炮"破甲弹"走 `damageType = "energy"`**。`enemy.gd::hurt()` 本来就有 energy 通道
+>    （无视 armor），所以不用新做护甲系统，子弹加一个 `damageType` 字段即可。
+> 3. **无人机基地的技能改成"伤害 ×1.5"**（原设计是射速 ×1.5）。`drone_base.gd` 没有自己的
+>    开火计时器（开火在 `drone.gd` 里各机独立），改伤害只需让 `drone.gd` 读
+>    `homeBase.effectiveAtk()`，比改射速干净得多。
+> 4. **铁箱塔只做减伤**，没有"期间不能攻击"的代价 —— 铁箱本来就不攻击。
+> 5. **技能按钮单独一行**（用户明确要求），用 `SkillRow` 承载，不和修理/出售挤在一起。
+> 6. **面板显示派生值**：攻击 / 射速 / 范围读取 `effectiveAtk / effectiveDelay / effectiveScope`，
+>    否则玩家切到"单体打击"看到攻击力没变，会以为技能没生效。
+>
+> **需求修订（2026-10-24，v1.1）**——
+> 「1. 技能可以是一个功能切换，比如火箭塔切换成远距离导弹，但是没有爆炸范围效果了，技能切换 cd 3s；
+> 2. 激光塔可切换成单个打击，只锁定一个敌人，伤害增加，技能切换 cd 3s；
+> 3. 移动机甲改为立刻修复自身与范围内塔 30%，之后无法使用 5s」
+>
+> 也就是把技能从"只有限时大招"扩成**两种形态**：`toggle`（功能切换，3 秒切换 CD）
+> 与 `instant`（瞬发）。下文 18.1~18.3、18.5~18.8 已按 v1.1 重写；
+> 18.4 的技能表也换成了新数值（含从代码里对出来的当前值）。
+
+### 18.1 设计原则：技能自带代价，并且分三种形态
+
+**不设金钱 / 宝石消耗。** 钱是建塔的资源、宝石是全局技能（`bombard` / `invincible`）的资源，
+再让塔技能吃钱会挤压核心循环。改用**副作用**平衡，让"什么时候开/切"成为决策。
+
+技能分三种形态（`kind` 字段）：
+
+| kind | 含义 | 冷却口径 | 用在哪 |
+|---|---|---|---|
+| **`toggle`** | **功能切换**：按下切到"另一种工作模式"，再按切回来（不是限时 buff） | **切换 CD 3 秒**（只为防连点抖，不是"一局只能用几次"） | 火箭塔（远距离导弹）、激光塔（单体打击） |
+| `timed` | 限时增益：开 3~5 秒然后自动结束 | 长冷却 18~25 秒 | 机枪塔、加农炮、EMP、特斯拉、无人机基地、铁箱塔 |
+| `instant` | 瞬发：点一下立刻生效 | 短冷却；**也可以换成"停止"**（单位整体失效一段时间） | 移动机甲（紧急维修 + **停止 3 秒**） |
+
+> **`toggle` 是这次改动的重点**：技能不再只有"开一个大招"，
+> 也可以是一个**持续的工作模式**——火箭塔切成远距离导弹、激光塔切成单体，切过去就一直保持，
+> 想回原样再按一次。切换 CD 只有 3 秒，所以玩家可以按战况来回切（比如来一群小兵切回溅射）。
+
+### 18.2 数据结构
+
+挂在 `Game.towerInfo[type]["skill"]` 下（沿用既有数据表，不在 `tower.gd` 里硬编码）：
+
+```gdscript
+# ── timed（限时增益）示例：机枪塔 ──
+"skill": {
+	"kind": "timed",
+	"name": "_Skill_overheat",
+	"desc": "_Skill_overheat_desc",
+	"duration": 3.0,
+	"cooldown": 18.0,
+	"atkMul": 2.0,          # 技能期间攻击力倍率
+	"delayMul": 0.5,        # 技能期间开火间隔倍率（<1 = 更快）
+	"selfHpPerSec": 6.0,    # 技能期间每秒自损
+	"minHpRatio": 0.25,     # 血量低于此比例时拒绝触发
+}
+
+# ── toggle（功能切换）示例：火箭塔 ──
+"skill": {
+	"kind": "toggle",
+	"name": "_Skill_missile",
+	"desc": "_Skill_missile_desc",
+	"switchCooldown": 3.0,  # 切换 CD（只防连点，不影响强度）
+	# 切到"导弹模式"后覆盖的字段；没写的沿用基础值
+	"sightBonus": 1.6,      # 射程 ×1.6  → 200 → 320
+	"atkMul": 1.25,         # 伤害 ×1.25 → 40 → 50
+	"splash": false,        # ⚠️ 关掉爆炸范围（这条是本技能的核心代价）
+	"bulletSpeed": 520.0,   # 弹速 300 → 520
+	"turnSpeed": 6.5,       # 转向角速度 5.0 → 6.5（速度变快，转向要跟上）
+}
+
+# ── instant（瞬发）示例：移动机甲 ──
+"skill": {
+	"kind": "instant",
+	"name": "_Skill_emergency_repair",
+	"desc": "_Skill_emergency_repair_desc",
+	"healRatio": 0.30,      # 立刻治疗 30% 最大血量（自身 + 范围内所有塔）
+	"healScope": 180.0,     # 范围 = 机甲现有的 radarScope（维修半径）
+	"shutdown": 3.0,        # ⚠️ 用完之后整个机甲停止 3 秒：不能移动 / 维修 / 回收
+}
+```
+
+> **`shutdown` 不是冷却。** 这两个概念要分开：
+> - **冷却（cooldown）**：只是"这个技能暂时不能再按"，单位本身照常工作。
+> - **停止（shutdown）**：**单位整个失效** —— 机甲这 3 秒不能移动、不发维修脉冲、不能回收残骸。
+>
+> 机甲用的是**停止**。它是这台机甲的"代价"，不是按钮的节流。
+> 实现上必须由 `mech.gd::_physics_process` 统一挡住，而不是只在按钮回调里判断。
+
+特殊效果（无视护甲 / 额外弹道 / 链式目标）另加布尔或整数字段，由**各塔子类**在
+`fire()` 里读，不在基类里塞一堆 if。
+
+
+### 18.3 `tower.gd` 新增
+
+| 成员 / 函数 | 作用 |
+|---|---|
+| `skillActiveLeft: float` | `timed`：剩余秒数（>0 表示生效中） |
+| `skillCooldownLeft: float` | 冷却剩余秒数（`toggle` 用的是切换 CD） |
+| `skillDisabledLeft: float` | **停止剩余秒数**（>0 表示整个单位失效）。与冷却**不是一回事**，见 18.2 的说明 |
+| `skillOn: bool` | `toggle`：当前是否处于"第二种模式"。**它才是持续状态**，不靠 `skillActiveLeft` |
+| `canUseSkill() -> bool` | 有技能 + 不在冷却 + **不在停止** + 血量够 + （`timed` 时）未在技能中 |
+| `activateSkill() -> bool` | `timed` / `instant` 的触发入口；返回是否成功（失败要给 UI 反馈） |
+| `toggleSkill() -> bool` | `toggle` 的入口：翻转 `skillOn` + 开始 3 秒切换 CD |
+| `endSkill()` | 结束 `timed` 技能、开始冷却、恢复系数 |
+| `isDisabled() -> bool` | `skillDisabledLeft > 0.0`。**子类必须先问这个再干活**（见下） |
+| `skillAtkMul() -> float` | `toggle` 且 `skillOn` 时返回 `atkMul`，否则 `atk` 的倍率（默认 1） |
+| `effectiveAtk() -> int` | `atk × skillAtkMul()` —— **所有子类的 `fire()` 都改用它** |
+| `effectiveDelay() -> float` | `delay × skillDelayMul` |
+| `applyFireRate()` | **唯一**写 `delayTimer.wait_time` 的地方 |
+
+⚠️ **停止不是"冷却的一种"，必须在子类的行为入口挡住。**
+拿机甲举例：它有三个独立行为（移动 / 维修脉冲 / 回收），如果只在技能按钮的
+`canUseSkill()` 里判断 `skillDisabledLeft`，那只是"按钮变灰"，
+机甲照样会走路、修塔、捡残骸 —— 等于这个代价不存在。
+正确做法是在 `mech.gd::_physics_process` 的**最前面**加一个总闸：
+
+```gdscript
+func _physics_process(delta: float) -> void:
+	super._physics_process(delta)        # 雷达扫描/重绘仍要跑，否则选中圈会停
+	if isDisabled():
+		skillDisabledLeft -= delta       # 由基类推进，或这里推进
+		stopAllWork()                    # 见 18.6 第 6 条
+		return
+	# …原有的移动 / 维修 / 回收
+```
+
+同理，`fire()` 里也要挡（防止停止瞬间已经排进队列的一发打出去）。
+
+⚠️ **最大的坑：`delayTimer.wait_time` 有 2 处写，`delayTimer.start()` 有 6 处调。**
+（写：`tower.gd:103` 的 `_ready()`、`tower.gd:193` 的 `levelUp()`；
+调 `start()`：cannon / laser / machineGun / mech / rocket / tesla 各一处。）
+`start()` 用的是**当前** `wait_time`，本身不写它 —— 所以只在 `fire()` 里"改射速"是无效的，
+而且 `levelUp()` 会直接把 `wait_time` 重置回 `delay`。技能要改射速，**必须**走进同一个入口。
+
+⚠️ **`toggle` 模式下的射程/弹速不是"缓存一次就完"**：
+`radarScope` 还写在 `raderShape.shape.radius` 里（`_ready()` 与 `levelUp()` 各写一次），
+切模式时必须**同时**改 `radarScope` 和碰撞体半径，否则圈画得远了、雷达却还只探 200px。
+建议加 `applySight()` 作为唯一入口，和 `applyFireRate()` 同一套路。
+
+
+### 18.4 各塔技能表
+
+> 数值都以**当前代码里的实际值**为基准（`Game.towerInfo` + 各塔脚本里的常量），
+> 括号里标的是"从多少改到多少"，方便实现后对账。
+
+| 塔 | 类型 | 技能 | 效果 | 代价 / 切换条件 |
+|---|---|---|---|---|
+| 机枪塔 | timed | **过热扫射** | 3s 内 atk×2、射速×2（DPS≈4×） | 每秒自损 6（共 18HP）；CD 18s |
+| 加农炮 | timed | 破甲弹 | 3s 内无视护甲 | 射速 ×0.7；CD 20s |
+| **火箭塔** | **toggle** | **远距离导弹** | 射程 **200 → 320**（×1.6）、伤害 **40 → 50**（×1.25）、弹速 **300 → 520**、转向角速度 **5.0 → 6.5** | **失去爆炸范围**：`blastRadius 90` → 单体直击。**切换 CD 3s** |
+| EMP | timed | 强磁过载 | 5s 内减速倍率翻倍 | 结束后停转 3s；CD 25s |
+| **激光塔** | **toggle** | **单体打击** | 锁定目标 **3 → 1**（`MAX_TARGETS`）、对单伤害 **38 → 95**（×2.5） | 失去多目标：满编 3 目标总 DPS 由 114 降到 95。**切换 CD 3s** |
+| 特斯拉 | timed | 链式放电 | 3s 内电弧多跳 2 个目标 | 每秒自损 5；CD 20s |
+| 无人机基地 | timed | 紧急升空 | 4s 内射速 ×1.5 | 期间不可选中/出售；CD 24s |
+| 铁箱塔 | timed | 应急装甲 | 4s 内受伤 −70% | 期间不能攻击；CD 20s |
+| **移动机甲** | **instant** | **紧急维修** | 立刻治疗**自身 + 半径 180 内所有塔**，各 **30% 自身最大血量** | 用完后**整个机甲停止 3 秒**：不能移动、不能维修、不能回收残骸 |
+
+**三条需要特别说明的：**
+
+1. **火箭塔的导弹模式不是纯加强，是取舍。**
+   射程 +60%、弹速 +73% 让它能打到以前够不着的远程敌人，但**没有爆炸范围**意味着
+   对成群的推进型（蜂群模式下尤其明显）反而更弱。玩家应该"看情况切"，而不是一直开着。
+
+2. **激光塔的单体伤害为什么是 ×2.5 而不是 ×3。**
+   满编 3 目标时总 DPS 是 `38×3 = 114`；切成单目标只有 `95`，**对群明确变弱**。
+   但对单目标时 `38 → 95` 是巨大提升，且**目标少于 3 个时反而比原模式强**。
+   如果直接给 ×3（114），单目标就和满编对群持平，切过去就没有代价了。
+
+3. **机甲的 30% 是"各自最大血量的 30%"，不是固定值。**
+   机甲自己 320 血 → 回 96；被修的那座塔如果 240 血 → 回 72。
+   用 `tower.addHp()` 治疗（**不能**用 `hurt(-n)`，见 18.6 第 2 条）。
+
+4. **机甲的 3 秒是"停止"，不是"按钮冷却"。**
+   按下之后这 3 秒里：**不能移动、不发维修脉冲、不能回收残骸**。
+   这是用一次群体爆发换来的代价 —— 也正是它冷却能只给 3 秒的原因：
+   如果只是按钮冷却、机甲照常修塔走路，3 秒对一次"群体回 30%"就太便宜了，那条代价等于不存在。
+   实现上必须在 `_physics_process` 里整体挡住，**不能**只在按钮上判断（见 18.6 第 6 条）。
+
+> **"破甲"依赖一个目前不存在的接缝**：`enemyInfo` 里有 `armor`（0~1），
+> 但伤害结算处是直接乘还是逐条判断，实现前要先在 `enemy.gd::hurt()` / 子弹结算里确认。
+> 若没有统一入口，**先实现机枪塔与铁箱塔**（不依赖护甲），破甲放到后面。
+
+### 18.5 UI
+
+- `scene/tower_detail_panel.tscn` 的 `ActionRow` 已经是"修理 / 出售"两个按钮，
+  **加第三个 `btnSkill`** 即可 —— 这是既有模式，不用新开面板
+- **按钮文案随类型变**：
+  - `toggle`：显示"切到哪种模式"（如「导弹模式」/「溅射模式」），当前处于第二种模式时按钮高亮（安全黄）
+  - `timed`：冷却中置灰 + 剩余秒数（`12s`）；生效中高亮 + 剩余持续时间（`2.4s`）
+  - `instant`：只有冷却倒计时（`3s`）
+- 视觉参考 `scene/ability_slot.tscn` 的冷却遮罩 + 数字（既有实现）
+- `toggle` 的 3 秒切换 CD 期间按钮也要置灰 —— 否则玩家会以为点坏了
+
+### 18.6 边界与坑
+
+1. **技能期间塔被出售 / 被炸毁** → 计时器随节点释放，禁止留悬空引用（同 §7.5）。
+2. **自损 / 治疗都不能走 `hurt()`**：
+   - `hurt()` 在 `invincible` 时直接 return → 「无敌 + 过热」变白送，所以**自损**要单独 `applySelfDamage()`。
+   - `hurt()` 里 `hp -= int(max(0.0, ceil(...)))` 把负伤害夹成 0 → **治疗**根本没效果
+     （`mech.gd` 的注释里记着这个坑），必须用 `tower.addHp()`。
+   - 两种情况的**死亡流程都得复用同一套**（释放格子、留残骸、记成就）。
+3. 冷却用 `_physics_process` 推进 → 游戏暂停时自然暂停，正确；但**倍速（§十六）下冷却会加速**，
+   这是可接受的（同 §16.4 的口径问题）。
+4. 若塔在技能中升级，`levelUp()` 会重设 `delay`/`atk`/`radarScope` ——
+   `applyFireRate()` 与 `applySight()` 必须重新叠上技能系数，否则升级会悄悄清掉技能效果。
+   对 `toggle` 尤其致命：**切换状态 `skillOn` 是持久的，但系数是派生的**，派生那步漏了就跟没切一样。
+5. `minHpRatio` / 切换 CD 拒绝触发时必须有提示（面板上短暂变红），否则玩家以为按钮坏了。
+
+**`toggle` 专属的三条：**
+
+6. **火箭塔导弹模式必须真的不溅射。** 现在 `rocketbullet.gd::spawnBomb()` 里
+   `bomb.blastRadius = 90.0` 是**写死**的，而且伤害是靠 `bomb.tscn` 的范围结算。
+   所以导弹模式不能只是"把半径调小"，要改成**命中时直接 `enemy.hurt(atk)`**、
+   **不生成 bomb 场景**（否则要么仍溅射、要么生成一个半径 0 的爆炸导致 `get_overlapping_areas` 空转）。
+   命中特效/烟仍然要播，见 `spawnHitEffect()`。
+7. **激光塔切换时必须释放多余锁定。** `laser_tower.gd` 的 `laserTargets` 最多存 3 个，
+   切到单体模式后要把第 2、3 个**从列表里移除并停止对应光束**，
+   否则会出现"只锁定一个，但三条光束还挂在敌人身上"的视觉/伤害不一致。
+   切回 3 目标模式时不用特殊处理 —— `collectTargets()` 会重新填。
+8. **`toggle` 改射程要同时改两处**：`radarScope`（画圈 + 找目标）与
+   `raderShape.shape.radius`（真实碰撞检测）。只改前者会出现"圈变大了但打不到"。
+
+**机甲停止专属的三条：**
+
+9. **停止必须在 `_physics_process` 里整体挡住，不能只挡按钮。**
+   `mech.gd` 的 `_physics_process` 同时管三件事：移动（`updateMovement`）、
+   维修脉冲（`repairTarget` / `fireRepairBeam`）、残骸回收（`updateSalvage`）。
+   只在 `canUseSkill()` 里判断 `skillDisabledLeft` 的话，机甲照样会走路、修塔、捡残骸 ——
+   这个代价就等于不存在。正确做法是在方法最前面加总闸，`super` 之后立刻 `return`。
+
+10. **进入停止的瞬间要收尾，不能"挂着"。** 需要一个 `stopAllWork()`：
+    - 正在回收 → `abortSalvage()`（**必须**，它会 `releaseClaim()` 释放残骸认领；
+      否则这 3 秒里别的机甲也捡不了那坨残骸，等于把资源锁死 3 秒）
+    - 正在移动 → 清掉目标格，原地停下（不要"暂停后接着走"，那会让玩家以为停止没生效）
+    - 维修激光的粒子/光束 → 立刻停（`muzzleFx` 停止 emitting、`queue_redraw()`），
+      否则会留着一条打到一半的激光
+
+11. **停止不等于无敌。** 这 3 秒里机甲照样会被敌人打、照样会死。
+    `hurt()` 不因为 `isDisabled()` 而返回 —— 这是代价的一部分，不是 bug。
+
+### 18.7 分阶段
+
+| 阶段 | 内容 |
+|---|---|
+| M1 | `applyFireRate()` / `applySight()` 重构（**不改行为**，先统一 2 处写 `wait_time` / 2 处写 `shape.radius` 的入口）+ `tower.gd` 技能框架（三种 kind） |
+| M2 | 先做一座 `toggle`（火箭塔导弹模式）跑通全链路：切换状态、射程、无溅射 |
+| M3 | 详情面板按钮 + 三种 kind 的文案/冷却 UI |
+| M4 | 激光塔单体模式（含释放多余锁定）+ 机甲紧急维修（瞬发群体治疗） |
+| M5 | 其余 6 座 `timed` 塔逐个接（每座一个探针） |
+| M6 | 平衡调整 |
+
+> 顺序刻意把"一座 toggle"提到最前面：`toggle` 的坑（释放锁定、射程双写、派生系数）
+> 都集中在它身上，先用火箭塔趟一遍，后面激光塔就只是照抄。
+
+### 18.8 验收探针
+
+**通用**
+
+- `timed`：冷却中 `canUseSkill()` 为 false、按钮不可点；生效中系数正确；结束后复原
+- 塔在技能/切换状态下升级 → 系数仍在生效（验证 18.6 第 4 条）
+
+**火箭塔（toggle）**
+
+- 切换后 `radarScope` = 320 **且** `raderShape.shape.radius` = 320（两处同时变）
+- 导弹模式命中一个敌人时，**周围 90px 内的其他敌人不掉血**（验证真的没溅射）
+- 切回溅射模式后，同一次命中周围敌人重新掉血
+- 3 秒内连按两次：第二次被拒绝（切换 CD）
+
+**激光塔（toggle）**
+
+- 单体模式：`laserTargets.size() <= 1`，光束只有一条
+- 对单伤害 95（vs 正常 38），总 DPS 从满编 114 降到 95
+- 切回后能重新锁定到 3 个
+
+**移动机甲（instant + 停止）**
+
+- 按下后：自身 hp +30% maxHp，半径 180 内每座受损塔各 +30% 自身 maxHp
+- **满血的塔不会被"过度治疗"**（`addHp()` 内部已夹到 maxHp）
+- **停止 3 秒内三件事全部无效**（这三条才是这条代价的关键，必须逐条断言）：
+  1. **不能移动**：给一个移动指令，3 秒内位置不变
+  2. **不能维修**：旁边放一座残血塔，3 秒内它的 hp **不涨**
+  3. **不能回收**：旁边放一坨残骸，3 秒内不被回收；且残骸的 `salvager` 已释放
+     （其他机甲此刻能认领它 —— 验证 18.6 第 10 条的 `abortSalvage()` 真的调了）
+- 停止期间按钮显示倒计时且不可点
+- 停止结束后的第一帧恢复工作（不用等下一轮脉冲）
+- **停止期间仍然可以被打死**（`hurt()` 不受 `isDisabled()` 影响）
+
+---
+
+## 十九、Boss 波（Boss Wave）
+
+> **实现状态：📝 设计稿（未实现）**
+> 需求原话：「每关小 boss 也可以设计，只是现在美术缺乏」
+
+### 19.1 现状
+
+12 种敌人全是常规单位，**没有 Boss 概念**（全项目搜 `boss` 无命中）。
+最强的是实验坦克，但它只是"血多 + 4 座炮塔"，没有任何专属行为。
+
+### 19.2 美术缺口 —— 先解决"怎么在没有专属美术时不阻塞功能"
+
+v0 方案（纯复用）：
+
+- 素材用 `sprite/enemy/redesigned/experimental_tank_v4_body*.svg`（或 `armored_tank_v2_*`）
+- 场景里 `scale` 放大到 1.6~1.8、`modulate` 偏红、外层加描边/脉冲 shader
+- ⚠️ **放大位图会糊。** 这些素材是 **SVG**，Godot 导入时按 `width`/`height` 栅格化成位图；
+  直接放大节点等于放大位图。要清晰必须**提高该 SVG 的导入尺寸**（例如 64 → 128），
+  再放到 0.9 倍 —— 这样进游戏是缩小而不是放大，边缘才锐利。
+  （这条和 `art_style.md` v8.1「统一 scale 无法修正长宽比」是同一类问题。）
+- 正式美术留到 M4；届时只需替换贴图与导入尺寸，**不动逻辑**
+
+### 19.3 数据结构
+
+沿用 `enemyInfo`（不新开一张表，避免敌人代码分叉）：
+
+```gdscript
+# Game.enemyInfo[type] 新增字段
+"isBoss": true,
+"bossBarName": "_EnemyName_experimentalTank",   # 血条上的名字，可独立于普通名
+```
+
+`StageData.allStage` 每条新增：
+
+```gdscript
+'bossWave': 3,                                   # 第几波出 Boss；0 / 缺省 = 本关无 Boss
+'bossType': Game.enemyType.experimentalTank,     # Boss 用哪个敌人类型
+```
+
+### 19.4 生成
+
+`base_level.gd::buildWaveSpawner(waveNo)`：当 `waveNo == bossWave` 时，在返回数组**末尾**
+追加一条 `{'time': waveNo, 'type': bossType, 'number': 1, 'route': <默认路线>}`。
+
+⚠️ Boss **不受战斗模式 `countScale` 影响**（§十七）—— 否则蜂群模式会一次刷出 2 个 Boss。
+
+### 19.5 行为（v0 → v3 递增）
+
+| 版本 | 内容 |
+|---|---|
+| v0 | 只放大 + 高血量 + 高护甲，行为与普通实验坦克一致 |
+| v1 | **免疫减速**（`emp_tower.gd::applySlow` 跳过 `isBoss`） |
+| v2 | 周期性召唤小兵（每 8s 生成 3 只该关最低级敌人） |
+| v3 | 被打到 50% 血时进入"狂暴"（攻速 ×1.5、移速 +30%） |
+
+### 19.6 UI
+
+- **顶部居中 Boss 血条**（新节点，挂在 `hud` CanvasLayer 内，屏幕空间、不跟相机缩放）
+- 名称（走 `tr()`）+ 血条 + 分段刻度（每 25% 一格）
+- Boss 死亡后淡出并隐藏
+
+### 19.7 边界与坑
+
+1. **Boss 逃跑**：`lossPoints` 要给一个大值（如 5），否则漏掉 Boss 和漏掉小兵代价一样。
+2. `finish()` 判定"场上无敌人"时 Boss 也算在内，逻辑不用改，但**别让 Boss 的召唤物
+   把"无敌人"永远卡住**。
+3. **性能**：Boss + 召唤物会叠加同屏数量，需与无尽模式的同屏上限（90）对齐。
+4. 成就：建议新增「击杀 Boss」计数成就；但注意挑战模式不记成就（§17.6），否则蜂群会加速刷。
+5. Boss 血条与既有 `life_bar`（敌人头顶血条）是**两套**：Boss 不显示头顶血条，
+   只显示顶部大血条，避免重复。
+
+### 19.8 分阶段
+
+| 阶段 | 内容 |
+|---|---|
+| M1 | 数据字段 + 复用实验坦克（放缩/上色）+ `buildWaveSpawner` 追加 |
+| M2 | 顶部 Boss 血条 UI |
+| M3 | 免疫减速 + 召唤小兵 |
+| M4 | 正式美术（提 SVG 导入尺寸）+ 狂暴机制 |
+
+### 19.9 验收探针
+
+- 指定波次只生成 **1 个** Boss；蜂群模式下仍是 1 个
+- Boss 血条出现、数值与 `hp` 同步、死亡后隐藏
+- `isBoss` 的敌人不被 EMP 减速（v1）
+- 召唤物数量不超过同屏上限
+
+---
+
+## 二十、三个模块的实施顺序建议
+
+三者互相独立，但**有依赖与冲突点**，建议按下面顺序：
+
+1. **§十八 M1（`applyFireRate()` 重构）先行** —— 它不改行为、风险低，却是塔技能的前提，
+   而且顺手把"`wait_time` 有 2 处写、`start()` 有 6 处调"这个散点收成一个入口。
+2. **§十七（战斗模式）** —— 收益守恒与记录隔离的逻辑独立，做完就能显著提升重玩价值。
+3. **§十九（Boss）** —— 依赖美术决策（SVG 导入尺寸），可以先用 v0 占位跑通。
+4. **§十八 M2~M4（塔技能）** —— 最后做，因为它需要逐塔调平衡。
+
+**交叉冲突点（实现时必须一起考虑）**：
+
+| 冲突 | 处理 |
+|---|---|
+| 蜂群 ×2 敌人 ↔ Boss 数量 | Boss 不吃 `countScale` |
+| 挑战模式不记成就 ↔ Boss 击杀成就 | Boss 成就也只在正常模式记 |
+| 塔技能自损 ↔ 无敌技能 | 自损绕过 `invincible` 判定，单独走 `applySelfDamage()` |
+| 倍速 ↔ 技能冷却 / Boss 召唤计时 | 都走 `_physics_process`，随倍速加速（可接受，与 §16.4 口径一致） |
+| 模式倍数 ↔ 无尽模式难度 | 两套独立变量相乘，**不要复用 `Game.enemyScale`** |
 
 ---
 
