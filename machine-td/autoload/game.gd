@@ -18,7 +18,14 @@ enum enemyType {
 	# 重装堡垒型（多炮塔地面单位）
 	experimentalTank,
 	# 飞越地图的空中骚扰单位（单独路线，逃脱不扣血）
-	battlePlane
+	battlePlane,
+	# ── Boss（§十九）──
+	# ⚠️ 必须追加在**末尾** —— 枚举值是存档/存档兼容与 StageData 配置的隐式依赖，
+	#    往中间插会让既有数据整体错位。
+	# 小 boss（第 4 关起每关 1 个）
+	bossBulwark, bossHive, bossCharger, bossSplitter, bossJammer, bossGunship,
+	# 大 boss（第 6 / 9 / 12 / 15 关）
+	bossFortress
 }
 
 # 塔类型
@@ -468,6 +475,111 @@ const enemyInfo = {
 		"role": "_EnemyRole_air",
 		"gemReward": 1, "gemRewardChance": 0.5
 	},
+
+	# ══════════════════════════════════════════════════════════════════
+	# Boss（设计见 feature_design.md §十九）
+	# ══════════════════════════════════════════════════════════════════
+	#
+	# 字段约定：
+	#   isBoss    —— 是 Boss（**不吃战斗模式的 countScale**，蜂群也只刷 1 个）
+	#   bossTier  —— 1 = 小 boss，2 = 大 boss
+	#   bossBarName —— 顶部血条上的名字（可与普通敌人名不同）
+	#   bossAuraColor —— 地面光环颜色，让同类素材的 boss 也能一眼区分
+	#
+	# ⚠️ 数值是**基数**，实际血量还要乘该关的 `bossHpMul`（StageData）。
+	# ⚠️ `lossPoints` 给小数值：基地只有 20 血，漏一个 boss 必须疼。
+
+	# ① 铁壁：护甲 0.7，逼你用能量伤害（特斯拉 / 加农炮破甲弹）
+	enemyType.bossBulwark: {
+		"name": "_BossName_bulwark",
+		"showsRange": true,
+		"hp": 900, "speed": 35, "reward": 80, "lossPoints": 3, "rewardExp": 30,
+		"armor": 0.7, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0,
+		"role": "_EnemyRole_boss",
+		"isBoss": true, "bossTier": 1,
+		"bossBarName": "_BossName_bulwark",
+		"bossTip": "_BossTip_bulwark",
+		"bossAuraColor": Color(0.55, 0.72, 0.90, 1.0),
+		"gemReward": 1
+	},
+	# ② 巢母：不还手，每 6 秒召唤 3 只小兵
+	enemyType.bossHive: {
+		"name": "_BossName_hive",
+		"showsRange": false,
+		"hp": 1100, "speed": 30, "reward": 100, "lossPoints": 3, "rewardExp": 35,
+		"armor": 0.25, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0,
+		"role": "_EnemyRole_boss",
+		"isBoss": true, "bossTier": 1,
+		"bossBarName": "_BossName_hive",
+		"bossTip": "_BossTip_hive",
+		"bossAuraColor": Color(0.45, 0.85, 0.55, 1.0),
+		"gemReward": 2
+	},
+	# ③ 突袭者：移速 x1.8（90）、血薄、不还击 —— 唯一依赖 EMP 的 boss
+	enemyType.bossCharger: {
+		"name": "_BossName_charger",
+		"showsRange": false,
+		"hp": 400, "speed": 90, "reward": 60, "lossPoints": 5, "rewardExp": 22,
+		"armor": 0.1, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0,
+		"role": "_EnemyRole_boss",
+		"isBoss": true, "bossTier": 1,
+		"bossBarName": "_BossName_charger",
+		"bossTip": "_BossTip_charger",
+		"bossAuraColor": Color(0.95, 0.55, 0.20, 1.0),
+		"gemReward": 1
+	},
+	# ④ 分裂体：死亡时分裂成 2 个 40% 血的小号（只分裂一层）
+	enemyType.bossSplitter: {
+		"name": "_BossName_splitter",
+		"showsRange": false,
+		"hp": 800, "speed": 40, "reward": 90, "lossPoints": 3, "rewardExp": 30,
+		"armor": 0.2, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0,
+		"role": "_EnemyRole_boss",
+		"isBoss": true, "bossTier": 1,
+		"bossBarName": "_BossName_splitter",
+		"bossTip": "_BossTip_splitter",
+		"bossAuraColor": Color(0.80, 0.50, 0.95, 1.0),
+		"gemReward": 1
+	},
+	# ⑤ 压制者：光环 260 内的塔每 5 秒被沉默 2 秒
+	enemyType.bossJammer: {
+		"name": "_BossName_jammer",
+		"showsRange": true,
+		"hp": 700, "speed": 45, "reward": 90, "lossPoints": 3, "rewardExp": 30,
+		"armor": 0.15, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 260,
+		"role": "_EnemyRole_boss",
+		"isBoss": true, "bossTier": 1,
+		"bossBarName": "_BossName_jammer",
+		"bossTip": "_BossTip_jammer",
+		"bossAuraColor": Color(0.75, 0.45, 1.0, 1.0),
+		"gemReward": 1
+	},
+	# ⑥ 炮艇（飞行）：只有无人机 / 激光 / 火箭打得到；EMP 对它无效
+	enemyType.bossGunship: {
+		"name": "_BossName_gunship",
+		"showsRange": true,
+		"hp": 750, "speed": 38, "reward": 90, "lossPoints": 4, "rewardExp": 30,
+		"armor": 0.15, "flying": true, "atk": 30, "shootDelay": 4.0, "scope": 300,
+		"role": "_EnemyRole_boss",
+		"isBoss": true, "bossTier": 1,
+		"bossBarName": "_BossName_gunship",
+		"bossTip": "_BossTip_gunship",
+		"bossAuraColor": Color(0.70, 0.60, 1.0, 1.0),
+		"gemReward": 1
+	},
+	# ⑦ 要塞（大 boss）：4 炮塔 + 召唤 + 50% 二阶段（狂暴 + 免疫减速）
+	enemyType.bossFortress: {
+		"name": "_BossName_fortress",
+		"showsRange": true,
+		"hp": 3000, "speed": 28, "reward": 300, "lossPoints": 8, "rewardExp": 120,
+		"armor": 0.35, "flying": false, "atk": 26, "shootDelay": 0.7, "scope": 320,
+		"role": "_EnemyRole_boss",
+		"isBoss": true, "bossTier": 2,
+		"bossBarName": "_BossName_fortress",
+		"bossTip": "_BossTip_fortress",
+		"bossAuraColor": Color(0.95, 0.78, 0.25, 1.0),
+		"gemReward": 3
+	},
 }
 
 # 支持的界面语言。
@@ -509,6 +621,17 @@ signal towerLocked # 玩家点了本关禁用的防御塔（tower_ui 发出，ma
 signal enemyClicked # 点击敌人（在地图上选中敌人，由 enemy.gd 的 input_event 发出）
 @warning_ignore("unused_signal")
 signal enemyDefeated(enemy, source) # 敌人被击杀（成就统计用；在节点释放前发出）
+
+## Boss 出生 / 死亡（feature_design.md §十九 顶部血条用）。
+## 由 `enemy.gd::setupEnemyInfo()` 与 `hurt()` 在 `isBoss` 时发出 ——
+## 这样血条不必每帧扫全场找 boss。
+signal bossSpawned(boss: Node)
+signal bossDefeated(boss: Node)
+
+## 敌人漏到基地（在节点释放前发出，带敌人本体）。
+## 结算战报用它统计"漏了什么"（feature_design.md §二十一 A）。
+## ⚠️ 不复用 `enemyEscaped`：那个只带 lossPoints，拿不到敌人类型。
+signal enemyLeaked(enemy: Node)
 
 
 var map = null

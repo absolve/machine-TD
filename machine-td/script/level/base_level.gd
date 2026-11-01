@@ -387,13 +387,41 @@ func spawnEnemy(spawnInfo: Dictionary):
 	# 那时得改用别的做法。
 	follower.v_offset = resolveOffset(spawnInfo)
 	route.add_child(follower)
+	# 可选：让敌人从路线上的**指定进度**开始。
+	# Boss 的「分裂」与「召唤」需要"在当前位置 / 稍后方"生成，
+	# 否则小号会从起点重新跑一遍整条路线，看着非常怪。
+	# `-1`（缺省）表示不指定；0 是合法进度，所以不能用 0 当哨兵。
+	var startProgress: float = float(spawnInfo.get("progress", -1.0))
+	if startProgress >= 0.0:
+		# 夹在路线长度内：越界会让 PathFollow2D 直接跑到终点、白送一次"逃脱"
+		var maxProgress: float = maxf(0.0, route.curve.get_baked_length() - 1.0)
+		follower.progress = clampf(startProgress, 0.0, maxProgress)
 
 	var enemyNode = scene.instantiate()
 	if enemyNode == null:
 		push_error("敌人场景实例化失败: " + str(scene.resource_path))
 		follower.queue_free()
 		return
+	# 可选：给实例设置任意属性（Boss 用 `props = {"canSplit": false}` 阻止小号再分裂，
+	# `silentBoss = true` 让它不发 bossSpawned —— 每分裂一次就播一次横幅会很烦）。
+	# ⚠️ 必须在 add_child **之前** 设置：`_ready()` 里就会读这些字段。
+	# 用 set() 而不是给每种 Boss 加专用字段 —— 否则每来一种新 boss 就要改这里。
+	var props: Dictionary = spawnInfo.get("props", {})
+	for key in props:
+		enemyNode.set(key, props[key])
+
 	follower.add_child(enemyNode)
+
+	# 可选：血量系数（Boss 的分裂体小号需要"40% 血"）。
+	# 放在 add_child 之后：此时 `_ready` 已经跑过、hp/maxHp 都是满的。
+	var hpScale: float = float(spawnInfo.get("hpScale", 1.0))
+	if not is_equal_approx(hpScale, 1.0) and "maxHp" in enemyNode:
+		var scaledHp: int = maxi(1, int(ceil(float(enemyNode.maxHp) * hpScale)))
+		enemyNode.set("maxHp", scaledHp)
+		enemyNode.set("hp", scaledHp)
+		var bar = enemyNode.get("lifeBar")
+		if bar != null:
+			bar.setMax(scaledHp)
 
 	# 路径点交给敌人自身（用于瞄准/朝向；移动仍由上面的 follower 驱动）
 	enemyNode.points = route.curve.get_baked_points()

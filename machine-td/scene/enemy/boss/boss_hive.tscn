@@ -1,0 +1,68 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="PackedScene" path="res://scene/enemy/enemy.tscn" id="1_base"]
+[ext_resource type="Script" path="res://script/enemy/boss/boss_hive.gd" id="2_script"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/experimental_tank_v4_body.svg" id="3_b1"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/experimental_tank_v4_body_2.svg" id="3_b2"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/experimental_tank_v4_body_3.svg" id="3_b3"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/experimental_tank_v4_body_4.svg" id="3_b4"]
+[ext_resource type="Shader" path="res://shader/enemy_hit_flash.gdshader" id="9_shader"]
+
+[sub_resource type="ShaderMaterial" id="mat_flash"]
+resource_local_to_scene = true
+shader = ExtResource("9_shader")
+shader_parameter/flash = 0.0
+shader_parameter/brighten = 0.85
+
+[sub_resource type="SpriteFrames" id="frames_body"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_b1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_b2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_b3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_b4")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="shape_radar"]
+radius = 165.0
+
+[sub_resource type="RectangleShape2D" id="shape_body"]
+size = Vector2(90.75000000000001, 66.0)
+
+[node name="bossHive" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+enemyType = 13
+muzzleOffset = 24.0
+
+[node name="base" parent="."]
+material = SubResource("mat_flash")
+scale = Vector2(1.35, 1.35)
+modulate = Color(0.68, 0.95, 0.72, 1)
+sprite_frames = SubResource("frames_body")
+
+[node name="radar" parent="."]
+visible = false
+
+[node name="shape" parent="radar"]
+shape = SubResource("shape_radar")
+
+[node name="turret" parent="."]
+visible = false
+material = SubResource("mat_flash")
+position = Vector2(14, 0)
+scale = Vector2(1.1, 1.1)
+
+[node name="shape" parent="."]
+visible = false
+shape = SubResource("shape_body")

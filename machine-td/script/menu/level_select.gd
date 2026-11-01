@@ -3,7 +3,7 @@ extends Node2D
 # 每行放几个关卡。行内卡片由 HBoxContainer 居中排列，每行都是满宽居中，
 # 所以最后一排不足 COLUMNS_PER_ROW 个（比如 15 关排成 6+6+3）也是居中的。
 const COLUMNS_PER_ROW := 6
-const GAP := 40 # 行内卡片间距（行间距由 ui/levels 的 separation 控制，两边保持一致）
+const GAP := 48 # 行内卡片间距（行间距由 ui/levels 的 separation 控制，两边保持一致）
 
 # 模式条的顺序（展示顺序，和 battleModeDefs 的书写顺序一致）
 const MODE_ORDER: Array[String] = ["normal", "swarm", "armor", "elite"]
@@ -18,7 +18,7 @@ const MODE_BTN_MIN_SIZE := Vector2(128, 60)
 @onready var descriptionPanel = $Ui/descriptionPanel
 
 
-var levelCard = preload("res://scene/level_card.tscn")
+var levelCard: PackedScene = preload("res://scene/level_card.tscn")
 
 ## 当前选中的模式 id。点关卡卡片时才写进 Game.battleMode ——
 ## 提前写的话，玩家只是点了模式没进关，返回主菜单会残留。
@@ -26,6 +26,8 @@ var selectedMode: String = "normal"
 ## 模式按钮 id -> Button，用于互斥高亮
 var modeButtons: Dictionary = {}
 var modeDescLabel: Label = null
+## 「下一关」的关卡 id（-1 = 没有可打的关卡），建卡时用
+var nextStageId: int = -1
 
 
 func _ready() -> void:
@@ -107,6 +109,7 @@ func refreshModeBar() -> void:
 # 按 StageData 生成关卡卡片：逐行铺开，行随关卡数自动增加
 func populateLevels() -> void:
 	var row: HBoxContainer = null
+	nextStageId = getNextStageId()
 	for stage in StageData.allStage:
 		if stage.has('selectable') and stage.selectable == false:
 			continue
@@ -124,14 +127,31 @@ func addRow() -> HBoxContainer:
 	return row
 
 
-func makeCard(stage: Dictionary) -> Control:
-	var card = levelCard.instantiate()
-	card.level = stage['name']
+func makeCard(stage: Dictionary) -> LevelCard:
+	var card: LevelCard = levelCard.instantiate() as LevelCard
+	card.level = str(stage['name'])
 	card.levelId = stage['id']
 	card.rating = UserData.getStageRating(stage['id'])
 	card.clicked.connect(loadMap)
 	card.isLock = not UserData.isStageUnlocked(stage['id'])
+	card.isNext = stage['id'] == nextStageId
 	return card
+
+
+## 「下一关」= 号数最小的、已解锁但还没拿到星级的可选关卡。
+## 用来在卡片上做一个"该打这张"的提示（数字转安全黄）。
+## 没有可打关卡（比如全通了）就返回 -1，不标任何卡片。
+func getNextStageId() -> int:
+	var best: int = -1
+	for stage in StageData.allStage:
+		if stage.has('selectable') and stage.selectable == false:
+			continue
+		var id: int = stage['id']
+		if not UserData.isStageUnlocked(id) or UserData.getStageRating(id) > 0:
+			continue
+		if best < 0 or id < best:
+			best = id
+	return best
 
 
 # 加载地图

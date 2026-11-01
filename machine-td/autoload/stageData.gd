@@ -1106,5 +1106,14 @@ var enemyScenes = {
 	Game.enemyType.scoutDrone: preload("res://scene/enemy/scout_drone.tscn"),
 	Game.enemyType.attackHelicopter: preload("res://scene/enemy/attack_helicopter.tscn"),
 	Game.enemyType.battlePlane: preload("res://scene/enemy/battle_plane.tscn"),
-	Game.enemyType.experimentalTank: preload("res://scene/enemy/experimental_tank.tscn")
+	Game.enemyType.experimentalTank: preload("res://scene/enemy/experimental_tank.tscn"),
+	# ── Boss（§十九）：场景已就位，但**还没有配到任何关卡** ——
+	# 先用 scene/test/boss_test.tscn 单独测试，等数值平衡之后再挂进 StageData.allStage。
+	Game.enemyType.bossBulwark: preload("res://scene/enemy/boss/boss_bulwark.tscn"),
+	Game.enemyType.bossHive: preload("res://scene/enemy/boss/boss_hive.tscn"),
+	Game.enemyType.bossCharger: preload("res://scene/enemy/boss/boss_charger.tscn"),
+	Game.enemyType.bossSplitter: preload("res://scene/enemy/boss/boss_splitter.tscn"),
+	Game.enemyType.bossJammer: preload("res://scene/enemy/boss/boss_jammer.tscn"),
+	Game.enemyType.bossGunship: preload("res://scene/enemy/boss/boss_gunship.tscn"),
+	Game.enemyType.bossFortress: preload("res://scene/enemy/boss/boss_fortress.tscn")
 }

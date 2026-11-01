@@ -68,6 +68,14 @@ var skillDisabledLeft: float = 0.0    # 停摆剩余（机甲用；>0 时整机�
 ## timed 技能的自损累加器：按每秒折算，攒够 1 点才真的扣一次血
 var skillSelfDamageAcc: float = 0.0
 
+## ── 本局战绩（结算战报用，feature_design.md §二十一 A）──
+## 只统计、不参与任何战斗计算。由 `enemy.gd::hurt()` 往里累加。
+## ⚠️ 塔被卖掉/打爆时这些数字会跟着节点一起没 —— 战报里就少了这座塔的贡献。
+##    这是可接受的（卖掉本来就不该算进最终布局），所以不做额外持久化。
+var dealtDamage: int = 0   ## 实际造成的伤害（已扣减伤/护甲，不含溢出）
+var killCount: int = 0     ## 击杀数
+var overkill: int = 0      ## 溢出伤害（打死时多出来的部分），衡量"爆发浪费"
+
 ## 炮口到轴心的像素距离 —— 代码里写 `marker.position`，**不要**去场景里改 Marker2D。
 ##
 ## ⚠️ 为什么放代码里：Marker2D 在基场景 Tower.tscn 里是 (0,0)，子场景就算覆盖了，
@@ -468,7 +476,30 @@ func stopGlow() -> void:
 
 
 func onDelayTimeout():
+	# 压制期间不能解除开火锁 —— 否则冷却一结束，塔会在压制途中"偷偷"恢复开火
+	if silencedLeft > 0.0:
+		return
 	canShot = true
+
+
+## ── 被压制（Boss「压制者」的光环，feature_design.md §十九）──
+##
+## 语义：`silencedLeft > 0` 期间**不能开火**（但照常瞄准、照常被攻击）。
+## 实现只依赖 `canShot`：所有塔开火前都检查它，`_physics_process` 里每帧压回 false，
+## 并且 `onDelayTimeout()` 在压制期间也不会把它放回 true。
+var silencedLeft: float = 0.0
+
+
+func isSilenced() -> bool:
+	return silencedLeft > 0.0
+
+
+## 施加压制（取更长的那次，避免多个压制者互相缩短时长）
+func applySilence(seconds: float) -> void:
+	if seconds <= 0.0:
+		return
+	silencedLeft = maxf(silencedLeft, seconds)
+	canShot = false
 
 
 ## 1 级的 reload。查 game.gd 的 towerInfo（那里存的就是 1 级数值）。
@@ -693,6 +724,18 @@ func _physics_process(delta: float) -> void:
 	# 技能计时（冷却 / 限时生效 / 停摆 / 自损）每帧都要推进，
 	# 所以放在最前面 —— 不能挂在"选中"之后，否则没选中的塔技能永远走不完。
 	tickSkill(delta)
+	# 被 Boss 压制（§十九 压制者）时不能开火。
+	# 所有塔的开火路径都以 `canShot` 为闸，所以闸设在这一处就够，不用改 9 个塔脚本。
+	if silencedLeft > 0.0:
+		silencedLeft = maxf(0.0, silencedLeft - delta)
+		canShot = false
+		# ★ 压制**结束的那一帧**必须把开火锁还回去。
+		#   否则会永久哑火：沉默期间冷却到期 → `onDelayTimeout()` 因为仍在压制而提前返回，
+		#   Timer 已经停了、不会再来第二次，于是 `canShot` 再也没有人把它设回 true。
+		#   （玩家反馈"塔被打压之后再也不开火"就是这条。）
+		#   只有冷却也已经走完时才直接恢复；冷却还没走完就交给 onDelayTimeout。
+		if silencedLeft <= 0.0 and (delayTimer == null or delayTimer.time_left <= 0.0):
+			canShot = true
 	if invincible: # 无敌期间
 		invincibleLeft -= delta
 		if invincibleLeft <= 0.0:

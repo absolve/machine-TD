@@ -45,6 +45,21 @@ func playWave(wave: int, enemies: Array = [], is_final: bool = false) -> void:
 	super.play(title, "", -1.0 if not is_final else holdSec + 0.6)
 
 
+## Boss 出场横幅（feature_design.md §十九 19.8）。
+##
+## 复用同一个横幅实例：标题写 Boss 名、副标题写"一句话怎么打"，
+## 兵种清单清空（Boss 出场时列小兵没有意义）。
+##
+## ⚠️ `subLabel` 在 playWave() 里被永久藏起来了 —— 这里必须**重新显示**，
+##    否则 Boss 的提示语写进去也看不见（踩过一次，表现为"副标题不出现"）。
+func playBoss(bossName: String, traitText: String) -> void:
+	if subLabelHidden != null:
+		subLabelHidden.visible = true
+	buildEnemyList([])
+	# 比普通波次多停一会儿（+0.9s）：Boss 名字 + 应对提示是玩家要读的信息
+	super.play(bossName, traitText, holdSec + 0.9)
+
+
 ## 把敌人清单排版出来：名 + 「xN」。
 ##
 ## 为什么是"名"与"xN"分开两个 Label，而不是一个 "名 xN" 字符串 ——

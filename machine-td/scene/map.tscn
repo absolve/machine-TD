@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" path="res://scene/ability_bar.tscn" id="12_ability"]
 [ext_resource type="PackedScene" uid="uid://dev1wi4vmspkd" path="res://scene/battle_start_banner.tscn" id="13_banner"]
 [ext_resource type="PackedScene" path="res://scene/ui/wave_banner.tscn" id="14_wavebanner"]
+[ext_resource type="PackedScene" path="res://scene/ui/boss_health_bar.tscn" id="15_bossbar"]
 
 [node name="map" type="Node2D" unique_id=988854810]
 script = ExtResource("1_rgtto")
@@ -26,6 +27,10 @@ zoomMax = 4.5
 [node name="Hud" type="CanvasLayer" parent="." unique_id=487852858]
 
 [node name="title" parent="Hud" unique_id=845388962 instance=ExtResource("2_4xw1d")]
+
+[node name="bossHealthBar" parent="Hud" unique_id=447179383 instance=ExtResource("15_bossbar")]
+layout_mode = 3
+anchors_preset = 5
 
 [node name="towerUI" parent="Hud" unique_id=54976183 instance=ExtResource("3_bq37x")]
 offset_left = -8.0

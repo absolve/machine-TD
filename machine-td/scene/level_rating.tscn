@@ -2,16 +2,31 @@
 
 [ext_resource type="Script" uid="uid://y57ru1vs0qvw" path="res://script/menu/level_rating.gd" id="1_ndx5l"]
 
-[node name="levelRating" type="HBoxContainer" unique_id=640723317]
-offset_right = 88.0
-offset_bottom = 40.0
+[node name="levelRating" type="HBoxContainer"]
+offset_right = 106.0
+offset_bottom = 30.0
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 1
 script = ExtResource("1_ndx5l")
 
-[node name="Star1" type="TextureRect" parent="." unique_id=2090069137]
+[node name="Star1" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Star2" type="TextureRect" parent="." unique_id=2120840015]
+[node name="Star2" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Star3" type="TextureRect" parent="." unique_id=911634739]
+[node name="Star3" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5

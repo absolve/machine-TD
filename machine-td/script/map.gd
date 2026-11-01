@@ -36,6 +36,8 @@ var endlessStatsText: String = ""
 var tutorialGuide: Node = null
 
 var level
+## 本局漏怪记录（结算战报用，feature_design.md §二十一 A）：{ "type": 敌人类型, "hp": 剩余血量 }
+var leakLog: Array = []
 var gunTower = preload("res://scene/tower/machineGunTower.tscn")
 var rocketTower = preload("res://scene/tower/rocketTower.tscn")
 var cannonTower = preload("res://scene/tower/cannonTower.tscn")
@@ -105,6 +107,10 @@ func _ready():
 	Game.towerClicked.connect(onTowerClicked)
 	Game.enemyClicked.connect(onEnemyClicked)
 	Game.towerLocked.connect(onTowerLocked)
+	# Boss 出场：播一次横幅（复用 waveBanner 实例，见 wave_banner.gd::playBoss）
+	Game.bossSpawned.connect(onBossSpawned)
+	# 战报：记录"漏了什么"（敌人本体在 signal 里带过来，enemyEscaped 只有扣血数）
+	Game.enemyLeaked.connect(onEnemyLeaked)
 	# 敌人信息面板自己收起时（敌人死亡 / 逃脱），清掉敌人的选中态 ——
 	# 那条路径 map 收不到点击，只能靠面板的 closed 信号（见 _refreshEnemyRangeSelection）
 	enemyDetailPanel.closed.connect(_refreshEnemyRangeSelection)
@@ -504,6 +510,24 @@ func showWaveBanner(wave: int) -> void:
 	waveBanner.playWave(wave, summarizeWave(rows), isFinal)
 
 
+## Boss 出场横幅（feature_design.md §十九 19.8）。
+##
+## 复用 `waveBanner` 这个实例而不是另做一个场景：它的淡入/停留/淡出动画、
+## 居中横带、危险条纹全部现成，Boss 只需要换文案（`wave_banner.gd::playBoss`）。
+##
+## ⚠️ 分裂体的小号**不会**走到这里：它们 spawn 时带 `silentBoss = true`，
+##    `enemy.gd` 因此不发 `bossSpawned`。否则一次分裂就再播两遍横幅。
+func onBossSpawned(boss: Node) -> void:
+	if waveBanner == null or not is_instance_valid(boss):
+		return
+	var info: Dictionary = Game.enemyInfo.get(int(boss.get("enemyType")), {})
+	var nameKey: String = str(info.get("bossBarName", info.get("name", "")))
+	var tipKey: String = str(info.get("bossTip", ""))
+	var bossName: String = tr(nameKey) if not nameKey.is_empty() else str(boss.name)
+	var tip: String = tr(tipKey) if not tipKey.is_empty() else ""
+	waveBanner.playBoss(bossName, tip)
+
+
 ## 把一波的生成记录汇总成「按数量降序的兵种清单」。
 ##
 ## ★ 必须先**按 type 合并 number**：同一兵种可能有多条记录（走不同路线或不同偏移，
@@ -587,6 +611,7 @@ func onDefenseFailed() -> void:
 	if Game.endlessMode and not endlessStatsText.is_empty():
 		resultScreen.waveLabel.text = endlessStatsText
 	resultScreen.levelRating.rating = 0
+	resultScreen.setReport(buildBattleReport())
 	# ★ 这里**不要**再调 setGemReward —— setResult(true) 已经把宝石行隐藏了，
 	#   而现在 setGemReward 是"通关时始终显示"，再调一次会把整行又亮出来。
 	resultScreen.show()
@@ -665,8 +690,8 @@ func onSpeedOffPressed():
 ## 游戏倍速。`Engine.time_scale` 是**全局**状态，不是本场景的局部变量 ——
 ## 所以每一次离开关卡都必须复位，否则 2 倍速会漏到关卡选择、主菜单甚至下一局。
 ## 复位点集中在本函数 + resetGameSpeed()，调用方只在 _exit_tree / finish 里各调一次。
-func setGameSpeed(scale: float) -> void:
-	Engine.time_scale = clampf(scale, 0.1, 4.0)
+func setGameSpeed(_scale: float) -> void:
+	Engine.time_scale = clampf(_scale, 0.1, 4.0)
 	# 倍速和暂停是两套东西：暂停靠 get_tree().paused，不受 time_scale 影响，
 	# 所以这里不用管暂停状态，恢复运行时自然还是原来的倍速。
 
@@ -763,7 +788,67 @@ func finish():
 	resultScreen.setResult(false)
 	resultScreen.levelRating.rating = rating
 	resultScreen.setGemReward(int(reward.get("gem", 0)), int(reward.get("starBonus", 0)))
+	resultScreen.setReport(buildBattleReport())
 	resultScreen.show()
+
+## 本局漏怪：只记"谁、还剩多少血"，结算页按类型汇总。
+## ⚠️ 必须在敌人被 free 之前调用 —— 信号就是从 `enemy.gd` 里 freeSelf() 前发出的。
+func onEnemyLeaked(enemy: Node) -> void:
+	if not is_instance_valid(enemy):
+		return
+	leakLog.append({
+		"type": int(enemy.get("enemyType")),
+		"hp": int(enemy.get("hp")),
+		"maxHp": int(enemy.get("maxHp")),
+	})
+
+
+## 汇总本局战报（feature_design.md §二十一 A）。
+##
+## 全部数据都来自**已经存在的东西**：塔上的三个计数器 + leakLog。
+## 没有任何一项参与战斗计算，所以这个函数怎么改都不影响平衡。
+func buildBattleReport() -> Dictionary:
+	var rows: Array = []
+	var totalDamage: int = 0
+	for node in get_tree().get_nodes_in_group("tower"):
+		if not is_instance_valid(node):
+			continue
+		var towerNode: Tower = node as Tower
+		if towerNode == null:
+			continue
+		var damage: int = int(towerNode.dealtDamage)
+		var kills: int = int(towerNode.killCount)
+		if damage <= 0 and kills <= 0:
+			continue
+		totalDamage += damage
+		rows.append({
+			"name": Game.getTowerDisplayName(towerNode.type),
+			"level": maxi(1, towerNode.level),
+			"damage": damage,
+			"kills": kills,
+			"overkill": int(towerNode.overkill),
+		})
+	rows.sort_custom(func(a, b): return int(a["damage"]) > int(b["damage"]))
+
+	# 漏怪按类型汇总：{ 类型: 数量 }
+	var leakCounts: Dictionary = {}
+	for entry in leakLog:
+		var key: int = int(entry.get("type", -1))
+		if key < 0:
+			continue
+		leakCounts[key] = int(leakCounts.get(key, 0)) + 1
+	var leaks: Array = []
+	for key in leakCounts:
+		leaks.append({"name": Game.getEnemyDisplayName(key), "count": int(leakCounts[key])})
+	leaks.sort_custom(func(a, b): return int(a["count"]) > int(b["count"]))
+
+	return {
+		"towers": rows,
+		"totalDamage": totalDamage,
+		"leaks": leaks,
+		"leakTotal": leakLog.size(),
+	}
+
 
 # 根据基地剩余生命计算三档星级（阈值见文件顶部 THREE_STAR_HEALTH_RATIO / TWO_STAR_HEALTH_RATIO）
 func calculateStars() -> int:

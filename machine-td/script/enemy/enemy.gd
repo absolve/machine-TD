@@ -26,6 +26,16 @@ var target = [] # 目标
 var points = [] # 路径点
 var pointIndex = 0
 var dead = false # 是否死亡
+## Boss 标记（由 setupEnemyInfo() 从 enemyInfo 写入）。顶部血条与"boss 不吃数量倍率"都看它。
+var isBoss: bool = false
+## 1 = 小 boss，2 = 大 boss，0 = 不是 boss
+var bossTier: int = 0
+## 出生序号（全局递增）。Boss 血条要在"同级多只"时挑最新的一只，
+## 靠场景树顺序不可靠（get_nodes_in_group 的顺序没有保证）。
+static var nextSpawnSeq: int = 0
+var spawnSeq: int = 0
+## 生成时静默：不发出 bossSpawned（分裂体的小号用，否则每分裂一次就播一次出场横幅）
+@export var silentBoss: bool = false
 ## 被点击选中（选中时自己画攻击范围圈，见 _draw）。
 ## ⚠️ 为什么圈由**敌人自己画**、而不是在 map.gd 里画：
 ##    画在 map 上时，敌人一旦 free，map 里那个"选中敌人"就变无效，
@@ -204,6 +214,15 @@ func setupEnemyInfo():
 	if muzzleMarker != null:
 		muzzleMarker.position = Vector2(muzzleOffset, 0.0)
 	applyRadarScope()
+
+	nextSpawnSeq += 1
+	spawnSeq = nextSpawnSeq
+	# Boss 标记（feature_design.md §十九）。缓存成成员变量，子类/血条不用反复查表。
+	isBoss = bool(info.get("isBoss", false))
+	bossTier = int(info.get("bossTier", 0))
+	if isBoss and not silentBoss:
+		# 顶部血条 / 出场横幅靠这个信号接管，不必每帧扫全场
+		Game.bossSpawned.emit(self)
 
 
 # 按 radarScope 同步雷达碰撞体半径（数值唯一来源是 Game.enemyInfo 的 scope 字段）
@@ -402,7 +421,16 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 	else:
 		actualDamage *= max(0.0, 1.0 - armor)
 
-	hp -= int(max(0.0, ceil(actualDamage)))
+	var damageInt: int = int(max(0.0, ceil(actualDamage)))
+	# 结算战报：把实际造成的伤害记到来源塔上（feature_design.md §二十一 A）。
+	# 用"结算后的伤害值"，所以护甲减免已经算进去了 —— 战报反映真实贡献。
+	# 溢出（打死了还多出来的那部分）单独记，用来衡量高爆发塔的浪费。
+	if damageInt > 0 and _source is Tower:
+		var sourceTower: Tower = _source as Tower
+		sourceTower.dealtDamage += mini(damageInt, hp)
+		if damageInt > hp:
+			sourceTower.overkill += damageInt - hp
+	hp -= damageInt
 	# 被击中亮一下（所有敌人通用，材质在基场景上）
 	playHitFlash()
 	# ---- 血条可见性：全部由敌人这边决定（life_bar.gd 只负责画）----
@@ -431,9 +459,13 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 			Game.gemRewarded.emit(gemReward)
 		# 成就统计需要知道敌人类型和击杀来源，必须在节点释放之前发出
 		Game.enemyDefeated.emit(self, _source)
+		# Boss 死亡：血条要在节点消失前收到通知（否则它会拿着一个失效引用）
+		if isBoss:
+			Game.bossDefeated.emit(self)
 		freeSelf()
 		if _source != null && _source is Tower:
 			_source.addExp(rewardExp)
+			_source.killCount += 1
 
 ## 敌人退场统一入口：把自己和承载自己的 PathFollow2D 一起释放。
 ##
@@ -597,6 +629,9 @@ func _physics_process(_delta):
 		return
 	parent.progress += speed * _delta
 	if parent.progress_ratio >= 1:
+		# 先发"漏了谁"（战报用），再发原有的 lossPoints。
+		# 顺序无所谓，但两个都必须在 freeSelf() 之前 —— 之后读 hp/type 都会是空。
+		Game.enemyLeaked.emit(self)
 		Game.enemyEscaped.emit(lossPoints)
 		freeSelf()
 
