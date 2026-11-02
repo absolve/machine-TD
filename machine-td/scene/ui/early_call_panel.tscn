@@ -1,0 +1,61 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://script/ui/early_call_panel.gd" id="1_ecall"]
+[ext_resource type="PackedScene" path="res://scene/ui/ui_button.tscn" id="2_btn"]
+[ext_resource type="StyleBox" path="res://theme/style/panel_style.tres" id="3_panel"]
+
+[node name="earlyCallPanel" type="Control"]
+visible = false
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -640.0
+offset_top = -140.0
+offset_right = -28.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+script = ExtResource("1_ecall")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_styles/panel = ExtResource("3_panel")
+
+[node name="HBox" type="HBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 2
+
+[node name="infoBox" type="VBoxContainer" parent="Panel/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 0
+
+[node name="nextLabel" type="Label" parent="Panel/HBox/infoBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.898, 0.929, 0.961, 1)
+theme_override_font_sizes/font_size = 26
+text = "下一波 20s"
+
+[node name="rewardLabel" type="Label" parent="Panel/HBox/infoBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.776, 0.102, 1)
+theme_override_font_sizes/font_size = 30
+text = "提前 +40 金币"
+
+[node name="btnCall" parent="Panel/HBox" instance=ExtResource("2_btn")]
+custom_minimum_size = Vector2(220, 64)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 30
+text = "提前召唤"
+clickSound = 1

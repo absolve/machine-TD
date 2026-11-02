@@ -142,6 +142,9 @@ func spawnBoss(enemyType: int) -> void:
 	if level == null:
 		push_warning("boss_test: 关卡还没加载好")
 		return
+	# 手动刷 Boss 时波次号不变，不清标记的话第二次起会被"同波只播一次"去重
+	if map != null and map.has_method("resetBossBannerDedup"):
+		map.call("resetBossBannerDedup")
 	level.call("spawnEnemy", {"type": enemyType, "route": 1})
 	refreshStatus()
 

@@ -103,6 +103,9 @@ func _ready() -> void:
 	wave = ENDLESS_WAVE
 	health = ENDLESS_HEALTH
 	money = ENDLESS_MONEY
+	# 无尽不开放提前召唤，也不加波间间歇：保持"清空即下一波"的原始节奏
+	# （§二十二 H 明确 v1 隐藏按钮，否则用时维度会被双重获利）。
+	intermissionDuration = 0.0
 	# 空中航线也要提示（地面两条都铺了带子，玩家一眼看得出走向）
 	hintRoutes = [AIR_ROUTE]
 	# 路线摆缺了要立刻看得见：getRoute() 越界时会回落到最后一条路线，

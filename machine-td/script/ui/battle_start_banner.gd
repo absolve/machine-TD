@@ -20,8 +20,6 @@ signal finished ## 播放结束（已经自动 hide）
 @export var fadeOutSec: float = 0.45
 ## 入场时的起始缩放（1.0 = 不缩放）
 @export var fromScale: float = 0.86
-## 出场时上移的像素
-@export var outOffsetY: float = -34.0
 
 @onready var band: Control = $center/band
 @onready var titleLabel: Label = $center/band/content/VBox/titleLabel
@@ -46,15 +44,17 @@ func play(title: String = "", sub: String = "", hold_override: float = -1.0) -> 
 	if not sub.is_empty():
 		subLabel.text = sub
 	var hold: float = holdSec if hold_override < 0.0 else hold_override
-	print(hold)
 	if tween != null and tween.is_valid():
 		tween.kill()
 
 	visible = true
 	modulate.a = 0.0
 	band.scale = Vector2(fromScale, fromScale)
-	band.position.y = 0.0
-	# pivot 取中心，缩放才是"从中间长出来"而不是从左上角
+	# ⚠️ 不要写 band.position：band 的父节点是 CenterContainer，居中由容器负责。
+	#    手动写 position 会和容器抢位置 —— 第一次播放容器会重新排序（居中），
+	#    第二次播放时容器不再排序，position=0 就真的把横幅顶到屏幕最上方了
+	#    （2026-11-02 实测：波次横幅 y=435，紧接的 Boss 横幅 y=0）。
+	#    pivot 取中心，缩放才是"从中间长出来"而不是从左上角。
 	band.pivot_offset = band.size * 0.5
 
 	tween = create_tween()
@@ -64,10 +64,9 @@ func play(title: String = "", sub: String = "", hold_override: float = -1.0) -> 
 	tween.tween_property(band, "scale", Vector2.ONE, fadeInSec).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	# 第二段：停住
 	tween.chain().tween_interval(hold)
-	# 第三段：淡出 + 上移
-	#tween.chain().set_parallel(true)
+	# 第三段：淡出。位置保持不动，由 CenterContainer 固定居中，
+	# 避免连续播放时横幅跑到屏幕顶部（见上面 band.position 的说明）。
 	tween.tween_property(self, "modulate:a", 0.0, fadeOutSec)
-	tween.tween_property(band, "position:y", outOffsetY, fadeOutSec).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	tween.chain().tween_callback(onDone)
 	await  tween.finished
 

@@ -21,6 +21,8 @@ var endlessStatsText: String = ""
 @onready var finishTimer = $Timer
 @onready var toastInfo = $Hud/toastInfo
 @onready var waveProgressBar = $Hud/waveProgressBar
+## 波间间歇倒计时 + 提前召唤按钮（§二十二 H）。是否显示由 level 的间歇状态决定。
+@onready var earlyCallPanel = $Hud/earlyCallPanel
 @onready var towerDetailPanel = $Hud/towerDetailPanel
 @onready var enemyDetailPanel = $Hud/enemyDetailPanel
 @onready var levelIntroPanel = $PopupLayer/levelIntroPanel
@@ -75,6 +77,10 @@ const TWO_STAR_HEALTH_RATIO: float = 0.5
 var mechLastBuiltMsec: int = -999999
 
 var isLastWave = false # 最后一波
+## 本波已经播过 Boss 横幅的波次与档位：多 Boss 同波只播一次，大 Boss 可覆盖小 Boss 一次。
+## 波次号变化时自然失效；测试场景手动刷 Boss 时用 resetBossBannerDedup() 清标记。
+var bossBannerWave: int = -1
+var bossBannerTier: int = -1
 ## 结算复查开关：lastWave() 打开，finish() 复查到"敌人全清"后关闭并弹结算。
 ## 没有它的话，暂停/失败后 Timer 仍会周期性回调 finish()，可能重复结算。
 var finishChecking: bool = false
@@ -121,6 +127,7 @@ func _ready():
 	AbilityManager.gemChanged.connect(onGemChanged)
 	AbilityManager.abilityFailed.connect(onAbilityFailed)
 	
+	earlyCallPanel.callRequested.connect(onEarlyCallPressed)
 	resultScreen.btnRestart.pressed.connect(restart)
 	resultScreen.btnNextLevel.pressed.connect(nextLevel)
 	resultScreen.btnMenu.pressed.connect(returnHome)
@@ -520,12 +527,27 @@ func showWaveBanner(wave: int) -> void:
 func onBossSpawned(boss: Node) -> void:
 	if waveBanner == null or not is_instance_valid(boss):
 		return
+	# 多 Boss 同波：横幅只有一个实例，连播会互相顶掉（第二只把第一只的横幅直接截断）。
+	# 规则：同一波只播一次；若之后又刷出更高档位的 Boss，允许再播一次（大 Boss 值得提示）。
+	var waveNo: int = int(level.currWave) if level != null else -1
+	var tier: int = int(boss.get("bossTier"))
+	if waveNo == bossBannerWave and tier <= bossBannerTier:
+		return
+	bossBannerWave = waveNo
+	bossBannerTier = tier
 	var info: Dictionary = Game.enemyInfo.get(int(boss.get("enemyType")), {})
 	var nameKey: String = str(info.get("bossBarName", info.get("name", "")))
 	var tipKey: String = str(info.get("bossTip", ""))
 	var bossName: String = tr(nameKey) if not nameKey.is_empty() else str(boss.name)
 	var tip: String = tr(tipKey) if not tipKey.is_empty() else ""
 	waveBanner.playBoss(bossName, tip)
+
+
+## 清掉"本波已播过 Boss 横幅"的标记。Boss 测试场景每刷一只都要重置，
+## 否则同波（currWave 不变）的第二只会被去重掉，看不到横幅。
+func resetBossBannerDedup() -> void:
+	bossBannerWave = -1
+	bossBannerTier = -1
 
 
 ## 把一波的生成记录汇总成「按数量降序的兵种清单」。
@@ -550,6 +572,47 @@ func summarizeWave(rows: Array) -> Array:
 
 func onEnemyDefeated(point):
 	titleNode.money += point
+
+
+## 玩家点了「提前召唤」：截断间歇、立刻开下一波，并按剩余秒数发金币。
+##
+## 所有判定（开关 / 间歇中 / 无尽 / Boss 波）都在 level.callWaveEarly() 里，
+## 这里只负责入账与提示 —— 按钮哪怕连点两次，第二次也会因为间歇已结束而返回空。
+func onEarlyCallPressed() -> void:
+	if level == null or not level.has_method("callWaveEarly"):
+		return
+	var result: Dictionary = level.callWaveEarly()
+	if result.is_empty():
+		return
+	var reward: int = int(result.get("reward", 0))
+	if reward > 0:
+		titleNode.money += reward
+		# 复用击杀金币飘字：把面板中心从屏幕坐标换算回世界坐标，
+		# 飘字就出现在按钮附近（相机缩放/移动时也不会跑到别处）。
+		var screen_center: Vector2 = earlyCallPanel.get_global_rect().get_center()
+		var world_center: Vector2 = get_viewport().get_canvas_transform().affine_inverse() \
+			* screen_center
+		RewardPopup.playAt(world_center, reward)
+		addNotice(Game.t("_EarlyCallNotice", "提前召唤奖励：+%d 金币") % reward,
+			Color(1.0, 0.776, 0.102))
+	if earlyCallPanel != null:
+		earlyCallPanel.hidePanel()
+
+
+## 每帧把 level 的间歇状态同步到右下角面板。
+## 只在间歇期显示；最后一波 / 无尽 / 教程关（间歇为 0）时 level 不会报告 available。
+func refreshEarlyCallPanel() -> void:
+	if earlyCallPanel == null or level == null:
+		return
+	if not level.has_method("getEarlyCallInfo"):
+		earlyCallPanel.hidePanel()
+		return
+	var info: Dictionary = level.getEarlyCallInfo()
+	if not bool(info.get("available", false)):
+		earlyCallPanel.hidePanel()
+		return
+	earlyCallPanel.showState(float(info.get("remaining", 0.0)),
+		int(info.get("reward", 0)), bool(info.get("isBoss", false)))
 
 
 ## 击败特殊敌人掉落宝石：入账 + 立刻落盘，再复用"宝石变化"那条现成链路
@@ -1068,6 +1131,10 @@ func onButtonPressed():
 	SoundManage.playConfirm()
 	resultScreen.show()
 	pass # Replace with function body.
+
+
+func _process(_delta: float) -> void:
+	refreshEarlyCallPanel()
 
 
 func _physics_process(_delta: float) -> void:

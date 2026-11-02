@@ -13,4 +13,7 @@ z_index = -1
 
 [node name="SpawnerTimer" type="Timer" parent="." unique_id=1141747298]
 
+[node name="IntermissionTimer" type="Timer" parent="." unique_id=1141747299]
+one_shot = true
+
 [node name="TowerShadow" parent="." unique_id=1602345415 instance=ExtResource("2_ivasy")]

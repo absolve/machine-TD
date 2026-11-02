@@ -1498,6 +1498,9 @@ layer 100 的转场遮罩就永远盖不住它 —— 转场时会看到弹窗�
 | 2026-10-23 | 生命条可见性改由持有者控制 | v1.0 | 原 `life_bar.gd` 的 `value` setter 里直接写 `visible = true`，而敌人信息面板每帧回写 `e.hp` → **只要点中敌人血条就被顶出来**，与"是否被击中"无关。拆成"数值只管数值"，新增 `flashFor/flash/conceal/isShowing/remaining`，由敌人/塔/机甲各自决定显隐。敌人规则：**选中不显示，被击中强制显示 3 秒**（`HIT_SHOW_SECONDS`）。踩坑：方法原本叫 `show`/`hide` 会**覆盖 `CanvasItem` 内建方法**导致解析失败，改为 `flash`/`conceal` |
 | 2026-10-23 | 机甲抢同一坨残骸 | v1.0 | `pickSalvageTarget()` 只按最近距离选，多台机甲会锁定同一坨并来回拉扯。新增残骸认领：`wreckage.gd` 加 `salvager` 字段与 `tryClaim/releaseClaim/claimedBy`，机甲选目标时跳过已被他人认领的；`updateSalvage()` 不再每帧重选（新增 `advanceSalvage(delta)`），放弃时 `abortSalvage()` 释放认领 |
 | 2026-10-23 | 图鉴补机甲图标 | v1.0 | 图鉴防御塔页原本只有 8 座塔，缺移动机甲。`codex_panel.gd` 的 `TOWERICONS` 补 `mechTower.png`（由 `mech_base_1.png` + `mech_turret_1.png` 合成，192×192），图鉴显示为 9 座 |
+| 2026-11-02 | §二十二 H 提前召唤（实现） | v1.0 | 按设计稿落地。① **调度**：`base_level.tscn` 新增 `IntermissionTimer`（继承到全部关卡），上一波清空后进入 20 秒间歇；`onWaveTimerTimeout()` 拆出 `startNextWave()`，自然到点与提前召唤走同一条开波路径，**`nextSpawnDelay()` 未改一个字节**。② **默认值**：`WAVE_INTERMISSION = 20.0`，关卡数据可用 `waveInterval` 覆盖；**无尽 / 教程关设为 0**，保留"清空即下一波"的原节奏（无尽隐藏按钮，教程引导不该空等）。③ **奖励**：`min(ceil(剩余秒数) × 2, 该波击杀总金币 × 30%)`，按 UI 显示口径向上取整改为整数秒，避免"面板 12s 却给 23"；击杀金币乘 `modeRewardScale` 对齐挑战模式；Boss 波可召唤但恒为 0，按钮转警示色。④ **UI**：新增 `scene/ui/early_call_panel.tscn` + `script/ui/early_call_panel.gd`，挂在 map HUD 右下角（原进度条位置），`map.gd::_process` 每帧读 `level.getEarlyCallInfo()`；金币由 `map.gd::onEarlyCallPressed()` 入顶栏。⑤ `ENABLE_EARLY_CALL` 总开关保留。验证：临时探针 **43 项断言全过**（第 1 波前无按钮、间歇 20s、第 8 秒 +24、自然到点开下一波、1X/2X 同奖励、波内间隔未改、Boss 0 金币、无尽禁用、最后一波后无间歇、HUD 显示→点击→入账→收起整链路） |
+| 2026-11-02 | §十九 多 Boss 血条（实现） | v1.0 | 需求：「Boss 只能每波一只吗？能不能有两只以上，血条怎么改」。① **血条从单条改多行堆叠**：`boss_health_bar.tscn` 改成 `Stack/Rows` 容器，单行抽成 `boss_health_row.tscn` + `boss_health_row.gd`；主脚本用 `rows: Dictionary`（Boss → 行）管理，出生加行、死亡/被释放删行，不再有"只跟一只"的状态。排序：大 Boss 优先、同级按 `spawnSeq` 从早到晚（新刷的小 Boss 不会顶掉旧行）。最多显示 **2 行**，超出显示「还有 N 只 Boss」；小 Boss 48px、大 Boss 56px（血条 10/12px，名字字号 24/26），行边框/名字用 `bossAuraColor` 区分；整体固定在标题栏正下方居中（top=112），不遮挡顶栏金币等信息。二阶段（50% 标签 + 刻度变色）仍在每行内独立生效。② **横幅去重**：`map.gd` 记录 `bossBannerWave/bossBannerTier`，同波只播一次，仅允许更高档位 Boss 再覆盖一次；测试场景 `boss_test.gd` 手动刷 Boss 前调 `resetBossBannerDedup()`。③ **Boss 不吃数量倍率**：`base_level.buildWaveSpawner()` 的 `modeCountScale` 跳过 `enemyInfo.isBoss` 行（与 §十七 设计一致，蜂群不会把 1 只 Boss 翻成 2 只）。验证：临时探针 **35 项断言全过**（1/2/3 行显示、第 4 只溢出 +1、大 Boss 置顶且 +2、 同波横幅不重复/大 Boss 覆盖、二阶段标签与刻度、击杀移除行、节点被绕过信号释放也能兜底清理、数量倍率只翻普通敌人不翻 Boss、全清隐藏）；另修 `map.tscn` 实例上的 `anchors_preset` 覆盖把血条贴到 y=0 的问题；最终按需求把血条放回标题栏正下方（top=112，探针确认标题栏底 98 < 血条顶 112），名字字号放大到 24/26 |
+| 2026-11-02 | 波次 / Boss 横幅位置漂移（修复） | v1.0 | 现象：改了 Boss 血条位置后，玩家发现横幅位置也变了 —— 实际与血条无关，是横幅自身的既有 bug。`battle_start_banner.gd::play()` 里写 `band.position.y = 0.0`，而 band 的父节点是 `CenterContainer`：第一次播放时容器会重新排序并把 band 居中（y=435），紧接着的第二次播放（同一实例连播「波次横幅 → Boss 横幅」）容器不再排序，`position=0` 就真的把横幅顶到屏幕最上方。修法：删除 `band.position` 写入与 `position:y` 上移动画（`outOffsetY` 一并删除），位置完全交给 `CenterContainer`；进出场只保留淡入淡出 + 缩放。验证：探针连续播放 `playWave()` → `playBoss()`，两次 `band.position.y` 均为 **435**（1920×1080 下正中），不再出现 y=0 |
 
 ---
 
@@ -2815,13 +2818,27 @@ if waveNo == bigBossWave and bigBossType != null:
   拼的话窗口一缩放就错位。线必须画在 ProgressBar **上方**，所以它是子节点
   （父节点的 `_draw` 会被自己的子节点盖住）。
 - 大 boss：**50% 那条刻度加粗 + 换色**，填充转橙红，并浮出 `PHASE 2` 标签
-- **同时多只 boss 只显示一只**：大 boss 优先，同级取**出生序号最新**的
-  （用 `enemy.gd` 新增的 `spawnSeq` —— 不能靠 `get_nodes_in_group()` 的顺序，那个没有保证）
-- Boss 死亡 → `Game.bossDefeated` 信号 → 自动切到还在场的下一只；全死光就隐藏
+- **多只 Boss 同时在场 → 多行堆叠**（2026-11-02 改）：每只活着的 Boss 占一行，
+  大 Boss 在上、同级按**出生序号从早到晚**排（用 `enemy.gd` 的 `spawnSeq`，
+  不能靠 `get_nodes_in_group()` 的顺序）。最多完整显示 **2 行**，超出的收进「还有 N 只 Boss」条。
+  小 Boss 行高 48px、大 Boss 56px，血条厚度 10/12px；名字字号 24/26，用 `bossAuraColor` 染边框和名字。
+  整体**固定在标题栏正下方居中**（top=112），不遮挡顶栏的波次 / 血量 / 金币 / 宝石。
+  ⚠️ `map.tscn` 里该实例**不要**再写 `anchors_preset` —— 那会把场景里的锚点/偏移重置掉，
+  血条就贴到标题栏上了（2026-11-02 踩过；探针确认标题栏底 98 < 血条顶 112）。
+  每行都是独立场景 `scene/ui/boss_health_row.tscn`，状态各自维护，互不覆盖。
+- Boss 死亡或节点被直接释放 → 对应行移除；全死光就隐藏
+- **出场横幅去重**：同一波多只 Boss 只播一次（横幅只有一个实例，连播会互相截断）；
+  若之后刷出更高档位的 Boss，允许再播一次（大 Boss 值得提示）。测试场景手动刷 Boss 时调
+  `map.resetBossBannerDedup()` 清标记。
 - **出场横幅 ✅**：复用 `waveBanner` 这个实例（`script/ui/wave_banner.gd::playBoss()`），
   标题= Boss 名、副标题= 一句话应对提示（`enemyInfo.bossTip`），停留比普通波次多 0.9s 留出阅读时间。
   ⚠️ `playWave()` 会把副标题永久藏起来，`playBoss()` 必须**重新显示**它，否则提示语写了也看不见。
   ⚠️ 分裂体的小号用 `silentBoss = true` 生成，**不会**再播一遍横幅。
+  ⚠️ **不要写 `band.position`**：band 的父节点是 `CenterContainer`，居中由容器负责。
+  旧代码在 `play()` 里写 `band.position.y = 0.0` —— 第一次播放时容器会重排并把它居中，
+  但紧接的第二次播放（波次横幅 → Boss 横幅）容器不再重排，横幅就停在屏幕最上方。
+  2026-11-02 实测：波次横幅 y=435（正中），紧接着的 Boss 横幅 y=0（顶部）。
+  现在已删除所有 position 写入与上移动画，进出场只做淡入淡出/缩放，位置固定居中。
 
 ### 19.9 分阶段
 
@@ -2884,7 +2901,8 @@ if waveNo == bigBossWave and bigBossType != null:
 | `script/enemy/boss/boss_gunship.gd` | 炮艇（飞行）：每 4s 向最近塔投弹，**单次伤害封顶 15% 塔血量** |
 | `script/enemy/boss/boss_fortress.gd` | 要塞（大）：射击 + 每 10s 召唤；**<50% 进入二阶段**（攻速 ×1.5、移速 ×1.3、免疫减速） |
 | `scene/enemy/boss/*.tscn` | 7 个 Boss 场景（**占位美术**：复用实验坦克 / 直升机贴图 + `modulate` 上色 + `scale`） |
-| `scene/ui/boss_health_bar.tscn` + `script/ui/boss_health_bar.gd` | **顶部 Boss 血条**：常驻显示、名字、分段刻度、二阶段变色 + `PHASE 2` 标签；多只 boss 时的选择规则见 19.8 |
+| `scene/ui/boss_health_bar.tscn` + `script/ui/boss_health_bar.gd` | **顶部 Boss 血条容器**：多行堆叠、排序、最多 3 行 + 「+N」溢出条；规则见 19.8 |
+| `scene/ui/boss_health_row.tscn` + `script/ui/boss_health_row.gd` | 单只 Boss 的血条行：名字、血条、分段刻度、二阶段变色 + `PHASE 2` 标签、Boss 身份色 |
 | `script/ui/boss_bar_ticks.gd` | 血条上的分段刻度（自绘 3 条线，50% 那条加粗） |
 | `script/ui/wave_banner.gd::playBoss()` | **Boss 出场横幅**（复用波次横幅实例，只换文案） |
 | `scene/test/boss_test.tscn` + `script/test/boss_test.gd` | **专用测试场景**（见下） |
@@ -3184,7 +3202,7 @@ fortress phase2: speed 28 -> 36, interval 0.70 -> 0.47, ignores slows
 
 ## 二十二、内容充实设计（提前召唤 / 宝石商店）
 
-> **实现状态：📝 设计稿（未实现）**（2026-11-02）
+> **实现状态：🟡 部分实现**（2026-11-02）—— 模块 H（提前召唤）已落地；模块 I（宝石商店）仍为设计稿。
 >
 > 需求原话：「提前召唤和宝石商店可以添加到文档里面」
 >
@@ -3196,6 +3214,8 @@ fortress phase2: speed 28 -> 36, interval 0.70 -> 0.47, ignores slows
 >    全项目没有任何减法出口。一个花不掉的货币不是资源，是计分板。
 
 ### 22.1 模块 H：提前召唤下一波（Call-Wave Early）
+
+> **实现状态：✅ 已实现**（2026-11-02）
 
 **玩点**：波与波之间的间歇期，顶栏出现「下一波 ⏱ 12s」和一个召唤按钮。
 立即召唤则按**剩余等待秒数**折算金币奖励。玩家 layout 已经够强时，
@@ -3236,6 +3256,21 @@ fortress phase2: speed 28 -> 36, interval 0.70 -> 0.47, ignores slows
 - 2X 倍速下同样剩余秒数的奖励 = 1X 下的奖励
 
 **成本 S / 风险 低**（不碰平衡表；主要风险点只有"叠成一团"，已用禁改间隔规避）
+
+**落地说明（2026-11-02）**：
+
+- 调度改造集中在 `script/level/base_level.gd`：新增 `IntermissionTimer`（`base_level.tscn`，继承到全部关卡），
+  上一波清空后进入 20 秒间歇；`onWaveTimerTimeout()` 拆出 `startNextWave()`，自然到点与提前召唤复用同一条开波路径。
+- 默认间歇 `WAVE_INTERMISSION = 20.0`，关卡数据可用 `waveInterval` 覆盖；**无尽 / 教程关设为 0**，
+  保留原来的"清空即下一波"节奏（无尽本来就要隐藏按钮，教程引导不该卡在空等上）。
+- 奖励 = `min(ceil(剩余秒数) × 2, 该波击杀总金币 × 30%)`。剩余秒数按 UI 显示口径向上取整，
+  避免面板写"12s"却因内部还剩 11.98 秒只给 23；击杀金币按 `modeRewardScale` 同步挑战模式。
+- Boss 波照常可召唤但奖励恒为 0，按钮文案换成警示色。奖励由 `map.gd::onEarlyCallPressed()` 入顶栏金币。
+- UI 为独立场景 `scene/ui/early_call_panel.tscn`，挂在 map HUD 右下角（原波次进度条位置），
+  间歇期显示倒计时与按钮；`map.gd::_process` 每帧同步 `level.getEarlyCallInfo()`。
+- `ENABLE_EARLY_CALL = false` 时连间歇一起关掉，调度时序与改动前一致。
+- 验证：临时探针 43 项断言全过（含自然到点、1X/2X 同奖励、波内间隔未改、Boss 无金币、无尽禁用、
+  最后一波后无间歇、HUD 显示 → 点击 → 入账 → 收起整条链路）。
 
 ### 22.2 模块 I：宝石商店（Gem Shop）
 

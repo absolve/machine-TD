@@ -1,84 +1,60 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://script/ui/boss_health_bar.gd" id="1_bar"]
-[ext_resource type="Script" path="res://script/ui/boss_bar_ticks.gd" id="2_ticks"]
-[ext_resource type="StyleBox" path="res://theme/style/tower_bar_bg.tres" id="3_barbg"]
-[ext_resource type="StyleBox" path="res://theme/style/tower_hp_fill.tres" id="4_hpfill"]
 
-[sub_resource type="StyleBoxFlat" id="sb_panel"]
-content_margin_left = 18.0
-content_margin_top = 10.0
-content_margin_right = 18.0
-content_margin_bottom = 10.0
-bg_color = Color(0.078, 0.086, 0.133, 0.88)
+[sub_resource type="StyleBoxFlat" id="sb_overflow"]
+content_margin_left = 16.0
+content_margin_top = 3.0
+content_margin_right = 16.0
+content_margin_bottom = 3.0
+bg_color = Color(0.078, 0.086, 0.133, 0.82)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.95, 0.6, 0.3, 0.9)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+border_color = Color(0.95, 0.6, 0.3, 0.5)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="BossHealthBar" type="Control"]
+visible = false
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -390.0
-offset_top = 100.0
-offset_right = 390.0
-offset_bottom = 196.0
+offset_left = -360.0
+offset_top = 112.0
+offset_right = 360.0
+offset_bottom = 290.0
 grow_horizontal = 2
 mouse_filter = 2
 script = ExtResource("1_bar")
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="Stack" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("sb_panel")
+theme_override_constants/separation = 4
 
-[node name="VBox" type="VBoxContainer" parent="Panel"]
+[node name="Rows" type="VBoxContainer" parent="Stack"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="NameLabel" type="Label" parent="Panel/VBox"]
+[node name="OverflowRow" type="PanelContainer" parent="Stack"]
+visible = false
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("sb_overflow")
+
+[node name="Label" type="Label" parent="Stack/OverflowRow"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.82, 0.55, 1)
-theme_override_font_sizes/font_size = 30
-text = "BOSS"
-
-[node name="BarRow" type="Control" parent="Panel/VBox"]
-custom_minimum_size = Vector2(0, 30)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Bar" type="ProgressBar" parent="Panel/VBox/BarRow"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_styles/background = ExtResource("3_barbg")
-theme_override_styles/fill = ExtResource("4_hpfill")
-show_percentage = false
-
-[node name="Ticks" type="Control" parent="Panel/VBox/BarRow"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("2_ticks")
-
-[node name="PhaseTag" type="Label" parent="Panel/VBox"]
-visible = false
-layout_mode = 2
-mouse_filter = 2
-theme_override_colors/font_color = Color(1, 0.45, 0.32, 1)
-theme_override_font_sizes/font_size = 22
-text = "PHASE 2"
+theme_override_font_sizes/font_size = 18
+text = "+1 Boss"

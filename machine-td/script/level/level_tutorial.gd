@@ -5,3 +5,6 @@ extends "res://script/level/base_level.gd"
 
 func _ready() -> void:
 	super._ready()
+	# 教程关保留原来的连续节奏：新手引导按"打完一波马上下一波"编排，
+	# 加 20 秒间歇会把引导步骤卡在空等上。提前召唤也不在教程里开放。
+	intermissionDuration = 0.0

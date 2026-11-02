@@ -13,14 +13,40 @@ const DEFAULT_SPAWN_INTERVAL := 1.0
 ## 记录级间隔的下限。写 0 或负数会让整波瞬间叠在一起，所以卡一个最小值。
 const MIN_SPAWN_DELAY := 0.05
 
+## ── 提前召唤下一波（feature_design.md §二十二 H）──
+##
+## 原来的节奏是"上一波清空 → 约 1 秒后立刻开下一波"，玩家在波间没有决策。
+## 现在在两波之间插一段固定间歇，并把这段等待变成可选收入：
+## 等满开下一波，或提前召唤、按**剩余等待秒数**折算金币。
+##
+## ⚠️ 只截断**间歇计时器**，波内出怪间隔（nextSpawnDelay）一个字都不改 ——
+##    否则后一个敌人会追上前一个，在路径上叠成一团（§17.7 的教训）。
+const ENABLE_EARLY_CALL: bool = true
+## 波间间歇长度（秒，游戏内时长）。关卡数据可用 'waveInterval' 覆盖。
+## 全部用游戏内时长：2X 倍速下倒计时走得更快，但同样剩余秒数换到的金币与 1X 一致。
+const WAVE_INTERMISSION: float = 20.0
+## 提前召唤的折算比例：每提前 1 秒 = 2 金币……
+const EARLY_CALL_GOLD_PER_SEC: float = 2.0
+## ……但最多只给"该波总击杀金币"的 30%，避免全程秒召唤成为唯一最优解。
+const EARLY_CALL_CAP_RATIO: float = 0.3
+
 ## 本关的兜底生成间隔（_ready 时从关卡配置读入）
 var spawnInterval: float = DEFAULT_SPAWN_INTERVAL
+
+## 波间间歇长度（秒）。无尽 / 教程关在各自脚本里设为 0，保留原来的连续节奏。
+var intermissionDuration: float = WAVE_INTERMISSION
+## 是否正处于波间间歇（倒计时 UI 与提前召唤按钮据此显示）
+var intermissionActive: bool = false
+## 间歇开始时缓存的下一波赏金信息：供 UI 每帧读取，不用每帧重算整波编制
+var intermissionWaveGold: int = 0
+var intermissionBossWave: bool = false
 
 ## 出怪间隔的整体缩放：无尽模式按波次把节奏调快（普通关卡恒为 1.0）。
 var spawnDelayScale: float = 1.0
 
 @onready var waveTimer = $WaveTimer
 @onready var spawnerTimer = $SpawnerTimer
+@onready var intermissionTimer: Timer = $IntermissionTimer
 @onready var towerShadow = $TowerShadow
 
 ## 本关的行军路线。关卡场景里**按摆放顺序**摆几个 Path2D 就有几条路线：
@@ -105,6 +131,9 @@ func _ready() -> void:
 		waveTimer.timeout.connect(onWaveTimerTimeout)
 	if not spawnerTimer.timeout.is_connected(onSpawnerTimerTimeout):
 		spawnerTimer.timeout.connect(onSpawnerTimerTimeout)
+	# 间歇计时器同样走代码兜底连接（它只存在于 base_level.tscn，不需要各关重连）
+	if not intermissionTimer.timeout.is_connected(onIntermissionTimerTimeout):
+		intermissionTimer.timeout.connect(onIntermissionTimerTimeout)
 	collectRoutes()
 	for i in StageData.allStage:
 		if levelId == i.get("id"):
@@ -117,6 +146,8 @@ func _ready() -> void:
 			if interval > 0.0:
 				spawnInterval = interval
 				spawnerTimer.wait_time = interval
+			# 波间间歇：关卡数据可选覆盖（不写就用 20 秒）。0 表示"清空即开下一波"。
+			intermissionDuration = maxf(0.0, float(i.get("waveInterval", WAVE_INTERMISSION)))
 			# 配置里声明的路线数和场景里实际摆的 Path2D 数量应当一致，不一致给个提示
 			var declared: int = int(i.get("routes", 1))
 			if declared != routes.size():
@@ -230,6 +261,10 @@ func canPlaceForType(tower_type, coverGrids: Array[Vector2i]) -> bool:
 
 # 开始生成敌人
 func start():
+	# 暂停发生在波间间歇时，恢复游戏不能把波次轮询也拉起来 ——
+	# 否则它会空转到间歇结束，还可能和 IntermissionTimer 抢着开下一波。
+	if intermissionActive:
+		return
 	waveTimer.start()
 
 ## 取第 waveNo 波的生成记录。默认＝从关卡数据里筛 time == waveNo；
@@ -244,13 +279,21 @@ func buildWaveSpawner(waveNo: int) -> Array:
 		# ⚠️ **只在这里乘一次**。onSpawnerTimerTimeout() 只会对 number 做减一，
 		#    不能再乘 —— 否则会变成 4 倍。
 		# duplicate() 保证了改的是副本，不会污染 StageData 里的原始编排。
-		if not is_equal_approx(Game.modeCountScale, 1.0):
+		# ⚠️ Boss 不吃数量倍率（enemyInfo 里 isBoss 的约定）：多 Boss 编排里
+		#    每一行代表几只 Boss 就是几只，蜂群不能把 Boss 也翻成两只。
+		var enemy_type: int = int(row.get("type", -1))
+		var enemy_info: Dictionary = Game.enemyInfo.get(enemy_type, {})
+		if not is_equal_approx(Game.modeCountScale, 1.0) \
+				and not bool(enemy_info.get("isBoss", false)):
 			row["number"] = maxi(1, int(ceil(float(row.get("number", 0)) * Game.modeCountScale)))
 		rows.append(row)
 	return rows
 
 
 func onWaveTimerTimeout():
+	# 间歇期间由 IntermissionTimer 负责推进，WaveTimer 不该再触发
+	if intermissionActive:
+		return
 	if currentSpawner.size() > 0:
 		waveTimer.start()
 		return
@@ -258,6 +301,37 @@ func onWaveTimerTimeout():
 		waveTimer.start()
 		return
 
+	# 最后一波已排上：即便有残留的 timeout，也不能再开一波
+	if currWave >= wave:
+		waveTimer.stop()
+		return
+	# 第 1 波之前不开间歇（保留开局布防时间）；最后一波之后也没有间歇（结算接管）
+	# 总开关关闭时连间歇一起关掉 —— 调度时序必须与改动前逐帧一致。
+	if ENABLE_EARLY_CALL and currWave > 0 and intermissionDuration > 0.0:
+		beginIntermission()
+		return
+	startNextWave()
+
+## 进入波间间歇：停掉波次轮询，开始倒计时（到点后由 onIntermissionTimerTimeout 开下一波）。
+## 只有"上一波已清空、且还有下一波"时才会走到这里。
+func beginIntermission() -> void:
+	waveTimer.stop()
+	intermissionActive = true
+	# 下一波的编制只在这里读一次：UI 每帧只做剩余秒数 × 2 的折算。
+	intermissionWaveGold = getWaveKillGold(currWave + 1)
+	intermissionBossWave = isBossWave(currWave + 1)
+	intermissionTimer.wait_time = intermissionDuration
+	intermissionTimer.start()
+
+func onIntermissionTimerTimeout() -> void:
+	if not intermissionActive:
+		return
+	intermissionActive = false
+	startNextWave()
+
+## 真正把下一波排上（原来的 onWaveTimerTimeout 主体）。
+## 提前召唤与自然到点都走这一条路径，保证两者除了"何时开始"之外完全一致。
+func startNextWave() -> void:
 	currWave += 1
 	Game.dataRefreshed.emit({'wave': currWave})
 	# 新的一波：航线提示可以再提醒一次（同一波内只提示一次，避免连着刷）
@@ -278,6 +352,86 @@ func onWaveTimerTimeout():
 		Game.lastWaveStarted.emit()
 		return
 	waveTimer.start()
+
+
+## ── 提前召唤的查询与执行（UI 每帧读 getEarlyCallInfo）──
+##
+## 返回 { available, remaining, reward, isBoss, wave }：
+##   · available = 现在能不能点按钮（开关 / 间歇中 / 不是无尽 / 还有下一波）
+##   · remaining = 剩余等待秒数（游戏内时长，Timer.time_left 已按 time_scale 计）
+##   · reward    = 当前剩余秒数折算的金币（Boss 波恒为 0）
+func getEarlyCallInfo() -> Dictionary:
+	var info: Dictionary = {
+		"available": false,
+		"remaining": 0.0,
+		"reward": 0,
+		"isBoss": false,
+		"wave": currWave + 1,
+	}
+	if not canCallWaveEarly():
+		return info
+	var remaining: float = getIntermissionRemaining()
+	info["available"] = true
+	info["remaining"] = remaining
+	info["isBoss"] = intermissionBossWave
+	# Boss 波可以提前拉，但不给金币 —— 提前拉 Boss 是战术选择，不该再白送钱
+	info["reward"] = 0 if intermissionBossWave else calculateEarlyCallReward(remaining)
+	return info
+
+func canCallWaveEarly() -> bool:
+	if not ENABLE_EARLY_CALL or not intermissionActive:
+		return false
+	# v1 不在无尽模式开放：无尽的成绩含"用时"维度，提前召唤等于双重获利
+	if Game.endlessMode or currWave < 1 or currWave >= wave:
+		return false
+	return getIntermissionRemaining() > 0.0
+
+func getIntermissionRemaining() -> float:
+	if not intermissionActive:
+		return 0.0
+	return maxf(intermissionTimer.time_left, 0.0)
+
+## bonus = min(floor(剩余秒数 × 2), floor(该波击杀总金币 × 30%))
+##
+## 剩余秒数先按 UI 的显示口径向上取整：面板写"12s"时奖励就必须是 12×2=24，
+## 不能因为内部还剩 11.98 秒而少给 1 金币。
+func calculateEarlyCallReward(remaining: float) -> int:
+	var seconds: int = maxi(0, int(ceil(remaining)))
+	var by_time: int = int(floor(float(seconds) * EARLY_CALL_GOLD_PER_SEC))
+	var cap: int = int(floor(float(intermissionWaveGold) * EARLY_CALL_CAP_RATIO))
+	return mini(by_time, cap)
+
+func isBossWave(wave_no: int) -> bool:
+	for row in buildWaveSpawner(wave_no):
+		var enemy_type: int = int(row.get("type", -1))
+		var info: Dictionary = Game.enemyInfo.get(enemy_type, {})
+		if bool(info.get("isBoss", false)):
+			return true
+	return false
+
+## 该波"全部击杀"能拿到的金币，作为提前召唤奖励的封顶基准。
+## 挑战模式的击杀收益本来就会乘 modeRewardScale，这里同步乘上，封顶值才公平。
+func getWaveKillGold(wave_no: int) -> int:
+	var total: float = 0.0
+	for row in buildWaveSpawner(wave_no):
+		var enemy_type: int = int(row.get("type", -1))
+		var info: Dictionary = Game.enemyInfo.get(enemy_type, {})
+		total += float(info.get("reward", 0)) * float(row.get("number", 0))
+	return int(round(total * Game.modeRewardScale))
+
+## 立刻结束间歇并开下一波。返回 { wave, reward, isBoss }；不可用（按钮已过期等）时返回空字典。
+## 金币由调用方（map.gd）入账 —— 那里才有顶栏与提示组件。
+func callWaveEarly() -> Dictionary:
+	if not canCallWaveEarly():
+		return {}
+	var remaining: float = getIntermissionRemaining()
+	var reward: int = 0 if intermissionBossWave else calculateEarlyCallReward(remaining)
+	var next_wave: int = currWave + 1
+	var boss_wave: bool = intermissionBossWave
+	intermissionActive = false
+	intermissionTimer.stop()
+	startNextWave()
+	return {"wave": next_wave, "reward": reward, "isBoss": boss_wave}
 
 ## 一次 tick **只生成一个敌人**，生成完再按"下一个敌人的兵种"设置下次间隔。
 ##
