@@ -56,11 +56,43 @@ func _ready() -> void:
 		towerCard1.connect("lockedClicked", towerLockedClick)
 		towerCard1.infoShown.connect(showTowerInfo)
 		towerCard1.connect("mouse_exited", hideTowerInfo)
+	# 建造许可证：建一座灰一张、卖/爆回来又亮（§23.2）。
+	# call_deferred 是为了等本帧 placeTower 的 add_child 落定，扫组数到的才是新值。
+	refreshQuotaLocks()
+	Game.towerPlaced.connect(onTowerPlacementChanged)
+	Game.towerGridReleased.connect(onTowerPlacementChanged)
 
 
-# 点了本关禁用的塔 → 交给 map 弹一句提示
-func towerLockedClick(_type) -> void:
-	Game.towerLocked.emit()
+## towerPlaced/towerGridReleased 的共同回调；参数全带默认值以兼容两种信号形状。
+func onTowerPlacementChanged(_a = null, _b = null, _c = null, _d = null, _e = null) -> void:
+	refreshQuotaLocks.call_deferred()
+
+
+## 按"场上存活数 vs 关卡许可证"刷新每张卡片的置灰态与悬停说明。
+## 计数直接扫 tower 组（存活口径），出售/爆毁天然放额。
+func refreshQuotaLocks() -> void:
+	var stageId: int = StageData.currentStageId
+	var allowed: Array = StageData.getTowers(stageId)
+	for card in towerCardList.get_children():
+		if not ("type" in card):
+			continue
+		var poolLocked: bool = not allowed.is_empty() and not (card.type in allowed)
+		var quotaFull: bool = false
+		if not Game.endlessMode and not poolLocked:
+			var quota: int = StageData.getTowerQuota(stageId, card.type)
+			if quota >= 0:
+				var alive: int = 0
+				for t in get_tree().get_nodes_in_group("tower"):
+					if not t.is_queued_for_deletion() and t.get("type") == card.type:
+						alive += 1
+				quotaFull = alive >= quota
+		card.setLocked(poolLocked or quotaFull)
+		card.tooltip_text = tr("_TowerQuotaTooltip") if quotaFull else ""
+
+
+# 点了本关禁用的塔 → 交给 map 弹一句提示（池未放行还是许可证满，由 map 按实际状态判断）
+func towerLockedClick(type) -> void:
+	Game.towerLocked.emit(type)
 	
 #func showInfo(_type):
 	#var temp = Game.towerInfo.get(_type)

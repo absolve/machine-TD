@@ -394,6 +394,10 @@ func placeTower(type, cost, grid, towerCoverGrid, gridSize: Vector2i = Vector2i(
 	if not Game.endlessMode and not StageData.isTowerAllowed(StageData.currentStageId, type):
 		addNotice(tr("_TowerLockedInStage"))
 		return
+	# 兜底：建造许可证已满（卡片已置灰，这里防止时序绕过 / 调试直调）
+	if isQuotaFull(type):
+		addNotice(quotaNotice(type))
+		return
 	if titleNode.money < cost:
 		# print('Insufficient funds')
 		addNotice(tr("_NotEnoughMoney"))
@@ -949,9 +953,39 @@ func isMultiRouteLevel() -> bool:
 func addNotice(s, color: Color = Color.CORAL):
 	toastInfo.display(s, color)
 
-# 玩家点了本关禁用的塔卡片
-func onTowerLocked() -> void:
-	addNotice(tr("_TowerLockedInStage"))
+# 玩家点了本关禁用的塔卡片（池未放行 / 许可证已满，按实际状态区分提示）
+func onTowerLocked(type = null) -> void:
+	if type != null and isQuotaFull(type):
+		addNotice(quotaNotice(type))
+	else:
+		addNotice(tr("_TowerLockedInStage"))
+
+
+## 场上存活的本类塔数量（建造许可证的计数口径，设计见 feature_design.md §23.2）。
+## 直接扫组而不是记数：出售 / 爆毁 / 残骸化都天然放额，没有簿记状态就没有簿记 bug。
+func countTowersAlive(type) -> int:
+	var n: int = 0
+	for node in get_tree().get_nodes_in_group("tower"):
+		if node.is_queued_for_deletion():
+			continue
+		if node.get("type") == type:
+			n += 1
+	return n
+
+
+## 建造许可证是否已满。未配置的塔（-1）与无尽模式永远不为"满"。
+func isQuotaFull(type) -> bool:
+	if Game.endlessMode:
+		return false
+	var quota: int = StageData.getTowerQuota(StageData.currentStageId, type)
+	return quota >= 0 and countTowersAlive(type) >= quota
+
+
+## 许可证提示：带上塔名，免得玩家以为"所有塔都被限制"。
+func quotaNotice(type) -> String:
+	var info: Dictionary = Game.towerInfo.get(type, {})
+	var towerName: String = tr(str(info.get("name", "")))
+	return "%s · %s" % [towerName, tr("_BuildQuotaFull")]
 
 ## 塔与敌人共用右侧详情栏，因此这里负责保持单选并更新面板。
 func onTowerClicked(item, selected):

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://script/test/tower_quota_probe.gd" id="1_q"]
+
+[node name="tower_quota_probe" type="Node"]
+script = ExtResource("1_q")

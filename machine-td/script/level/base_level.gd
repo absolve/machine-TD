@@ -168,6 +168,91 @@ func collectRoutes() -> void:
 	for child in get_children():
 		if child is Path2D:
 			routes.append(child)
+	for route in routes:
+		smoothRouteCorners(route.curve)
+
+
+## ── 弯道平滑（2026-11-02）──
+## 关卡折线里大量直角转角 + PathFollow2D.rotates=true，敌人到拐角会**瞬间甩 90°**，很生硬。
+##
+## 为什么不用 Curve2D 的贝塞尔手柄：本项目是 Godot 4.7，实测（enum_peek 探针）确认
+## 4.7 的 Curve2D 已没有 point mode API —— set_point_in/out 写进去能读回来，
+## 但烘焙结果**仍然严格等于折线**（baked length == 逐段长度和）。
+## 所以这里直接**把转角点替换成一小段圆弧的采样点**：折线本身变密，
+## 任何版本、任何采样间隔下走位与朝向都是渐变。
+##
+## 内切偏移为什么压到 ≤4px：传送带表面只有 37px 宽（见 OFFSET_HALF_WIDTH 处注释），
+## 敌人分道最大 ±9px；转角弧最大偏离原折线 4px 时，最外侧敌人仍贴着带面边轨内侧。
+## 折返角（>160°）不许圆化 —— 几何上会把路线绕成结；<15° 的缓转角本来就不硬，不动。
+const SMOOTH_MIN_TURN_DEG := 15.0
+const SMOOTH_MAX_TURN_DEG := 160.0
+const SMOOTH_MAX_CUT_IN := 4.0
+const SMOOTH_TANGENT_MAX := 14.0
+const SMOOTH_ARC_SAMPLE_STEP := 2.0
+const SMOOTH_BAKE_INTERVAL := 2.5
+
+static func smoothRouteCorners(curve: Curve2D) -> void:
+	if curve == null:
+		return
+	var src: PackedVector2Array = PackedVector2Array()
+	for i in curve.point_count:
+		src.append(curve.get_point_position(i))
+	if src.size() < 3:
+		return
+	var out: PackedVector2Array = PackedVector2Array([src[0]])
+	for i in range(1, src.size() - 1):
+		var a: Vector2 = src[i - 1]
+		var b: Vector2 = src[i]
+		var c: Vector2 = src[i + 1]
+		var u1: Vector2 = (b - a).normalized()
+		var u2: Vector2 = (c - b).normalized()
+		var turn: float = absf(rad_to_deg(u1.angle_to(u2)))
+		if turn < SMOOTH_MIN_TURN_DEG or turn > SMOOTH_MAX_TURN_DEG:
+			out.append(b)
+			continue
+		var segMin: float = minf(a.distance_to(b), b.distance_to(c))
+		out.append_array(_cornerArc(b, u1, u2, segMin))
+	out.append(src[src.size() - 1])
+	# 与原折线逐点比对，完全一致才回写（没有转角被圆化的关，一条曲线都不该被动过）
+	if out == src:
+		return
+	var minLen: float = INF
+	for i in range(1, out.size()):
+		minLen = minf(minLen, out[i].distance_to(out[i - 1]))
+	if minLen < 1.0:
+		out = src  # 兜底：采样过密会喂给烘焙系统异常数据，宁可放弃这一条路线的平滑
+	curve.clear_points()
+	for p in out:
+		curve.add_point(p)
+	curve.bake_interval = minf(curve.bake_interval, SMOOTH_BAKE_INTERVAL)
+
+
+## 转角 b 的圆弧采样：返回 [T1 … T2] 上的等分点（含切点）。
+## α = 转角（方向变化量）；内切圆半径 r 由「顶点到弧中点偏移 δ = r·(sec(α/2)−1) ≤ 4px」反推，
+## 再用切点距 t = r·tan(α/2) ≤ 14px 夹一道，避免啃到相邻转角。
+static func _cornerArc(b: Vector2, u1: Vector2, u2: Vector2, segMin: float) -> PackedVector2Array:
+	var result: PackedVector2Array = PackedVector2Array()
+	var turnRad: float = absf(u1.angle_to(u2))
+	var halfTurn: float = turnRad * 0.5
+	if halfTurn <= 0.0001 or halfTurn >= PI * 0.499:
+		return result
+	var secMinus1: float = 1.0 / cos(halfTurn) - 1.0
+	var tMax: float = minf(SMOOTH_TANGENT_MAX, segMin * 0.45)
+	var r: float = minf(SMOOTH_MAX_CUT_IN / secMinus1, tMax / tan(halfTurn))
+	var t: float = r * tan(halfTurn)
+	var bis: Vector2 = (-u1 + u2).normalized()
+	var center: Vector2 = b + bis * (r / cos(halfTurn))
+	var t1: Vector2 = b - u1 * t
+	var t2: Vector2 = b + u2 * t
+	var arcLen: float = r * turnRad
+	var steps: int = maxi(3, ceili(arcLen / SMOOTH_ARC_SAMPLE_STEP))
+	var v: Vector2 = t1 - center
+	var ang1: float = v.angle()
+	var ang2: float = (t2 - center).angle()
+	var dAng: float = wrapf(ang2 - ang1 + PI, 0.0, TAU) - PI
+	for k in range(steps + 1):
+		result.append(center + v.rotated(dAng * float(k) / float(steps)))
+	return result
 
 
 ## 把这条航线的走向画一遍给玩家看（画完自己消失）。每波最多提醒一次。

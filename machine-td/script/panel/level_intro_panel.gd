@@ -212,6 +212,35 @@ func buildInfo(stage_data: Dictionary) -> void:
 	addChip(Game.t("_EnemyTypes", "Enemy Types"), str(stats["types"].size()), COLOR_TEXT)
 	addChip(Game.t("_TotalEnemies", "Total Enemies"), str(stats["total"]), COLOR_TEXT)
 	showStarHint(starBonus > 0 and not challenge)
+	refreshQuotaLine(stage_data)
+
+
+## 建造许可证一行（§23.2）：只在配了许可的关卡出现，整宽、InfoBox 正下方。
+## 开打前必须让玩家看见"这关机枪只能 4 座"，否则第一次被拒就是"莫名其妙"。
+var quotaLineLabel: Label = null
+
+func refreshQuotaLine(stage_data: Dictionary) -> void:
+	var stageId: int = int(stage_data.get("id", -1))
+	var quota: Dictionary = StageData.towerQuota.get(stageId, {})
+	if quota.is_empty() or Game.endlessMode:
+		if quotaLineLabel != null:
+			quotaLineLabel.visible = false
+		return
+	if quotaLineLabel == null:
+		quotaLineLabel = Label.new()
+		quotaLineLabel.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		quotaLineLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		quotaLineLabel.add_theme_font_size_override("font_size", 26)
+		quotaLineLabel.add_theme_color_override("font_color", Color(1.0, 0.8, 0.45, 1.0))
+		var parentBox: Node = infoBox.get_parent()
+		parentBox.add_child(quotaLineLabel)
+		parentBox.move_child(quotaLineLabel, infoBox.get_index() + 1)
+	var pieces: PackedStringArray = PackedStringArray()
+	for towerType in quota:
+		var info: Dictionary = Game.towerInfo.get(towerType, {})
+		pieces.append("%s×%d" % [tr(str(info.get("name", ""))), int(quota[towerType])])
+	quotaLineLabel.text = "%s  %s" % [tr("_BuildQuotaTitle"), "  ·  ".join(pieces)]
+	quotaLineLabel.visible = true
 
 
 ## 星级奖励规则提示：只在该关确有星级奖励时出现。

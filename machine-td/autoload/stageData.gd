@@ -106,6 +106,28 @@ func isTowerAllowed(stageId: int, tower_type) -> bool:
 	return tower_type in allowed
 
 
+## ── 建造许可证（设计见 feature_design.md §23.2）──
+## 关卡 → { 塔类型: 最多同时建造数 }。没配的关卡 = 不限制；条目内没配的塔 = 不限制。
+## 投放原则（§23.2.1）：16 关只配 5 关、每关最多限 2 种、只限廉价泛用塔或易过度投资的塔，
+## 刚解锁的新塔永远不限 —— 限制是"砍冗余"，不是"堵最小解"。
+## 计数口径 = **场上存活数**（`map.countTowersAlive` 实时扫 tower 组），
+## 所以出售 / 被摧毁自然放额，没有簿记状态，也就不会有簿记 bug。
+var towerQuota: Dictionary = {
+	3: {Game.towerType.machineGunTower: 4, Game.towerType.cannonTower: 4},
+	4: {Game.towerType.machineGunTower: 8},
+	7: {Game.towerType.rocketTower: 3},
+	11: {Game.towerType.teslaCoilTower: 4, Game.towerType.laserTower: 3},
+	15: {Game.towerType.machineGunTower: 6, Game.towerType.cannonTower: 6},
+}
+
+## 某关某种塔最多同时建几座；-1 = 不限。
+func getTowerQuota(stageId: int, tower_type) -> int:
+	var quota: Dictionary = towerQuota.get(stageId, {})
+	if not quota.has(tower_type):
+		return -1
+	return int(quota[tower_type])
+
+
 ## 某关卡声明的路线数（默认 1）。
 ## 真正的路线节点在关卡场景里 —— 场景里按顺序摆几个 Path2D 就有几条路线。
 ## 这个字段是给 UI / 一致性校验用的声明值，两边对不上时 base_level 会 push_warning。
