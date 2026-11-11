@@ -1,5 +1,5 @@
 extends Control
-## 生成 "SIMPLE TOWER DEFENSE" 标题图（工厂 / 工业风）
+## 生成 "LINEGUARD / FACTORY TOWER DEFENSE" 标题图（工厂 / 工业风）
 ##
 ## 输出两份：
 ##   welcome_title.png  1600x450，**透明底、无钢板、无边框**，用于欢迎页顶部
@@ -36,12 +36,12 @@ const SHADOW := "#0d1016"
 const BG := "#20263a"
 
 # ---- 排版 ----
-# 两行共用同一个字号（由 driver 行定），"SIMPLE" 因为字数少而自然更短
+# 两行共用同一个字号（由 driver 行定），"LINEGUARD" 因为字数少而自然更短
 const TRACK_RATIO := 0.12
 const LINE_GAP := 26.0
 const LINES := [
-	{"text": "SIMPLE", "color": "#ffc61a", "bars": 1},
-	{"text": "TOWER DEFENSE", "target_w": 1300.0, "max_size": 140,
+	{"text": "LINEGUARD", "color": "#ffc61a", "bars": 1},
+	{"text": "FACTORY TOWER DEFENSE", "target_w": 1280.0, "max_size": 120,
 		"color": "#f8fbfd", "bars": 2, "driver": true},
 ]
 
@@ -74,6 +74,7 @@ func _ready() -> void:
 	_punchStencil(img, CROP)
 	img.save_png(OUT + "/welcome_title.png")
 	print("  -> welcome_title.png  %dx%d" % [img.get_width(), img.get_height()])
+	print("  -> %s" % ProjectSettings.globalize_path(OUT + "/welcome_title.png"))
 
 	# ---- 2. 危险条纹带：横向无缝，供滚动着色器用 ----
 	_makeHazardStrip()
