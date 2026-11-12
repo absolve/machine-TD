@@ -100,15 +100,15 @@ func setReport(report: Dictionary) -> void:
 		var percent: int = int(round(float(damage) * 100.0 / float(totalDamage)))
 		reportGrid.add_child(makeCell(
 			"%s Lv.%d" % [str(row.get("name", "?")), int(row.get("level", 1))],
-			Color(0.898, 0.929, 0.961), 24, 0))
-		reportGrid.add_child(makeCell("%d%%" % percent, Color(1.0, 0.776, 0.102), 24, 1, true))
-		reportGrid.add_child(makeCell("%d" % damage, Color(0.729, 0.949, 0.804), 24, 2, true))
-		reportGrid.add_child(makeCell("%d" % int(row.get("kills", 0)), Color(0.75, 0.85, 1.0), 24, 3, true))
+			Palette.UI_100, 24, 0))
+		reportGrid.add_child(makeCell("%d%%" % percent, Palette.HAZARD_500, 24, 1, true))
+		reportGrid.add_child(makeCell("%d" % damage, Palette.SUCCESS_LT, 24, 2, true))
+		reportGrid.add_child(makeCell("%d" % int(row.get("kills", 0)), Palette.UI_100, 24, 3, true))
 		shown += 1
 
 	if shown == 0:
 		reportGrid.add_child(makeCell(Game.t("_ReportNoData", "No tower dealt damage"),
-			Color(0.62, 0.70, 0.78), 22, 0))
+			Palette.UI_300, 22, 0))
 
 	# 高度自适应：行多才出现滚动条，行少时不占地方
 	var wanted: float = maxf(REPORT_MIN_HEIGHT,
@@ -119,14 +119,14 @@ func setReport(report: Dictionary) -> void:
 	var leaks: Array = report.get("leaks", [])
 	if leaks.is_empty():
 		reportLeakLabel.text = Game.t("_ReportNoLeaks", "No enemies got through")
-		reportLeakLabel.add_theme_color_override("font_color", Color(0.60, 0.90, 0.68, 1.0))
+		reportLeakLabel.add_theme_color_override("font_color", Palette.SUCCESS_LT)
 	else:
 		var parts: Array = []
 		for item in leaks:
 			parts.append("%s ×%d" % [str(item.get("name", "?")), int(item.get("count", 0))])
 		reportLeakLabel.text = "%s: %s" % [
 			Game.t("_ReportLeaks", "Leaked"), "  ".join(parts)]
-		reportLeakLabel.add_theme_color_override("font_color", Color(1.0, 0.62, 0.52, 1.0))
+		reportLeakLabel.add_theme_color_override("font_color", Palette.DANGER_TEXT)
 	reportBox.visible = true
 
 
@@ -144,7 +144,7 @@ func ensureReportUi() -> void:
 
 	reportTitle = Label.new()
 	reportTitle.add_theme_font_size_override("font_size", 24)
-	reportTitle.add_theme_color_override("font_color", Color(1.0, 0.82, 0.55, 1.0))
+	reportTitle.add_theme_color_override("font_color", Palette.ALERT_300)
 	reportBox.add_child(reportTitle)
 
 	# ── 固定表头 ──
@@ -152,7 +152,7 @@ func ensureReportUi() -> void:
 	reportHeader.name = "reportHeader"
 	reportHeader.add_theme_constant_override("separation", REPORT_HEADER_SEP)
 	reportHeader.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var headerColor := Color(0.62, 0.70, 0.78, 1.0)
+	var headerColor := Palette.UI_300
 	var headers := [
 		Game.t("_ReportColTower", "Tower"),
 		Game.t("_ReportColShare", "Share"),

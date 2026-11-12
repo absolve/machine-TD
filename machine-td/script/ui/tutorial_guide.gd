@@ -33,9 +33,9 @@ extends Control
 signal finished
 
 ## 遮罩颜色：压暗但不是全黑 —— 玩家还得看得见地图上发生了什么
-const DIM_COLOR := Color(0.02, 0.03, 0.05, 0.62)
+const DIM_COLOR := Color(Palette.RIM, 0.62)
 ## 高亮描边色（和顶栏数字的金黄同一支）
-const HILITE_COLOR := Color(1.0, 0.7764706, 0.101960786)
+const HILITE_COLOR := Palette.HAZARD_500
 ## 高亮框往外扩多少像素（贴着按钮描边太紧，扩一点好看）
 const HOLE_PAD := 8.0
 ## 气泡与高亮框的间距

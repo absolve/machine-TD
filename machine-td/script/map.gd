@@ -598,7 +598,7 @@ func onEarlyCallPressed() -> void:
 			* screen_center
 		RewardPopup.playAt(world_center, reward)
 		addNotice(Game.t("_EarlyCallNotice", "提前召唤奖励：+%d 金币") % reward,
-			Color(1.0, 0.776, 0.102))
+			Palette.HAZARD_500)
 	if earlyCallPanel != null:
 		earlyCallPanel.hidePanel()
 
@@ -626,7 +626,7 @@ func onGemRewarded(amount: int) -> void:
 	UserData.addGem(amount)
 	AbilityManager.gemChanged.emit(UserData.gem)
 	# 青色提示，和关卡情报里的"宝石奖励"用同一个色，玩家一眼能认出是宝石
-	addNotice(tr("_GemPicked") % amount, Color(0.4, 0.9, 1.0))
+	addNotice(tr("_GemPicked") % amount, Palette.GEM)
 
 func onEnemyEscaped(point):
 	# 逃脱敲钟：一声低沉的锣，提示玩家漏怪了。
@@ -658,7 +658,7 @@ func recordEndlessResult() -> void:
 	var minutes: int = int(floor(float(seconds) / 60.0))
 	endlessStatsText = "%s · %s %d · %s %d:%02d" % [tr("_EndlessResult") % reached,
 		tr("_EndlessKills"), kills, tr("_EndlessTime"), minutes, seconds % 60]
-	addNotice(endlessStatsText, Color(1.0, 0.85, 0.4))
+	addNotice(endlessStatsText, Palette.HAZARD_300)
 
 
 # 基地被打爆：直接进入失败结算
@@ -1128,11 +1128,11 @@ func areaDamage(center: Vector2, radius: float, damage: int) -> bool:
 	ExplosionManage.playExplosion(center)
 	playBombardStrike(center, radius)
 	if hitCount > 0:
-		addNotice(Game.t("_ability_bombard_hit", "Airstrike hit %d enemies") % hitCount, Color(1.0, 0.776, 0.102))
+		addNotice(Game.t("_ability_bombard_hit", "Airstrike hit %d enemies") % hitCount, Palette.HAZARD_500)
 		return true
 	# ⚠️ 这里必须返回 false：技能现在要花宝石，而 AbilityManager 只有拿到 true 才扣。
 	#    如果没打中也返回 true，玩家会**白丢一颗宝石**（以前不花宝石时返回啥都无所谓）。
-	addNotice(Game.t("_ability_bombard_miss", "Airstrike hit nothing"), Color(0.86, 0.92, 0.95))
+	addNotice(Game.t("_ability_bombard_miss", "Airstrike hit nothing"), Palette.UI_100)
 	return false
 
 
@@ -1154,9 +1154,9 @@ func areaInvincible(center: Vector2, radius: float, duration: float) -> bool:
 		tower.setInvincible(duration)
 	if towers.is_empty():
 		# 同上：范围内没有塔就不算生效，不扣宝石、不进冷却
-		addNotice(Game.t("_ability_invincible_miss", "No tower in range"), Color(0.86, 0.92, 0.95))
+		addNotice(Game.t("_ability_invincible_miss", "No tower in range"), Palette.UI_100)
 		return false
-	addNotice(Game.t("_ability_invincible_hit", "%d towers are now invincible") % towers.size(), Color(1.0, 0.776, 0.102))
+	addNotice(Game.t("_ability_invincible_hit", "%d towers are now invincible") % towers.size(), Palette.HAZARD_500)
 	return true
 
 
@@ -1261,7 +1261,7 @@ func _draw() -> void:
 		var radius: float = AbilityManager.getSelectingRadius()
 		if radius > 0.0:
 			var mousePos: Vector2 = get_local_mouse_position()
-			var circleColor: Color = Color(1.0, 0.776, 0.102, 1.0)
+			var circleColor: Color = Palette.HAZARD_500
 			draw_circle(mousePos, radius, Color(circleColor.r, circleColor.g, circleColor.b, 0.16))
 			draw_arc(mousePos, radius, 0.0, TAU, 64, Color(circleColor.r, circleColor.g, circleColor.b, 0.9), 3.0)
 

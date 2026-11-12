@@ -38,12 +38,12 @@ enum Tab { ENEMY, TOWER }
 
 # ---------- 样式常量 ----------
 
-const COLOR_TEXT := Color(0.91764706, 0.9490196, 0.96862745, 1.0)
-const COLOR_LABEL := Color(0.65882355, 0.6862745, 0.65882355, 1.0)
-const COLOR_GOLD := Color(1, 0.7764706, 0.101960786, 1.0)
-const COLOR_RED := Color(1, 0.5529412, 0.5019608, 1.0) # 敌人主色：暖红
-const COLOR_TEAL := Color(0.49803922, 0.8156863, 0.7764706, 1.0) # 防御塔主色：青
-const COLOR_HOVER := Color(1, 0.8509804, 0.39215687, 1.0)
+const COLOR_TEXT := Palette.UI_100
+const COLOR_LABEL := Palette.UI_300
+const COLOR_GOLD := Palette.HAZARD_500
+const COLOR_RED := Palette.DANGER_TEXT # 敌人主色：暖红
+const COLOR_TEAL := Palette.INFO_LT # 防御塔主色：青
+const COLOR_HOVER := Palette.HAZARD_300
 
 const STAT_WIDTH := 118 # 信息栏里每个数值块的最小宽度（右侧窄栏，所以比横向布局时小）
 
@@ -138,11 +138,11 @@ func _ready() -> void:
 
 ## 三种卡片外观：普通 / 鼠标悬停 / 已选中
 func buildCardStyles() -> void:
-	sbNormal = makeCardStyle(Color(0.101960786, 0.12156863, 0.15686275, 0.85),
-		Color(0.20392157, 0.23529412, 0.3019608, 1), 2)
-	sbHover = makeCardStyle(Color(0.16078432, 0.19215687, 0.23921569, 0.95),
-		Color(0.65882355, 0.6862745, 0.65882355, 1), 2)
-	sbActive = makeCardStyle(Color(0.24313726, 0.21176471, 0.101960786, 0.95), COLOR_GOLD, 3)
+	sbNormal = makeCardStyle(Color(Palette.UI_950, 0.85),
+		Palette.UI_800, 2)
+	sbHover = makeCardStyle(Color(Palette.UI_800, 0.95),
+		Palette.UI_300, 2)
+	sbActive = makeCardStyle(Color(Palette.HAZARD_900, 0.95), COLOR_GOLD, 3)
 
 
 func makeCardStyle(bg: Color, border: Color, width: int) -> StyleBoxFlat:
@@ -218,7 +218,7 @@ func styleTab(button: Button, active: bool) -> void:
 	button.add_theme_color_override("font_focus_color", base)
 	button.add_theme_color_override("font_pressed_color", COLOR_HOVER)
 	button.add_theme_color_override("font_hover_color", COLOR_HOVER)
-	button.modulate = Color(1, 1, 1, 1) if active else Color(0.82, 0.87, 0.92, 0.8)
+	button.modulate = Color(1, 1, 1, 1) if active else Color(Palette.UI_100, 0.8)
 
 
 # ---------- 卡片网格 ----------

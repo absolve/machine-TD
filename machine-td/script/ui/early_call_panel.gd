@@ -7,9 +7,9 @@ extends Control
 signal callRequested
 
 ## 普通波：安全黄（与顶栏金币同色系）
-const NORMAL_ACCENT: Color = Color(1.0, 0.776, 0.102, 1.0)
+const NORMAL_ACCENT: Color = Palette.HAZARD_500
 ## Boss 波：警示红 —— "可以提前拉，但不给钱"
-const BOSS_ACCENT: Color = Color(1.0, 0.42, 0.32, 1.0)
+const BOSS_ACCENT: Color = Palette.ALERT_HOT
 
 @onready var nextLabel: Label = $Panel/HBox/infoBox/nextLabel
 @onready var rewardLabel: Label = $Panel/HBox/infoBox/rewardLabel

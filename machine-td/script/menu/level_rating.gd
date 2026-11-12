@@ -8,7 +8,7 @@ const STAR_EMPTY: Texture2D = preload("res://sprite/star-2.png")
 ## 两张星图都是白色描边 / 白色实心，空星压成灰蓝，
 ## 否则「还没打过的关卡」看上去和「三颗星」一样满。
 const TINT_FULL := Color(1, 1, 1, 1)
-const TINT_EMPTY := Color(0.368627, 0.478431, 0.549020, 0.85)
+const TINT_EMPTY := Color(Palette.UI_720, 0.85)
 
 var ratingValue: int = 0
 

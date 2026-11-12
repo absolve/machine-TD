@@ -10,8 +10,8 @@ extends Control
 var phase2: bool = false
 
 const COLOR_WEAK := Color(1.0, 1.0, 1.0, 0.45)
-const COLOR_PHASE := Color(1.0, 0.62, 0.32, 0.95)
-const COLOR_PHASE2 := Color(1.0, 0.35, 0.25, 1.0)
+const COLOR_PHASE := Color(Palette.ALERT_500, 0.95)
+const COLOR_PHASE2 := Palette.ALERT_HOT
 
 
 func _ready() -> void:

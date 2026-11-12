@@ -137,12 +137,12 @@ func ensureModeChip() -> void:
 	chip.name = "modeChip"
 	# 挑战模式用锈红底 + 橙红描边（敌方色系），和"这是更难的规则"语义一致
 	var sb: StyleBoxFlat = StyleBoxFlat.new()
-	sb.bg_color = Color(0.42, 0.14, 0.10, 0.88)
+	sb.bg_color = Color(Palette.DANGER_DEEP, 0.88)
 	sb.border_width_left = 2
 	sb.border_width_top = 2
 	sb.border_width_right = 2
 	sb.border_width_bottom = 2
-	sb.border_color = Color(0.77, 0.33, 0.21, 1.0)
+	sb.border_color = Palette.DANGER
 	sb.corner_radius_top_left = 8
 	sb.corner_radius_top_right = 8
 	sb.corner_radius_bottom_right = 8
@@ -159,7 +159,7 @@ func ensureModeChip() -> void:
 	var label: Label = Label.new()
 	label.name = "modeLabel"
 	label.add_theme_font_size_override("font_size", 32)
-	label.add_theme_color_override("font_color", Color(1.0, 0.92, 0.86, 1.0))
+	label.add_theme_color_override("font_color", Palette.ALERT_300)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	chip.add_child(label)
 
@@ -187,12 +187,12 @@ func buildModeTip() -> void:
 	tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	var sb: StyleBoxFlat = StyleBoxFlat.new()
-	sb.bg_color = Color(0.09, 0.10, 0.16, 0.97)
+	sb.bg_color = Color(Palette.UI_950, 0.97)
 	sb.border_width_left = 2
 	sb.border_width_top = 2
 	sb.border_width_right = 2
 	sb.border_width_bottom = 2
-	sb.border_color = Color(0.77, 0.33, 0.21, 1.0)
+	sb.border_color = Palette.DANGER
 	sb.corner_radius_top_left = 8
 	sb.corner_radius_top_right = 8
 	sb.corner_radius_bottom_right = 8
@@ -210,14 +210,14 @@ func buildModeTip() -> void:
 	modeTipTitle = Label.new()
 	modeTipTitle.name = "title"
 	modeTipTitle.add_theme_font_size_override("font_size", 30)
-	modeTipTitle.add_theme_color_override("font_color", Color(1.0, 0.78, 0.56, 1.0))
+	modeTipTitle.add_theme_color_override("font_color", Palette.HAZARD_300)
 	modeTipTitle.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(modeTipTitle)
 
 	modeTipBody = Label.new()
 	modeTipBody.name = "body"
 	modeTipBody.add_theme_font_size_override("font_size", 26)
-	modeTipBody.add_theme_color_override("font_color", Color(0.92, 0.95, 1.0, 1.0))
+	modeTipBody.add_theme_color_override("font_color", Palette.UI_050)
 	modeTipBody.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	modeTipBody.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	modeTipBody.custom_minimum_size = Vector2(560, 0)
@@ -323,7 +323,7 @@ func onTextureButtonToggled(toggled_on: bool) -> void:
 const SPEED_TEXT_NORMAL := "1X"
 const SPEED_TEXT_FAST := "2X"
 const SPEED_COLOR_NORMAL := Color(1, 1, 1, 1)
-const SPEED_COLOR_FAST := Color(1, 0.7764706, 0.101960786, 1)
+const SPEED_COLOR_FAST := Palette.HAZARD_500
 
 func onBtnSpeedToggled(toggled_on: bool) -> void:
 	applySpeedVisual(toggled_on)

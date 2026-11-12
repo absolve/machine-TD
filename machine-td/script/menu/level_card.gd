@@ -19,17 +19,17 @@ class_name LevelCard
 signal clicked
 
 # ── 配色（art_style.md §3.2 色阶 / §3.3 安全黄）──
-const ACCENT_CLEARED := Color("ffc61a")  # 已通关 = 安全黄
-const ACCENT_OPEN := Color("94b0c2")     # 可玩 = 亮银
-const ACCENT_LOCKED := Color("4a5f78")   # 未解锁 = 暗灰
-const ACCENT_HOVER := Color("ffd964")     # 悬停 = 黄高光
-const NUM_TEXT := Color("f8fbfd")        # 主文字
-const NUM_TEXT_LOCKED := Color("9fb4c4") # 压暗文字（禁用态）
-const NUM_TEXT_NEXT := Color("ffc61a")   # 「下一关」= 安全黄
-const NUM_TEXT_HOVER := Color("f4f4f4")  # 最亮
-const PLATE_EDGE := Color("4a5f78")      # 底板描边
-const PLATE_BG := Color("566c86")        # 卡片底（ui_600）
-const PLATE_BG_HOVER := Color("6f8aa4")  # 悬停时底色抬高一档（ui_500）
+const ACCENT_CLEARED := Palette.HAZARD_500  # 已通关 = 安全黄
+const ACCENT_OPEN := Palette.UI_400     # 可玩 = 亮银
+const ACCENT_LOCKED := Palette.UI_720   # 未解锁 = 暗灰
+const ACCENT_HOVER := Palette.HAZARD_300     # 悬停 = 黄高光
+const NUM_TEXT := Palette.UI_050        # 主文字
+const NUM_TEXT_LOCKED := Palette.UI_300 # 压暗文字（禁用态）
+const NUM_TEXT_NEXT := Palette.HAZARD_500   # 「下一关」= 安全黄
+const NUM_TEXT_HOVER := Palette.UI_000  # 最亮
+const PLATE_EDGE := Palette.UI_720      # 底板描边
+const PLATE_BG := Palette.UI_600        # 卡片底（ui_600）
+const PLATE_BG_HOVER := Palette.UI_500  # 悬停时底色抬高一档（ui_500）
 
 # 数字字号：一位数 / 两位数 / 具名关卡
 const NUM_FONT_ONE := 80

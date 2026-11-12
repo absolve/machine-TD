@@ -23,7 +23,7 @@ const EDGE_INSET := 3.0
 const EDGE_W := 1.0
 
 ## 角铁主色。改这个就换状态。
-@export var accent: Color = Color("94b0c2"):
+@export var accent: Color = Palette.UI_400:
 	set(value):
 		accent = value
 		queue_redraw()

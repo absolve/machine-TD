@@ -66,7 +66,7 @@ func buildModeBar() -> void:
 	modeDescLabel.name = "modeDescLabel"
 	modeDescLabel.position = MODE_DESC_POS
 	modeDescLabel.add_theme_font_size_override("font_size", 22)
-	modeDescLabel.add_theme_color_override("font_color", Color(0.65882355, 0.6862745, 0.65882355, 1.0))
+	modeDescLabel.add_theme_color_override("font_color", Palette.UI_300)
 	$Ui.add_child(modeDescLabel)
 
 	selectedMode = Game.battleMode if Game.battleModeDefs.has(Game.battleMode) else "normal"
@@ -94,9 +94,9 @@ func refreshModeBar() -> void:
 		btn.set_pressed_no_signal(active)
 		# 选中：正常模式用白，挑战模式用锈红（敌方色）提示"这不是普通难度"；未选中一律压暗
 		if active:
-			btn.modulate = Color(1, 1, 1, 1) if modeId == "normal" else Color(1.0, 0.78, 0.72, 1.0)
+			btn.modulate = Color(1, 1, 1, 1) if modeId == "normal" else Palette.DANGER_TEXT
 		else:
-			btn.modulate = Color(0.78, 0.80, 0.85, 1.0)
+			btn.modulate = Palette.UI_300
 	if modeDescLabel != null:
 		var desc: String = Game.getBattleModeDesc(selectedMode)
 		# 挑战模式额外说明"不记星级与成就"，否则玩家会以为是 bug

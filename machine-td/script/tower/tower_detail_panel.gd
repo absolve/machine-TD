@@ -178,7 +178,7 @@ func refreshSkillButton(t: Tower) -> void:
 
 	# 生效/启用时用安全黄强调，和"我方强化"的视觉约定一致
 	if t.isSkillActive() or (t.skillKind == "toggle" and t.skillOn):
-		btnSkill.modulate = Color(1.0, 0.86, 0.45, 1.0)
+		btnSkill.modulate = Palette.HAZARD_300
 	else:
 		btnSkill.modulate = Color(1, 1, 1, 1)
 

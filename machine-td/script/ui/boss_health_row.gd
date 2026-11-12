@@ -33,7 +33,7 @@ func bind(target: Node) -> void:
 	compact = int(target.get("bossTier")) < 2
 	apply_compact()
 	# 用 bossAuraColor 给每行一个身份色：多只 Boss 同时在场时靠颜色 + 名字区分
-	apply_style(info.get("bossAuraColor", Color(0.95, 0.6, 0.3, 1.0)))
+	apply_style(info.get("bossAuraColor", Palette.ALERT_500))
 	refresh()
 
 
@@ -53,7 +53,7 @@ func refresh() -> void:
 
 	var isBigBoss: bool = int(boss.get("bossTier")) >= 2
 	var inPhase2: bool = isBigBoss and ratio <= PHASE2_RATIO
-	bar.modulate = Color(1.0, 0.62, 0.42, 1.0) if inPhase2 else Color(1, 1, 1, 1)
+	bar.modulate = Palette.ALERT_HOT if inPhase2 else Color(1, 1, 1, 1)
 	phaseTag.visible = inPhase2
 	if ticks != null and bool(ticks.get("phase2")) != inPhase2:
 		ticks.set("phase2", inPhase2)

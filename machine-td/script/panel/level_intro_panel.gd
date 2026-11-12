@@ -27,10 +27,10 @@ const COL_WIDTH_HP := 140
 const COL_WIDTH_SPEED := 140
 const COL_WIDTH_AIR := 100
 
-const COLOR_HEADER := Color(0.65882355, 0.6862745, 0.65882355, 1.0)
-const COLOR_TEXT := Color(0.89411765, 0.92156863, 0.8745098, 1.0)
+const COLOR_HEADER := Palette.UI_300
+const COLOR_TEXT := Palette.UI_050
 ## 星级奖励的数值用强调色（安全黄），和"宝石奖励"的青色区分开，一眼能看出是"额外给的部分"
-const COLOR_STAR_BONUS := Color(1.0, 0.7764706, 0.101960786, 1.0)
+const COLOR_STAR_BONUS := Palette.HAZARD_500
 
 ## 面板里那行"星级奖励规则"提示。**由代码创建**、插在 InfoBox 之后 ——
 ## 这样不用改场景文件，也不会影响无尽模式的介绍页（那里把它隐藏）。
@@ -81,9 +81,9 @@ func showEndless(bestWave: int) -> void:
 	showStarHint(false)
 	# 无尽模式没有战斗模式，模式横幅也收起来
 	refreshModeBanner()
-	addChip(Game.t("_BaseHealth", "Base HP"), "10", Color(0.75, 0.95, 1.0, 1.0))
-	addChip(Game.t("_EndlessCrowd", "On Screen"), "90", Color(1.0, 0.85, 0.6, 1.0))
-	addChip(Game.t("_EndlessBest", "Best Record"), str(bestWave), Color(1.0, 0.78, 0.72, 1.0))
+	addChip(Game.t("_BaseHealth", "Base HP"), "10", Palette.INFO_LT)
+	addChip(Game.t("_EndlessCrowd", "On Screen"), "90", Palette.ALERT_300)
+	addChip(Game.t("_EndlessBest", "Best Record"), str(bestWave), Palette.DANGER_TEXT)
 	# 规则用几行纯文本代替"敌人清单"，比逐条列兵种好读
 	intelTitle.text = Game.t("_EndlessRules", "Rules")
 	clearChildren(enemyList)
@@ -151,12 +151,12 @@ func ensureModeBanner() -> void:
 	var banner: PanelContainer = PanelContainer.new()
 	banner.name = "modeBanner"
 	var sb: StyleBoxFlat = StyleBoxFlat.new()
-	sb.bg_color = Color(0.42, 0.14, 0.10, 0.92)
+	sb.bg_color = Color(Palette.DANGER_DEEP, 0.92)
 	sb.border_width_left = 3
 	sb.border_width_top = 3
 	sb.border_width_right = 3
 	sb.border_width_bottom = 3
-	sb.border_color = Color(0.77, 0.33, 0.21, 1.0)
+	sb.border_color = Palette.DANGER
 	sb.corner_radius_top_left = 10
 	sb.corner_radius_top_right = 10
 	sb.corner_radius_bottom_right = 10
@@ -174,7 +174,7 @@ func ensureModeBanner() -> void:
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.add_theme_font_size_override("font_size", 30)
-	label.add_theme_color_override("font_color", Color(1.0, 0.90, 0.82, 1.0))
+	label.add_theme_color_override("font_color", Palette.ALERT_300)
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	banner.add_child(label)
 
@@ -195,14 +195,14 @@ func buildInfo(stage_data: Dictionary) -> void:
 	clearChildren(infoBox)
 	var stats: Dictionary = collectEnemyStats(stage_data)
 	var challenge: bool = Game.isChallengeMode()
-	addChip(Game.t("_Wave", "Wave"), str(int(stage_data.get("wave", 0))), Color(0.75, 0.95, 1.0, 1.0))
-	addChip(Game.t("_BaseHealth", "Base HP"), str(int(stage_data.get("health", 0))), Color(1.0, 0.78, 0.72, 1.0))
-	addChip(Game.t("_StartMoney", "Start Money"), str(int(stage_data.get("money", 0))), Color(1.0, 0.85, 0.6, 1.0))
+	addChip(Game.t("_Wave", "Wave"), str(int(stage_data.get("wave", 0))), Palette.INFO_LT)
+	addChip(Game.t("_BaseHealth", "Base HP"), str(int(stage_data.get("health", 0))), Palette.DANGER_TEXT)
+	addChip(Game.t("_StartMoney", "Start Money"), str(int(stage_data.get("money", 0))), Palette.ALERT_300)
 	var baseGem: int = int(stage_data.get("gemReward", 0))
 	var gemShown: int = baseGem
 	if challenge:
 		gemShown = int(ceil(float(baseGem) * Game.modeGemScale))
-	addChip(Game.t("_GemRewardShort", "Gem Reward"), str(gemShown), Color(0.4, 0.9, 1.0, 1.0))
+	addChip(Game.t("_GemRewardShort", "Gem Reward"), str(gemShown), Palette.GEM)
 	# 3★ 额外宝石：开打前就把"打好能多拿多少"摆出来，
 	# 否则玩家只有在结算时才知道星能换宝石（那时已经打完了）。
 	# 挑战模式不记星级 → 这一格与它下面的规则说明都不该出现。
@@ -231,7 +231,7 @@ func refreshQuotaLine(stage_data: Dictionary) -> void:
 		quotaLineLabel.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		quotaLineLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		quotaLineLabel.add_theme_font_size_override("font_size", 26)
-		quotaLineLabel.add_theme_color_override("font_color", Color(1.0, 0.8, 0.45, 1.0))
+		quotaLineLabel.add_theme_color_override("font_color", Palette.HAZARD_300)
 		var parentBox: Node = infoBox.get_parent()
 		parentBox.add_child(quotaLineLabel)
 		parentBox.move_child(quotaLineLabel, infoBox.get_index() + 1)

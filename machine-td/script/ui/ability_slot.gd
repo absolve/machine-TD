@@ -18,9 +18,9 @@ const STYLE_NORMAL := preload("res://theme/style/btn_normal.tres")
 const STYLE_ACTIVE := preload("res://theme/style/btn_hover.tres")
 
 const COLOR_READY := Color(1.0, 1.0, 1.0, 1.0)
-const COLOR_COOLING := Color(0.72, 0.76, 0.80, 1.0)
+const COLOR_COOLING := Palette.UI_300
 ## 宝石不够：压得比冷却更暗，一眼能看出"这个现在放不了"
-const COLOR_POOR := Color(0.48, 0.50, 0.55, 1.0)
+const COLOR_POOR := Palette.UI_450
 
 @onready var bg: Panel = $bg
 @onready var icon: TextureRect = $icon
@@ -66,7 +66,7 @@ func refreshAffordable() -> void:
 	affordable = AbilityManager.canAfford(abilityId)
 	# 成本数字也跟着变色：买不起时变红
 	if costLabel != null:
-		costLabel.modulate = Color(1, 1, 1, 1) if affordable else Color(1, 0.45, 0.45, 1)
+		costLabel.modulate = Color(1, 1, 1, 1) if affordable else Palette.DANGER_TEXT
 	# 立刻按"当前冷却进度"重算一次配色，不等下一帧
 	var total: float = cooldownTimer.wait_time
 	refresh(cooldownTimer.time_left / total if total > 0.0 else 0.0)

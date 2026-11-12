@@ -129,7 +129,7 @@ func makeTile(achievement_id: String, achievement: Dictionary) -> PanelContainer
 	nameLabel.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	nameLabel.add_theme_font_size_override("font_size", 28)
 	nameLabel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	nameLabel.modulate = Color(0.97254902, 0.98431373, 0.99215686) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
+	nameLabel.modulate = Palette.UI_050 if unlocked else Palette.UI_300
 	content.add_child(nameLabel)
 
 	var progress: Label = Label.new()
@@ -137,7 +137,7 @@ func makeTile(achievement_id: String, achievement: Dictionary) -> PanelContainer
 	progress.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	progress.add_theme_font_size_override("font_size", 24)
 	progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	progress.modulate = Color(1, 0.7764706, 0.101960786) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
+	progress.modulate = Palette.HAZARD_500 if unlocked else Palette.UI_300
 	content.add_child(progress)
 
 	return tile
@@ -159,20 +159,20 @@ func makeTileStyle(unlocked: bool) -> StyleBoxFlat:
 	style.corner_radius_bottom_left = 12
 	style.corner_radius_bottom_right = 12
 	if unlocked:
-		style.bg_color = Color(0.3372549, 0.42352942, 0.5254902, 0.98)
-		style.border_color = Color(1, 0.7764706, 0.101960786, 0.95)
-		style.shadow_color = Color(1, 0.7764706, 0.101960786, 0.28)
+		style.bg_color = Color(Palette.UI_600, 0.98)
+		style.border_color = Color(Palette.HAZARD_500, 0.95)
+		style.shadow_color = Color(Palette.HAZARD_500, 0.28)
 		style.shadow_size = 8
 	else:
-		style.bg_color = Color(0.26666668, 0.34509805, 0.43137255, 0.92)
-		style.border_color = Color(0.5803922, 0.6901961, 0.7607843, 1)
+		style.bg_color = Color(Palette.UI_750, 0.92)
+		style.border_color = Palette.UI_400
 	return style
 
 
 func makeBadgeStyle(achievement: Dictionary, unlocked: bool) -> StyleBoxFlat:
 	var accent: Color = categoryAccent(str(achievement.get("category", "")))
 	var style: StyleBoxFlat = StyleBoxFlat.new()
-	style.bg_color = Color(0.075, 0.12, 0.17, 1.0)
+	style.bg_color = Palette.UI_950
 	style.border_width_left = 3
 	style.border_width_top = 3
 	style.border_width_right = 3
@@ -185,7 +185,7 @@ func makeBadgeStyle(achievement: Dictionary, unlocked: bool) -> StyleBoxFlat:
 	style.content_margin_top = 8.0
 	style.content_margin_right = 8.0
 	style.content_margin_bottom = 8.0
-	style.border_color = accent if unlocked else Color(0.32, 0.4, 0.46, 1.0)
+	style.border_color = accent if unlocked else Palette.UI_750
 	style.shadow_color = Color(accent.r, accent.g, accent.b, 0.28 if unlocked else 0.08)
 	style.shadow_size = 12 if unlocked else 5
 	style.shadow_offset = Vector2(0, 3)
@@ -195,15 +195,15 @@ func makeBadgeStyle(achievement: Dictionary, unlocked: bool) -> StyleBoxFlat:
 func categoryAccent(category: String) -> Color:
 	match category:
 		"stage":
-			return Color(0.32, 0.8, 0.84, 1.0)
+			return Palette.INFO
 		"combat":
-			return Color(0.94, 0.42, 0.31, 1.0)
+			return Palette.ALERT_HOT
 		"build":
-			return Color(1.0, 0.72, 0.2, 1.0)
+			return Palette.HAZARD_500
 		"growth":
-			return Color(0.53, 0.82, 0.48, 1.0)
+			return Palette.SUCCESS_LT
 		_:
-			return Color(0.78, 0.82, 0.85, 1.0)
+			return Palette.UI_300
 
 
 # ---------- 悬停详情 ----------
@@ -222,7 +222,7 @@ func showDetail(achievement_id: String) -> void:
 		detailIcon.texture = load(FALLBACK_ICON) as Texture2D
 		detailIcon.material = matLocked
 		detailName.text = Game.t("_AchvHoverHint", "Hover an achievement to see its details")
-		detailName.modulate = Color(0.62352943, 0.7058824, 0.76862746)
+		detailName.modulate = Palette.UI_300
 		detailStatus.text = ""
 		detailDesc.text = ""
 		detailProgress.text = ""
@@ -235,16 +235,16 @@ func showDetail(achievement_id: String) -> void:
 	detailIcon.material = matUnlocked if unlocked else matLocked
 
 	detailName.text = achievementName(achievement_id, achievement)
-	detailName.modulate = Color(0.97254902, 0.98431373, 0.99215686) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
+	detailName.modulate = Palette.UI_050 if unlocked else Palette.UI_300
 
 	detailStatus.text = Game.t("_AchievementUnlocked", "Unlocked") if unlocked else Game.t("_AchievementLocked", "Locked")
-	detailStatus.modulate = Color(0.654902, 0.9411765, 0.4392157) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
+	detailStatus.modulate = Palette.SUCCESS_LT if unlocked else Palette.UI_300
 
 	detailDesc.text = achievementDesc(achievement_id, achievement)
-	detailDesc.modulate = Color(0.91764706, 0.9490196, 0.96862745)
+	detailDesc.modulate = Palette.UI_100
 
 	detailProgress.text = progressText(achievement_id, achievement)
-	detailProgress.modulate = Color(1, 0.7764706, 0.101960786) if unlocked else Color(0.62352943, 0.7058824, 0.76862746)
+	detailProgress.modulate = Palette.HAZARD_500 if unlocked else Palette.UI_300
 
 
 # ---------- 工具 ----------
@@ -258,14 +258,14 @@ func makeIconMaterials() -> void:
 	matUnlocked.set_shader_parameter("desaturate", 0.0)
 	matUnlocked.set_shader_parameter("dim", 1.0)
 	matUnlocked.set_shader_parameter("icon_zoom", 1.25)
-	matUnlocked.set_shader_parameter("outline_color", Color(1.0, 0.78, 0.2, 0.9))
+	matUnlocked.set_shader_parameter("outline_color", Color(Palette.HAZARD_500, 0.9))
 
 	matLocked = ShaderMaterial.new()
 	matLocked.shader = shader
 	matLocked.set_shader_parameter("desaturate", 1.0)
 	matLocked.set_shader_parameter("dim", 0.55)
 	matLocked.set_shader_parameter("icon_zoom", 1.25)
-	matLocked.set_shader_parameter("outline_color", Color(0.48, 0.6, 0.66, 0.45))
+	matLocked.set_shader_parameter("outline_color", Color(Palette.UI_450, 0.45))
 
 
 func progressText(achievement_id: String, achievement: Dictionary) -> String:

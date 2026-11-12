@@ -89,7 +89,7 @@ func makeText(s: String, strong: bool) -> Label:
 	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	# 数值档（金黄、略大）与名字档（浅色）分开，一眼看出哪个兵种多
 	lbl.add_theme_color_override("font_color",
-		Color(1.0, 0.776, 0.102) if strong else Color(0.898, 0.929, 0.961))
+		Palette.HAZARD_500 if strong else Palette.UI_100)
 	lbl.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.6))
 	lbl.add_theme_constant_override("shadow_offset_x", 2)
 	lbl.add_theme_constant_override("shadow_offset_y", 2)
