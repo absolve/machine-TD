@@ -23,6 +23,7 @@ config/icon="res://icon.svg"
 
 Game="*res://autoload/game.gd"
 UserData="*res://autoload/userData.gd"
+FontStack="*res://autoload/fontStack.gd"
 EasterEgg="*res://autoload/easterEgg.gd"
 ExplosionManage="*res://scene/explosion/explosion_manage.tscn"
 SoundManage="*res://autoload/sound_manage.tscn"
@@ -90,7 +91,7 @@ zoomOut={
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://lang/language.en.translation", "res://lang/language.zh.translation")
+locale/translations=PackedStringArray("res://lang/language.en.translation", "res://lang/language.zh.translation", "res://lang/language.zh_TW.translation", "res://lang/language.ja.translation", "res://lang/language.ru.translation")
 
 [layer_names]
 

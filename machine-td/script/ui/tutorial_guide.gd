@@ -205,7 +205,7 @@ func buildSteps() -> void:
 			"id": "start",
 			"target": "btn_start",
 			"text": Game.t("_TutorialGuide4",
-				"Tap ▶ to send in the enemies. Hold the line!"),
+				"Tap the Play button to send in the enemies. Hold the line!"),
 		},
 	]
 	# 技能那一步只在玩家**真的放得出来**时才加：新存档宝石是 0，

@@ -1,0 +1,68 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="PackedScene" uid="uid://bpt2onorpqp5q" path="res://scene/enemy/enemy.tscn" id="1_base"]
+[ext_resource type="Script" path="res://script/enemy/boss/boss_train.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://co8qbb4ak6gxx" path="res://scene/turret/base_turret.tscn" id="3_turret"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/armored_tank_v2_body.svg" id="4_b1"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/armored_tank_v2_body_2.svg" id="5_b2"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/armored_tank_v2_body_3.svg" id="6_b3"]
+[ext_resource type="Texture2D" path="res://sprite/enemy/redesigned/armored_tank_v2_body_4.svg" id="7_b4"]
+[ext_resource type="Shader" uid="uid://y51iyfj13ovq" path="res://shader/enemy_hit_flash.gdshader" id="8_shader"]
+
+[sub_resource type="ShaderMaterial" id="mat_flash"]
+resource_local_to_scene = true
+shader = ExtResource("8_shader")
+shader_parameter/flash = 0.0
+shader_parameter/brighten = 0.85
+
+[sub_resource type="SpriteFrames" id="frames_body"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_b1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_b2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_b3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_b4")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 12.0
+}]
+
+[sub_resource type="RectangleShape2D" id="shape_body"]
+size = Vector2(60, 30)
+
+[node name="bossTrain" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+enemyType = 19
+trainSlot = -1
+
+[node name="base" parent="."]
+material = SubResource("mat_flash")
+scale = Vector2(1.3, 0.95)
+modulate = Color(0.74, 0.78, 0.84, 1)
+sprite_frames = SubResource("frames_body")
+
+[node name="radar" parent="."]
+visible = false
+
+[node name="turret" parent="."]
+visible = false
+
+[node name="shape" parent="."]
+shape = SubResource("shape_body")
+
+[node name="Turret01" parent="." instance=ExtResource("3_turret")]
+z_index = 1
+position = Vector2(-4, 0)
+atk = 10
+shootDelay = 1.6
+radarScope = 260.0
+rotationSpeed = 8.0
+muzzleOffset = 18.5

@@ -109,9 +109,9 @@ offset_bottom = 417.0
 
 [node name="HBoxContainer" type="VBoxContainer" parent="Ui" unique_id=442101509]
 layout_mode = 0
-offset_left = 792.0
+offset_left = 760.0
 offset_top = 453.0
-offset_right = 1148.0
+offset_right = 1180.0
 offset_bottom = 1057.0
 theme_override_constants/separation = 20
 alignment = 1

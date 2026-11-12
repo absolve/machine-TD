@@ -38,6 +38,8 @@
 - [二十二、内容充实设计（提前召唤 / 宝石商店）](#二十二内容充实设计提前召唤--宝石商店)
 - [二十三、灵感库记录（塔防机制调研吸收，未排期）](#二十三灵感库记录塔防机制调研吸收未排期)
 - [二十四、敌人新机制轴设计（补给车队 / 督战指挥车）](#二十四敌人新机制轴设计补给车队--督战指挥车)
+- [二十五、装甲列车 boss（多部件大 boss）](#二十五装甲列车-boss多部件大-boss)
+- [二十六、国际化扩语种（字体链与探针）](#二十六国际化扩语种字体链与探针)
 
 ---
 
@@ -1503,6 +1505,9 @@ layer 100 的转场遮罩就永远盖不住它 —— 转场时会看到弹窗�
 | 2026-11-05 | 回血特效缩放 + 弯道平滑 | v1.0 | 反馈两条：「医疗车恢复动画偏大」「直角弯道敌人转身生硬」。① **回血特效**：`heal_particles.tscn` 缩放 0.20~0.32 → **0.12~0.20**（144px 贴图 → 17~29px），初速 170~280 → **120~190**（尺寸与散开半径同步收，避免"小十字飘很远"）；`enemy.gd::addHp()` 的参数注释同步更新。② **弯道平滑**：`base_level.collectRoutes()` 新增 `smoothRouteCorners()`——**转角点替换为圆弧采样点**（15°~160° 转角；半径由「顶点到弧中点内切 ≤4px」反推，切点距 ≤14px 且 ≤0.45×短边防相邻弧重叠；弧上按 2px 采样；烘焙间隔压到 2.5）。**关键实测**：Godot 4.7 的 Curve2D 已删除 point mode API，`set_point_in/out` 写进能读回、但对烘焙**零影响**（`enum_peek` 探针：baked length == 折线长度和）——所以放弃贝塞尔方案，纯折线加密任何版本行为一致。4px 预算的依据是传送带面宽只有 37px、分道最大 ±9px。③ **坑**：项目 GDScript **警告按错误处理**（`:=` 从 Variant 推断、不存在的枚举常量都会让脚本解析失败），探针场景因此静默挂起两次才查出；GDScript 常量是 `INF` 不是 `INFINITY`。验证：`scene/test/route_smooth_probe.tscn` **17/17 全过**（端点不动/顶点消失/内切 ≤4.3px/单步转角摊薄/幂等/折返豁免/level_1 双路线/回血四参数）；`all_levels_check.tscn` 全量核查 **45 条路线全 OK**——转角单步从 90° 摊到 ≤11.3°，点距 ≥1.89px 无一触发防重叠兜底，直线航线原样保留 |
 | 2026-11-02 | §十九 多 Boss 血条（实现） | v1.0 | 需求：「Boss 只能每波一只吗？能不能有两只以上，血条怎么改」。① **血条从单条改多行堆叠**：`boss_health_bar.tscn` 改成 `Stack/Rows` 容器，单行抽成 `boss_health_row.tscn` + `boss_health_row.gd`；主脚本用 `rows: Dictionary`（Boss → 行）管理，出生加行、死亡/被释放删行，不再有"只跟一只"的状态。排序：大 Boss 优先、同级按 `spawnSeq` 从早到晚（新刷的小 Boss 不会顶掉旧行）。最多显示 **2 行**，超出显示「还有 N 只 Boss」；小 Boss 48px、大 Boss 56px（血条 10/12px，名字字号 24/26），行边框/名字用 `bossAuraColor` 区分；整体固定在标题栏正下方居中（top=112），不遮挡顶栏金币等信息。二阶段（50% 标签 + 刻度变色）仍在每行内独立生效。② **横幅去重**：`map.gd` 记录 `bossBannerWave/bossBannerTier`，同波只播一次，仅允许更高档位 Boss 再覆盖一次；测试场景 `boss_test.gd` 手动刷 Boss 前调 `resetBossBannerDedup()`。③ **Boss 不吃数量倍率**：`base_level.buildWaveSpawner()` 的 `modeCountScale` 跳过 `enemyInfo.isBoss` 行（与 §十七 设计一致，蜂群不会把 1 只 Boss 翻成 2 只）。验证：临时探针 **35 项断言全过**（1/2/3 行显示、第 4 只溢出 +1、大 Boss 置顶且 +2、 同波横幅不重复/大 Boss 覆盖、二阶段标签与刻度、击杀移除行、节点被绕过信号释放也能兜底清理、数量倍率只翻普通敌人不翻 Boss、全清隐藏）；另修 `map.tscn` 实例上的 `anchors_preset` 覆盖把血条贴到 y=0 的问题；最终按需求把血条放回标题栏正下方（top=112，探针确认标题栏底 98 < 血条顶 112），名字字号放大到 24/26 |
 | 2026-11-02 | 波次 / Boss 横幅位置漂移（修复） | v1.0 | 现象：改了 Boss 血条位置后，玩家发现横幅位置也变了 —— 实际与血条无关，是横幅自身的既有 bug。`battle_start_banner.gd::play()` 里写 `band.position.y = 0.0`，而 band 的父节点是 `CenterContainer`：第一次播放时容器会重新排序并把 band 居中（y=435），紧接着的第二次播放（同一实例连播「波次横幅 → Boss 横幅」）容器不再排序，`position=0` 就真的把横幅顶到屏幕最上方。修法：删除 `band.position` 写入与 `position:y` 上移动画（`outOffsetY` 一并删除），位置完全交给 `CenterContainer`；进出场只保留淡入淡出 + 缩放。验证：探针连续播放 `playWave()` → `playBoss()`，两次 `band.position.y` 均为 **435**（1920×1080 下正中），不再出现 y=0 |
+| 2026-11-12 | §二十六 M3a：实装 `zh_TW` / `ja` / `ru` 三个语种 | v1.0 | 需求：「其他语言的翻译先帮我加上，俄语的也加上」。**只追加 3 列**（`Keys`/`en`/`zh` 三列逐字未改，脚本对比验证）。① **为什么先只加这三个**：26.2 实测主字体谚文 0/11172、泰文 0/128、越南变音符 4/256，而 CJK 20976/20992、西里尔 100% —— 所以 `zh_TW`/`ja`/`ru` 是"字体安全"的那三个，`ko`/`th`/`vi` **故意不加**：现在登记进下拉等于给玩家一个切过去看豆腐块的按钮。② 登记链路全是数据驱动：`Game.language` 从 2 条到 5 条，`setting.gd` 的下拉/切换/持久化**一行没改**；`project.godot` 的 `locale/translations` 必须手写（实测 `--import` 不会自动加）。③ 语种判定重写：`SYSTEM_LANGUAGE_ALIASES`（`zh_TW/zh_HK/zh_MO/zh_Hant*` 走繁体）+ 地区精确表 → code 精确 → 语言前缀 → `en`；`loadSettings()` 的 schema 迁移原来硬写 `begins_with("zh") → "zh"`，会把繁体老玩家迁回简体，改成复用同一判定。规则拆成纯函数 `_languageFromLocaleString()` 才能测（`OS` 单例桩不掉），探针 C8 喂 10 组 locale。④ **顺带修掉一个存量视觉 bug**：主菜单按钮列固定 356px，实测 `get_combined_minimum_size()` 显示英文 `Endless Mode` 需要 379 —— **英文一直在被截断**；加 `ja`(388) / `ru`(411) 后更明显。列宽改 420（`btn_normal.tres` 是 StyleBoxFlat 矢量，拉宽不失真）。为放下做了三处短译（«Бесконечный» / «Энциклопедия» / «エンドレス»）。⑤ **两条我之前的判断被实测推翻**：`custom_minimum_size` 的 220/240 是**下限不是上限**，所以 §26.6 的 #5 #6 不成立（下拉装满 5 个语种名只需 215，父面板 968）；`_About_Text` 的"逐语种手工断行"也不成立（是 `RichTextLabel` + `autowrap=WORD_SMART`，zh/ru 实测内容高 513 < 面板 560）。⑥ **量宽度的两个时序坑**：`welcome.tscn` 内嵌 setting 面板，`setting.gd:44` 在 `_ready()` 里 `set_locale` → locale 必须 `add_child` **之后**设（否则五个语种量到同一份中文）；只 `set_locale` 不重算缓存的最小尺寸 → 必须把 `text` 摘下再装回去。⑦ 探针加 C8/C9/C10 + **C11 检查项对账**：我编辑 `_ready` 时曾把 C9/C10 挤到 `quit()` 后面，探针安静地报 `fails=0` —— "全绿"和"跑了"是两件事，现在每个检查组登记自己、末尾对账。合并工具沉到 `script/test/merge_locales.py`（预检占位符/`\n`/BBCode/**字形覆盖**，不干净就不写 CSV）。验证：`i18n_probe` **50/50**、`train_boss_probe` 33/33、`tower_quota_probe` 15/15、`all_levels_check` bad=0。**未做**：真机切一遍语言看排版（全是 headless 结论）；结算战报表那组列宽没实测（要打到通关才有内容），留作 M2 人工核对。 |
+| 2026-11-12 | §二十六 国际化 M0：字体回退链 + 探针 | v1.0 | 需求：「先做第 0 步，把字体链和探针搞出来」（上游：「分析国际化还差几个，上架 Steam 要先加亚洲一些国家语言」）。**不加任何语种**，先把三类"在开发者机器上表现为一切正常"的事故变成机器检查。① **实测字体覆盖**（fontTools 与 Godot `Font.has_char()` 双向核对，唯一字体 `AlibabaPuHuiTi-3-85-Bold.ttf`）：CJK 20976/20992、西里尔 100% ⇒ 繁体与俄语几乎免费；假名 184/192 但缺 `・`/`々`；**谚文 0/11172、泰文 0/128、越南变音符 4/256** ⇒ 韩泰越必须自带字体。② 顺手抓到**现存 bug**：`_TutorialGuide4` 的 `▶` U+25B6 主字体没有 —— 现在能显示是靠 `.import:22` 的 `allow_system_fallback=true` 蹭玩家系统字体，Steam Deck / 精简系统上就是豆腐块。改文案而不是加字体（那个按钮本来就是贴图图标）。③ **回退链装配在代码**（`autoload/fontStack.gd`，注册在 `UserData` 之后）：`font/fallback/` 目录里的字体按**文件名排序**装进主字体的 `fallbacks`，前缀 `01_/02_` 就是优先级（`・` 在 JP/KR 字体里都有时，先命中者决定字形）。不写进 `.ttf.import` 的理由：主字体被 23 个场景共用、链只该配一次；且实测两种手写格式都被导入器拒绝并**重置回 `fallbacks=[]`**（填路径串报 `String to Object`，补 `[ext_resource]` 头报 `Resource file not found`），而 `*.import` 本身被 gitignore（`git ls-files` 计数 0）—— 配了也带不出本机。④ **两个坑 + 一个我自己写错又实测纠正的说法**：4.7 的 `TranslationServer` **没有 `has_key()`**（当静态方法调用直接 Parse Error），判"取不到"只能用 `translate(key) == key`，并配一条未知 key 的自检防止判据是空的；写这条时我先记成"`Font.has_char()` 只查自己、不顺着 `fallbacks` 找"，**实测推翻**：链清空 `has_char(한)=false`、挂上韩文字体即 `true`，且关掉 `allow_system_fallback` 后 `get_string_size("한국어")` 由 **108.0 → 120.0**，说明**真实排版也走链**；真正要记的是反向那半句 —— `has_char` **不认系统兜底**，所以它恰好是"打进包的字体够不够"的正确问法。⑤ 探针 `i18n_probe` **27 项**（含 C5f/C5g 锁"apply() 合并而不是覆盖"）：结构 / 四处登记同步（CSV 列 ⇄ `Game.language` ⇄ `project.godot` ⇄ `.translation`）/ 占位符 / **运行时文本与 CSV 逐条比对**（专门抓"改了 CSV 没跑 `--import`"，只查 key 存在抓不到）/ 链装配 / 逐字形覆盖 / **语种↔文字系统探测位**（抓"先登记语种、后补字体"的顺序错误 —— 那一刻该语种一个字符都没用到，覆盖检查是绿的）。⑥ **正反两轮自我证明**：临时加 `ko` 列 + 借系统 `malgun.ttf` 冒充回退字体 → C5c 链=2、C6/C7 的 ko 全 PASS，同时 C2a/C2c/C3/C4c 如期 FAIL；撤掉字体 → C6 FAIL 并报 `U+C11C x304 in _appName`、C7 FAIL 列 `U+AC00/U+D55C/U+3131`。**该字体仅本地验证、未提交、也不是合法分发方案**。另两轮踩坑：C5f 最初用 `FontVariation(base_font=主字体)` 当哨兵塞进主字体自己的 `fallbacks`，构成**引用环直接把进程问崩**（哨兵换成空 `FontFile` 才对）；`▶` 除了 CSV 还在 `script/ui/tutorial_guide.gd:208` 的硬编码兜底里出现第二处，一并改掉。清理后 `i18n_probe` 27/27、`train_boss_probe` 33/33、`tower_quota_probe` 15/15 回归不变；另清掉 `language.csv` 的一处行间空行。⑦ 待做（26.8）：M1 放 4 个 OFL 字体（本机无外网，本轮做不到）→ M2 布局 9 处固定宽度 + 泰文 `AUTOWRAP_WORD_SMART` 问题 → M3 加 `zh_TW/ja/ko` → M4 `vi/th` → M5 Steam 商店文案。另记一条现在就会咬人的：`userData.gd:89` 的 `begins_with("zh")` 把 `zh_TW/zh_HK` 判成简体 |
+| 2026-11-12 | §二十五 装甲列车 M1~M2（实现） | v1.0 | 需求：「我想设计一种类似火车的 boss，每节车厢有炮塔，有 5 节车厢，独立血量，中间车厢被打爆其他就往前进，都被打爆就爆炸，逃离扣血每节单独扣」。**先做设计稿（25.1~25.12）再实现 M1~M2**。① **5 节都是真 `Enemy`**：独立 hp / 独立奖励 / 独立逃脱扣血全部白拿基类，`lossPoints 2` 每节各扣（探针 G11 实测漏两节 = 两次独立结算 = 4 点）。② **编组刚性 = 全队只有一个速度**：车厢把 `addSlow/removeSlow` 转发给 `train_conductor.gd` 的共享表，取最强一条算 `teamSpeed` 再写回每一节 —— 各节自算会让车厢间距漂走，火车散架（S1/S2/S3 覆盖）。③ **收拢只在死亡那一帧改写一次槽位**：锚点是"当前最前面那节活着的车厢"，所以 leader 死 → 整列不跳、中间死 → 后面各进一格、尾车死 → 谁都不动（G4/G5/G6）。④ **车厢 `extends enemy.gd` 而不是 `boss.gd`**：`boss.gd` 每帧压掉头顶血条，而列车顶部只有一条血条，"哪节在掉血"必须靠头顶条回答 —— 这是对 §19.7 第 6 条的有意破例，代价是光环绘制重复写约 15 行。⑤ 零件复用：炮塔 = `base_turret.tscn`（与实验坦克同一套），只是从"一个身体挂 4 炮"变成"5 个身体各挂 1 炮"。⑥ **踩到三处**：`.tscn` 里写 `#` 注释会让整个场景解析失败并连带 `stageData.gd` 编译失败（全项目报 autoload "does not inherit from Node"）；关卡的 `resolveOffset()` 给没写 offset 的兵种自动分 ±4px 车道，头节会歪出去，必须两头强制 0；**逃脱不走 `hurt()`**，所以没有 `onCarDied`，编组靠 `_process` 里 `pruneDead()` 收尾。⑦ 探针 `scene/test/train_boss_probe.tscn` **33 项全过**，回归 `tower_quota_probe` 15/15、`all_levels_check` bad=0。**已知未完成**：顶部血条现在显示的是头节自己 600 血（M3 的 `barProvider` 才改成合成血 + 5 段车厢格）、二阶段/宝石/终爆是 M4、挂关卡是 M5；**没在编辑器里真看过一列火车跑起来的样子**。⑧ **否决了需求的另一种读法**（打爆任意一节整列前移）：那会让"打爆尾车"也把列车推向基地，正确行为被惩罚、最优解退化成"别打" |
 | 2026-11-05 | 建造许可证（§23.2 K 晋升实现） | v1.0 | 需求：「建造许可证这个功能可以实现，最小改动实现」。① **数据**：`stageData.gd` 新增 `towerQuota` 表（仿 `stageTowers` 的形状，**不塞进 `allStage` 条目** —— 与塔池放行同机制、同位置好维护），按 23.2.1 投放表配 3/4/7/11/15 五关；7 关"待验证"条目已核 —— `tower.gd:160` 实测火箭**可对空**（`canTargetAir` 含 droneBase/laser/rocket），限火箭成立。`getTowerQuota()` 返回 -1 = 不限。② **计数口径 = 实时扫组**：`map.countTowersAlive()` 直接数 `tower` 组存活节点（`is_queued_for_deletion` 过滤），**零簿记状态** —— 出售/爆毁/残骸化天然放额，不存在"忘了扣"的 bug 类型；组审计过，只有 `tower.gd` 一处 `add_to_group("tower")`，无人机不污染。③ **闸口**：`map.placeTower` 在池校验后加 `isQuotaFull` 拒绝（扣钱前，同机甲约束的写法）；无尽豁免；默认无配置 = 行为与现在完全一致。④ **UI**：`tower_ui.refreshQuotaLocks()` 按存活数灰卡片 + tooltip，挂 `towerPlaced / towerGridReleased` 双信号 `call_deferred` 刷新（等本帧 `add_child` 落定）；`Game.towerLocked.emit(type)` 开始带参，map 按"池未放行 or 许可证满"给不同文案；介绍面板 InfoBox 下方新增整宽许可行（仿 `starHintLabel` 的插入法）。⑤ **本地化**：`_BuildQuotaFull / _TowerQuotaTooltip / _BuildQuotaTitle` 三键（中英）。验证：`scene/test/tower_quota_probe.tscn`（真实 map + 第 3 关）**15/15 全过**（配额查询/第 5 座被拒/加农同闸/特斯拉不限/拆一座再建成功/无尽豁免/卡片灰显与恢复/信号整链路/CSV 键齐全）；`route_smooth_probe` 回归 17/17。探针踩坑两处：直调 `placeTower` 不经过 `towerPlaced` 信号，需 emit 才走真实链路；`find_child("vbox")` 撞名（HUD 里多个 vbox），必须走 `towerUINode.towerCardList` 引用 |
 
 ---
@@ -2735,6 +2740,7 @@ bossBulwark, bossHive, bossCharger, bossSplitter, bossJammer, bossGunship, bossF
 
 > 大 boss 的类型先固定为 `bossFortress` 一种。以后要加第二种大 boss，只需在
 > `StageData` 里换 `bigBossType` —— 生成逻辑不用改。
+> **第二种大 boss 已设计完：装甲列车，见 §二十五**（就是靠换这一行投放的）。
 
 ### 19.6 生成
 
@@ -3645,3 +3651,628 @@ J 是玩家**花钱建造的塔**（构筑决策）——两轴不同，若都�
 | roadmap 原则① | 两模块都不改 `enemyInfo` 既有条目，只追加 —— 16 关平衡零漂移 |
 
 ---
+
+## 二十五、装甲列车 boss（多部件大 boss）
+
+> **实现状态：📝 设计稿（2026-11-12，未实现）**
+>
+> 需求原话：「我想设计一种类似火车的 boss，每节车厢有炮塔，有 5 节车厢，独立血量，
+> 中间车厢被打爆，其他就会往前进，都被打爆就会爆炸，逃离扣血我想的是每节单独扣血」
+>
+> 四项待定已确认：**大 boss 第二种** / **一条合成血条 + 分段车厢格** /
+> **每节 `lossPoints` 2（全漏 10）** / **终爆对周围塔造成范围伤害**。
+
+### 25.1 它填的是哪条空白轴
+
+§二十四 开头盘过的 5 条空白轴里，前 4 条已被 S/T/P/Q/R 认领或归档，
+但**「一个 boss 由多个可击杀部件组成」这件事，现有 7 种 boss 一个都没做**
+（§19.3 全是"单实体 + 一条机制"）。装甲列车 adds 三条现有 boss 都没有的东西：
+
+| 新增轴 | 玩家被迫换的应对 |
+|---|---|
+| **多部件独立血量** | 火力被 5 个目标天然摊薄 —— "堆一座超级塔"的打法第一次失效，必须**铺开集火顺序** |
+| **线性密集队列** | 溅射/群伤一次串打多节，单体高伤只啃一节 → **打"只会堆单体爆发"的人**（现有 6 种小 boss 没有一种惩罚这条） |
+| **击杀顺序决策** | 先打哪节会改变列车的**长度**与**剩余火力**，见 25.3 |
+
+设计原则仍然守住 §19.3 那句：**逼你换一种应对，而不是单纯堆血量**。
+总血量刻意与要塞同档（3000 基数），它不是更厚的怪，是**形状不同**的怪。
+
+### 25.2 编组结构
+
+5 节**同质车厢**沿同一路线串成一列，每节是一个独立的 `Enemy` 实例，
+自己带一座 `BaseTurret`（就是实验坦克那套子炮塔，见 §19.11 偏差 1 的反面 ——
+这次是"多个身体 + 每个一炮"，不是"一个身体 + 四炮"）。
+
+```
+起点 ──────────────────────────────► 基地
+ [车厢5] [车厢4] [车厢3] [车厢2] [车厢1]      ← 车厢1 最接近基地 = leader
+   ↑
+ 中间那节（车厢3）身上标宝石，见 25.5
+```
+
+| 项 | 规则 |
+|---|---|
+| 槽位 | `progress[i] = leaderProgress - i × CAR_SPACING`（`i` 只数**活着**的车厢，从 0 起） |
+| leader | 活着的最前面那节。它打死后**第 2 节自动上位**，列车继续前进 —— 没有"车头一死就停"的漏洞 |
+| 起点铺开 | 生成时 leader 从 `4 × CAR_SPACING` 处入场，保证 5 节全在路线内（否则后几节 progress 为负、在起点外堆叠） |
+| `CAR_SPACING` | 车厢贴图宽 × `scale` + 8px。占位美术阶段取 **72**（正式美术换贴图时跟着改这一个常量） |
+| 车体朝向 | 由 `PathFollow2D` 自带的 `rotation` 跟曲线转，5 节自然弯成一列 —— 不需要手写朝向 |
+
+### 25.3 核心机制：打爆一节，后面的收拢
+
+**某节车厢被打爆 → 它后面的所有车厢整体前移一个 `CAR_SPACING`**，列车变短。
+这正是需求里的"中间车厢被打爆，其他就会往前进"。
+
+由此产生三条**真实**的策略，也是这个 boss 的全部乐趣来源：
+
+| 打哪节 | 后果 |
+|---|---|
+| **尾车（车厢5）** | 后面没车厢 → **不推进任何东西**，纯粹削掉一座炮塔。最安全的答案 |
+| **中间（车厢3）** | 后面两节各前移一格，列车收拢成更短的两团 → **溅射收益更高**，且**宝石在这节** |
+| **leader（车厢1）** | 第 2 节顶上来，整列位置不变，但少一座最靠前的炮塔 —— 它同时是"最接近基地"的威胁 |
+
+> **明确不做（已评估并否决）**：「打爆任意一节 → **整列**前移一格」（需求字面的另一种读法）。
+> 它会让"打爆最后那节"和"打爆中间那节"都把整列车推向基地，
+> 于是**正确行为被惩罚**、最优解变成"别打、先攒塔"。
+> 收拢版本只让**死点之后**的车厢前进，玩家打死路威胁（leader）不受罚，
+> 尾车前进一格也不会越界（它永远在最后）。
+
+**压缩发生在死亡那一帧**，是一次性的 progress 改写，不是每帧重算
+（每帧重算会在车厢被减速 / 恢复时抖动，见 25.7 第 1 条）。
+
+### 25.4 二阶段（与要塞同构的"半血狂暴"）
+
+以**合成血量**（5 节之和）判 50%，与现有大 boss 的 UI 口径保持一致：
+
+| 触发 | 效果 |
+|---|---|
+| 合成血量 ≤ 50% | 编组速度 ×1.3、**全队免疫减速**（复用 `boss.gd::immuneSlow`，但作用在编组共享速度上）、立刻多开一节备用炮（车厢炮塔 `shootDelay ÷1.4`） |
+
+> 为什么用合成血量而不是"还剩几节"：还剩 3 节 ≠ 剩 60% 血（可能 2 节残血 + 1 节满血）。
+> 合成血量才能让玩家在顶部那一条上**一眼预期**狂暴什么时候来。
+
+### 25.5 数值（基数，实际血量仍乘关卡 `bossHpMul`，见 §19.4）
+
+| 项 | 每节 | 整列合计 |
+|---|---|---|
+| `hp` | 600 | **3000**（= 要塞同档） |
+| `armor` | 0.30 | —— |
+| `speed` | 26（编组共享，见 25.7 第 1 条） | 26 |
+| 炮塔 `atk` / `shootDelay` / `scope` | 10 / 1.6s / 260 | 合计 DPS ≈ 31（要塞 ≈ 37） |
+| `reward` 金币 | 60 | **300**（= 要塞同档） |
+| `rewardExp` 塔经验 | 24 | 120（= 要塞同档） |
+| `gemReward` | **只有车厢3 给 3**，其余 0 | 3（= 要塞同档） |
+| `lossPoints` | **2** | 全漏 **10**（基地 20 血的 50%） |
+
+`bossHpMul` 沿用 §19.4 的 `1.0 + 0.39 × (id - 1)`，**在 conductor 里对每节统一乘**（不在 5 个 enemyInfo 里各写一遍）。
+
+> **宝石为什么挂在中间那节**：三个目的。① 总量仍然 = 要塞的 3，不破 §19.2 的奖励表；
+> ② 给"打中间"一个正向理由，抵消 25.3 里"尾车最安全"造成的"没人敢打中间"；
+> ③ 车厢3 被打爆同时触发收拢 → 奖励与机制在同一节点上，玩家会记住这件事。
+>
+> ⚠️ **不能靠车厢的 `gemReward` 字段实现**：`spawnEnemy()` 的 `props` 是在 `add_child` **之前**
+> `set()` 的，而 `setupEnemyInfo()` 在 `_ready()` 里会用 `enemyInfo` 重新覆盖 `gemReward`
+> （[enemy.gd:182](file:///F:/machine-TD/machine-td/script/enemy/enemy.gd#L182)）—— props 注入会被抹掉。
+> 所以"哪一节掉宝石"由 **conductor 按槽位结算**（`canSplit` / `silentBoss` 之所以能用 props，
+> 是因为那两个字段不从 `enemyInfo` 读）。
+
+### 25.6 全灭爆炸
+
+最后一节被打爆时，在**那节的位置**放一颗现成的 `bomb`（照抄
+[suicideTruck.gd::triggerSelfExplode()](file:///F:/machine-TD/machine-td/script/enemy/suicideTruck.gd) 的写法）：
+
+| 参数 | 值 | 理由 |
+|---|---|---|
+| `blastRadius` | 220 | 比自爆车的 120 大一档，大 boss 的收尾该有存在感 |
+| `damage` | 60 | 相对 §19.10 探针里塔 `maxHp=200` 的量级 ≈ 30% —— 疼，但不会一炸拆塔 |
+| `targetMask` | `1 << 0`（只命中塔） | 不能炸到敌人自己（编组都死了，留着只会污染统计） |
+| `damageType` | `physical` | 与自爆车一致；不给它一个"能量爆炸"的新语义 |
+| 视觉 | **只用 bomb 自己的动画** | ⚠️ 不要再叠 `ExplosionManage.playExplosion()`（`bomb.gd` 注释里已经写过这个坑） |
+
+> **这条爆炸的设计意图**：让"最后一节在哪打死"变成决策 —— 拖到塔群边上补最后一刀，
+> 会白送对面一片塔。它是 25.3 那套顺序决策的**收尾惩罚**，不是额外的随机坏运气。
+> 因此**收拢（打中间/尾车）本身不爆炸**，只有整列全灭才炸。
+
+### 25.7 实现草记
+
+**新增文件**
+
+| 文件 | 作用 |
+|---|---|
+| `script/enemy/boss/boss_train.gd` | 车厢：`extends boss.gd`。**不自主推进**（覆写掉 `super._physics_process` 里那段 `parent.progress += speed * delta`，改成只处理表现），把移动权交给 conductor；带一座 `BaseTurret` 挂点 |
+| `script/enemy/boss/train_conductor.gd` | 编组控制器。**挂在 level 节点下，不挂在任何车厢上** —— 否则 leader 一死控制器跟着消失（25.8 第 3 条）。职责：槽位与 progress、死亡压缩、全队共享减速表、合成血条 provider、车厢3 宝石结算、全灭爆炸 |
+| `scene/enemy/boss/boss_train.tscn` | 车厢场景（占位美术：复用 `armored_tank_v2_*` + `modulate` 铁灰 + `Turret` 实例一座） |
+
+**数据登记（全部只追加，遵守 roadmap 原则③）**
+
+```gdscript
+# game.gd::enemyType 末尾追加（bossFortress 之后）
+bossTrain
+
+# game.gd::enemyInfo 新增一条：isBoss = true / bossTier = 2 /
+#   bossBarName = "_BossName_train" / bossTip = "_BossTip_train"
+#   bossAuraColor = Color(0.62, 0.66, 0.72)   # 铁灰：与要塞金红、炮艇紫明确分开
+#   车厢不写 scope（炮塔自己带雷达），conductor 用 CAR_COUNT / CAR_SPACING 常量
+
+# stageData.gd::enemyScenes 追加 bossTrain → boss_train.tscn
+# StageData.allStage：'bigBossType': Game.enemyType.bossTrain   ← §19.5 预留的换型口子，生成逻辑一行不改
+# lang/language.csv：_BossName_train / _BossTip_train 两条（en + zh）
+# script/test/boss_test.gd::BOSS_ENTRIES：追加一条，方便按 F6 单测
+```
+
+**投放**：第 **9** 关（`bigBossType = bossTrain`）。
+理由：L6 仍然是要塞（第一次见大 boss，综合考试），L9 换列车（**第二次见大 boss，形状完全不同**）——
+这条正好兑现 §19.5 那句"以后要加第二种大 boss，只需在 StageData 里换 `bigBossType`"。
+L12/L15 暂不换（要塞当终盘 Boss 更合适），轮换留给以后加第三种大 boss。
+
+**三条必做的实现纪律**（都是这个 boss 独有的坑，不是通用建议）：
+
+1. **速度必须是"全队一个数"**。车厢各自走 `refreshSpeed()` 的话，一节被 EMP 减速、
+   另一节没减 → 车厢间距被拉长/挤叠，视觉直接变成"火车散架"，机制也就废了。
+   做法：车厢覆写 `addSlow() / removeSlow()`，把来源转记到 conductor 的
+   `teamSlowSources`，由 conductor 取最强一条算 `teamSpeed`，再把 `teamSpeed` **写回每节 `speed`**。
+   > 这与 §八 2026-10-24 那条 EMP 减速漂移是同一类问题，只是这次多了一个"必须刚性"的约束。
+2. **压缩只在死亡那一帧做一次** progress 改写。每帧按 `leader - i×spacing` 强制回写会和
+   第 1 条打架（减速那一帧算出的 `i` 变了就会抖），也让"收拢"这个动作失去打击感。
+3. **车厢要显示头顶血条**，这是对 §19.7 第 6 条（"boss 不显示头顶血条"）的**有意破例**：
+   顶部只有**一条**合成血条，"到底哪节在掉血"必须靠头顶条 + 25.9 的分段格来回答。
+   ⚠️ `boss.gd::_physics_process` 现在每帧把 `lifeBar.visible` 压回 false
+   （[boss.gd:39](file:///F:/machine-TD/machine-td/script/enemy/boss/boss.gd#L39)），
+   车厢这边要么把它放开，要么车厢干脆 `extends enemy.gd` 而不是 `boss.gd`，
+   光环绘制从 `boss.gd` 抽成一个可复用片段。**推荐后者**（车厢是"部件"，语义上本来就不是完整 boss）。
+
+### 25.8 血条：一条合成条 + 5 段车厢格
+
+| 项 | 规则 |
+|---|---|
+| 顶部行数 | **仍然只有 1 行**（`MAX_ROWS = 2` 不动，不去占要塞那一行） |
+| 血量 | 来自 conductor 的 `Σhp / ΣmaxHp`（含 `bossHpMul`），**不是** leader 车厢自己的血 |
+| 分段格 | 血条上画 **5 段等分格**，每段 = 一节车厢。被打爆一节 → 那一格**变暗 + 画叉**（复用 `boss_bar_ticks.gd` 的自绘 Control 做法：线必须画在 ProgressBar **上方**，否则被盖住） |
+| 与 fills 的关系 | 段格**只做分隔与状态**，不各自扣血 —— 填充仍是整条连续比例，所以"还剩多少总血"依然一眼可读 |
+| 名字 | `_BossName_train`；`bossTip` 写"溅射打串、先拆尾车、中间那节有宝石、最后一节会炸"（横幅停留多 0.9s 的规则沿用 §19.8） |
+
+**需要动的既有代码（这是本模块唯一一处非纯追加改动）**
+
+- `boss_health_bar.onBossSpawned()`：只有 leader 车厢标 `isBoss` 发信号，其余 4 节用
+  `props = {"silentBoss": true}` 生成 → 天然只建 1 行（`silentBoss` 是现成机制，分裂体小号已用过）。
+- `boss_health_row.bind()/refresh()`：血量来源从"节点身上的 `hp/maxHp`"改成
+  "节点有 `barProvider` 就用 provider 的 `barHp()/barMaxHp()/barCarSlots()`" ——
+  对现有 7 种 boss 走原分支，**行为逐帧不变**。
+- ⚠️ `boss_health_bar._process()` 现在判"绑定节点 `dead` 就删行"
+  （[boss_health_bar.gd:74](file:///F:/machine-TD/machine-td/script/ui/boss_health_bar.gd#L74)）。
+  leader 车厢打死后编组还有 4 节活着，**这条判据必须换成"provider 说编组还有活的不删行"**，
+  否则整列还剩一半血、血条却当场消失。这是本模块最容易写错的一处。
+- 大 boss 的 50% 加粗刻度 + `PHASE 2` 标签（§19.8）在合成条上照常生效 —— 25.4 就是按合成血量判的，正好对上。
+
+### 25.9 关键决定与坑
+
+1. **不吃蜂群 `countScale`**：列车每一节都标 `isBoss`，`buildWaveSpawner()` 现有的
+   `isBoss` 跳过倍数分支就够用，不会出现"蜂群刷出 10 节列车"。但**只生成 1 行编排**：
+   一个 `isBoss` 行 = 一个编组，其余 4 节由 leader 在 `_ready()` 里自己生成。
+   > ⚠️ 千万别写成 `number: 5` —— 那会让 5 个编组各自铺开一列，场上出现 25 节车厢。
+2. **`finish()` 结算**：判据是"队列空 + 场上无敌人"。5 节都是真 `Enemy`，
+   死光 / 漏光之后场上自然干净，不需要特判。反过来说 ——
+   **只要还有任何一节活着，这一波就不会结算**，这是大 boss 应有的黏度，不改。
+3. **同屏上限**：5 节占 5 个名额（无尽模式上限 90）。本模块**不召唤**小兵，
+   与 §19.7 第 10 条那条约束无关；但如果以后给列车加"甩车厢"技能，要按巢母那条查上限。
+4. **漏怪扣血是分批的**：5 节依次到达基地 = 2 点 × 到达次数。中途玩家还有救，
+   不会出现"一次失误直接 10 点没了"的不可读结算。全漏 10 点 = 基地 20 血的一半，
+   与 §19.7 第 5 条"boss 逃跑代价要大"一致，但没有越过"一次致命"的红线。
+5. **塔会把火力摊在 5 个目标上**：这是机制，不是 bug，不要给塔加"只打 leader"的特殊索敌。
+   真想让塔集中，用 §二十一 B（目标优先级）里加"列车最近车厢优先"这类**通用**策略，
+   而不是为这个 boss 单开一条分支。
+6. **成就计数**：`boss_slayer`（§19.7 第 7 条建议，**目前还没实现**）将来落地时，
+   一列列车只能算 **1 次**，不能算 5 次 —— 判据用"编组全灭"而不是"bossDefeated 信号次数"。
+7. **倍速 / 挑战模式**：conductor 计时全走 `_physics_process`，2X 自动跟随（与 §二十 交叉冲突表口径一致）；
+   挑战模式不计成就（§17.6）。
+
+### 25.10 验收探针
+
+**编组**
+
+- 生成后场上恰好 **5 节**、相邻 `progress` 差 = `CAR_SPACING`、全部 `progress >= 0`
+- 蜂群模式下仍然 5 节（不是 25 节）
+- 打爆中间那节 → 其后车厢 `progress` 各 **增加一个** `CAR_SPACING`、其前车厢**不变**、leader `progress` **不变**
+- 打爆 leader → 第 2 节成为 leader，整列位置不跳
+- 打爆尾车 → 没有任何车厢移动
+- 5 节 `speed` 任一帧都相同（断言 `cars[i].speed == cars[j].speed`）
+
+**减速（对应 25.7 第 1 条）**
+
+- 只让 1 节进 EMP → **5 节同时变慢且幅度相同**；离开后 5 节都精确回到 `teamBaseSpeed`
+- 二阶段后 `addSlow` → 5 节 `speed` 一律不变（全队免疫）
+
+**数值与结算**
+
+- 合成血条 = `Σhp / ΣmaxHp`，打爆任意一节 **不删行**，只剩最后一节时仍显示
+- 每节物理伤害被 `armor 0.3` 砍 30%；`hurt(..., "energy")` 打满额（沿用铁壁那条通道）
+- 每节漏怪各扣基地 2 点；漏 3 节 = 6 点
+- 只有车厢3 死亡给 3 宝石，其余 4 节 `gemReward == 0`
+- 金币合计 = 300 × `modeRewardScale`（每节 60，与要塞同档）
+
+**二阶段与终爆**
+
+- 合成血量跨过 50% → 编组 `speed ×1.3`、免疫减速开、炮塔间隔 ÷1.4，**各只发生一次**
+- 最后一节死亡 → `bomb` 实例出现、`blastRadius==220`、`targetMask==1<<0`、
+  220 内的塔掉血 ≈ 60、**场上不出现第二套爆炸特效**
+- 打爆非最后一节 → **不爆炸**
+- 全灭后 `finish()` 正常结算（不卡在"场上无敌人"判定）
+
+**回归**
+
+- 现有 7 种 boss 顶部血条行为逐帧不变（`barProvider` 分支只对列车生效）
+- 要塞（`bigBossType` 未改成列车的关卡）不受任何影响
+
+### 25.11 分阶段
+
+| 阶段 | 内容 | 成本 |
+|---|---|---|
+| M1 | `bossTrain` 兵种登记 + 车厢场景 + conductor（生成 5 节 / 槽位 / 起点铺开） | ✅ 已完成 |
+| M2 | 死亡压缩 + 全队共享减速表（25.7 第 1、2 条） | ✅ 已完成（含"每节单独扣血"的实弹验证） |
+| M3 | 合成血条 + 5 段车厢格 + `barProvider` 分支（含 25.8 那条删行判据） | M |
+| M4 | 二阶段狂暴 + 车厢3 宝石 + 全灭爆炸 + i18n + 测试场景入口 | S |
+| M5 | 挂进第 9 关 `bigBossType` + 平衡（**依赖 §19.9 的 M5：关卡 Boss 配置字段本身还没落过地**） | S |
+
+> ⚠️ M5 的前置：`StageData` 里 `bossWave` / `bossHpMul` / `bigBossType` 四个字段
+> 到现在一个都没配过（§19.11「Boss 还没挂进关卡」）。列车是**第二种**要挂进关卡的 boss，
+> 别为它单独发明一套关卡配置写法 —— 先按 §19.5 把那四个字段落一次地，要塞和列车一起挂。
+
+**成本 M~L / 风险 中**
+风险集中在三处：全队共享减速（25.7 第 1 条）、血条行生命周期（25.8 ⚠️ 那条）、
+以及"一列 = 5 个敌人实例"对波次结算与同屏上限的影响。三处都有现成模板可抄，
+不涉及任何既有系统的重写。
+
+### 25.12 与其他模块的关系
+
+| 关联 | 说明 |
+|---|---|
+| §十九 Boss | 兑现 19.5「第二种大 boss 只需换 `bigBossType`」；`bossAuraColor` / `bossTier` / `bossTip` / `silentBoss` 全部复用；§19.7 第 6 条为车厢头顶血条**开一条有意破例** |
+| §十九 要塞 | 总血、金币、经验、宝石四项**逐条对齐**（3000/300/120/3）—— 它是同档次的另一种形状，不是更强的 boss |
+| §二十四 T 督战指挥车 | 都涉及"多个单位互相影响"，但方向相反：T 是**敌内**增益（别让火力摊薄），列车是**敌内**摊薄（逼你排顺序）。可以同关投放，读图负担要注意 |
+| §二十一 D 精英词缀 | 词缀**不应**作用于车厢（5 节各 roll 一次会出现"三节带护盾的列车"这种极端值）；要加就加在整列一个层级 |
+| §二十一 B 目标优先级 | 25.9 第 5 条指定的正解入口 |
+| §十七 战斗模式 | 吃 `modeHpScale` / `modeSpeedScale`（它就是个敌人），**不吃 `countScale`** |
+| 实验坦克 4 炮塔 | 同一批零件（`base_turret.tscn`），区别是"一个身体挂 4 炮"vs"5 个身体各挂 1 炮" |
+
+---
+
+### 25.13 已实现部分（M1~M2，2026-11-12）
+
+#### 文件清单
+
+| 文件 | 作用 |
+|---|---|
+| `script/enemy/boss/train_conductor.gd` | 编组控制器（**挂在 level 节点下**）：铺 5 节、槽位、起点铺开、死亡收拢、全队共享减速表、编组自我释放 |
+| `script/enemy/boss/boss_train.gd` | 车厢：`extends enemy.gd`（**不是** `boss.gd`，见 25.7 第 3 条）；头节建编组、跟随节按 `trainGroupId` 归队；`addSlow`/`removeSlow` 转发编组；`hurt` 死后上报收拢 |
+| `scene/enemy/boss/boss_train.tscn` | 车厢场景（占位美术：`armored_tank_v2_body_*` × `scale(1.3, 0.95)` + `modulate (0.74,0.78,0.84)` + 一座 `BaseTurret`） |
+| `script/test/train_boss_probe.gd` + `scene/test/train_boss_probe.tscn` | M1~M2 探针（33 项断言，headless） |
+| `game.gd` | `enemyType` 末尾追加 `bossTrain`（枚举值 19）；`enemyInfo` 一条数值（每节 600/0.3/26/60金/24经验/漏2，`gemReward 0`） |
+| `stageData.gd::enemyScenes` | 登记车厢场景（**仍未配到任何关卡**，与 §19.11 同状态） |
+| `lang/language.csv` | `_BossName_train` / `_BossTip_train`（en + zh） |
+| `script/test/boss_test.gd::BOSS_ENTRIES` | 加一条，测试场景里能单独刷一列火车 |
+
+炮塔数值在**场景 Inspector**里（与实验坦克同一套约定）：`atk 10`、`shootDelay 1.6`、
+`radarScope 260`、`rotationSpeed 8`、`muzzleOffset 18.5` → 单节 DPS 约 6.3，5 节合计约 31。
+`.tscn` 里**不能写 `#` 注释**（会让整个场景解析失败，实现时踩过一次：
+连带 `preload` 它的 `stageData.gd` 编译失败、`stageData` autoload 直接挂掉，全项目报
+"does not inherit from Node"），所以这些数字记录在这里而不是场景里。
+
+#### 探针结果（33 项全过）
+
+```
+G1  exactly 5 carriages                 G2a/b/c  全部在路线内 + 间距 = CAR_SPACING 72
+G3  all carriages on one track          G7   五节同一帧 speed 相同
+S1  one carriage in EMP -> all 5 slow   S1b  team speed = base x (1 - strongest)
+S2  exact restore to teamBaseSpeed      S3   immuneSlow swallows slows for every carriage
+G4a/b/c  中间死：前面不动、后面各收拢一格
+G5a/b/c  leader 死：顶上来的那节不跳，整列保持原位
+G6  尾车死：谁都不动
+G8  蜂群模式仍是一列 5 节（不是 25 节）  G9   modeHpScale 每节照吃
+G11a/b/c 漏两节 = 两次独立逃脱结算 = 4 点伤害，剩下 3 节继续跑
+G10a/b  全灭后场上无车厢 + 编组自我释放
+```
+
+跑法：
+
+```
+f:/Godot_v4.7.1-stable_win64.exe --headless --path machine-td \
+  --quit-after 20000 res://scene/test/train_boss_probe.tscn
+```
+
+回归：`tower_quota_probe`（15/15）与 `all_levels_check`（bad=0）都重跑过，
+现有 7 种 boss 与关卡编排不受影响。
+
+#### 实现时发现的三处偏差（已回写进 25.7 的精神，但细节不同）
+
+1. **头节会被关卡的自动车道劈出去**：`base_level.gd::resolveOffset()` 给没写 `offset`
+   的兵种按类型自动分配 ±4px 左右车道，于是**跟随节（显式写 0）在中心线上、
+   头节偏 4px** —— 一列歪车。修法两头都要下：跟随节的 `spawnInfo` 显式写 `"offset": 0.0`，
+   conductor 在 `setup()` 里把头节的 `wrapper.v_offset` 强制归 0。
+   （探针 G3 现在专门盯这条。）
+2. **逃脱不走 `hurt()`，所以不会有 `onCarDied`**：`enemy.gd::_physics_process` 到达终点时
+   直接 `freeSelf()`，既不置 `dead` 也不发死亡信号。conductor 除了"死时压缩"，
+   还要在 `_process` 里 `pruneDead()` 收失效条目 —— 否则漏光一列火车后编组会一直不释放，
+   也就永远占着一个 `groups` 条目。测试场景的「清空 Boss」是第三条路径（直接 `freeSelf`），
+   同样靠这条兜住。
+3. **探针必须量"到锚点的间距"，不能量绝对 progress**：两次快照之间整列一直在前进
+   （3 帧约 3px），绝对位移里混着这段路，`CAR_SPACING` 会被测成 75。
+   间距里的前进量相互抵消，判据才与测量时机无关。
+
+#### 还没做的（M3 起）
+
+- **顶部血条现在显示的是头节自己的 600 血**，不是 5 节的合成血量 —— 这是 M3 的
+  `barProvider` 分支要改的第一件事（25.8）。也就是说**当前血条会"骗人"**：
+  打死中间那节，条子纹丝不动。测试时别把它当成 bug 报。
+- 二阶段狂暴 / 车厢3 宝石 / 全灭爆炸（M4，`immuneSlow` 开关已就位并被 S3 验过）
+- 挂进第 9 关（M5，依赖 §19.9 的 Boss 关卡配置字段先落地）
+- **未做视觉确认**：本轮全部结论来自 headless 探针，没有在编辑器里真跑过一局看
+  占位贴图的比例、光环叠起来好不好认、五节车厢在弯道上贴不贴。
+
+---
+
+## 二十六、国际化扩语种（字体链与探针）
+
+> **实现状态：🟡 M0 完成 + 已实装 3 个语种（`zh_TW` / `ja` / `ru`，2026-11-12）**
+>
+> `ko` / `th` / `vi` **故意还没加** —— 主字体对谚文/泰文/越南变音符是 0 覆盖（26.2 实测），
+> 现在登记进下拉只是给玩家一个"切过去看豆腐块"的按钮。等 M1 放字体。
+>
+> 需求原话：「帮我分析游戏现在的国际化还需要增加几个，应该上架 steam 肯定需要这个，
+> 我打算先加亚洲一些国家语言」→「先做第 0 步，把字体链和探针搞出来」
+>
+> 第 0 步的定义：**不加任何语种**，先把"加语种必然踩的坑"变成机器能检查的东西。
+> 理由很直接 —— 三类最常见的事故（忘了登记、忘了重导、缺字形）
+> **在开发者机器上全都表现为"一切正常"**，只有玩家的截图里才会出问题。
+
+### 26.1 现状盘点（审计数字，2026-11-12 实测）
+
+| 项 | 实测 | 含义 |
+|---|---|---|
+| 语种 | `en` / `zh` 两列，[game.gd:607](file:///F:/machine-TD/machine-td/autoload/game.gd#L607) 硬编码 | 语言下拉只有两项是因为 `Game.language` 只有两项 |
+| 词条 | **304 个 key**（`lang/language.csv`） | 加一个语种 = 填 304 格 |
+| 结构健康度 | 空值 **0**、重复 key **0**、每行列数一致、23 个含 `%d/%s` 的 key **各列占位符完全一致** | **没有技术债**，加语种是"加列"而不是"补债" |
+| 长度特征 | en 均 27 字符 / zh 均 9.5；**260/304 条的英文长度 ≥ 中文两倍** | 现有布局一直是在"最短的中文"和"较长的英文"之间过的，韩文/泰文会更长 |
+| 手工断行 | 全表只有 `_About_Text` 用了 `\n`（共 8 处转义） | 担心的"逐语种手工断行"负担基本不存在（26.6 实测证实：那是 `RichTextLabel` + `autowrap=WORD_SMART`，自己会折行） |
+| 登记面 | **四处必须同步**：CSV 列 ↔ `Game.language` ↔ `project.godot:93 locale/translations` ↔ `lang/language.<code>.translation` | 第 0 步之前**没有任何东西检查这四处**，全靠人记 |
+| 运行时链路 | `userData.gd:86-90` 启动判定 + `saveSettings` 持久化到 `user_settings.cfg`；`setting.gd:15-25` 填下拉、`:72-76` 切换 | 链路本身干净，不用动 |
+
+### 26.2 真正的地基问题：全项目只有一个字体
+
+唯一的字体是 `font/AlibabaPuHuiTi-3-85-Bold.ttf`（`theme/theme.tres:22` 的 `default_font`，
+23 个场景各自挂这份 theme）。用 fontTools 与 Godot `Font.has_char()` **双向核对**的实测结果：
+
+| 目标文字 | 主字体覆盖 | 结论 |
+|---|---|---|
+| CJK 统一表意文字 | **20976 / 20992（100%）**、Ext-A 6582/6592 | 繁体中文**几乎免费**（代价只是字形按大陆规范设计） |
+| 西里尔字母 | 100% | 俄语免费（不在"亚洲"但顺带记一笔） |
+| 假名（日语） | 184 / 192，缺的都是死码位，**但缺 `・` U+30FB 与 `々` U+3005** | 日文 UI 高频字符，要么补字体要么改文案 |
+|谚文（韩语） | **0 / 11172**（Jamo 也是 0） | ❌ **必须自带字体** |
+| 泰文 | **0 / 128**（辅音、上置元音、声调全缺） | ❌ **必须自带字体 + 排版改造**（见 26.6） |
+| 越南语变音符 | Latin Extended Additional **4 / 256**（`ư ộ ề ễ` 全缺） | ❌ **必须自带字体** |
+
+> ⚠️ **`allow_system_fallback=true` 是上架前最危险的开关**
+> （`AlibabaPuHuiTi-3-85-Bold.ttf.import:22`）。缺字目前**靠玩家操作系统兜底**：
+> Windows 会给韩文/泰文补字形，本机怎么测都"正常"；
+> Steam Deck / Linux（fontconfig）或精简系统的玩家看到的是豆腐块。
+> 这类 bug **在开发者机器上永远复现不出来**，所以必须用字形覆盖检查来防，而不是靠眼睛。
+
+**顺手抓到一个现存 bug**：`_TutorialGuide4` 中英两列都用了 `▶`（U+25B6），主字体没有这个字形。
+已改成文字描述（en "Tap the Play button…" / zh「点『播放』按钮开始出怪」）——
+**改文案而不是加字体**，因为那个按钮本身是贴图图标，文字里引用一个符号本来就是多余表达。
+
+### 26.3 字体回退链：装配在代码，不装配在 `.import`
+
+新增 [autoload/fontStack.gd](file:///F:/machine-TD/machine-td/autoload/fontStack.gd)，
+在 `project.godot` 的 autoload 里注册于 **UserData 之后**（比任何场景早，语种切换不受影响）：
+
+- 启动时把 `res://font/fallback/` 目录里的 `.ttf/.otf/.woff/.woff2` 按**文件名排序**
+  装进主字体的 `fallbacks` 链。
+- **文件名前缀 = 优先级**（`01_NotoSansKR.otf`、`02_NotoSansThai.ttf`…）。
+  同一个码位（`・` 就是典型）在 JP 与 KR 字体里都有时，先命中的那个决定字形风格 ——
+  所以顺序必须可控，不能靠字母序。
+- **只装链不下载字体**：目录为空时什么都不做，行为与本步改动前逐帧一致。
+- **合并而不是覆盖**（本轮修掉的一个真 bug）：初版 `apply()` 是 `baseFont.fallbacks = 目录扫到的链`，等于每次启动把 `.ttf.import` / 主题 `FontVariation` 里配好的回退**抹掉**；现在先把"不是自己放进去的"留下，再追加目录里的，同一实体不重复入链（由 C5f/C5g 守着）。
+- 加载失败必须 `push_warning`：否则链会**静默少一层**，缺字照样掉给系统兜底，
+  而探针看着还是绿的（这是"检查器骗人"的一种）。
+- `fontChain()` / `hasGlyphAcrossChain()` / `providerOf()` 给探针用。
+  **实测语义（2026-11-12，纠正本节早期写法）**：
+  · `Font.has_char()` **会顺着 `fallbacks` 往下找** —— 链清空时 `has_char(한)=false`，
+    把韩文字体挂上就变 `true`。（先前记成"只查自己、必须手工遍历"是**错的**。）
+  · 真实排版也走链：关掉 `allow_system_fallback` 后，
+    `get_string_size("한국어")` 从 **108.0 → 120.0**（每字 36 的豆腐块换成 40 的真字形）。
+  · 但 `has_char()` **不认系统兜底** —— 开着兜底时缺字照样被 OS 画出来（本机看着正常），
+    `has_char` 仍然报 false。所以它恰好是"**我们自己打包的字体够不够**"的正确问法，
+    探针 C6/C7 因此天然不受本机装了什么字体影响。
+
+### 26.3b 回退链到底能配在几个地方（用户问"主题里能不能配 fallback"的完整答案）
+
+实测四个位置，结论是：**`Theme` 本身没有 fallback 概念，fallback 挂在字体资源上**。
+
+| 可配点 | 能不能生效 | 能不能提交 / 进包 | 说明 |
+|---|---|---|---|
+| `Theme`（`theme.tres`）上配 fallback | ❌ 没有这个字段 | —— | Theme 只有字体槽（`default_font`、每类控件的 `font`），**换字体不是补字形**：给 `Label` 整槽换成 NotoSansKR，Latin 与 CJK 也会一起换，不是"缺字时才借" |
+| 主字体的 `.ttf.import` → `fallbacks=[]` | ✅ 编辑器 Import 面板可配 | ⚠️ **本机专属**：本仓库 `*.import` 被 gitignore（`.gitignore:18`，`git ls-files` 里 `.import` 计数为 **0**） | 手写该字段两种写法都被拒：填路径字符串报 `Unable to convert array index 0 from "String" to "Object"`；补 `[ext_resource]` 头报 `Resource file not found: res://1_fbkr`，随后 Godot 重新导入**把 `fallbacks` 重置回 `[]`** |
+| 主题引用一个 **`FontVariation` .tres**（`base_font` = 主字体，`fallbacks` = […]） | ✅ 实测 `has_char` 与排版都走它 | ✅ `.tres` 进版本库、进导出包 | 这是"在主题里配 fallback"的**正解形态**：把 `theme.tres:22` 的 `default_font` 指向这个 .tres |
+| `autoload/fontStack.gd` 运行时装配 | ✅ | ✅ `.gd` 进版本库、进包 | 本项目的选择：目录自动发现，加语种不用碰编辑器 |
+
+两条实测细节值得记：
+
+- `theme.tres` 里 `default_font` 引用的对象与 `load("res://font/…ttf")` 拿到的是**同一个实例**
+  → 改一次，23 个挂这份主题的场景全部生效（这也是 runtime 方案能成立的根）。
+- 配在 `FontVariation` 上的链与配在主字体上的链**互不覆盖、可以并存**
+  （只给包装层配 → 包装层 `true`、主字体 `false`；只给主字体配 → 两层都 `true`）。
+  所以 `fontStack` 改成**合并不覆盖**之后，三种配法同时用也不会互相抹掉。
+
+> 另记一条对 M1 之后有用的开关：`allow_system_fallback` 是 `FontFile` 上的**运行时属性**
+> （不只导入设置）。字体配齐后把它关掉，缺字就从"本机正常、别人豆腐块"变成
+> **所有人都立刻看见的显式故障**。现在不动它，是因为 M1 还没做。
+
+### 26.4 探针 `i18n_probe`（50 项断言；M0 落地时 27 项，加三个语种后扩到 50）
+
+`script/test/i18n_probe.gd` + `scene/test/i18n_probe.tscn`（`export_presets.cfg:13` 的
+`exclude_filter` 已经把 `scene/test/*` 挡在包里）。
+
+| 组 | 查什么 | 抓的是哪类事故 |
+|---|---|---|
+| **C1** 结构 | 每行一格一列、无空 key 行、无空值、key 不重复、key 数合理 | 手工编辑 CSV 最容易碰坏引号/逗号 |
+| **C2** 登记同步 | CSV 列 ⇄ `Game.language` ⇄ `project.godot` ⇄ 编译产物存在 | **加了列忘了登记** → 下拉里没有它；**有登记没有列** → 切过去全是 key |
+| **C3** 占位符 | 每行各列的 `%d/%s/%f` 集合必须相同 | 漏了 `%d` 会让 `format()` 直接报错或显示成残缺句 |
+| **C4a** 检测器自检 | 不存在的 key 必须**原样返回** | 保证 C4b 的"等于 key 就算缺"判据不是空的（4.7 的 `TranslationServer` **没有 `has_key`**，只能这么判） |
+| **C4b/c** 运行时 | 每个语种每个 key 都取得到，**且取到的文本与 CSV 逐条一致** | 只查"key 在不在"抓不到**"改了 CSV 但没跑 `--import`"** —— 旧 `.translation` 里 key 也在，只是文案是旧的。比对前先还原 `\n/\t/\"` 转义（导入器开了 `unescape_translations=true`），否则 `_About_Text` 会误报 |
+| **C5** 链装配 | 链长 = 1 + 目录里字体数、主字体能画 CJK、**私用区 U+E000 必须判缺** | 后一条是覆盖检查器的**反向自检**：用一个永远不该有的码位证明 `has_char` 真的会返回 false |
+| **C5f/g** 合并语义 | 临时往链上塞一个外部字体再跑 `apply()`，它必须**还在链里**且链不重复 | 抓装配写成**覆盖而不是合并** —— 症状是"编辑器里配好的回退一进游戏就没了"，只有运行时能复现。⚠️ 哨兵必须是空 `FontFile`：拿 `FontVariation(base_font=主字体)` 当哨兵会构成**引用环，直接把进程问崩**（实测踩过） |
+| **C6** 字形覆盖 | 每个语种、每个字符，在**整条链**里能不能画出来；失败时打印 `U+XXXX ×出现次数 in key` | 豆腐块本体 |
+| **C7** 语种↔文字 | 按 locale code 查一组**代表性码位**（`ko` 查 `가 한 ㄱ`、`th` 查 `ก ั า`…） | **"先登记语种、后补字体、文案还没翻"** —— 那一刻 CSV 里没有该语种的文字，C6 全绿，但下拉里已经有了「한국어」 |
+| **C8** 语种判定 | 纯函数 `_languageFromLocaleString()` 喂 10 组 locale（`zh_CN/zh_TW/zh_HK/zh_MO/ja_JP/ru_RU/en_US/de_DE/fr_FR/ko_KR`） | ① 繁体区被当简体；② 判定出来的 code 没登记（`set_locale` 切到一个没有译文的语言）；③ 未知语种没回 `en`（与 `Game.t()` 的兜底不一致 → 混排） |
+| **C9** 主菜单宽度 | **装真实场景量真实控件**：逐个按钮比 `get_combined_minimum_size().x` 与它实际拿到的宽度 | 截断本体。三个前提写在函数注释里：locale 必须 `add_child` 之后设（setting.gd 会盖）、`text` 摘下再装回去（min size 有缓存）、不比字符数（按钮带图标 + 西里尔字母宽度只有字号的一半） |
+| **C10** 语言下拉 | 装满 `Game.language` 后最坏需求 vs 可用宽度 | 语种名**不走翻译键**（玩家要用自己的字选回去），所以 C1~C9 都盖不到它 —— 这条同时把"240 是上限"那个错误判断钉死 |
+| **C11** 对账 | 每个检查组进 `_ran`，末尾与 `EXPECTED_CHECKS` 比 | 我编辑 `_ready` 时把 C9/C10 挤到了 `quit()` 后面，探针照样报 `fails=0` —— **全绿不等于跑了** |
+
+> C7 需要单独存在的原因值得记下来：**C6 是"用到的字"的检查，C7 是"这个语种该能写"的检查**。
+> 加语种的真实顺序总是先让语种出现在下拉里、再放字体、最后才翻译，
+> 所以在 C6 还是空集的时候，只有 C7 会响。
+
+**正反两轮演练（探针的自我证明，2026-11-12）**
+临时给 CSV 加了一整列 `ko`（304 格韩文），并用系统里的 `malgun.ttf` 冒充回退字体
+—— **仅本地验证，绝不提交，也不是合法的分发方案**：
+
+```
+放字体：C5c chain=2  C6 locale ko PASS  C7 locale ko PASS
+        同时 C2a / C2c / C3 / C4c 如期 FAIL（没登记、没 project.godot、没翻译、占位符缺失）
+撤字体：C6 locale ko FAIL —— "U+C11C x304 in _appName | U+BCF4 x304 in _appName"
+        C7 locale ko FAIL —— missing ["U+AC00", "U+D55C", "U+3131"]
+清理后：25/25 绿；train_boss_probe 33/33、tower_quota_probe 15/15 回归不变
+```
+
+### 26.5 语种清单与实装状态
+
+| 批次 | 语种 | 状态 | 理由 | 成本实测 |
+|---|---|---|---|---|
+| 第一批 | `zh_TW` 繁體中文 | ✅ **已实装** | 台港澳付费重镇，字体零成本（CJK 20976/20992） | 304 格简转繁；控件宽度与简体基本同（主菜单最坏 269 vs 269） |
+| 第一批 | `ja` 日本語 | ✅ **已实装** | Steam 亚洲区收入密度最高 | 304 格；**必须避开 `々・`**（字体没有）→ 文案改用「次から次へと」「／」，探针 C6 逐字守 |
+| 顺带 | `ru` Русский | ✅ **已实装** | 不在"亚洲"，但西里尔**满覆盖 = 零字体成本**，性价比高于泰/越 | 304 格；文本普遍比英文长，26.6 的宽度实测就是为它加的 |
+| 第二批 | `ko` 한국어 | ⬜ **等 M1 字体** | 付费习惯好 | 304 格 + `01_NotoSansKR`；谚文 0/11172 |
+| 第二批 | `vi` Tiếng Việt | ⬜ **等 M1 字体** | 增长快、盘子中等 | 304 格 + `04_NotoSans`（补变音符） |
+| 第二批 | `th` ไทย | ⬜ **等 M1 字体 + 排版** | 盘子最小、成本最高 | 304 格 + `02_NotoSansThai`；泰文无词间空格（26.6 #8） |
+
+**取舍讲清楚**：`th` 排最后是它同时吃"新字体 + 换行机制改造 + 最小付费盘"三项，
+而 `ko/ja/zh_TW` 三个就能把亚洲主力付费区覆盖完（+ 现有 en/zh = 5 语种）。
+另外若愿意把范围从"亚洲"放宽：`ru`（西里尔已满覆盖，**字体零成本**）、
+`pt-BR/es` 的销量通常高于 `th/vi`。
+
+### 26.6 布局风险清单（先按写死的宽度估，再按真实控件实测 —— 有两条被推翻）
+
+| # | 位置 | 问题 |
+|---|---|---|
+| 1 | `scene/achievement_toast.tscn:26` 面板 `440×140` + `clip_text` + 省略号 | ❌ **实测不成立**（2026-11-12 加 `ru` 后逐条量过 25 条成就文案）：根节点是 `PanelContainer`，`440` 是**下限**，长文本只会把弹条撑宽；而 `achievement_toast.gd:77-83` 停靠位是用 `max(size.x, custom_minimum_size.x)` 算的，**跟着自己的宽度重算位置**，所以既不会截断也不会滑出屏外 |
+| 2 | `script/ui/wave_banner.gd:14` 敌人名单单行 HBox、**不换行**、4 空格分隔 | ⚠️ **实测仍在悬崖边，而且是存量问题**：8 个名字全排 en 需要 1955 > band 1920（英文本来就已越界），ru 2133；只排 5 个时 ru 1404 ✔。加 `ko` 之前必须先解决（缩字号或允许两行） |
+| 3 | `scene/welcome.tscn:110` 主菜单按钮列硬框 **356px** | ✅ **已修**：实测按钮带图标后 `get_combined_minimum_size()` 是 en 379 / ja 388 / ru 411 —— **英文本来就被截断**。列宽改成 420，五语种最坏 411 ✔。常驻断言 = 探针 C9 |
+| 4 | `script/ui/result_screen.gd:69` 战报表列宽 `[300,90,120,90]` | ⚠️ **同一条老毛病**：那组数是按单元格**最小宽度**下发的，塔名变长时列会自己加宽。**但没实测过结算界面**（要打到通关才有内容），留作 M2 的人工核对项 |
+| 5 | `scene/pause_menu.tscn:57` 四按钮 `220×54` 固定宽高 | ❌ **我判断错了**：`220` 是下限，面板 `offset ±250` = 500 宽，实测最宽的 ru 按钮需要 346 ✔ 放得下。真要留意的是**高度** —— 目前没有任何一处会折行，所以也不会出问题 |
+| 6 | `scene/setting.tscn:93` 语言下拉 `240×56` | ❌ **我这条判断错了**：240 是 `custom_minimum_size`，是**下限不是上限**。实测装满 5 个语种名只需要 215（`Русский` 163），控件自己会长，父面板 968 宽 → 不截断。常驻断言 = 探针 C10，真被顶破时它会红 |
+| 7 | `script/menu/level_card.gd:35` 按**字符数**选字号（80/58/34） | 这套逻辑是给数字设计的，别喂译文 |
+| 8 | 全项目 **27 处** `AUTOWRAP_WORD_SMART`（17 处在场景、10 处在脚本） | **泰文没有词间空格** → 只能靠"词太长硬切"的兜底，切在音节中间 |
+| 9 | `theme.tres` 由 23 个场景各自挂（`project.godot` 没有全局 `gui/theme/custom`） | 漏挂的控件用引擎默认字体 —— **字体链覆盖不到它们**，会出现同屏两种字形混排 |
+
+### 26.7 已知会咬人的存量问题（不是本轮引入，但加语种时会爆）
+
+1. ~~`userData.gd:89` 的 `OS.get_locale().begins_with("zh")` 把繁体区判成简体~~
+   → ✅ **已修**（2026-11-12 加 `zh_TW` 时一起）：新增 `detectLanguageFromSystem()` +
+   `SYSTEM_LANGUAGE_ALIASES`（`zh_TW/zh_HK/zh_MO/zh_Hant*` 一律走繁体），
+   匹配顺序是**地区别名精确表 → 带地区的 code 精确匹配 → 语言前缀回落 → `en`**；
+   `loadSettings()` 里 schema 迁移那段原来硬写 `begins_with("zh") → "zh"`，也改成复用同一个判定，
+   否则老存档的繁体玩家会被"迁移"回简体。规则拆成纯函数 `_languageFromLocaleString(locale)`
+   是因为 `OS` 单例桩不掉 —— 探针 C8 直接喂 10 组 locale 字符串测它。
+2. 硬编码中文残留：`scene/result_screen.tscn:90`、`scene/ui/early_call_panel.tscn:47,53,60`
+   的初值文案，以及 `script/ui/early_call_panel.gd:28-37`、`script/map.gd:600` 的中文
+   `fallback` 实参 —— 运行时会被 `Game.t()` 覆盖，但**非中文语种**在刷新前会闪一下中文。
+   全项目其他地方的 `fallback` 都是英文，这两处是例外。
+3. Steam 侧还有一半工作量**不在这个仓库里**：商店页每语种要单独填标题/短描述/长描述/标签
+   （约 1.5~2 千字一语种，与游戏内 304 条是两个口径），后台勾选的 Languages
+   必须与实装严格一致（勾了 `Thai` 而游戏里没有是能被退材料的风险项），区域定价另算。
+
+### 26.8 分阶段
+
+| 阶段 | 内容 | 状态 |
+|---|---|---|
+| M0 | 字体回退链（合并语义）+ `i18n_probe` + 修 `▶` + 清 CSV 行间空行 | ✅ 完成 |
+| M1 | 下载并投放 4 个 OFL 字体（`font/fallback/` 已备好目录与说明）→ 解锁 `ko` / `th` / `vi` | ⬜ 待做（**当前机器无外网，做不到**） |
+| M2 | 布局改造：26.6 剩下的真项 **#2 波次横幅（唯一有实测数字支撑的）**、**#4 结算战报表**（还没实测）、#7、#8（泰文才需要）、**#9 全局 theme** | ⬜ 待做 |
+| M3a | 加 `zh_TW` / `ja` / `ru` 三列（字体安全的那些）+ 语种判定表 + 主菜单列宽 420 | ✅ **完成**，`i18n_probe` 50 项全过（见 26.9） |
+| M3b | 加 `ko`（等 M1 字体）；`ru` 已顺带做完 | ⬜ 待 M1 |
+| M4 | 泰文换行（第 8 项）+ 加 `vi` / `th` | ⬜ 待做 |
+| M5 | Steam 商店文案 + 后台 Languages + 区域定价 | ⬜ 待做 |
+
+> 每一批做完都能单独发：**M0 已经把"加了语种但坏了没人知道"这条路堵住了**，
+> 之后任何一次加列都会在探针里当场报出缺哪一步，不会拖到玩家截图。
+
+### 26.9 M3a 实装记录：`zh_TW` / `ja` / `ru`（2026-11-12）
+
+#### 动了什么
+
+| 文件 | 内容 |
+|---|---|
+| `lang/language.csv` | **只追加 3 列**（`zh_TW` / `ja` / `ru`），`Keys`/`en`/`zh` 三列**逐字未改**（脚本对比过：`[r[1] for r in old]==[r[1] for r in new]` 为真） |
+| `autoload/game.gd:607` | `Game.language` 从 2 条到 5 条（`繁體中文` / `日本語` / `Русский`）—— 语言下拉、切换、持久化全部数据驱动，`setting.gd` 一行没改 |
+| `autoload/userData.gd` | 新增 `SYSTEM_LANGUAGE_ALIASES` + `detectLanguageFromSystem()` + 纯函数 `_languageFromLocaleString()`；`loadSettings()` 的 schema 迁移改成复用同一判定（原来硬写 `begins_with("zh") → "zh"`，会把繁体老玩家迁回简体） |
+| `project.godot:94` | `locale/translations` 补 3 个 `.translation`（**Godot 不会自动加**，实测手写 `--import` 后仍要手动补这一行） |
+| `scene/welcome.tscn:110` | 主菜单按钮列 `792..1148`(356) → `760..1180`(420)，中心仍是 970，`btn_normal.tres` 是 StyleBoxFlat（矢量），拉宽不失真 |
+| `script/test/merge_locales.py` | 加列工具（预检 → 干跑 → `--write`），放在 `script/test/` 里：`export_presets.cfg:13` 的 `exclude_filter` 让它不进包，但进版本库 |
+| `script/test/i18n_probe.gd` | 新增 C8 语种判定、C9 主菜单实测宽度、C10 下拉框、C11 检查项对账 |
+
+#### 实测宽度（关掉 `allow_system_fallback` 后量，主菜单列可用 420）
+
+| 语种 | 最坏按钮需要 | 结果 |
+|---|---|---|
+| en | 379（`Endless Mode`） | **改之前是 356 → 英文本来就一直在被截断** |
+| zh / zh_TW | 269 | 一直 OK |
+| ja | 388（`チュートリアル` / `ゲームスタート`） | 356 时会截断，420 后 OK |
+| ru | 411（`Энциклопедия`） | 420 OK |
+
+为放得下做的三处**短译**（不是硬约束让步，是本来就该短）：
+`_Endless[ru]` «Бесконечный режим»→«Бесконечный»、`_Codex[ru]` «Энциклопедия юнитов»→«Энциклопедия»、
+`_Endless[ja]` «エンドレスモード»→«エンドレス»。
+
+#### 四条只有实测才知道的事
+
+1. **`240 / 220` 这类是 `custom_minimum_size`，是下限不是上限** ——
+   我把 §26.6 的 #5 #6 两条判断推翻了（下拉装满 5 个语种名只需 215，父面板 968 宽）。
+   真会截断的只有**固定 offset 摆出来的容器**（主菜单列就是）。
+2. **量宽度必须用 `get_combined_minimum_size()`，不能用"字符数 × 字号"** ——
+   按钮带图标；而且一个汉字 39px、一个西里尔字母平均 ~20px，估算会把俄语算短一半。
+3. **两个必须绕开的时序坑**：① `welcome.tscn` 内嵌 setting 面板，
+   `setting.gd:44` 在 `_ready()` 里 `set_locale(UserData.language)` —— locale 只能在
+   `add_child` **之后**设，否则被盖回去（我第一次量出来五个语种数字全一样就是这个原因）；
+   ② 只 `set_locale` 不会让已布局控件重算最小尺寸（绘制走 `atr()`，但 min size 是缓存的）——
+   必须把 `text` 摘下再装回去。
+4. **`@@ DONE fails=0` 不等于检查跑过了** —— 我编辑 `_ready` 时把 C9/C10 挤到 `quit()` 之后，
+   探针安静地报了全绿。所以加了 **C11：登记表对账**，每个检查组进 `_ran`，
+   最后和 `EXPECTED_CHECKS` 比，漏跑当场红。
+
+#### 探针结果
+
+```
+i18n_probe      50 项全过（C1~C7 各语种 ×5、C8 十组 locale 判定、C9 五语种按钮宽度、
+                C10 下拉、C11 对账、C5f/C5g 链合并语义）
+train_boss_probe 33/33     tower_quota_probe 15/15     all_levels_check bad=0
+```
+
+#### 还欠着什么
+
+- **`ko` / `th` / `vi` 没加**，唯一原因是 M1 的字体没放进来（本机无外网）。
+  放好 `font/fallback/01_NotoSansKR.otf` 之后，`merge_locales.py --codes ko` +
+  `--write` + `--import` + 补 `project.godot` + 补 `Game.language` 五步，
+  探针会把漏掉的那一步当场指出来。
+- **没有在真机上切过一次语言**：以上全是 headless 结论。
+  建议手工验一遍：主菜单切 `Русский`/`日本語` → 六个按钮是否完整、
+  设置面板语言下拉、暂停菜单、结算战报表（300px 那列装塔名，§26.6 #4 还没实测）。
+
+#### 一条反复出现的老毛病（这轮我自己错了三次）
+
+这轮我把 `custom_minimum_size` 当成**上限**判断了三次（#1 成就弹条、#5 暂停按钮、#6 语言下拉），
+三次都错 —— 它是下限，控件会随内容长大；主菜单列之所以真会截断，
+是因为它是**固定 offset 摆出来的绝对布局**（`layout_mode = 0`），那才是硬框。
+所以看场景里的数字时必须先问一句：**这是 min size 还是 offset？**
+
+---
+

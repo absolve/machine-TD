@@ -1137,5 +1137,6 @@ var enemyScenes = {
 	Game.enemyType.bossSplitter: preload("res://scene/enemy/boss/boss_splitter.tscn"),
 	Game.enemyType.bossJammer: preload("res://scene/enemy/boss/boss_jammer.tscn"),
 	Game.enemyType.bossGunship: preload("res://scene/enemy/boss/boss_gunship.tscn"),
-	Game.enemyType.bossFortress: preload("res://scene/enemy/boss/boss_fortress.tscn")
+	Game.enemyType.bossFortress: preload("res://scene/enemy/boss/boss_fortress.tscn"),
+	Game.enemyType.bossTrain: preload("res://scene/enemy/boss/boss_train.tscn")
 }

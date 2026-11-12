@@ -23,6 +23,7 @@ const BOSS_ENTRIES := [
 	{"type": "bossJammer", "name": "_BossName_jammer", "tip": "_BossTip_jammer"},
 	{"type": "bossGunship", "name": "_BossName_gunship", "tip": "_BossTip_gunship"},
 	{"type": "bossFortress", "name": "_BossName_fortress", "tip": "_BossTip_fortress"},
+	{"type": "bossTrain", "name": "_BossName_train", "tip": "_BossTip_train"},
 ]
 
 var map: Node = null

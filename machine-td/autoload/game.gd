@@ -25,7 +25,9 @@ enum enemyType {
 	# 小 boss（第 4 关起每关 1 个）
 	bossBulwark, bossHive, bossCharger, bossSplitter, bossJammer, bossGunship,
 	# 大 boss（第 6 / 9 / 12 / 15 关）
-	bossFortress
+	bossFortress,
+	# 大 boss 第二种：装甲列车编组（§二十五），5 节车厢共用这一个类型
+	bossTrain
 }
 
 # 塔类型
@@ -580,11 +582,37 @@ const enemyInfo = {
 		"bossAuraColor": Color(0.95, 0.78, 0.25, 1.0),
 		"gemReward": 3
 	},
+	# ⑧ 装甲列车（大 boss 第二种，§二十五）：**一条编组 = 5 节车厢共用这一条数据**
+	#   · 数值是**每节**的量：hp 600×5 = 3000、reward 60×5 = 300、rewardExp 24×5 = 120，
+	#     逐条对齐要塞（§25.5）—— 它是同档次的另一种形状，不是更强的 boss
+	#   · atk / scope 都是 0：炮塔是车厢场景里的 BaseTurret 子节点，火力数值在那边
+	#   · gemReward 故意给 0：宝石由编组控制器按"中间那节"结算（props 注入会被
+	#     setupEnemyInfo 覆盖掉，见 §25.5 末尾 ⚠️）
+	#   · lossPoints 每节 2 → 全漏 10 = 基地 20 血的 50%（分批到达，中途还有救）
+	enemyType.bossTrain: {
+		"name": "_BossName_train",
+		"showsRange": false,
+		"hp": 600, "speed": 26, "reward": 60, "lossPoints": 2, "rewardExp": 24,
+		"armor": 0.3, "flying": false, "atk": 0, "shootDelay": 1.0, "scope": 0,
+		"role": "_EnemyRole_boss",
+		"isBoss": true, "bossTier": 2,
+		"bossBarName": "_BossName_train",
+		"bossTip": "_BossTip_train",
+		"bossAuraColor": Color(0.62, 0.66, 0.72, 1.0),
+		"gemReward": 0
+	},
 }
 
 # 支持的界面语言。
+# ⚠️ 这三列的**译文进 CSV 之前**必须先有对应字体：谚文/泰文/越南变音符在主字体里
+#    是 0 覆盖（§二十六 26.2），加列 = 玩家切过去看豆腐块。
+#    `i18n_probe` 的 C2/C7 就是挡这一步的：列、登记、project.godot、.translation
+#    四处不同步，或者语种声明了但字形画不出来，探针当场红。
 const language = [ {'text': 'English', 'code': 'en', 'id': 0},
- {'text': '简体中文', 'code': 'zh', 'id': 1}]
+ {'text': '简体中文', 'code': 'zh', 'id': 1},
+ {'text': '繁體中文', 'code': 'zh_TW', 'id': 2},
+ {'text': '日本語', 'code': 'ja', 'id': 3},
+ {'text': 'Русский', 'code': 'ru', 'id': 4}]
 	
 
 @warning_ignore("unused_signal")

@@ -85,9 +85,44 @@ func _ready() -> void:
 # 没进过设置页就不会调用 set_locale → tr() 拿不到中文。
 func applyLanguage() -> void:
 	if language.is_empty():
-		# OS.get_locale() 形如 "zh_CN" / "en_US"
-		language = "zh" if OS.get_locale().begins_with("zh") else "en"
+		language = detectLanguageFromSystem()
 	TranslationServer.set_locale(language)
+
+
+## 系统语言 → 我们的语种 code。认不出来一律回 `en`
+## （`Game.t()` 的兜底也是英文，两处口径必须一致，否则会出现
+##  "系统语言被判成 A、缺 key 时又回退成英文"的三不管状态）。
+##
+## ⚠️ 这里**不能只判 `begins_with("zh")`** —— 那是加繁体之前的写法，
+##    后果是 `zh_TW` / `zh_HK` 的玩家第一次启动看到的是**简体**（§二十六 26.7 第 1 条）。
+##    所以繁体必须走**地区别名精确表**，不能让它掉进 "zh" 前缀那一步。
+const SYSTEM_LANGUAGE_ALIASES := {
+	"zh_TW": "zh_TW", "zh_HK": "zh_TW", "zh_MO": "zh_TW",
+	"zh_Hant": "zh_TW", "zh_Hant_TW": "zh_TW", "zh_Hant_HK": "zh_TW",
+}
+
+func detectLanguageFromSystem() -> String:
+	return _languageFromLocaleString(OS.get_locale())
+
+
+## 纯函数：locale 字符串 → 语种 code。单独拆出来是因为 `OS.get_locale()` 没法桩，
+## 而这套"地区别名 + 精确匹配 + 前缀回落"的次序恰恰是最容易写错、
+## 又只有靠多组输入才测得出来的部分（探针 C8 直接喂 locale 字符串测它）。
+func _languageFromLocaleString(sys: String) -> String:
+	if SYSTEM_LANGUAGE_ALIASES.has(sys):
+		return SYSTEM_LANGUAGE_ALIASES[sys]
+	# 1) 带地区的精确匹配优先（将来加 `pt_BR` / `es_419` 这类同语言不同地区时靠它）
+	for entry in Game.language:
+		var code := String(entry.get("code", ""))
+		if code.contains("_") and sys.begins_with(code):
+			return code
+	# 2) 再退到语言前缀：ja_JP → ja、ru_RU → ru、zh_CN → zh
+	var base := sys.get_slice("_", 0)
+	for entry in Game.language:
+		var code := String(entry.get("code", ""))
+		if code != "en" and code.get_slice("_", 0) == base:
+			return code
+	return "en"
 
 func getSettingsPath() -> String:
 	return getFilePath(SETTINGS_FILE_NAME)
@@ -125,10 +160,14 @@ func loadSettings() -> bool:
 		return false
 	# schema 1 及更早：language 默认写死 "en"，玩家就算从没选过语言也会被存成 en。
 	# 升级时这种"继承来的 en"要按系统语言重新判定，否则老玩家永远停在英文。
+	# ⚠️ 判定统一走 detectLanguageFromSystem()：早先这里硬写 `begins_with("zh") → "zh"`，
+	#    加了繁体之后会把 zh_TW 的老玩家直接判成简体（§二十六 26.7 第 1 条同一个坑）。
 	var schema: int = int(config.get_value("general", "schema", 1))
 	language = str(config.get_value("general", "language", language))
-	if schema < SETTINGS_SCHEMA and language == "en" and OS.get_locale().begins_with("zh"):
-		language = "zh"
+	if schema < SETTINGS_SCHEMA and language == "en":
+		var detected := detectLanguageFromSystem()
+		if detected != "en":
+			language = detected
 	if schema < SETTINGS_SCHEMA:
 		needsSettingsSave = true
 	masterVolume = clampi(int(config.get_value("volume", "master", masterVolume)), 0, 100)
