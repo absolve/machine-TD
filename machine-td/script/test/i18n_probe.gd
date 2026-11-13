@@ -99,6 +99,8 @@ func checkMenuTextFits() -> void:
 			continue
 		var over: Array = []
 		var widths: Array = []
+		var worstNeed: float = 0.0
+		var worstText := ""
 		for btn in col.get_children():
 			if not (btn is Button):
 				continue
@@ -110,9 +112,13 @@ func checkMenuTextFits() -> void:
 			var need: float = (btn as Control).get_combined_minimum_size().x
 			var got: float = (btn as Control).size.x
 			var shown := TranslationServer.translate(key)
+			if need > worstNeed:
+				worstNeed = need
+				worstText = shown
 			widths.append("%s=%.0f" % [shown, need])
 			if need > got + 0.5:
 				over.append("%s 需要%.0f>可得%.0f" % [shown, need, got])
+		print("@@ INFO C9 %s 最坏 %.0f（%s）/ 可用 %.0f" % [code, worstNeed, worstText, col.size.x])
 		_ok(over.is_empty(), "C9 %s main menu buttons fit (%.0f 列宽)" % [code, col.size.x],
 				"%s | %s" % [str(over), " ".join(widths)])
 		remove_child(welcome)
@@ -172,15 +178,12 @@ func checkLocaleDetection() -> void:
 	var cases := {
 		"zh_CN": "zh", "zh_SG": "zh",
 		"zh_TW": "zh_TW", "zh_HK": "zh_TW", "zh_MO": "zh_TW",
-		"ja_JP": "ja", "ru_RU": "ru",
-		"en_US": "en", "de_DE": "en", "fr_FR": "en", "ko_KR": "en",
+		"ja_JP": "ja", "ru_RU": "ru", "ko_KR": "ko", "th_TH": "th", "vi_VN": "vi",
+		"en_US": "en", "de_DE": "en", "fr_FR": "en",
 	}
 	var wrong: Array = []
 	for locale in cases.keys():
 		var want := String(cases[locale])
-		# 未登记的语种期望回 en；如果哪天加了 ko 列，这条自动改成要求 ko
-		if want == "en" and registered.has("ko") and locale == "ko_KR":
-			want = "ko"
 		# ⚠️ 必须显式声明类型：`var got := userData.call(...)` 是从 Variant 推断，
 		#    本项目把警告当错误（§八 2026-11-05 记过一次），脚本会直接解析失败、探针静默不跑
 		var got: String = String(userData.call("_languageFromLocaleString", locale))

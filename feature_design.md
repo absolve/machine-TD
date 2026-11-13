@@ -1509,6 +1509,7 @@ layer 100 的转场遮罩就永远盖不住它 —— 转场时会看到弹窗�
 | 2026-11-12 | §二十六 国际化 M0：字体回退链 + 探针 | v1.0 | 需求：「先做第 0 步，把字体链和探针搞出来」（上游：「分析国际化还差几个，上架 Steam 要先加亚洲一些国家语言」）。**不加任何语种**，先把三类"在开发者机器上表现为一切正常"的事故变成机器检查。① **实测字体覆盖**（fontTools 与 Godot `Font.has_char()` 双向核对，唯一字体 `AlibabaPuHuiTi-3-85-Bold.ttf`）：CJK 20976/20992、西里尔 100% ⇒ 繁体与俄语几乎免费；假名 184/192 但缺 `・`/`々`；**谚文 0/11172、泰文 0/128、越南变音符 4/256** ⇒ 韩泰越必须自带字体。② 顺手抓到**现存 bug**：`_TutorialGuide4` 的 `▶` U+25B6 主字体没有 —— 现在能显示是靠 `.import:22` 的 `allow_system_fallback=true` 蹭玩家系统字体，Steam Deck / 精简系统上就是豆腐块。改文案而不是加字体（那个按钮本来就是贴图图标）。③ **回退链装配在代码**（`autoload/fontStack.gd`，注册在 `UserData` 之后）：`font/fallback/` 目录里的字体按**文件名排序**装进主字体的 `fallbacks`，前缀 `01_/02_` 就是优先级（`・` 在 JP/KR 字体里都有时，先命中者决定字形）。不写进 `.ttf.import` 的理由：主字体被 23 个场景共用、链只该配一次；且实测两种手写格式都被导入器拒绝并**重置回 `fallbacks=[]`**（填路径串报 `String to Object`，补 `[ext_resource]` 头报 `Resource file not found`），而 `*.import` 本身被 gitignore（`git ls-files` 计数 0）—— 配了也带不出本机。④ **两个坑 + 一个我自己写错又实测纠正的说法**：4.7 的 `TranslationServer` **没有 `has_key()`**（当静态方法调用直接 Parse Error），判"取不到"只能用 `translate(key) == key`，并配一条未知 key 的自检防止判据是空的；写这条时我先记成"`Font.has_char()` 只查自己、不顺着 `fallbacks` 找"，**实测推翻**：链清空 `has_char(한)=false`、挂上韩文字体即 `true`，且关掉 `allow_system_fallback` 后 `get_string_size("한국어")` 由 **108.0 → 120.0**，说明**真实排版也走链**；真正要记的是反向那半句 —— `has_char` **不认系统兜底**，所以它恰好是"打进包的字体够不够"的正确问法。⑤ 探针 `i18n_probe` **27 项**（含 C5f/C5g 锁"apply() 合并而不是覆盖"）：结构 / 四处登记同步（CSV 列 ⇄ `Game.language` ⇄ `project.godot` ⇄ `.translation`）/ 占位符 / **运行时文本与 CSV 逐条比对**（专门抓"改了 CSV 没跑 `--import`"，只查 key 存在抓不到）/ 链装配 / 逐字形覆盖 / **语种↔文字系统探测位**（抓"先登记语种、后补字体"的顺序错误 —— 那一刻该语种一个字符都没用到，覆盖检查是绿的）。⑥ **正反两轮自我证明**：临时加 `ko` 列 + 借系统 `malgun.ttf` 冒充回退字体 → C5c 链=2、C6/C7 的 ko 全 PASS，同时 C2a/C2c/C3/C4c 如期 FAIL；撤掉字体 → C6 FAIL 并报 `U+C11C x304 in _appName`、C7 FAIL 列 `U+AC00/U+D55C/U+3131`。**该字体仅本地验证、未提交、也不是合法分发方案**。另两轮踩坑：C5f 最初用 `FontVariation(base_font=主字体)` 当哨兵塞进主字体自己的 `fallbacks`，构成**引用环直接把进程问崩**（哨兵换成空 `FontFile` 才对）；`▶` 除了 CSV 还在 `script/ui/tutorial_guide.gd:208` 的硬编码兜底里出现第二处，一并改掉。清理后 `i18n_probe` 27/27、`train_boss_probe` 33/33、`tower_quota_probe` 15/15 回归不变；另清掉 `language.csv` 的一处行间空行。⑦ 待做（26.8）：M1 放 4 个 OFL 字体（本机无外网，本轮做不到）→ M2 布局 9 处固定宽度 + 泰文 `AUTOWRAP_WORD_SMART` 问题 → M3 加 `zh_TW/ja/ko` → M4 `vi/th` → M5 Steam 商店文案。另记一条现在就会咬人的：`userData.gd:89` 的 `begins_with("zh")` 把 `zh_TW/zh_HK` 判成简体 |
 | 2026-11-12 | §二十五 装甲列车 M1~M2（实现） | v1.0 | 需求：「我想设计一种类似火车的 boss，每节车厢有炮塔，有 5 节车厢，独立血量，中间车厢被打爆其他就往前进，都被打爆就爆炸，逃离扣血每节单独扣」。**先做设计稿（25.1~25.12）再实现 M1~M2**。① **5 节都是真 `Enemy`**：独立 hp / 独立奖励 / 独立逃脱扣血全部白拿基类，`lossPoints 2` 每节各扣（探针 G11 实测漏两节 = 两次独立结算 = 4 点）。② **编组刚性 = 全队只有一个速度**：车厢把 `addSlow/removeSlow` 转发给 `train_conductor.gd` 的共享表，取最强一条算 `teamSpeed` 再写回每一节 —— 各节自算会让车厢间距漂走，火车散架（S1/S2/S3 覆盖）。③ **收拢只在死亡那一帧改写一次槽位**：锚点是"当前最前面那节活着的车厢"，所以 leader 死 → 整列不跳、中间死 → 后面各进一格、尾车死 → 谁都不动（G4/G5/G6）。④ **车厢 `extends enemy.gd` 而不是 `boss.gd`**：`boss.gd` 每帧压掉头顶血条，而列车顶部只有一条血条，"哪节在掉血"必须靠头顶条回答 —— 这是对 §19.7 第 6 条的有意破例，代价是光环绘制重复写约 15 行。⑤ 零件复用：炮塔 = `base_turret.tscn`（与实验坦克同一套），只是从"一个身体挂 4 炮"变成"5 个身体各挂 1 炮"。⑥ **踩到三处**：`.tscn` 里写 `#` 注释会让整个场景解析失败并连带 `stageData.gd` 编译失败（全项目报 autoload "does not inherit from Node"）；关卡的 `resolveOffset()` 给没写 offset 的兵种自动分 ±4px 车道，头节会歪出去，必须两头强制 0；**逃脱不走 `hurt()`**，所以没有 `onCarDied`，编组靠 `_process` 里 `pruneDead()` 收尾。⑦ 探针 `scene/test/train_boss_probe.tscn` **33 项全过**，回归 `tower_quota_probe` 15/15、`all_levels_check` bad=0。**已知未完成**：顶部血条现在显示的是头节自己 600 血（M3 的 `barProvider` 才改成合成血 + 5 段车厢格）、二阶段/宝石/终爆是 M4、挂关卡是 M5；**没在编辑器里真看过一列火车跑起来的样子**。⑧ **否决了需求的另一种读法**（打爆任意一节整列前移）：那会让"打爆尾车"也把列车推向基地，正确行为被惩罚、最优解退化成"别打" |
 | 2026-11-05 | 建造许可证（§23.2 K 晋升实现） | v1.0 | 需求：「建造许可证这个功能可以实现，最小改动实现」。① **数据**：`stageData.gd` 新增 `towerQuota` 表（仿 `stageTowers` 的形状，**不塞进 `allStage` 条目** —— 与塔池放行同机制、同位置好维护），按 23.2.1 投放表配 3/4/7/11/15 五关；7 关"待验证"条目已核 —— `tower.gd:160` 实测火箭**可对空**（`canTargetAir` 含 droneBase/laser/rocket），限火箭成立。`getTowerQuota()` 返回 -1 = 不限。② **计数口径 = 实时扫组**：`map.countTowersAlive()` 直接数 `tower` 组存活节点（`is_queued_for_deletion` 过滤），**零簿记状态** —— 出售/爆毁/残骸化天然放额，不存在"忘了扣"的 bug 类型；组审计过，只有 `tower.gd` 一处 `add_to_group("tower")`，无人机不污染。③ **闸口**：`map.placeTower` 在池校验后加 `isQuotaFull` 拒绝（扣钱前，同机甲约束的写法）；无尽豁免；默认无配置 = 行为与现在完全一致。④ **UI**：`tower_ui.refreshQuotaLocks()` 按存活数灰卡片 + tooltip，挂 `towerPlaced / towerGridReleased` 双信号 `call_deferred` 刷新（等本帧 `add_child` 落定）；`Game.towerLocked.emit(type)` 开始带参，map 按"池未放行 or 许可证满"给不同文案；介绍面板 InfoBox 下方新增整宽许可行（仿 `starHintLabel` 的插入法）。⑤ **本地化**：`_BuildQuotaFull / _TowerQuotaTooltip / _BuildQuotaTitle` 三键（中英）。验证：`scene/test/tower_quota_probe.tscn`（真实 map + 第 3 关）**15/15 全过**（配额查询/第 5 座被拒/加农同闸/特斯拉不限/拆一座再建成功/无尽豁免/卡片灰显与恢复/信号整链路/CSV 键齐全）；`route_smooth_probe` 回归 17/17。探针踩坑两处：直调 `placeTower` 不经过 `towerPlaced` 信号，需 emit 才走真实链路；`find_child("vbox")` 撞名（HUD 里多个 vbox），必须走 `towerUINode.towerCardList` 引用 |
+| 2026-11-13 | 弯道平滑 2.0：半径对齐弯头 + 教程关加弯道 | v1.1 | 上文 2026-11-05 那条的**半径被推翻重做**（4px 内切预算看起来"够用"，实际不够）。① **首版为什么还不够**：内切 4px 反推出的半径只有 **9.66px**，90° 只花 **15.2px** 行程（130px/s 下 0.12 秒完成转向），分道 ±9px 的敌人有 **9.25px** 压到/越过带面边轨 —— 几何上平滑了，观感仍是"原地甩头"。这轮改成**半径 = 半格 32px**：传送带弯头贴图（`sprite/tile/belt_*.png`）画的就是以格子外角为圆心、r=32 的四分之一圆，路径与它同半径后 **90° 内切 13.25px、切点距 32px、转弯行程 50.3px**，敌人自始至终走在带面 37px 深槽的中线上。② **改动**：`base_level.gd` 常量换成 `SMOOTH_CORNER_RADIUS = 32`，切点距上限 `tMax = 0.5 × segMin`（数据里最短相邻段 64px，正好 r=32 贴合），删掉 `SMOOTH_MAX_CUT_IN / SMOOTH_TANGENT_MAX`；新增 `_pushUnique()` 按 **0.5px** 去重 —— 64px 错位弯上两段弧的接点会重合，不去重就触发原来的"采样过密兜底"、**整条路线静默退回直角**；兜底触发时改为 `push_warning` 而不是静默改回。③ **新增探针** `scene/test/route_smooth_probe.tscn`：R1 每个地面弯真的被圆化、R2 切点/内切几何、R3 点距与单步朝向、R4 弯头贴图方向 = 入口边→出口边、R5 `routeArea` 不因平滑**新增**格子（机甲不能开进弯道）、R6 教程关 ≥2 弯、R7 空中航线逐点不动、R8 检查组对账（防"全绿但其实没跑"）。全量 **17 关 / 33 条地面路线 / 100 个弯**：**单步最大 3.47°、内切误差 0.000px、最小点距 1.93px**。④ **教程关改成 4 个弯**：路线 `(-96,480)→(352,480)→(352,544)→(1504,544)→(1504,480)→(1984,480)`，只在两簇塔位（x=416~736 / 928~1248）**之外**上下错层，教学用的 y=544 直段完整保留，塔位/装饰一格未动；传送带 30 → **32 格**，新增 4 个弯头 `ws/ne`（x=352）与 `wn/se`（x=1504），相位仍按行进顺序 `1.75 + k`；原 30 个材质按新顺序复用 + 补 2 个。⑤ **顺带**：用 Pillow 把弯头贴图与平滑后路径叠成俯视图（`.td_verify/tutorial_route_preview.png`），确认圆弧压在弯头内弧、不碰内外轨。回归：`all_levels_check` **bad=0**；`tower_quota_probe` / `train_boss_probe` 依赖 `scene/map.tscn`，在 `palette.gd` 恢复前无法实例化（与本轮改动无关，待恢复后复跑）|
 
 ---
 
@@ -4149,11 +4150,11 @@ f:/Godot_v4.7.1-stable_win64.exe --headless --path machine-td \
 | 批次 | 语种 | 状态 | 理由 | 成本实测 |
 |---|---|---|---|---|
 | 第一批 | `zh_TW` 繁體中文 | ✅ **已实装** | 台港澳付费重镇，字体零成本（CJK 20976/20992） | 304 格简转繁；控件宽度与简体基本同（主菜单最坏 269 vs 269） |
-| 第一批 | `ja` 日本語 | ✅ **已实装** | Steam 亚洲区收入密度最高 | 304 格；**必须避开 `々・`**（字体没有）→ 文案改用「次から次へと」「／」，探针 C6 逐字守 |
+| 第一批 | `ja` 日本語 | ✅ **已实装** | Steam 亚洲区收入密度最高 | 304 格；主字体缺 `・ 々 ･ ｡ …` → 由 `02_NotoSansJP.otf` 补，探针 C6 逐字守 |
 | 顺带 | `ru` Русский | ✅ **已实装** | 不在"亚洲"，但西里尔**满覆盖 = 零字体成本**，性价比高于泰/越 | 304 格；文本普遍比英文长，26.6 的宽度实测就是为它加的 |
-| 第二批 | `ko` 한국어 | ⬜ **等 M1 字体** | 付费习惯好 | 304 格 + `01_NotoSansKR`；谚文 0/11172 |
-| 第二批 | `vi` Tiếng Việt | ⬜ **等 M1 字体** | 增长快、盘子中等 | 304 格 + `04_NotoSans`（补变音符） |
-| 第二批 | `th` ไทย | ⬜ **等 M1 字体 + 排版** | 盘子最小、成本最高 | 304 格 + `02_NotoSansThai`；泰文无词间空格（26.6 #8） |
+| 第二批 | `ko` 한국어 | ✅ **已实装**（2026-11-13） | 付费习惯好 | 304 格 + `03_NotoSansKR.otf`（谚文 11172/11172）；主菜单最坏 270（`게임 시작`） |
+| 第二批 | `vi` Tiếng Việt | ✅ **已实装**（2026-11-13） | 增长快、盘子中等 | 304 格 + `01_NotoSans-Regular.ttf`（拉丁扩展 90/90）；主菜单最坏 375（`Chế độ vô tận`），`_Codex` 必须用短译「Danh mục」 |
+| 第二批 | `th` ไทย | ✅ **已实装**（2026-11-13，换行改造仍未做） | 盘子最小、成本最高 | 304 格 + `04_NotoSansThai.ttf`（泰文 86/86）；主菜单最坏 329（`โหมดไม่สิ้นสุด`）；**泰文无词间空格**（26.6 #8）仍待 M4 |
 
 **取舍讲清楚**：`th` 排最后是它同时吃"新字体 + 换行机制改造 + 最小付费盘"三项，
 而 `ko/ja/zh_TW` 三个就能把亚洲主力付费区覆盖完（+ 现有 en/zh = 5 语种）。
@@ -4165,11 +4166,11 @@ f:/Godot_v4.7.1-stable_win64.exe --headless --path machine-td \
 | # | 位置 | 问题 |
 |---|---|---|
 | 1 | `scene/achievement_toast.tscn:26` 面板 `440×140` + `clip_text` + 省略号 | ❌ **实测不成立**（2026-11-12 加 `ru` 后逐条量过 25 条成就文案）：根节点是 `PanelContainer`，`440` 是**下限**，长文本只会把弹条撑宽；而 `achievement_toast.gd:77-83` 停靠位是用 `max(size.x, custom_minimum_size.x)` 算的，**跟着自己的宽度重算位置**，所以既不会截断也不会滑出屏外 |
-| 2 | `script/ui/wave_banner.gd:14` 敌人名单单行 HBox、**不换行**、4 空格分隔 | ⚠️ **实测仍在悬崖边，而且是存量问题**：8 个名字全排 en 需要 1955 > band 1920（英文本来就已越界），ru 2133；只排 5 个时 ru 1404 ✔。加 `ko` 之前必须先解决（缩字号或允许两行） |
+| 2 | `script/ui/wave_banner.gd:14` 敌人名单单行 HBox、**不换行**、4 空格分隔 | ⚠️ **实测仍在悬崖边，而且是存量问题**：8 个名字全排 en 需要 1955 > band 1920（英文本来就已越界），ru 2133；只排 5 个时 ru 1404 ✔。**`ko`/`th`/`vi` 已加但这条没动**，加新关卡前必须先量一次（M2 首要项） |
 | 3 | `scene/welcome.tscn:110` 主菜单按钮列硬框 **356px** | ✅ **已修**：实测按钮带图标后 `get_combined_minimum_size()` 是 en 379 / ja 388 / ru 411 —— **英文本来就被截断**。列宽改成 420，五语种最坏 411 ✔。常驻断言 = 探针 C9 |
 | 4 | `script/ui/result_screen.gd:69` 战报表列宽 `[300,90,120,90]` | ⚠️ **同一条老毛病**：那组数是按单元格**最小宽度**下发的，塔名变长时列会自己加宽。**但没实测过结算界面**（要打到通关才有内容），留作 M2 的人工核对项 |
 | 5 | `scene/pause_menu.tscn:57` 四按钮 `220×54` 固定宽高 | ❌ **我判断错了**：`220` 是下限，面板 `offset ±250` = 500 宽，实测最宽的 ru 按钮需要 346 ✔ 放得下。真要留意的是**高度** —— 目前没有任何一处会折行，所以也不会出问题 |
-| 6 | `scene/setting.tscn:93` 语言下拉 `240×56` | ❌ **我这条判断错了**：240 是 `custom_minimum_size`，是**下限不是上限**。实测装满 5 个语种名只需要 215（`Русский` 163），控件自己会长，父面板 968 宽 → 不截断。常驻断言 = 探针 C10，真被顶破时它会红 |
+| 6 | `scene/setting.tscn:93` 语言下拉 `240×56` | ❌ **我这条判断错了**：240 是 `custom_minimum_size`，是**下限不是上限**。8 个语种名实测需要 245（最宽 `Tiếng Việt`），控件自己长到 245，父面板 968 宽 → 不截断。常驻断言 = 探针 C10，真被顶破时它会红 |
 | 7 | `script/menu/level_card.gd:35` 按**字符数**选字号（80/58/34） | 这套逻辑是给数字设计的，别喂译文 |
 | 8 | 全项目 **27 处** `AUTOWRAP_WORD_SMART`（17 处在场景、10 处在脚本） | **泰文没有词间空格** → 只能靠"词太长硬切"的兜底，切在音节中间 |
 | 9 | `theme.tres` 由 23 个场景各自挂（`project.godot` 没有全局 `gui/theme/custom`） | 漏挂的控件用引擎默认字体 —— **字体链覆盖不到它们**，会出现同屏两种字形混排 |
@@ -4196,11 +4197,11 @@ f:/Godot_v4.7.1-stable_win64.exe --headless --path machine-td \
 | 阶段 | 内容 | 状态 |
 |---|---|---|
 | M0 | 字体回退链（合并语义）+ `i18n_probe` + 修 `▶` + 清 CSV 行间空行 | ✅ 完成 |
-| M1 | 下载并投放 4 个 OFL 字体（`font/fallback/` 已备好目录与说明）→ 解锁 `ko` / `th` / `vi` | ⬜ 待做（**当前机器无外网，做不到**） |
+| M1 | 下载并投放 4 个 OFL 字体（`font/fallback/`）→ 解锁 `ko` / `th` / `vi` | ✅ **完成**（2026-11-13，见 26.10） |
 | M2 | 布局改造：26.6 剩下的真项 **#2 波次横幅（唯一有实测数字支撑的）**、**#4 结算战报表**（还没实测）、#7、#8（泰文才需要）、**#9 全局 theme** | ⬜ 待做 |
 | M3a | 加 `zh_TW` / `ja` / `ru` 三列（字体安全的那些）+ 语种判定表 + 主菜单列宽 420 | ✅ **完成**，`i18n_probe` 50 项全过（见 26.9） |
-| M3b | 加 `ko`（等 M1 字体）；`ru` 已顺带做完 | ⬜ 待 M1 |
-| M4 | 泰文换行（第 8 项）+ 加 `vi` / `th` | ⬜ 待做 |
+| M3b | 加 `ko` / `th` / `vi` 三列 + 字体链装配 | ✅ **完成**（2026-11-13），`i18n_probe` 65 项全过（见 26.10） |
+| M4 | 泰文换行（第 8 项） | 🟡 **文案已上，换行机制未改**（26.6 #8） |
 | M5 | Steam 商店文案 + 后台 Languages + 区域定价 | ⬜ 待做 |
 
 > 每一批做完都能单独发：**M0 已经把"加了语种但坏了没人知道"这条路堵住了**，
@@ -4274,5 +4275,55 @@ train_boss_probe 33/33     tower_quota_probe 15/15     all_levels_check bad=0
 是因为它是**固定 offset 摆出来的绝对布局**（`layout_mode = 0`），那才是硬框。
 所以看场景里的数字时必须先问一句：**这是 min size 还是 offset？**
 
----
+### 26.10 M3b 实装记录：`ko` / `th` / `vi` + 四支 Noto 字体（2026-11-13）
 
+#### 字体：四支 OFL，按"谁先命中"排序
+
+| 文件 | 来源 | 补什么 | 本文件实测 |
+|---|---|---|---|
+| `01_NotoSans-Regular.ttf` | notofonts.github.io `fonts/NotoSans/hinted/ttf` | 越南语拉丁扩展（主字体 4/256） | 拉丁扩展 90/90 |
+| `02_NotoSansJP.otf` | googlefonts/noto-cjk `Sans/SubsetOTF/JP` | 主字体缺的 8 个假名 + `・ 々 ･ ｡ …` | 假名 176/176、标点 5/5 |
+| `03_NotoSansKR.otf` | googlefonts/noto-cjk `Sans/SubsetOTF/KR` | 谚文 0/11172 | 谚文 11172/11172 |
+| `04_NotoSansThai.ttf` | notofonts.github.io `fonts/NotoSansThai/hinted/ttf` | 泰文 0/86 | 泰文 86/86 |
+
+**顺序不是随手编号，是实测决定的**：三支 CJK 子集**都自带拉丁扩展**（`NotoSansJP` 也是 90/90），
+所以拉丁字体必须排第一，否则越南语的变音符会被 CJK 字体的拉丁字形接管；日/韩子集都含 176 个假名，
+日文排韩文前面才能用日文字形画 `・ 々`；泰文子集只有 140 字形，放最后不会抢任何东西。
+上面这套结论与下载地址都写进了 `font/fallback/README.md`。
+
+⚠️ **两个仓库别搞混**：CJK（KR/JP/SC/TC）在 `googlefonts/noto-cjk`，
+`notofonts/notofonts.github.io` 里没有 `NotoSansKR/` `NotoSansJP/` 目录（取这两条会 404）。
+
+#### 动了什么
+
+| 文件 | 内容 |
+|---|---|
+| `font/fallback/` | 四支字体 + `.import`（`.import` 被 gitignore，队友拉下来要跑一次 `--headless --import`） |
+| `lang/language.csv` | **只追加 3 列**（`ko`/`th`/`vi`），前 6 列逐字未改；脚本化写入（`merge_locales.py --write`） |
+| `autoload/game.gd:611` | `Game.language` 5 → 8 条（`한국어` / `ไทย` / `Tiếng Việt`） |
+| `project.godot:94` | `locale/translations` 补 3 个 `.translation` |
+| `script/test/merge_locales.py` | 字形预检**改成整条链的并集**（原来只查主字体，会把韩/泰/越误判成缺字） |
+| `script/test/i18n_probe.gd` | C8 增加 `ko_KR`/`th_TH`/`vi_VN` 三组判定；C9 每语种常驻打印最坏宽度 |
+
+#### 实测宽度（主菜单列可用 420；`@@ INFO C9 …` 现在每次都会打印）
+
+| 语种 | 最坏按钮 | 余量 |
+|---|---|---|
+| en | 379（`Endless Mode`） | 41 |
+| zh / zh_TW | 269 | 151 |
+| ja | 388（`チュートリアル`） | 32 |
+| ru | 411（`Энциклопедия`） | **9** |
+| ko | 270（`게임 시작`） | 150 |
+| th | 329（`โหมดไม่สิ้นสุด`） | 91 |
+| vi | 375（`Chế độ vô tận`） | 45 |
+
+越南语为了避免截断做了一处短译：`_Codex` 从「Bách khoa đơn vị」(444) 改到「Danh mục」(≈250)；
+中间版本「Danh mục đơn vị」(437) 仍超，说明**越南语每字符平均 ~26px**，比西里尔还宽。
+
+#### 探针结果
+
+```
+i18n_probe 65 项全过（8 语种 × C4b/C4c/C6/C7/C9 + 其余单例检查）
+```
+
+---

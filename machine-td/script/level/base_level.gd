@@ -172,24 +172,29 @@ func collectRoutes() -> void:
 		smoothRouteCorners(route.curve)
 
 
-## ── 弯道平滑（2026-11-02）──
-## 关卡折线里大量直角转角 + PathFollow2D.rotates=true，敌人到拐角会**瞬间甩 90°**，很生硬。
+## ── 弯道平滑（2026-11-02 首版，2026-11-13 把半径对齐传送带弯头）──
+## 关卡折线里大量直角转角 + PathFollow2D.rotates=true，敌人到拐角会**瞬间甩 90°**。
 ##
-## 为什么不用 Curve2D 的贝塞尔手柄：本项目是 Godot 4.7，实测（enum_peek 探针）确认
-## 4.7 的 Curve2D 已没有 point mode API —— set_point_in/out 写进去能读回来，
-## 但烘焙结果**仍然严格等于折线**（baked length == 逐段长度和）。
-## 所以这里直接**把转角点替换成一小段圆弧的采样点**：折线本身变密，
-## 任何版本、任何采样间隔下走位与朝向都是渐变。
+## 为什么不用 Curve2D 的贝塞尔手柄：本项目是 Godot 4.7，实测确认 4.7 的 Curve2D
+## 已没有 point mode API —— set_point_in/out 写进去能读回来，但烘焙结果**仍然严格
+## 等于折线**（baked length == 逐段长度和）。所以直接把转角替换成圆弧采样点。
 ##
-## 内切偏移为什么压到 ≤4px：传送带表面只有 37px 宽（见 OFFSET_HALF_WIDTH 处注释），
-## 敌人分道最大 ±9px；转角弧最大偏离原折线 4px 时，最外侧敌人仍贴着带面边轨内侧。
-## 折返角（>160°）不许圆化 —— 几何上会把路线绕成结；<15° 的缓转角本来就不硬，不动。
+## 半径为什么必须等于半格（32px）：传送带弯头（sprite/tile/belt_*.png）画的就是
+## r=32 的四分之一圆 —— 直带中线在距边 32px 处（通道 y=14..49），弯头内轨到角
+## 13.5px。首版按"内切 ≤4px"反推，r 只有 9.66：90° 只花 15px 行程，突击车
+## （130px/s）0.12s 就甩过去，而且比贴图中线偏外 9px，叠上 ±9 分道正好顶到
+## 37px 带面的边轨。现在 90° 用 r=32、内切 13.25px：敌人压在贴图中线上，
+## 转弯行程 50px，分道 32±9=23..41 仍在弯头 13.5..50.5 的通道内。
+## 折返角（>160°）不许圆化 —— 几何上会把路线绕成结；<15° 的缓转角本来就不硬。
 const SMOOTH_MIN_TURN_DEG := 15.0
 const SMOOTH_MAX_TURN_DEG := 160.0
-const SMOOTH_MAX_CUT_IN := 4.0
-const SMOOTH_TANGENT_MAX := 14.0
+## 半格 = 弯头贴图的圆角半径，路径必须与它同半径才压得住带面中线。
+const SMOOTH_CORNER_RADIUS := 32.0
 const SMOOTH_ARC_SAMPLE_STEP := 2.0
 const SMOOTH_BAKE_INTERVAL := 2.5
+## 输出点去重阈值。"一格错位"的两个 90° 弯各让 32px，两段弧在边中点相接 ——
+## 接点重合，不去重就会触发密度兜底、整条路线退回直角折线。
+const SMOOTH_MIN_POINT_GAP := 0.5
 
 static func smoothRouteCorners(curve: Curve2D) -> void:
 	if curve == null:
@@ -199,7 +204,8 @@ static func smoothRouteCorners(curve: Curve2D) -> void:
 		src.append(curve.get_point_position(i))
 	if src.size() < 3:
 		return
-	var out: PackedVector2Array = PackedVector2Array([src[0]])
+	var out: PackedVector2Array = PackedVector2Array()
+	_pushUnique(out, src[0])
 	for i in range(1, src.size() - 1):
 		var a: Vector2 = src[i - 1]
 		var b: Vector2 = src[i]
@@ -208,37 +214,43 @@ static func smoothRouteCorners(curve: Curve2D) -> void:
 		var u2: Vector2 = (c - b).normalized()
 		var turn: float = absf(rad_to_deg(u1.angle_to(u2)))
 		if turn < SMOOTH_MIN_TURN_DEG or turn > SMOOTH_MAX_TURN_DEG:
-			out.append(b)
+			_pushUnique(out, b)
 			continue
 		var segMin: float = minf(a.distance_to(b), b.distance_to(c))
-		out.append_array(_cornerArc(b, u1, u2, segMin))
-	out.append(src[src.size() - 1])
+		for p in _cornerArc(b, u1, u2, segMin):
+			_pushUnique(out, p)
+	_pushUnique(out, src[src.size() - 1])
 	# 与原折线逐点比对，完全一致才回写（没有转角被圆化的关，一条曲线都不该被动过）
 	if out == src:
 		return
 	var minLen: float = INF
 	for i in range(1, out.size()):
 		minLen = minf(minLen, out[i].distance_to(out[i - 1]))
-	if minLen < 1.0:
-		out = src  # 兜底：采样过密会喂给烘焙系统异常数据，宁可放弃这一条路线的平滑
+	if minLen < SMOOTH_MIN_POINT_GAP:
+		push_warning("smoothRouteCorners: 采样点过密（%.2fpx），放弃这条路线的平滑" % minLen)
+		return
 	curve.clear_points()
 	for p in out:
 		curve.add_point(p)
 	curve.bake_interval = minf(curve.bake_interval, SMOOTH_BAKE_INTERVAL)
 
 
+static func _pushUnique(out: PackedVector2Array, p: Vector2) -> void:
+	if out.is_empty() or out[out.size() - 1].distance_to(p) >= SMOOTH_MIN_POINT_GAP:
+		out.append(p)
+
+
 ## 转角 b 的圆弧采样：返回 [T1 … T2] 上的等分点（含切点）。
-## α = 转角（方向变化量）；内切圆半径 r 由「顶点到弧中点偏移 δ = r·(sec(α/2)−1) ≤ 4px」反推，
-## 再用切点距 t = r·tan(α/2) ≤ 14px 夹一道，避免啃到相邻转角。
+## 半径固定 SMOOTH_CORNER_RADIUS（=弯头贴图），再用切点距 t = r·tan(α/2)
+## 夹到半段长 —— 相邻两个弯共享一段时各让一半，正好在边中点相接。
 static func _cornerArc(b: Vector2, u1: Vector2, u2: Vector2, segMin: float) -> PackedVector2Array:
 	var result: PackedVector2Array = PackedVector2Array()
 	var turnRad: float = absf(u1.angle_to(u2))
 	var halfTurn: float = turnRad * 0.5
 	if halfTurn <= 0.0001 or halfTurn >= PI * 0.499:
 		return result
-	var secMinus1: float = 1.0 / cos(halfTurn) - 1.0
-	var tMax: float = minf(SMOOTH_TANGENT_MAX, segMin * 0.45)
-	var r: float = minf(SMOOTH_MAX_CUT_IN / secMinus1, tMax / tan(halfTurn))
+	var tMax: float = segMin * 0.5
+	var r: float = minf(SMOOTH_CORNER_RADIUS, tMax / tan(halfTurn))
 	var t: float = r * tan(halfTurn)
 	var bis: Vector2 = (-u1 + u2).normalized()
 	var center: Vector2 = b + bis * (r / cos(halfTurn))

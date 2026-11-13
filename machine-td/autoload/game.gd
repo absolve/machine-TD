@@ -604,15 +604,19 @@ const enemyInfo = {
 }
 
 # 支持的界面语言。
-# ⚠️ 这三列的**译文进 CSV 之前**必须先有对应字体：谚文/泰文/越南变音符在主字体里
-#    是 0 覆盖（§二十六 26.2），加列 = 玩家切过去看豆腐块。
+# ⚠️ 新语种的**译文进 CSV 之前**必须先有对应字体：谚文/泰文/越南变音符在主字体里
+#    是 0 覆盖（§二十六 26.2），加列 = 玩家切过去看豆腐块。现在由 `font/fallback/`
+#    里的四支 Noto 补齐（`autoload/fontStack.gd` 装配）。
 #    `i18n_probe` 的 C2/C7 就是挡这一步的：列、登记、project.godot、.translation
 #    四处不同步，或者语种声明了但字形画不出来，探针当场红。
 const language = [ {'text': 'English', 'code': 'en', 'id': 0},
  {'text': '简体中文', 'code': 'zh', 'id': 1},
  {'text': '繁體中文', 'code': 'zh_TW', 'id': 2},
  {'text': '日本語', 'code': 'ja', 'id': 3},
- {'text': 'Русский', 'code': 'ru', 'id': 4}]
+ {'text': 'Русский', 'code': 'ru', 'id': 4},
+ {'text': '한국어', 'code': 'ko', 'id': 5},
+ {'text': 'ไทย', 'code': 'th', 'id': 6},
+ {'text': 'Tiếng Việt', 'code': 'vi', 'id': 7}]
 	
 
 @warning_ignore("unused_signal")

@@ -7,25 +7,36 @@
 所以文件名前缀就是优先级 —— 同一个码位（比如 `・`）在 JP 与 KR 字体里都有时，
 先命中的那个决定字形风格。
 
-## 该放哪些（主字体覆盖率实测，2026-11-12）
+## 实际装好的四支（2026-11-13 落地，探针 C6/C7 全绿）
 
-| 建议文件名 | 服务的语言 | 主字体现状 |
-|---|---|---|
-| `01_NotoSansKR.otf` | 한국어 | 谚文音节 **0 / 11172** |
-| `02_NotoSansThai.ttf` | ไทย | 泰文 **0 / 128**（辅音、上置元音、声调全缺） |
-| `03_NotoSansJP.otf` | 日本語 | 假名 184/192，缺 `・` U+30FB 与 `々` U+3005 —— 日文 UI 高频 |
-| `04_NotoSans-Regular.ttf` | Tiếng Việt | Latin Extended Additional **4 / 256**（`ư ộ ề ễ` 全缺） |
+| 文件名 | 下载源文件 | 服务的语言 | 主字体缺什么 | 本文件实测覆盖 |
+|---|---|---|---|---|
+| `01_NotoSans-Regular.ttf` | `notofonts.github.io/fonts/NotoSans/hinted/ttf/NotoSans-Regular.ttf` | Tiếng Việt | Latin Extended Additional 4/256（`ư ộ ề ễ` 全缺） | 90/90 |
+| `02_NotoSansJP.otf` | `noto-cjk/Sans/SubsetOTF/JP/NotoSansJP-Regular.otf` | 日本語 | 假名 184/192，缺 `・` `々` `･` `｡` 与 `…` | 假名 176/176、标点 5/5 |
+| `03_NotoSansKR.otf` | `noto-cjk/Sans/SubsetOTF/KR/NotoSansKR-Regular.otf` | 한국어 | 谚文音节 **0 / 11172** | 11172/11172 |
+| `04_NotoSansThai.ttf` | `notofonts.github.io/fonts/NotoSansThai/hinted/ttf/NotoSansThai-Regular.ttf` | ไทย | 泰文 **0 / 86** | 86/86 |
+
+**顺序为什么是「拉丁 → 日 → 韩 → 泰」**（实测出来的，不是随手编号）：
+
+- 三支 CJK 子集都自带拉丁扩展（`NotoSansJP` 也有 90/90），越南语的变音符谁排前面就用谁的字形。
+  拉丁字体排第一，越南文才不会被 CJK 字体的拉丁字形接管。
+- 日/韩子集都含 176 个假名，`・` `々` 也都有。日文排韩文前面，日文标点才用日文字形。
+- 泰文子集最小（140 字形），只补泰文，放最后不会抢任何东西。
+
+⚠️ 两个仓库别搞混：**CJK（KR/JP/SC/TC）在 `github.com/googlefonts/noto-cjk`**，
+`notofonts/notofonts.github.io` 里**没有** `NotoSansKR/` `NotoSansJP/` 目录（2026-11-13 核对，取这两条会 404）。
 
 **已经满覆盖、不用加字体**：CJK 统一表意文字 20976/20992（所以繁体中文几乎零成本）、
 西里尔字母（俄语免费）、希腊字母、基础 Latin。
 
 ## 步骤
 
-1. 下载 **OFL（SIL Open Font License）** 授权字体，Noto 系列可自由商用：
-   `github.com/notofonts/notofonts.github.io` 里按 `fonts/NotoSansKR/hinted/ttf/…` 取。
+1. 下载 **OFL（SIL Open Font License 1.1）** 授权字体 —— 上述四个文件全部是 OFL，
+   随游戏分发（含 Steam 商用）允许，只需把许可文本随包带上。
    ⚠️ **不要**从自己系统里抄 `Malgun Gothic` / `Leelawadee UI` —— 那是操作系统授权，
    不能随游戏分发，上架 Steam 是许可事故。
-2. 按上表命名放进本目录（前缀编号 = 优先级）。
+2. 改名成上表的文件名放进本目录（前缀编号 = 优先级；文件名只影响排序，改不改二进制都不算修改字体）。
+   日/韩各约 4~6 MB，泰文约 60 KB，Noto Sans 约 0.5 MB。
 3. 跑一次 `--headless --import`（新资源必须生成 `.import`，否则 `load()` 拿不到）。
 4. 跑探针验收：
    ```
