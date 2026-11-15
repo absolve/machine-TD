@@ -3,6 +3,7 @@
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="1_theme"]
 [ext_resource type="Script" uid="uid://c82d6iaytyl4p" path="res://script/ui/pause_menu.gd" id="2_script"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_button"]
+[ext_resource type="Script" path="res://script/ui/panel_brackets.gd" id="9_brackets"]
 
 [node name="pauseMenu" type="Control" unique_id=431099984]
 process_mode = 3
@@ -19,9 +20,10 @@ layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2
-color = Color(0.12156863, 0.14901961, 0.17254902, 0.45)
+color = Color(0.0509804, 0.0627451, 0.0862745, 0.45)
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1134434306]
+script = ExtResource("9_brackets")
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

@@ -26,7 +26,7 @@ height = 8
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_transition"]
 resource_local_to_scene = true
 shader = ExtResource("2_shader")
-shader_parameter/base_color = Color(0.08, 0.09, 0.12, 1)
+shader_parameter/base_color = Color(0.0509804, 0.0627451, 0.0862745, 1)
 shader_parameter/node_resolution = Vector2(1920, 1080)
 shader_parameter/factor = 0.0
 shader_parameter/width = 0.35

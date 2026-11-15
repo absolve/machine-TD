@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://dnaqsi3rmg555" path="res://script/tower/tesla_coil_tower.gd" id="2_5fmby"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_427bq"]
 [ext_resource type="Texture2D"  path="res://sprite/tower/tower_tesla.png" id="99_turret"]
+[ext_resource type="Texture2D" path="res://sprite/tower/base_platform_128.png" id="99_base"]
 [ext_resource type="Texture2D" uid="uid://d007qyjl2hj8g" path="res://sprite/tower/tower_tesla_f1.png" id="f1"]
 [ext_resource type="Texture2D" uid="uid://d0usqajra2hj7" path="res://sprite/tower/tower_tesla_f2.png" id="f2"]
 [ext_resource type="Texture2D" uid="uid://ohg1jbbdutmx" path="res://sprite/tower/tower_tesla_f3.png" id="f3"]
@@ -22,8 +23,16 @@ shader_parameter/flash_amplitude = 0.8
 shader_parameter/outline_thickness = 0.0
 shader_parameter/outline_color = Color(1, 1, 1, 1)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_nobase"]
-animations = []
+[sub_resource type="SpriteFrames" id="SpriteFrames_base"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("99_base")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_3idwy"]
 radius = 500.0
@@ -90,9 +99,9 @@ visible = false
 shape = SubResource("RectangleShape2D_4p7g2")
 
 [node name="base" parent="." index="1" unique_id=1580788916]
+z_index = -1
 material = SubResource("ShaderMaterial_nw5hk")
-sprite_frames = SubResource("SpriteFrames_nobase")
-animation = &""
+sprite_frames = SubResource("SpriteFrames_base")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
 visible = false

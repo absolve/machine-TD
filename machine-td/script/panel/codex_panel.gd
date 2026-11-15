@@ -150,7 +150,11 @@ func makeCardStyle(bg: Color, border: Color, width: int) -> StyleBoxFlat:
 	sb.bg_color = bg
 	sb.border_color = border
 	sb.set_border_width_all(width)
-	sb.set_corner_radius_all(10)
+	sb.set_corner_radius_all(12)
+	# 统一构造：2px 硬黑外轮廓（和 panel_style / card_style 同一套）
+	sb.shadow_color = Palette.RIM
+	sb.shadow_size = 2
+	sb.shadow_offset = Vector2.ZERO
 	sb.set_content_margin_all(8)
 	return sb
 

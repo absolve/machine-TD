@@ -32,6 +32,7 @@ var lastSkillText: String = ""
 
 
 func _ready() -> void:
+	resized.connect(queue_redraw)
 	visible = false
 	hpTitle.text = Game.t("_HP", "HP")
 	expTitle.text = Game.t("_EXP", "EXP")
@@ -203,3 +204,7 @@ func _process(_delta: float) -> void:
 		clear()
 		return
 	refresh()
+
+
+func _draw() -> void:
+	PanelBrackets.paint(self)

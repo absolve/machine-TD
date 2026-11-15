@@ -8,17 +8,19 @@ content_margin_left = 8.0
 content_margin_top = 8.0
 content_margin_right = 8.0
 content_margin_bottom = 8.0
-bg_color = Color(0.101960786, 0.12156863, 0.15686275, 0.85)
+bg_color = Color(0.1019608, 0.1098039, 0.172549, 0.85)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.20392157, 0.23529412, 0.3019608, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
+border_color = Color(0.2901961, 0.37254903, 0.47058824, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0.05098039, 0.0627451, 0.08627451, 1)
+shadow_size = 2
+shadow_offset = Vector2(0, 0)
 [node name="codexCard" type="PanelContainer"]
 custom_minimum_size = Vector2(178, 194)
 theme = ExtResource("2_theme")

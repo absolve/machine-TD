@@ -5,7 +5,7 @@
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_wfuso"]
 [ext_resource type="Texture2D" uid="uid://dl20d3cxbv5dp" path="res://sprite/fx/fx_spark.png" id="90_spark"]
 [ext_resource type="Texture2D" uid="uid://cpy1fdfwdx3em" path="res://sprite/fx/p_star.png" id="91_star"]
-[ext_resource type="Texture2D" uid="uid://dhnkampji1cw2" path="res://sprite/tower/base_laser_round.png" id="99_base"]
+[ext_resource type="Texture2D" path="res://sprite/tower/base_platform_128.png" id="99_base"]
 [ext_resource type="Texture2D"  path="res://sprite/tower/tower_laser.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_axgl3"]

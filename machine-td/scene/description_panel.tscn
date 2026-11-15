@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://dwqkoxye6srrs"]
 
 [ext_resource type="StyleBox" uid="uid://b6xp0ibvg67va" path="res://theme/style/descriptionPanel.tres" id="1_n5jb3"]
+[ext_resource type="Script" path="res://script/ui/panel_brackets.gd" id="9_brackets"]
 
 [node name="descriptionPanel" type="PanelContainer" unique_id=448012878]
+script = ExtResource("9_brackets")
 custom_minimum_size = Vector2(240, 150)
 offset_right = 240.0
 offset_bottom = 150.0

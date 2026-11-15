@@ -16,6 +16,11 @@ signal closed
 @onready var subtitleLabel: Label = $Center/panelBg/Margin/VBox/subtitleLabel
 @onready var infoBox: HBoxContainer = $Center/panelBg/Margin/VBox/InfoBox
 @onready var intelTitle: Label = $Center/panelBg/Margin/VBox/intelTitle
+## 表头在 ScrollContainer **外面**，滚动时固定不动。
+@onready var intelHeader: VBoxContainer = $Center/panelBg/Margin/VBox/intelHeader
+@onready var headerMargin: MarginContainer = $Center/panelBg/Margin/VBox/intelHeader/headerMargin
+@onready var headerRow: HBoxContainer = $Center/panelBg/Margin/VBox/intelHeader/headerMargin/headerRow
+@onready var scrollContainer: ScrollContainer = $Center/panelBg/Margin/VBox/ScrollContainer
 @onready var enemyList: VBoxContainer = $Center/panelBg/Margin/VBox/ScrollContainer/enemyList
 @onready var hintLabel: Label = $Center/panelBg/Margin/VBox/Footer/hintLabel
 @onready var startButton: Button = $Center/panelBg/Margin/VBox/Footer/btnStart
@@ -48,6 +53,13 @@ func _ready() -> void:
 	intelTitle.text = Game.t("_EnemyIntel", "Enemy Intel")
 	hintLabel.text = Game.t("_IntelHint", "Close this window and press Start to begin the battle.")
 	startButton.text = Game.t("_BeginBattle", "Begin Battle")
+	# 滚动条出现/消失会改变数据行的可用宽度；表头必须补同样的右间距，
+	# 否则固定列（血量/速度/空中）会随滚动条显隐左右跳。
+	var vbar: VScrollBar = scrollContainer.get_v_scroll_bar()
+	if not vbar.visibility_changed.is_connected(syncHeaderGutter):
+		vbar.visibility_changed.connect(syncHeaderGutter)
+	if not scrollContainer.resized.is_connected(syncHeaderGutter):
+		scrollContainer.resized.connect(syncHeaderGutter)
 
 
 # 关闭面板。**统一走这里**，closed 信号才会一定发出去
@@ -295,9 +307,11 @@ func collectEnemyStats(stage_data: Dictionary) -> Dictionary:
 
 func buildEnemyList(stage_data: Dictionary) -> void:
 	clearChildren(enemyList)
+	clearChildren(headerRow)
 	var stats: Dictionary = collectEnemyStats(stage_data)
 	var order: Array = stats["types"]
 	if order.is_empty():
+		intelHeader.visible = false
 		var empty: Label = Label.new()
 		empty.text = Game.t("_NoEnemyData", "No enemy data for this level.")
 		empty.add_theme_font_size_override("font_size", 26)
@@ -305,15 +319,17 @@ func buildEnemyList(stage_data: Dictionary) -> void:
 		enemyList.add_child(empty)
 		return
 
-	# 表头
-	addRow(
+	# 表头在滚动区外，滚动时固定不动
+	intelHeader.visible = true
+	fillRow(
+		headerRow,
 		Game.t("_EnemyColName", "Enemy"),
 		Game.t("_EnemyColRole", "Role"),
 		Game.t("_EnemyColCount", "Count"),
 		Game.t("_EnemyColHp", "HP"),
 		Game.t("_EnemyColSpeed", "Speed"),
 		Game.t("_EnemyColAir", "Air"),
-		COLOR_HEADER, 26, true)
+		COLOR_HEADER, 26)
 
 	# 每种敌人一行，属性取 Game.enemyInfo，名称/定位取多语言显示名
 	# 血量与速度都要乘模式倍数（与 enemy.gd::setupEnemyInfo 保持一致），
@@ -327,18 +343,42 @@ func buildEnemyList(stage_data: Dictionary) -> void:
 		var speedShown: int = int(info.get("speed", 0))
 		if not is_equal_approx(Game.modeSpeedScale, 1.0):
 			speedShown = maxi(1, int(round(float(speedShown) * Game.modeSpeedScale)))
-		addRow(
+		var row: HBoxContainer = HBoxContainer.new()
+		row.add_theme_constant_override("separation", 10)
+		fillRow(
+			row,
 			Game.getEnemyDisplayName(enemyType),
 			Game.getEnemyRoleName(enemyType),
 			"x%d" % int(stats["counts"].get(enemyType, 0)),
 			str(hpShown),
 			str(speedShown),
 			Game.t("_Yes", "Yes") if isAir else "-",
-			COLOR_TEXT, 30, false)
+			COLOR_TEXT, 30)
+		enemyList.add_child(row)
+
+	# 面板刚显示时布局还没算完，等一帧再把滚动条宽度补到表头右侧
+	call_deferred("syncHeaderGutter")
 
 
-# 一行敌人信息；is_header 为 true 时在行后追加分隔线
-func addRow(
+## 把表头放在滚动区外之后，数据行的可用宽度会比表头少一个滚动条宽度。
+## 这里给表头补同样的右边距，保证血量/速度/空中三列上下对齐。
+func syncHeaderGutter() -> void:
+	if headerMargin == null or scrollContainer == null:
+		return
+	var bar: VScrollBar = scrollContainer.get_v_scroll_bar()
+	var gutter: int = 0
+	if bar != null and bar.visible:
+		gutter = int(ceil(bar.size.x))
+		if gutter <= 0:
+			gutter = int(ceil(bar.get_combined_minimum_size().x))
+	var current: int = headerMargin.get_theme_constant("margin_right")
+	if current != gutter:
+		headerMargin.add_theme_constant_override("margin_right", gutter)
+
+
+## 把一行 6 列填进给定 HBox。表头和数据行共用，保证列宽完全一致。
+func fillRow(
+	row: HBoxContainer,
 	col_name: String,
 	col_role: String,
 	col_count: String,
@@ -346,10 +386,8 @@ func addRow(
 	col_speed: String,
 	col_air: String,
 	color: Color,
-	font_size: int,
-	is_header: bool
+	font_size: int
 ) -> void:
-	var row: HBoxContainer = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
 
 	var nameCell: Label = makeCell(col_name, 0, HORIZONTAL_ALIGNMENT_LEFT, color, font_size)
@@ -361,10 +399,6 @@ func addRow(
 	row.add_child(makeCell(col_hp, COL_WIDTH_HP, HORIZONTAL_ALIGNMENT_RIGHT, color, font_size))
 	row.add_child(makeCell(col_speed, COL_WIDTH_SPEED, HORIZONTAL_ALIGNMENT_RIGHT, color, font_size))
 	row.add_child(makeCell(col_air, COL_WIDTH_AIR, HORIZONTAL_ALIGNMENT_CENTER, color, font_size))
-
-	enemyList.add_child(row)
-	if is_header:
-		enemyList.add_child(HSeparator.new())
 
 
 func makeCell(text: String, width: int, align: HorizontalAlignment, color: Color, font_size: int) -> Label:

@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://uv64kol65sr5" path="res://scene/sound_opinion.tscn" id="3_g2to7"]
 [ext_resource type="Texture2D" uid="uid://b5ns2yj1xdd15" path="res://sprite/Music-On.png" id="5_musicon"]
 [ext_resource type="Texture2D" uid="uid://b5yfaf2b87rp2" path="res://sprite/Music-Off.png" id="6_musicoff"]
+[ext_resource type="Script" path="res://script/ui/panel_brackets.gd" id="9_brackets"]
 
 [node name="setting" type="Control" unique_id=762839594]
 process_mode = 3
@@ -17,6 +18,7 @@ theme = ExtResource("1_ahr6q")
 script = ExtResource("1_xthoy")
 
 [node name="Box" type="PanelContainer" parent="." unique_id=2092103572]
+script = ExtResource("9_brackets")
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

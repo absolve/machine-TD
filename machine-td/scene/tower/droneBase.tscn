@@ -3,9 +3,21 @@
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_qyteg"]
 [ext_resource type="Script" uid="uid://cnmy5uf77qffw" path="res://script/tower/drone_base.gd" id="2_ir8sv"]
 [ext_resource type="Texture2D" uid="uid://c5x73fo1dftri" path="res://sprite/tower/tower_drone.png" id="99_turret"]
+[ext_resource type="Texture2D" path="res://sprite/tower/base_platform_128.png" id="99_base"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j5ypg"]
 size = Vector2(64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_base"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("99_base")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_autotur"]
 animations = [{
@@ -24,6 +36,9 @@ type = 1004
 
 [node name="shape" parent="." index="0" unique_id=1958475246]
 shape = SubResource("RectangleShape2D_j5ypg")
+
+[node name="base" parent="." index="1"]
+sprite_frames = SubResource("SpriteFrames_base")
 
 [node name="radar" parent="." index="2" unique_id=2082783838]
 visible = false

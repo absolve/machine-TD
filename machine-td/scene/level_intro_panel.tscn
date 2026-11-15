@@ -5,6 +5,7 @@
 [ext_resource type="StyleBox" path="res://theme/style/tower_panel_style.tres" id="3_panel"]
 [ext_resource type="StyleBox" path="res://theme/style/tower_separator.tres" id="4_sep"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="5_khtis"]
+[ext_resource type="Script" path="res://script/ui/panel_brackets.gd" id="9_brackets"]
 
 [node name="levelIntroPanel" type="Control" unique_id=235618938]
 visible = false
@@ -27,6 +28,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="panelBg" type="PanelContainer" parent="Center" unique_id=1198628119]
+script = ExtResource("9_brackets")
 custom_minimum_size = Vector2(1180, 0)
 custom_maximum_size = Vector2(1180, 1010)
 layout_mode = 2
@@ -72,6 +74,22 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.49803922, 0.8156863, 0.7764706, 1)
 theme_override_font_sizes/font_size = 36
 text = "Enemy Intel"
+
+[node name="intelHeader" type="VBoxContainer" parent="Center/panelBg/Margin/VBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="headerMargin" type="MarginContainer" parent="Center/panelBg/Margin/VBox/intelHeader"]
+layout_mode = 2
+
+[node name="headerRow" type="HBoxContainer" parent="Center/panelBg/Margin/VBox/intelHeader/headerMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="sep" type="HSeparator" parent="Center/panelBg/Margin/VBox/intelHeader"]
+layout_mode = 2
+theme_override_styles/separator = ExtResource("4_sep")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Center/panelBg/Margin/VBox" unique_id=543455368]
 custom_minimum_size = Vector2(0, 360)

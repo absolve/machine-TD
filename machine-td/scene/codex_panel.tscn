@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://ditrqsosl5fvs" path="res://script/panel/codex_panel.gd" id="1_codex"]
 [ext_resource type="Theme" uid="uid://em0nibpopl3n" path="res://theme/theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://4byruac2lq6d" path="res://scene/ui/ui_button.tscn" id="3_btn"]
+[ext_resource type="Script" path="res://script/ui/panel_brackets.gd" id="9_brackets"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lunp2"]
 
@@ -22,7 +23,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.039215688, 0.047058824, 0.07058824, 0.72)
+color = Color(0.0509804, 0.0627451, 0.0862745, 0.72)
 
 [node name="Frame" type="MarginContainer" parent="." unique_id=924832665]
 layout_mode = 1
@@ -37,6 +38,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="Frame" unique_id=1402492585]
+script = ExtResource("9_brackets")
 layout_mode = 2
 
 [node name="VBox" type="VBoxContainer" parent="Frame/PanelContainer" unique_id=1577213352]
@@ -136,7 +138,7 @@ vertical_alignment = 1
 
 [node name="detailDesc" type="Label" parent="Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox" unique_id=640045052]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.91764706, 0.9490196, 0.96862745, 1)
+theme_override_colors/font_color = Color(0.8627451, 0.9176471, 0.9490196, 1)
 theme_override_font_sizes/font_size = 21
 autowrap_mode = 3
 

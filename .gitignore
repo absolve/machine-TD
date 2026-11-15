@@ -1,24 +1,55 @@
-# Godot 4+ specific ignores
+# =============================================================
+#  machine-TD · Git 忽略规则
+#  原则：源码/场景/美术/音频/项目配置需要上传；
+#        引擎缓存、导出产物、测试垃圾、生成工具与中间素材不上传。
+# =============================================================
+
+# ---------------- Godot 引擎 ----------------
 .godot/
+.import/
 .nomedia
 
-# Godot-specific ignores
-.import/
+# 导入缓存与自动生成文件（源文件：*.png / *.ogg / language.csv 等）
+*.import
+*.translation
+
+# 导出配置（包含本地机器路径，dev 机器间不同步）
 export.cfg
 export_credentials.cfg
 export_presets.cfg
 
-# Imported translations (automatically generated from CSV files)
-*.translation
-
-# Mono-specific ignores
+# .NET / Mono
 .mono/
 data_*/
 mono_crash.*.json
-*.import
 
+# ---------------- 项目内不需要上传的内容 ----------------
+# 编辑器个人配置
 .vscode/
+# 离线生成脚本（title logo 等）
 tools/
+# 导出打包产物
 build/
+# 调试/验证临时目录（探针脚本、截图、备份）
 /.td_verify
+# 设计稿、概念图中间版本
 /design
+# 美术备用字体，仅 tools/ 离线脚本使用，运行时不需要
+/machine-td/font/display/
+
+# ---------------- 系统 / 编辑器杂项 ----------------
+Thumbs.db
+desktop.ini
+.DS_Store
+*~
+*.swp
+*.swo
+*.tmp
+*.bak
+*.orig
+*.rej
+*.log
+
+# ---------------- Python 缓存（tools/ 下脚本产生）----------------
+__pycache__/
+*.py[cod]

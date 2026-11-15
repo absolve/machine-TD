@@ -39,6 +39,7 @@ var enemy: Node = null # 当前选中的敌人
 
 
 func _ready() -> void:
+	resized.connect(queue_redraw)
 	visible = false
 	hpTitle.text = Game.t("_HP", "HP")
 	atkTitle.text = Game.t("_Atk", "ATK")
@@ -126,3 +127,7 @@ func _process(_delta: float) -> void:
 		clear()
 		return
 	refresh()
+
+
+func _draw() -> void:
+	PanelBrackets.paint(self)

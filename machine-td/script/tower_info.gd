@@ -15,6 +15,7 @@ extends PanelContainer
 @onready var hpValue: Label = $MarginContainer/vbox/Stats/hpRow/Value
 
 func _ready() -> void:
+	resized.connect(queue_redraw)
 	atkTitle.text = Game.t("_Atk", "ATK")
 	reloadTitle.text = Game.t("_FireRate", "Fire Rate")
 	scopeTitle.text = Game.t("_Range", "Range")
@@ -43,3 +44,7 @@ func fmtFireRate(reload_s: float) -> String:
 	if reload_s <= 0.0:
 		return "--"
 	return "%.1f/s" % (1.0 / reload_s)
+
+
+func _draw() -> void:
+	PanelBrackets.paint(self)
