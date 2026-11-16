@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <rect width="1920" height="1080" fill="#f7f8f6"/>
+
+  <g fill="none" stroke="#28323a" stroke-linecap="square" stroke-linejoin="miter">
+    <!-- Factory outline and partitions -->
+    <path d="M170 185H1750V900H170Z" stroke-width="8"/>
+    <path d="M350 185V455M530 185V390M710 185V455M890 185V390
+             M1070 185V455M1250 185V390M1430 185V455M1600 185V390" stroke-width="5"/>
+    <path d="M530 390H710M890 390H1070M1250 390H1430M1600 390H1750" stroke-width="5"/>
+    <path d="M430 610V900M700 610V900M970 610V900M1240 610V900M1510 610V900" stroke-width="5"/>
+    <path d="M350 455H530M710 455H890M1070 455H1250M1430 455H1600
+             M350 610H430M530 610H700M890 610H970M1070 610H1240
+             M1250 610H1510M1600 610H1750" stroke-width="5"/>
+
+    <!-- Door swings -->
+    <path d="M350 455V495A40 40 0 0 0 390 455
+             M530 390H570A40 40 0 0 1 530 430
+             M710 455V495A40 40 0 0 0 750 455
+             M890 390H930A40 40 0 0 1 890 430
+             M1070 455V495A40 40 0 0 0 1110 455
+             M1250 390H1290A40 40 0 0 1 1250 430
+             M1430 455V495A40 40 0 0 0 1470 455
+             M1600 390H1640A40 40 0 0 1 1600 430
+             M430 610V650A40 40 0 0 1 470 610
+             M700 735H740A40 40 0 0 0 700 695
+             M970 610V650A40 40 0 0 1 1010 610
+             M1240 735H1280A40 40 0 0 0 1240 695
+             M1510 610V650A40 40 0 0 1 1550 610" stroke-width="3"/>
+
+    <!-- Main conveyor route -->
+    <path d="M210 530H1710" stroke="#39739a" stroke-width="28"/>
+    <path d="M210 530H1710" stroke="#f7f8f6" stroke-width="3" stroke-dasharray="3 24"/>
+    <path d="M210 512V548M1710 512V548" stroke="#28323a" stroke-width="5"/>
+
+    <!-- Outer entrance and loading-bay openings -->
+    <path d="M170 455H215M170 610H215M1750 455H1705M1750 610H1705" stroke-width="8"/>
+    <path d="M170 455A155 155 0 0 1 325 610M1750 455A155 155 0 0 0 1595 610" stroke-width="2"/>
+    <path d="M155 475H185M155 590H185M1735 475H1765M1735 590H1765" stroke="#39739a" stroke-width="5"/>
+
+    <!-- Simple architectural registration marks, no printed labels -->
+    <path d="M120 185H145M120 900H145M1775 185H1800M1775 900H1800
+             M170 145V165M1750 145V165M150 185H160M1760 185H1770"
+          stroke="#74818a" stroke-width="2"/>
+  </g>
+
+  <!-- 01 Factory gate: paired gate leaves and a clear vehicle threshold -->
+  <g fill="none" stroke="#39739a" stroke-width="5" stroke-linejoin="round">
+    <path d="M205 470V515L245 530L205 545V590M245 470V512L285 530L245 548V590"/>
+    <path d="M196 485H184M196 575H184"/>
+  </g>
+  <circle cx="280" cy="530" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 02 Gatehouse and loading bay: dock leveller, bumpers and truck bay -->
+  <g fill="none" stroke="#39739a" stroke-width="4" stroke-linejoin="round">
+    <path d="M1650 465H1720V495H1650ZM1650 565H1720V595H1650"/>
+    <path d="M1662 495V515M1708 495V515M1662 545V565M1708 545V565"/>
+    <path d="M1640 505H1730V545H1640Z"/>
+    <path d="M1650 515H1720V535H1650Z" stroke-width="2"/>
+    <path d="M1658 550L1668 540M1678 550L1688 540M1698 550L1708 540"/>
+  </g>
+  <circle cx="1635" cy="530" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 03 Material yard: stacked raw-stock bundles and pallet footprints -->
+  <g fill="none" stroke="#74818a" stroke-width="3">
+    <path d="M205 665H300V710H205ZM205 720H300V765H205Z"/>
+    <path d="M213 674H292M213 683H292M213 692H292M213 701H292"/>
+    <path d="M213 729H292M213 738H292M213 747H292M213 756H292"/>
+    <path d="M198 714H310M198 770H310"/>
+  </g>
+  <path d="M225 657V772M280 657V772" stroke="#d49a22" stroke-width="3"/>
+  <circle cx="345" cy="700" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 04 Conveyor No. 1: a distinct roller conveyor spur -->
+  <g fill="none" stroke="#39739a" stroke-width="4">
+    <path d="M445 530V495H510V565H445V530"/>
+    <path d="M454 502V558M466 502V558M478 502V558M490 502V558M502 502V558" stroke="#74818a" stroke-width="3"/>
+    <path d="M445 495H510M445 565H510" stroke="#28323a" stroke-width="3"/>
+  </g>
+  <circle cx="475" cy="575" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 05 Assembly workshop: articulated assembly arm and worktable -->
+  <g fill="none" stroke="#39739a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M760 345V320L785 300L815 315L835 292"/>
+    <circle cx="760" cy="345" r="10" fill="#f7f8f6"/>
+    <circle cx="785" cy="300" r="9" fill="#f7f8f6"/>
+    <circle cx="815" cy="315" r="8" fill="#f7f8f6"/>
+    <path d="M835 292L844 281M835 292L849 298"/>
+    <path d="M745 360H845M755 360V375M835 360V375" stroke="#74818a" stroke-width="3"/>
+    <path d="M775 352V360M805 352V360M825 352V360" stroke="#d49a22" stroke-width="4"/>
+  </g>
+  <circle cx="850" cy="350" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 06 Welding workshop: welding torch, workpiece and radiating sparks -->
+  <g fill="none" stroke="#74818a" stroke-width="4" stroke-linejoin="round">
+    <path d="M555 685H665V735H555Z"/>
+    <path d="M575 700H645V720H575Z"/>
+    <path d="M575 744V754M645 744V754M555 754H665"/>
+  </g>
+  <g fill="none" stroke="#d49a22" stroke-width="4" stroke-linecap="round">
+    <path d="M575 668L603 688L617 675L631 688"/>
+    <path d="M618 675L628 662M622 680L640 677M614 670L609 655M628 686L643 694"/>
+  </g>
+  <circle cx="675" cy="700" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 07 Painting workshop: enclosed booth, exhaust and spray pattern -->
+  <g fill="none" stroke="#74818a" stroke-width="4" stroke-linejoin="round">
+    <path d="M785 660H865V755H785Z"/>
+    <path d="M795 672H855V738H795Z" stroke="#39739a" stroke-width="3"/>
+    <path d="M800 748H850M800 755V766M850 755V766"/>
+    <path d="M795 660V650H855V660M805 650V640M845 650V640"/>
+  </g>
+  <g fill="none" stroke="#39739a" stroke-width="3" stroke-linecap="round">
+    <path d="M810 682L802 694M825 682L825 697M840 682L848 694"/>
+    <path d="M810 706L804 715M840 706L846 715"/>
+  </g>
+  <circle cx="875" cy="700" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 08 Inspection line: gauge, datum cross and measurement jaws -->
+  <g fill="none" stroke="#39739a" stroke-width="4">
+    <circle cx="1325" cy="315" r="33"/>
+    <circle cx="1325" cy="315" r="20" stroke="#74818a" stroke-width="2"/>
+    <path d="M1325 315L1344 302M1325 278V287M1362 315H1353M1325 352V343M1288 315H1297"/>
+    <path d="M1278 362H1372M1288 355V369M1362 355V369"/>
+  </g>
+  <circle cx="1395" cy="345" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 09 Finished-goods warehouse: boxed pallets and lift truck aisle -->
+  <g fill="none" stroke="#74818a" stroke-width="3">
+    <path d="M1550 660H1600V700H1550ZM1605 660H1655V700H1605ZM1660 660H1710V700H1660Z"/>
+    <path d="M1550 708H1600V748H1550ZM1605 708H1655V748H1605ZM1660 708H1710V748H1660Z"/>
+    <path d="M1555 670H1595V690H1555ZM1610 670H1650V690H1610ZM1665 670H1705V690H1665Z"/>
+    <path d="M1555 718H1595V738H1555ZM1610 718H1650V738H1610ZM1665 718H1705V738H1665Z"/>
+  </g>
+  <path d="M1545 754H1715M1560 754V762M1700 754V762" stroke="#d49a22" stroke-width="4"/>
+  <circle cx="1720" cy="700" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 10 Central control room: console bank with three monitor panels -->
+  <g fill="none" stroke="#39739a" stroke-width="4" stroke-linejoin="round">
+    <path d="M565 285H665V325H565Z"/>
+    <path d="M573 293H600V312H573ZM605 293H632V312H605ZM637 293H657V312H637Z"/>
+    <path d="M580 335H650V350H580ZM590 325V335M640 325V335"/>
+    <path d="M582 300L590 296M614 307L623 298M644 303L650 299" stroke="#d49a22" stroke-width="3"/>
+  </g>
+  <circle cx="680" cy="345" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 11 Underground utility tunnel: pipe runs, junctions and service valve -->
+  <g fill="none" stroke="#39739a" stroke-width="5" stroke-linejoin="round">
+    <path d="M195 800H370V845H405M245 800V780H335V800M295 845V860H360"/>
+    <path d="M225 790V810M235 790V810M315 790V810M325 790V810"/>
+    <circle cx="370" cy="800" r="12" fill="#f7f8f6"/>
+    <circle cx="370" cy="800" r="4" fill="#d49a22" stroke="none"/>
+    <path d="M350 830V860M340 830H360M340 860H360"/>
+  </g>
+  <circle cx="410" cy="825" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 12 Power room: transformer coils and high-voltage bolt -->
+  <g fill="none" stroke="#39739a" stroke-width="4">
+    <rect x="930" y="280" width="100" height="74"/>
+    <path d="M944 294C956 294 956 314 968 314S980 294 992 294
+             S1004 314 1016 314M944 328C956 328 956 342 968 342
+             S980 328 992 328S1004 342 1016 342"/>
+    <path d="M980 287L968 310H983L974 329L997 302H983L991 287Z" fill="#f2bc46" stroke="#d49a22" stroke-width="2"/>
+    <path d="M920 289V345M1038 289V345" stroke="#74818a" stroke-width="3"/>
+  </g>
+  <circle cx="1045" cy="345" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 13 Automated warehouse: high-bay racks and shuttle carriage -->
+  <g fill="none" stroke="#74818a" stroke-width="3">
+    <path d="M1280 670H1445V750H1280Z"/>
+    <path d="M1280 695H1445M1280 722H1445M1310 670V750M1340 670V750M1370 670V750M1400 670V750"/>
+  </g>
+  <g fill="none" stroke="#39739a" stroke-width="4">
+    <path d="M1314 686H1336V690H1314ZM1374 705H1396V709H1374ZM1404 731H1426V735H1404Z"/>
+    <path d="M1295 660V760M1430 660V760"/>
+    <path d="M1344 710H1362V721H1344Z" fill="#f7f8f6"/>
+  </g>
+  <circle cx="1460" cy="700" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 14 Core assembly line: synchronized stations around the main conveyor -->
+  <g fill="none" stroke="#39739a" stroke-width="4">
+    <path d="M1130 490V505H1180V490M1130 570V555H1180V570"/>
+    <path d="M1190 490V505H1240V490M1190 570V555H1240V570"/>
+    <path d="M1142 505V555M1154 505V555M1166 505V555"/>
+    <path d="M1202 505V555M1214 505V555M1226 505V555"/>
+  </g>
+  <circle cx="1265" cy="575" r="13" fill="#f7f8f6" stroke="#d49a22" stroke-width="5"/>
+
+  <!-- 15 Factory core: central gear-and-shaft assembly -->
+  <g transform="translate(960 530)" fill="none" stroke="#28323a" stroke-linejoin="round">
+    <circle r="49" stroke-width="5"/>
+    <circle r="36" stroke="#39739a" stroke-width="5"/>
+    <circle r="17" stroke="#d49a22" stroke-width="5"/>
+    <path d="M-7-58H7V-44H-7ZM-7 44H7V58H-7ZM44-7H58V7H44ZM-58-7H-44V7H-58Z
+             M-47-47L-37-57L-27-47L-37-37ZM27 47L37 37L47 47L37 57Z
+             M27-47L37-57L47-47L37-37ZM-47 47L-37 37L-27 47L-37 57Z" stroke-width="4"/>
+    <path d="M0-17V17M-17 0H17" stroke="#39739a" stroke-width="4"/>
+  </g>
+
+  <!-- Unlabelled stage placement sockets for later interactive labels -->
+  <g fill="#f7f8f6" stroke="#d49a22" stroke-width="5">
+    <circle cx="280" cy="530" r="13"/>
+    <circle cx="1635" cy="530" r="13"/>
+    <circle cx="345" cy="700" r="13"/>
+    <circle cx="475" cy="575" r="13"/>
+    <circle cx="850" cy="350" r="13"/>
+    <circle cx="675" cy="700" r="13"/>
+    <circle cx="875" cy="700" r="13"/>
+    <circle cx="1395" cy="345" r="13"/>
+    <circle cx="1720" cy="700" r="13"/>
+    <circle cx="680" cy="345" r="13"/>
+    <circle cx="410" cy="825" r="13"/>
+    <circle cx="1045" cy="345" r="13"/>
+    <circle cx="1460" cy="700" r="13"/>
+    <circle cx="1265" cy="575" r="13"/>
+    <circle cx="960" cy="530" r="13"/>
+  </g>
+</svg>

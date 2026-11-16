@@ -1,6 +1,8 @@
 extends Control
 ## 通关 / 失败结算面板。已从 Window 改为普通 Control，否则嵌入式子窗口会盖在场景切换遮罩之上。
 
+signal uploadScoreRequested
+
 @onready var levelRating = $PanelContainer/VBoxContainer3/MarginContainer/vbox/levelRating
 @onready var resultLabel = $PanelContainer/VBoxContainer3/MarginContainer/vbox/resultLabel
 @onready var waveLabel = $PanelContainer/VBoxContainer3/MarginContainer/vbox/waveLabel
@@ -8,6 +10,7 @@ extends Control
 @onready var gemRewardLabel = $PanelContainer/VBoxContainer3/MarginContainer/vbox/gemRewardRow/gemRewardLabel
 @onready var btnRestart:Button=$PanelContainer/VBoxContainer3/MarginContainer2/hbox/btnRestart
 @onready var btnNextLevel:Button=$PanelContainer/VBoxContainer3/MarginContainer2/hbox/btnNextLevel
+@onready var btnUploadScore:Button=$PanelContainer/VBoxContainer3/MarginContainer2/hbox/btnUploadScore
 @onready var btnMenu:Button=$PanelContainer/VBoxContainer3/MarginContainer2/hbox/btnMenu
 
 @export var isFailed = false # 是否失败
@@ -22,6 +25,7 @@ func _ready():
 # 设置结果
 func setResult(_isFailed: bool):
 	isFailed = _isFailed
+	btnUploadScore.visible = isFailed and Game.endlessMode
 	if isFailed:
 		resultLabel.text = tr("_LevelFailed")
 		gemRewardRow.visible = false
@@ -30,6 +34,11 @@ func setResult(_isFailed: bool):
 	else:
 		resultLabel.text = tr("_LevelCompleted")
 		btnNextLevel.visible = true
+
+
+func onBtnUploadScorePressed() -> void:
+	uploadScoreRequested.emit()
+
 
 ## 设置宝石奖励并显示。
 ##

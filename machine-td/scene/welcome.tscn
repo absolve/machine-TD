@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://bsksv4xqp8slm" path="res://sprite/play-circle.png" id="7_vvofi"]
 [ext_resource type="Texture2D" uid="uid://dpriqv5u7rxvo" path="res://sprite/settings.png" id="8_vn0ct"]
 [ext_resource type="Texture2D" uid="uid://jssxjig1588u" path="res://sprite/interrogation.png" id="9_vkhmq"]
-[ext_resource type="Texture2D" uid="uid://c5cb022ih5jj3" path="res://sprite/achievement_3d.png" id="9_vn0ct"]
+[ext_resource type="Texture2D" uid="uid://ck56kksv5uah7" path="res://sprite/achievement_3d.png" id="9_vn0ct"]
 [ext_resource type="PackedScene" uid="uid://cmoo2h1nvyyws" path="res://scene/setting.tscn" id="9_vvofi"]
 [ext_resource type="Shader" uid="uid://ch8wag47374oa" path="res://shader/achievement_glow.gdshader" id="10_glow"]
 [ext_resource type="PackedScene" uid="uid://cq5ajf7h5g7lc" path="res://scene/achievement_panel.tscn" id="11_achv"]
@@ -19,6 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://cyiyyjhafyov3" path="res://sprite/image.png" id="12_vvs3e"]
 [ext_resource type="PackedScene" path="res://scene/ui/hazard_strip.tscn" id="13_hazard"]
 [ext_resource type="PackedScene" uid="uid://c2nj0kfkpwu4c" path="res://scene/codex_panel.tscn" id="15_codexpanel"]
+[ext_resource type="PackedScene" path="res://scene/steam_leaderboard_panel.tscn" id="16_leaderboard"]
 [ext_resource type="Script" uid="uid://draj1o4j7ek6d" path="res://script/ui/brackets_overlay.gd" id="20_brackets"]
 [ext_resource type="Script" uid="uid://basrrukmw0sns" path="res://script/ui/spark_fx.gd" id="21_spark"]
 
@@ -36,13 +37,13 @@ corner_radius_bottom_left = 12
 shadow_color = Color(0.05098039, 0.0627451, 0.08627451, 1)
 shadow_size = 2
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_vvs3e"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_36tqo"]
 resource_local_to_scene = true
 shader = ExtResource("7_k3eee")
 shader_parameter/speed = 0.12
 shader_parameter/alpha = 1.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_36tqo"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i2m4w"]
 resource_local_to_scene = true
 shader = ExtResource("7_k3eee")
 shader_parameter/speed = 0.12
@@ -102,7 +103,7 @@ offset_right = 1620.0
 offset_bottom = 394.0
 
 [node name="hazardTop" parent="Ui" unique_id=944989092 instance=ExtResource("13_hazard")]
-material = SubResource("ShaderMaterial_vvs3e")
+material = SubResource("ShaderMaterial_36tqo")
 layout_mode = 0
 offset_left = 280.0
 offset_top = 37.0
@@ -110,7 +111,7 @@ offset_right = 1640.0
 offset_bottom = 59.0
 
 [node name="hazardBottom" parent="Ui" unique_id=1211075920 instance=ExtResource("13_hazard")]
-material = SubResource("ShaderMaterial_36tqo")
+material = SubResource("ShaderMaterial_i2m4w")
 layout_mode = 0
 offset_left = 280.0
 offset_top = 395.0
@@ -193,6 +194,17 @@ offset_bottom = 1112.0
 scale = Vector2(0.6, 0.6)
 texture_normal = ExtResource("9_vn0ct")
 
+[node name="leaderboardIcon" parent="Ui" unique_id=430274554 instance=ExtResource("5_si833")]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 0
+offset_left = 1512.0
+offset_top = 720.0
+offset_right = 1908.0
+offset_bottom = 816.0
+tooltip_text = "_Leaderboard"
+theme_override_font_sizes/font_size = 40
+text = "_LeaderboardIcon"
+
 [node name="AboutPanel" parent="." unique_id=968769467 instance=ExtResource("3_0h2lm")]
 
 [node name="setting" parent="." unique_id=762839594 instance=ExtResource("9_vvofi")]
@@ -200,6 +212,9 @@ texture_normal = ExtResource("9_vn0ct")
 [node name="AchievementPanel" parent="." unique_id=1661854894 instance=ExtResource("11_achv")]
 
 [node name="CodexPanel" parent="." unique_id=205813787 instance=ExtResource("15_codexpanel")]
+custom_maximum_size = Vector2(-1, 864)
+
+[node name="SteamLeaderboardPanel" parent="." unique_id=198279677 instance=ExtResource("16_leaderboard")]
 
 [connection signal="pressed" from="Ui/HBoxContainer/UIButton" to="." method="onTutorialPressed"]
 [connection signal="pressed" from="Ui/HBoxContainer/btnStart" to="." method="onBtnSStartPressed"]
@@ -207,4 +222,6 @@ texture_normal = ExtResource("9_vn0ct")
 [connection signal="pressed" from="Ui/HBoxContainer/setting" to="." method="onSettingPressed"]
 [connection signal="pressed" from="Ui/HBoxContainer/btnCodex" to="." method="onCodexPressed"]
 [connection signal="pressed" from="Ui/HBoxContainer/btnAbout" to="." method="onButton3Pressed"]
+[connection signal="pressed" from="Ui/leaderboardIcon" to="." method="onLeaderboardPressed"]
 [connection signal="closed" from="setting" to="." method="onSettingClose"]
+[connection signal="closed" from="SteamLeaderboardPanel" to="." method="onLeaderboardClosed"]

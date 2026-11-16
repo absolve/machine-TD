@@ -10,6 +10,7 @@ var delay = 0.1 # 开火延迟
 var target = [] # 目标集合
 var canShot = true
 var selected = false # 选中
+var hovered = false
 var rotationSpeed = 10
 var money = 0 # 花费
 var sellingPrice = 0 # 售价
@@ -119,6 +120,8 @@ func _ready() -> void:
 	# 用组而不是遍历地图子节点 —— 塔是 map 的直接子节点，但组查询不受层级影响，
 	# 以后塔要是挪到别的容器下也不会悄悄失效。
 	add_to_group("tower")
+	mouse_entered.connect(onMouseEntered)
+	mouse_exited.connect(onMouseExited)
 	setupSkill()
 	if raderShape.shape:
 		raderShape.shape.radius = effectiveScope()
@@ -180,6 +183,16 @@ func hideSelect():
 	queue_redraw()
 	#update_status_ui()
 	Game.towerClicked.emit(self, selected)
+
+func onMouseEntered() -> void:
+	hovered = true
+	if not selected:
+		queue_redraw()
+
+func onMouseExited() -> void:
+	hovered = false
+	if not selected:
+		queue_redraw()
 
 # 增加经验
 func addExp(amount: int) -> void:
@@ -741,14 +754,14 @@ func _physics_process(delta: float) -> void:
 		if invincibleLeft <= 0.0:
 			setInvincibleVisual(false)
 			
-	if not selected:
+	if not selected and not hovered:
 		return
 	radarSweepAngle = fmod(radarSweepAngle + delta * RADAR_SCAN_SPEED, TAU)
 	queue_redraw()
 
 
 func _draw():
-	if not selected:
+	if not selected and not hovered:
 		return
 	var radarColor: Color = Color(0.25, 0.75, 1.0, 1.0)
 	# 画圈用**派生后的**射程：toggle 改了射程时，圈和真实碰撞体（applySight 写的那个）必须一致

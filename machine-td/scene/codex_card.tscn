@@ -22,7 +22,7 @@ shadow_color = Color(0.05098039, 0.0627451, 0.08627451, 1)
 shadow_size = 2
 shadow_offset = Vector2(0, 0)
 [node name="codexCard" type="PanelContainer"]
-custom_minimum_size = Vector2(178, 194)
+custom_minimum_size = Vector2(184, 184)
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("Card_default")
 script = ExtResource("1_card")
@@ -38,7 +38,7 @@ size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="icon" type="TextureRect" parent="VBox/Center"]
-custom_minimum_size = Vector2(128, 128)
+custom_minimum_size = Vector2(146, 146)
 layout_mode = 2
 mouse_filter = 2
 expand_mode = 1

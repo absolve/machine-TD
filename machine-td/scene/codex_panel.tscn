@@ -23,17 +23,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0509804, 0.0627451, 0.0862745, 0.72)
+color = Color(0.0509804, 0.0627451, 0.0862745, 0.6)
 
 [node name="Frame" type="MarginContainer" parent="." unique_id=924832665]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 56.0
-offset_top = 32.0
-offset_right = -56.0
-offset_bottom = -32.0
+offset_left = 60.0
+offset_top = 92.0
+offset_right = -60.0
+offset_bottom = -96.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -43,7 +43,7 @@ layout_mode = 2
 
 [node name="VBox" type="VBoxContainer" parent="Frame/PanelContainer" unique_id=1577213352]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 20
 
 [node name="Header" type="HBoxContainer" parent="Frame/PanelContainer/VBox" unique_id=1289267983]
 layout_mode = 2
@@ -83,7 +83,6 @@ layout_mode = 2
 text = "_CodexTowers"
 
 [node name="Scroll" type="ScrollContainer" parent="Frame/PanelContainer/VBox/Columns/Left" unique_id=1168103173]
-custom_maximum_size = Vector2(-1, 720)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0

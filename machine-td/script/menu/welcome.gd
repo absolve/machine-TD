@@ -5,6 +5,7 @@ extends Node2D
 @onready var achievementIcon: TextureButton = $Ui/achievement
 @onready var achievementPanel = $AchievementPanel
 @onready var codexPanel = $CodexPanel
+@onready var steamLeaderboardPanel = $SteamLeaderboardPanel
 
 var glowTween: Tween
 
@@ -34,6 +35,14 @@ func onButton3Pressed():
 # 面板自己管显示（场景里就是 visible = false，close() 里自己隐藏），这里只管打开
 func onCodexPressed() -> void:
 	codexPanel.open()
+
+
+func onLeaderboardPressed() -> void:
+	steamLeaderboardPanel.open()
+
+
+func onLeaderboardClosed() -> void:
+	steamLeaderboardPanel.hide()
 
 
 func onTutorialPressed() -> void:

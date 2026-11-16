@@ -130,6 +130,7 @@ func _ready():
 	earlyCallPanel.callRequested.connect(onEarlyCallPressed)
 	resultScreen.btnRestart.pressed.connect(restart)
 	resultScreen.btnNextLevel.pressed.connect(nextLevel)
+	resultScreen.uploadScoreRequested.connect(onEndlessScoreUploadRequested)
 	resultScreen.btnMenu.pressed.connect(returnHome)
 	pauseMenu.resumePressed.connect(resumeGame)
 	pauseMenu.restartPressed.connect(restart)
@@ -659,6 +660,12 @@ func recordEndlessResult() -> void:
 	endlessStatsText = "%s · %s %d · %s %d:%02d" % [tr("_EndlessResult") % reached,
 		tr("_EndlessKills"), kills, tr("_EndlessTime"), minutes, seconds % 60]
 	addNotice(endlessStatsText, Palette.HAZARD_300)
+
+
+## Steam 排行榜 API 接入前，先给上传按钮提供明确反馈。
+func onEndlessScoreUploadRequested() -> void:
+	addNotice(Game.t("_EndlessUploadUnavailable",
+		"Steam leaderboard upload is not available yet."), Palette.UI_300)
 
 
 # 基地被打爆：直接进入失败结算
