@@ -1,57 +1,216 @@
+// Universal Transition Shader — https://github.com/cashew-olddew/Universal-Transition-Shader
+// 作者 cashew-olddew，CC0（可商用、无署名义务，这里保留出处只是方便日后查阅）。
+//
+// 下面 `shader_type` 之后的代码与上游 transition.gdshader 逐行一致（只归了一缩进），
+// 逻辑和默认值都没改。想换转场效果只改 `scene/scene_transition.tscn` 的 ShaderMaterial。
+//
+// 当前配方 = README 的 **Seamless Striped Flower Transition**：
+//   transition_type = Clock(3)
+//   invert          = true
+//   grid_size       = (5.0, 5.0)      // 5x5 个"花"
+//   flip_frequency  = (2, 2)          // 相邻格子交替镜像 -> 无缝拼贴
+//   sectors         = 16              // 每朵花 16 瓣
+//
+// ⚠️ progress 的端点**不是** 0 / 1，而且四种 transition_type 方向还不一样：
+//   Clock   p 越大盖得越多……但开 invert 就反过来
+//   Shape   p 越大**露**得越多（要扫到 max(radius/d)，实测 2.73 才全透明）
+//   Basic   同 Shape
+//   Mask    取决于外部贴图，算不出来
+// 连"盖满落在哪个 progress"都跟 position 有关（Fan 支点在角上，屏幕只占半个扇区，
+// 所以 p≈0.5 就盖满了，而不是按整圆算的 p≈0）。
+// 两端一律由 script/ui/scene_transition.gd 的 getProgressEnds() 采样现算，
+// 不要在这里或场景里写死 progress 的起止值。
+//
+// 小提示：clock_feather 不要用默认的 0.0 —— 着色器里是 smoothstep(0.0, clock_feather, x)，
+// 两边界相等在 GLSL 里是未定义行为，实测会硬边闪烁，工程里设的是 0.05。
+
 shader_type canvas_item;
 
-uniform vec4 base_color : source_color;
-uniform vec2 node_resolution;
+uniform bool use_sprite_alpha = true;
+uniform bool use_transition_texture = false;
+uniform sampler2D transition_texture;
+uniform int transition_type: hint_enum("Basic", "Mask", "Shape", "Clock") = 0;
 
-uniform float factor : hint_range(0.0, 1.0, 0.01) = 0.54;
-uniform float width = 0.4;
+group_uniforms positioning;
+uniform vec2 position = vec2(0,0);
+uniform bool invert = false;
+uniform vec2 grid_size = vec2(1.0, 1.0);
+uniform float rotation_angle = 0.0;
 
-group_uniforms gradient;
-uniform sampler2D gradient_texture;
-uniform bool gradient_fixed = false;
+group_uniforms positioning.mirror;
+uniform bool global_x_mirror = false;
+uniform bool global_y_mirror = false;
+uniform bool local_x_mirror = false;
+uniform bool local_y_mirror = false;
 
-group_uniforms shape;
-uniform sampler2D shape_texture;
-uniform float shape_tiling = 32.0;
-uniform float shape_rotation = 0.0;
-uniform vec2 shape_scroll = vec2(0.0);
-uniform float shape_feathering : hint_range(0.0, 1.0, 0.01) = 0.00;
-uniform float shape_treshold : hint_range(0.0, 2.0, 0.01) = 1.0;
+group_uniforms positioning.stagger;
+uniform vec2 stagger = vec2(0.0, 0.0);
+uniform bool cumulative_stagger_flip = false;
+uniform vec2 cumulative_stagger = vec2(0, 0);
+uniform ivec2 stagger_frequency = ivec2(2, 2);
+uniform ivec2 flip_frequency = ivec2(1, 1);
 
-float gradient(vec2 uv, vec2 fixed_uv, bool fixed){
-	float value = 0.0;
-	if(fixed){
-		value = texture(gradient_texture, fixed_uv).r;
+group_uniforms basic_transition_controls;
+uniform float basic_feather = 0.0;
+
+group_uniforms mask_transition_controls;
+uniform sampler2D mask_texture;
+uniform bool use_mask_size = false;
+uniform vec2 mask_size = vec2(100.0);
+
+group_uniforms shape_transition_controls;
+uniform int edges : hint_range(3, 64) = 6; // default hexagon
+uniform float shape_feather : hint_range(0.0, 10.0) = 0.1;
+
+group_uniforms clock_transition_controls;
+uniform int sectors : hint_range(1, 128) = 1;
+uniform float clock_feather : hint_range(0.0, 16.0) = 0.0;
+
+group_uniforms animation;
+uniform float progress = 0.0;
+uniform vec2 progress_bias = vec2(0.0);
+
+varying vec4 modulate;
+
+vec2 use_actual_texture_size(vec2 uv, vec2 texture_size, vec2 raw_uv_deriv) {
+	uv -= 0.5;
+	float screen_ratio = raw_uv_deriv.x / raw_uv_deriv.y;
+	float texture_ratio = texture_size.x / texture_size.y;
+	float mixed_ratio = texture_ratio * screen_ratio;
+
+	if (screen_ratio > texture_ratio) {
+		uv.x /= mixed_ratio;
 	} else {
-		value = texture(gradient_texture, uv).r;
+		uv.y *= mixed_ratio;
 	}
-	return value;
+
+	return uv + 0.5;
 }
 
-vec2 rotate(vec2 uv, vec2 pivot, float angle)
-{
-	mat2 rotation = mat2(vec2(sin(angle), -cos(angle)),
-						vec2(cos(angle), sin(angle)));
-	uv -= pivot;
-	uv = uv * rotation;
-	uv += pivot;
-	return uv;
+vec2 get_stagger_offset(vec2 grid) {
+	vec2 cells = floor(grid);
+	float offset_row = mod(cells.y, float(stagger_frequency.x)) == 0.0 ? 0.5 : 0.0;
+	float offset_col = mod(cells.x, float(stagger_frequency.y)) == 0.0 ? 0.5 : 0.0;
+
+	float row_index = cumulative_stagger_flip ? (grid_size.y - 1.0 - cells.y) : cells.y;
+	float col_index = cumulative_stagger_flip ? (grid_size.x - 1.0 - cells.x) : cells.x;
+
+	return vec2(
+		offset_row * (stagger.x + row_index * cumulative_stagger.x),
+		offset_col * (stagger.y + col_index * cumulative_stagger.y)
+	);
+}
+
+vec2 get_grid_flip(vec2 grid) {
+	vec2 cells = floor(grid);
+	float flip_row = mod(cells.y, float(flip_frequency.x)) == 0.0 ? 1.0 : -1.0;
+	float flip_col = mod(cells.x, float(flip_frequency.y)) == 0.0 ? 1.0 : -1.0;
+
+	return vec2(
+		flip_row * grid.x,
+		flip_col * grid.y
+	);
+}
+
+vec2 rotate(vec2 v, float angle) {
+	return mat2(
+		vec2(cos(angle), sin(angle)),
+		vec2(-sin(angle), cos(angle))
+		) * v;
+}
+
+vec2 get_edges(float center, float width) {
+	float half_width = width * 0.5;
+	float edge0 = center - half_width;
+	float edge1 = center + half_width + 1e-5;
+	return vec2(edge0, edge1);
+}
+
+float get_local_progress(vec2 grid) {
+	vec2 cell = floor(grid);
+	// Easier to control bias values
+	vec2 pretty_bias = progress_bias / 10.0;
+	float offset = dot(cell, pretty_bias);
+	return progress - offset;
+}
+
+vec2 apply_mirror(vec2 uv, bool mirror_x, bool mirror_y) {
+	vec2 mirrored = 0.5 - abs(uv - 0.5);
+	vec2 toggle = vec2(float(mirror_x), float(mirror_y));
+	return mix(uv, mirrored, toggle);
+}
+
+void vertex() {
+	modulate = COLOR;
 }
 
 void fragment() {
-	float progress = mix(-width, 1.0, factor);
-	float aspect = node_resolution.y / node_resolution.x;
+	vec2 uv_deriv = fwidth(UV); // derivate used for keeping mask texture size regardless of sprite ratio
 
-	vec2 aspect_uv = ((UV-vec2(0.0,0.5)) * vec2(1.0, aspect))+vec2(0.0,0.5);
+	vec2 mirrored_uv = apply_mirror(UV, global_x_mirror, global_y_mirror);
 
-	float value = clamp((gradient(UV, aspect_uv, gradient_fixed) - progress) / (width), 0.0, 1.0);
+	vec2 grid = mirrored_uv * grid_size;
+	vec2 offset_uv = grid + get_stagger_offset(grid);
+	vec2 grid_flipped_uv = get_grid_flip(offset_uv);
+	vec2 tiled_uv = fract(grid_flipped_uv);
 
-	vec2 tiled_uv = rotate(mod((aspect_uv + vec2(TIME)*shape_scroll) * shape_tiling, 1.0), vec2(0.5), radians(shape_rotation));
-	float shape_value = 1.0 - texture(shape_texture, tiled_uv).r;
+	tiled_uv = apply_mirror(tiled_uv, local_x_mirror, local_y_mirror);
 
-	shape_value = mix(shape_feathering * 0.5, 1.0 - shape_feathering * 0.5, shape_value);
-	float shaped_gradient = smoothstep(value - (shape_feathering * 0.5), value + (shape_feathering * 0.5), shape_treshold - shape_value);
+	vec2 uv = (tiled_uv - position) * 2.0;
+	uv = rotate(uv, radians(rotation_angle));
 
-	COLOR.rgb = base_color.rgb;
-	COLOR.a = shaped_gradient;
+	float local_progress = get_local_progress(grid);
+
+	COLOR = texture(TEXTURE, UV) * modulate;
+	float alpha = COLOR.a;
+	float transition_progress = 0.0;
+
+	if (transition_type == 1) {
+		vec2 mask_zoom_uv = uv / local_progress;
+		vec2 mask_zoom_uv_01 = mask_zoom_uv * 0.5 + 0.5;
+		mask_zoom_uv_01 = use_mask_size ? use_actual_texture_size(mask_zoom_uv_01, mask_size, uv_deriv) : mask_zoom_uv_01;
+
+		transition_progress = texture(mask_texture, mask_zoom_uv_01).r;
+
+	} else if(transition_type == 2) {
+		float radius = length(uv);
+		float angle = atan(uv.y, uv.x);
+		float sector_angle = 2.0 * PI / float(edges);
+		float half_sector = sector_angle / 2.0;
+		// Define polygon sectors using the power of trigonometry
+		float d = cos(half_sector) / cos(mod(angle + half_sector, sector_angle) - half_sector);
+
+		vec2 smooth_edges = get_edges(local_progress, shape_feather);
+		transition_progress = smoothstep(smooth_edges.x, smooth_edges.y, radius / d);
+
+	} else if (transition_type == 3) {
+		float radius = length(uv);
+		float angle = atan(uv.y, uv.x);
+		float sector_angle = 2.0 * PI / float(sectors);
+		float half_sector = sector_angle / 2.0;
+		angle = mod(angle - half_sector, sector_angle);
+
+		float progress_angle = local_progress * 2.0 * PI / float(sectors);
+		float smooth_angle = smoothstep(0.0, clock_feather, progress_angle - angle);
+		transition_progress = smooth_angle;
+
+	} else {
+		vec2 smooth_edges = get_edges(local_progress, basic_feather);
+
+		float separation_x = smoothstep(smooth_edges.x, smooth_edges.y, abs(uv.x));
+		float separation_y = smoothstep(smooth_edges.x, smooth_edges.y, abs(uv.y));
+		transition_progress = max(separation_x, separation_y);
+	}
+
+	alpha = invert ? 1.0 - transition_progress : transition_progress;
+	alpha = use_sprite_alpha ? min(COLOR.a, alpha) : alpha;
+
+	vec4 transition_color = texture(transition_texture, UV);
+
+	if (use_transition_texture) {
+		vec4 chosen_color = mix(transition_color, COLOR, alpha);
+		COLOR = chosen_color;
+	} else {
+		COLOR.a = alpha;
+	}
 }

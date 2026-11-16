@@ -48,7 +48,10 @@ func spawnHitEffect() -> void:
 	var hitPos: Vector2 = global_position
 	# ① 命中粒子特效 —— 走对象池，不新建不销毁（子弹一秒十几发，反复 instantiate 很浪费）
 	#    variant 决定用哪种击中效果：打敌人=血肉(橙红)，打防御塔=金属(冷白)
-	var variant: String = "metal" if sourceTower == null else "flesh"
+	#    ⚠️ 用 is_instance_valid 而不是 `== null`：塔可能在子弹飞行途中被卖掉，
+	#       那时 sourceTower 是"已释放的引用"，`== null` 会判成 false（它并不等于 null），
+	#       于是错判成"打敌人"，喷出橙红血肉火花。
+	var variant: String = "flesh" if is_instance_valid(sourceTower) else "metal"
 	ExplosionManage.playHit(hitPos, variant)
 	# ② 命中音效（SoundManage 统一管理，2D 定位，离镜头越远越轻）
 	var pick: String = HIT_SOUNDS[randi() % HIT_SOUNDS.size()]

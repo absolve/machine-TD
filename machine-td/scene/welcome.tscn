@@ -212,7 +212,6 @@ text = "_LeaderboardIcon"
 [node name="AchievementPanel" parent="." unique_id=1661854894 instance=ExtResource("11_achv")]
 
 [node name="CodexPanel" parent="." unique_id=205813787 instance=ExtResource("15_codexpanel")]
-custom_maximum_size = Vector2(-1, 864)
 
 [node name="SteamLeaderboardPanel" parent="." unique_id=198279677 instance=ExtResource("16_leaderboard")]
 

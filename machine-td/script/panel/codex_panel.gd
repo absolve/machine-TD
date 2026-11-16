@@ -107,11 +107,11 @@ var TOWERICONS: Dictionary = {
 @onready var tabEnemies: Button = $Frame/PanelContainer/VBox/Columns/Left/Tabs/btnEnemies
 @onready var tabTowers: Button = $Frame/PanelContainer/VBox/Columns/Left/Tabs/btnTowers
 @onready var grid: GridContainer = $Frame/PanelContainer/VBox/Columns/Left/Scroll/CenterRow/grid
-@onready var detailIcon: TextureRect = $Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/IconCenter/detailIcon
-@onready var detailName: Label = $Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/DetailHeader/detailName
-@onready var detailTag: Label = $Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/DetailHeader/detailTag
-@onready var detailDesc: Label = $Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/detailDesc
-@onready var detailStats: GridContainer = $Frame/PanelContainer/VBox/Columns/DetailBox/DetailVBox/detailStats
+@onready var detailIcon: TextureRect = $Frame/PanelContainer/VBox/Columns/DetailBox/ScrollDetail/ScrollMargin/DetailVBox/IconCenter/detailIcon
+@onready var detailName: Label = $Frame/PanelContainer/VBox/Columns/DetailBox/ScrollDetail/ScrollMargin/DetailVBox/DetailHeader/detailName
+@onready var detailTag: Label = $Frame/PanelContainer/VBox/Columns/DetailBox/ScrollDetail/ScrollMargin/DetailVBox/DetailHeader/detailTag
+@onready var detailDesc: Label = $Frame/PanelContainer/VBox/Columns/DetailBox/ScrollDetail/ScrollMargin/DetailVBox/detailDesc
+@onready var detailStats: GridContainer = $Frame/PanelContainer/VBox/Columns/DetailBox/ScrollDetail/ScrollMargin/DetailVBox/detailStats
 
 # ---------- 状态 ----------
 

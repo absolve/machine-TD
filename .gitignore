@@ -36,6 +36,8 @@ build/
 /design
 # 美术备用字体，仅 tools/ 离线脚本使用，运行时不需要
 /machine-td/font/display/
+# 本地 DSH 插件 bundle（MCP 连接配置，不上传仓库）
+/.dsh-bundles/
 
 # ---------------- 系统 / 编辑器杂项 ----------------
 Thumbs.db

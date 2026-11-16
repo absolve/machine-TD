@@ -413,6 +413,12 @@ func hurt(_num: int, _source = null, _damage_type: String = "physical"):
 	#   dead 标志本来就有（见文件顶部），这里只是真正用起来。
 	if dead:
 		return
+	# 来源可能在结算前就没掉了：子弹要飞一段时间，这期间塔可能被卖掉 / 被拆掉，
+	# 于是 _source 成了一个**已释放的引用** —— 它既不是 null，也不能拿来做 `is` 判断
+	# （会抛 "Left operand of 'is' is a previously freed instance"），更不能读它的属性。
+	# 统一在这里归一成 null，后面所有用到 _source 的地方（战报、成就信号、加经验）就都安全了。
+	if not is_instance_valid(_source):
+		_source = null
 	var actualDamage: float = float(_num)
 	if _damage_type == "physical":
 		actualDamage *= max(0.0, 1.0 - armor)
