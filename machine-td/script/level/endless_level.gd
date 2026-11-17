@@ -3,14 +3,11 @@ extends "res://script/level/base_level.gd"
 ##
 ## 和普通关卡的区别：
 ##   · 数值写在脚本里（10 血 / 400 金），不从 StageData 读；
-##   · 波次编制**现场生成**（覆写 buildWaveSpawner），按波次解锁兵种、两条地面带子各分一半；
+##   · 波次编制**现场生成**（覆写 buildWaveSpawner），按波次解锁兵种并分配到当前地图路线；
 ##   · `wave` 设成极大值，`currWave >= wave` 永不成立 → **永不"通关"**，只有基地被打爆；
 ##   · 难度按波次缩放（Game.enemyScale / Game.enemyAtkScale / spawnDelayScale）。
 ##
-## 地图路线（见 endless_mode_design.md §4.2，双带并排 U 形）：
-##   路线1 = row3（东行）→ col28 回头 → row11（西行）；
-##   路线2 = row4（东行）→ col29 回头 → row12（西行）；两条带子全程相邻并排。
-##   路线3 = 空中航线（无人机 / 攻击直升机 / 战斗飞机走这条）。
+## 地图几何、传送带与塔位都保存在各自的关卡场景中；路线编号由场景根节点声明。
 
 ## ── 本关固定数值 ──
 const ENDLESS_HEALTH: int = 10 # 基地血量：漏 10 个就结束（无尽固定 10）
@@ -30,11 +27,6 @@ const ATK_SCALE_STEP: float = 0.05 # 每波敌人攻击 +5%
 const DELAY_SCALE_STEP: float = 0.015 # 每波出怪间隔 ×(1-1.5%)
 const DELAY_SCALE_MIN: float = 0.45 # 出怪间隔缩放下限
 const BOSS_INTERVAL: int = 5 # 每 5 波一个"高潮波"（数量 ×1.2）
-const AIR_ROUTE: int = 3 # 空中航线 = 路线3
-## 地图上应有的路线条数（路线1/2＝两条并排地面带子，路线3＝空中航线）。
-## 摆缺了的话 getRoute() 会「回落到最后一条」，敌人全挤在一条路上 —— 见 _ready 的警告。
-const ROUTE_TOTAL: int = 3
-
 ## 兵种解锁波次（设计文档 §5.1）
 const UNLOCK: Array = [
 	[1, Game.enemyType.miniTank],
@@ -81,7 +73,12 @@ const COUNT_CAP := {
 	Game.enemyType.experimentalTank: 5,
 }
 
-## 空中兵种：走路线3（`collectRoutes()` 里第 3 个 Path2D）
+## 当前关卡场景中地面/空中路线的编号（`collectRoutes()` 中从 1 开始）。
+@export var groundRouteNos: Array[int] = [1, 2]
+@export var airRouteNos: Array[int] = [3]
+@export var restrictMechPlacementToSlots: bool = false
+
+## 空中兵种。
 const AIR_TYPES: Array = [
 	Game.enemyType.scoutDrone,
 	Game.enemyType.attackHelicopter,
@@ -107,13 +104,15 @@ func _ready() -> void:
 	# （§二十二 H 明确 v1 隐藏按钮，否则用时维度会被双重获利）。
 	intermissionDuration = 0.0
 	# 空中航线也要提示（地面两条都铺了带子，玩家一眼看得出走向）
-	hintRoutes = [AIR_ROUTE]
-	# 路线摆缺了要立刻看得见：getRoute() 越界时会回落到最后一条路线，
-	# 于是「三条路线的编制」全挤在一条路上出（表现＝只有一条路线出兵），
-	# 而且不报错。这里直接吼一声，别再靠猜。
-	if getRouteCount() < ROUTE_TOTAL:
-		push_warning("无尽地图只摆了 %d 条路线（应有 %d 条：2 条地面带子 + 1 条空中航线），敌人会挤在同一条路上"
-			% [getRouteCount(), ROUTE_TOTAL])
+	hintRoutes = airRouteNos.duplicate()
+	# base_level._ready() 先于这里运行；现在知道哪些路线在空中，重新计算机甲禁行格。
+	collectRouteArea()
+	# 路线数量配置错了要立刻看得见：getRoute() 越界时会回落到最后一条路线，
+	# 多条路线的编制可能因此挤到一起。这里直接警告，避免静默走错路线。
+	var expectedRouteCount: int = groundRouteNos.size() + airRouteNos.size()
+	if getRouteCount() != expectedRouteCount:
+		push_warning("无尽地图有 %d 条路线（场景配置应为 %d 条），敌人可能会走错路线"
+			% [getRouteCount(), expectedRouteCount])
 	# 地图上还没有 placeableArea 实例时，先用代码给出可建造格，
 	# 免得"进得去但没地方建塔"。M2 摆好真实塔位后这段自动不生效。
 	if allowArea.is_empty():
@@ -121,6 +120,12 @@ func _ready() -> void:
 	# 本局统计：所有敌人（不分地面/空中）死亡都算进击杀数
 	startedAtMsec = Time.get_ticks_msec()
 	Game.enemyDefeated.connect(onEnemyDefeated)
+
+
+func canPlaceForType(tower_type, coverGrids: Array[Vector2i]) -> bool:
+	if restrictMechPlacementToSlots and tower_type == Game.towerType.mech:
+		return canPlace(coverGrids)
+	return super.canPlaceForType(tower_type, coverGrids)
 
 
 func _exit_tree() -> void:
@@ -206,41 +211,47 @@ func buildWaveSpawner(waveNo: int) -> Array:
 			break
 
 	# ── 生成记录：**每条路线同时出兵** ──
-	## 分兵规则：地面兵种两条带子各一半（奇数余 1 个给路线1），空中兵种走路线3。
+	## 分兵规则：地面兵种平均分到当前地图的所有地面路线；空中兵种轮流分到空中路线。
 	##
 	## ⚠️ 上一版是"先把路线1的兵全部排完，再排路线2" —— 而生成队列是**先进先出、
 	##    一次只放队首那一个**（见 base_level.gd::onSpawnerTimerTimeout），
-	##    结果整波的前半段只有路线1出兵、后半段只有路线2，玩家看到的是
-	##    "一次只出一条路线的敌人"（"两条带子始终都有敌人"的设计意图没落地）。
+	##    结果整波的前半段只有一条路线出兵、后半段才切到下一条。
 	##    现在改成：先把每个兵种拆进各条路线的队列，再**按比例交织**成一条队列，
 	##    几条路线从第一秒起就同时进人。
 	var lanes: Dictionary = {}
-	lanes[1] = []
-	lanes[2] = []
-	lanes[AIR_ROUTE] = []
+	var routeOrder: Array[int] = []
+	routeOrder.append_array(groundRouteNos)
+	routeOrder.append_array(airRouteNos)
+	for routeNo in routeOrder:
+		lanes[routeNo] = []
+	var nextAirRouteIndex: int = 0
 	for t in active:
 		var count: int = int(counts[t])
 		if count <= 0:
 			continue
 		if t in AIR_TYPES:
 			for _i in count:
-				lanes[AIR_ROUTE].append(t)
+				var airRouteNo: int = airRouteNos[nextAirRouteIndex % airRouteNos.size()]
+				lanes[airRouteNo].append(t)
+				nextAirRouteIndex += 1
 			continue
-		# 奇数余 1 个给路线1（与 endless_mode_design.md §5.2 的写法一致）
-		var half: int = int(ceil(float(count) / 2.0))
-		for _i in half:
-			lanes[1].append(t)
-		for _i in count - half:
-			lanes[2].append(t)
+		var eachGroundRoute: int = int(count / groundRouteNos.size())
+		var extraGroundRouteCount: int = count % groundRouteNos.size()
+		for routeIndex in groundRouteNos.size():
+			var routeCount: int = eachGroundRoute
+			if routeIndex < extraGroundRouteCount:
+				routeCount += 1
+			for _i in routeCount:
+				lanes[groundRouteNos[routeIndex]].append(t)
 
 	# 交织：每一拍挑**进度最落后**的那条路线（进度 = 该路线已出场数 / 该路线总数）。
 	# 这是按比例合并多路流水的标准做法：
-	#   · 两条带子数量相等 → 严格 1、2、1、2 交替，两列纵队同时推进；
+	#   · 各路线数量相等 → 按路线轮流出兵，多条路线从第一秒起就同时进人；
 	#   · 数量悬殊（比如 16 : 2）→ 小股的那条也会被均匀撒在整波里，
 	#     而不是"挤在某一段"或"末尾才出现"。
 	# 空中航线同样按这个比例插进去，所以飞机是穿插登场、不是最后一波全上。
 	var laneList: Array = []
-	for routeNo in [1, 2, AIR_ROUTE]:
+	for routeNo in routeOrder:
 		var items: Array = lanes[routeNo]
 		if not items.is_empty():
 			laneList.append({"route": int(routeNo), "items": items, "i": 0})

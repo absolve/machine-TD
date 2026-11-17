@@ -1,7 +1,12 @@
 extends Node2D
 
 ## 无尽模式的关卡场景（与 15 个关卡平级，见 endless_mode_design.md）
-const ENDLESS_LEVEL_SCENE := "res://scene/level/endless.tscn"
+const ENDLESS_LEVEL_SCENES: Array[PackedScene] = [
+	preload("res://scene/level/endless.tscn"),
+	preload("res://scene/level/endless_u.tscn"),
+	preload("res://scene/level/endless_wave.tscn"),
+	preload("res://scene/level/endless_three_lanes.tscn"),
+]
 
 ## 教程关的关卡 id（StageData.allStage 里 'id': 0 那条）
 const TUTORIAL_STAGE_ID := 0
@@ -33,6 +38,7 @@ var endlessStatsText: String = ""
 @onready var achievementTracker = $AchievementTracker
 @onready var abilityBar = $Hud/abilityBar
 @onready var customCamera = $CustomCamera
+@onready var abilityRangeOverlay: Node2D = $AbilityRangeOverlay
 
 ## 教程关的新手引导实例（非教程关一直是 null）
 var tutorialGuide: Node = null
@@ -356,10 +362,9 @@ func loadLevel():
 ## 数值由关卡脚本自己定（10 血 / 400 金），所以 levelId 传 -1 ——
 ## base_level._ready() 在 allStage 里匹配不到 -1，就不会覆盖脚本里的值。
 func loadEndlessLevel() -> void:
-	var levelScene: PackedScene = load(ENDLESS_LEVEL_SCENE)
-	if levelScene == null:
-		push_error("加载无尽关卡失败: " + ENDLESS_LEVEL_SCENE)
-		return
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	var levelScene: PackedScene = ENDLESS_LEVEL_SCENES[rng.randi_range(0, ENDLESS_LEVEL_SCENES.size() - 1)]
 	stageData = {}
 	var levelInstance = levelScene.instantiate()
 	levelInstance.levelId = -1
@@ -1082,7 +1087,7 @@ func returnHome():
 	SceneTransition.changeScene("res://scene/welcome.tscn")
 
 func onAbilitySelectionChanged(_ability_id: String) -> void:
-	queue_redraw()
+	abilityRangeOverlay.queue_redraw()
 
 
 ## 技能花掉宝石：把顶栏的宝石数字同步成最新值。
@@ -1181,7 +1186,7 @@ func _process(_delta: float) -> void:
 func _physics_process(_delta: float) -> void:
 	# 选择技能目标时也要重绘，让范围预览跟着鼠标走
 	if debug or AbilityManager.isSelectingPosition():
-		queue_redraw()
+		abilityRangeOverlay.queue_redraw()
 
 
 # 技能选中 / 取消都要重绘一次。
@@ -1262,16 +1267,6 @@ func _draw() -> void:
 		draw_string(font, get_local_mouse_position() + Vector2(20, 20), "%s-%s" % [floori(x / cellSize),
 		 floori(y / cellSize)],
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 60, Color.WHEAT)
-
-	# 技能范围预览：等待玩家点位置时，跟着鼠标画一个安全黄圆圈
-	if AbilityManager.isSelectingPosition():
-		var radius: float = AbilityManager.getSelectingRadius()
-		if radius > 0.0:
-			var mousePos: Vector2 = get_local_mouse_position()
-			var circleColor: Color = Palette.HAZARD_500
-			draw_circle(mousePos, radius, Color(circleColor.r, circleColor.g, circleColor.b, 0.16))
-			draw_arc(mousePos, radius, 0.0, TAU, 64, Color(circleColor.r, circleColor.g, circleColor.b, 0.9), 3.0)
-
 
 ## 离开战斗场景时停掉背景音乐。
 ##

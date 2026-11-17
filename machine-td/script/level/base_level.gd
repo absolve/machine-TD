@@ -155,18 +155,18 @@ func _ready() -> void:
 			break
 	# 可建造区：关卡里摆的 placeableArea 实例（子节点 _ready 已先跑完，位置对齐过了）
 	collectAllowArea()
-	# 路线格集合：移动机甲靠它判断"不能开上敌人路线"（§10.2）
-	collectRouteArea()
 	# 需要提示的航线由关卡数据声明（地面路线有传送带，玩家看得出走向，不用提示）
 	for routeNo in StageData.getHintRoutes(levelId):
 		hintRoutes.append(int(routeNo))
+	# 路线格集合：移动机甲靠它判断"不能开上地面敌人路线"（§10.2）
+	collectRouteArea()
 
 # 收集本关所有路线：场景里的 Path2D 子节点，按摆放顺序。
 # 约定第 1 个就是「路线1」—— 所以关卡配置里不写 route 的敌人默认走它。
 func collectRoutes() -> void:
 	routes.clear()
 	for child in get_children():
-		if child is Path2D:
+		if child is Path2D and child.visible:
 			routes.append(child)
 	for route in routes:
 		smoothRouteCorners(route.curve)
@@ -297,6 +297,9 @@ func getRouteCount() -> int:
 func collectAllowArea() -> void:
 	for node in get_tree().get_nodes_in_group("placeableArea"):
 		if not node.has_method("getGrid"):
+			continue
+		var slotVisual: CanvasItem = node as CanvasItem
+		if slotVisual == null or not slotVisual.is_visible_in_tree():
 			continue
 		var grid: Vector2i = node.getGrid()
 		if grid not in allowArea:
@@ -717,7 +720,7 @@ func removeOccupiedArea(grid: Array[Vector2i]):
 ## ── 敌人路线覆盖的格子 ──
 ##
 ## 供**移动机甲**判断"这一格能不能开过去"（见 feature_design.md §10.2）。
-## 机甲可以进可建造区、也可以进空地，唯独不能压到敌人路线上 —— 那是它的核心约束。
+## 机甲可以进可建造区、也可以进空地，唯独不能压到地面敌人路线上 —— 空中航线不占地面格子。
 ##
 ## 为什么不像 allowArea 那样直接读 placeableArea 节点：
 ## 路线是 Path2D 的自由曲线，没有"格节点"可读，只能**沿曲线采样**再换算成格子。
@@ -740,7 +743,11 @@ var routeArea: Array[Vector2i] = []
 func collectRouteArea() -> void:
 	routeArea.clear()
 	var seen: Dictionary = {}
-	for route in routes:
+	for routeIndex in range(routes.size()):
+		# hintRoutes 是关卡中不可见的空中航线标记，不应阻止机甲在其地面投影下通行。
+		if routeIndex + 1 in hintRoutes:
+			continue
+		var route: Path2D = routes[routeIndex]
 		if route == null or route.curve == null:
 			continue
 		var length: float = route.curve.get_baked_length()

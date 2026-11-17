@@ -111,6 +111,7 @@ var overkill: int = 0      ## 溢出伤害（打死时多出来的部分），�
 @onready var damageFx: Node2D = $DamageFx
 @onready var flameParticles: CPUParticles2D = $DamageFx/Flames
 @onready var smokeParticles: CPUParticles2D = $DamageFx/Smoke
+@onready var rangeOverlay: Node2D = $RangeOverlay
 # 开火特效播放器：只有配置了炮口闪光的塔才有这个节点，其余塔为 null
 @onready var sparkPlayer = get_node_or_null("SparkPlayer")
 
@@ -180,19 +181,23 @@ func init():
 
 func hideSelect():
 	selected = !selected
-	queue_redraw()
+	refreshRangeOverlay()
 	#update_status_ui()
 	Game.towerClicked.emit(self, selected)
 
 func onMouseEntered() -> void:
 	hovered = true
 	if not selected:
-		queue_redraw()
+		refreshRangeOverlay()
 
 func onMouseExited() -> void:
 	hovered = false
 	if not selected:
-		queue_redraw()
+		refreshRangeOverlay()
+
+func refreshRangeOverlay() -> void:
+	if rangeOverlay != null:
+		rangeOverlay.queue_redraw()
 
 # 增加经验
 func addExp(amount: int) -> void:
@@ -345,7 +350,7 @@ func runInstantSkill() -> bool:
 
 ## 模式/生效状态变化后的钩子（子类用来刷新自绘、渐变等）。默认什么也不做。
 func onSkillModeChanged() -> void:
-	queue_redraw()
+	refreshRangeOverlay()
 
 
 ## 每物理帧推进技能计时。由 `_physics_process` 统一调用。
@@ -451,7 +456,7 @@ func applySight() -> void:
 	var scopeNow: float = effectiveScope()
 	if raderShape != null and raderShape.shape:
 		raderShape.shape.radius = scopeNow
-	queue_redraw()
+	refreshRangeOverlay()
 
 
 # 升级闪光: 启用 shader -> 亮度淡入 -> 闪烁 -> 淡出 -> 关闭
@@ -757,40 +762,4 @@ func _physics_process(delta: float) -> void:
 	if not selected and not hovered:
 		return
 	radarSweepAngle = fmod(radarSweepAngle + delta * RADAR_SCAN_SPEED, TAU)
-	queue_redraw()
-
-
-func _draw():
-	if not selected and not hovered:
-		return
-	var radarColor: Color = Color(0.25, 0.75, 1.0, 1.0)
-	# 画圈用**派生后的**射程：toggle 改了射程时，圈和真实碰撞体（applySight 写的那个）必须一致
-	var scopeNow: float = effectiveScope()
-	draw_circle(Vector2.ZERO, scopeNow, Color(radarColor.r, radarColor.g, radarColor.b, 0.12))
-	draw_arc(Vector2.ZERO, scopeNow, 0.0, TAU, 64, Color(radarColor.r, radarColor.g, radarColor.b, 0.8), 2.0)
-	for i in range(1, 4):
-		var r = scopeNow * (i / 4.0)
-		draw_arc(Vector2.ZERO, r, 0.0, TAU, 64, Color(radarColor.r, radarColor.g, radarColor.b, 0.15), 1.0)
-	var segments: int = 24
-	var tailSpan: float = PI / 3.0
-	for s in range(segments):
-		var t = float(s) / segments
-		var a = radarSweepAngle - tailSpan * t
-		var alpha = (1.0 - t) * 0.5
-		var nextA = radarSweepAngle - tailSpan * (float(s + 1) / segments)
-		var p1 = Vector2(cos(a), sin(a)) * scopeNow
-		var p2 = Vector2(cos(nextA), sin(nextA)) * scopeNow
-		draw_polygon(
-			PackedVector2Array([Vector2.ZERO, p1, p2]),
-			PackedColorArray([
-				Color(radarColor.r, radarColor.g, radarColor.b, alpha),
-				Color(radarColor.r, radarColor.g, radarColor.b, alpha),
-				Color(radarColor.r, radarColor.g, radarColor.b, 0.0)
-			])
-		)
-	draw_line(
-		Vector2.ZERO,
-		Vector2(cos(radarSweepAngle), sin(radarSweepAngle)) * scopeNow,
-		Color(radarColor.r, radarColor.g, radarColor.b, 1.0),
-		2.0
-	)
+	refreshRangeOverlay()

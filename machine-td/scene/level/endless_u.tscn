@@ -1,0 +1,1022 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://scene/level/endless.tscn" id="1_base"]
+[ext_resource type="PackedScene" path="res://scene/belt.tscn" id="2_belt"]
+[ext_resource type="PackedScene" path="res://scene/placeable_area.tscn" id="3_slot"]
+
+[sub_resource type="Curve2D" id="Curve2D_u_1"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 288, -96, 0, 0, 0, 0, 288, 800, 0, 0, 0, 0, 1760, 800, 0, 0, 0, 0, 1760, -96)
+}
+point_count = 4
+
+[sub_resource type="Curve2D" id="Curve2D_u_2"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -96, 32, 0, 0, 0, 0, 2016, 992)
+}
+point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_u_3"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -96, 992, 0, 0, 0, 0, 2016, 32)
+}
+point_count = 2
+
+[node name="endless" instance=ExtResource("1_base")]
+groundRouteNos = Array[int]([1])
+airRouteNos = Array[int]([2, 3])
+restrictMechPlacementToSlots = true
+
+[node name="Path2D" parent="." index="4"]
+visible = false
+[node name="Path2D2" parent="." index="5"]
+visible = false
+[node name="Path2D3" parent="." index="6"]
+visible = false
+[node name="beltLayer" parent="." index="7"]
+visible = false
+[node name="placeableLayer" parent="." index="8"]
+visible = false
+[node name="propLayer" parent="." index="9"]
+visible = false
+
+[node name="GroundRoute1" type="Path2D" parent="."]
+curve = SubResource("Curve2D_u_1")
+
+[node name="AirRoute1" type="Path2D" parent="."]
+curve = SubResource("Curve2D_u_2")
+
+[node name="AirRoute2" type="Path2D" parent="."]
+curve = SubResource("Curve2D_u_3")
+
+[node name="GroundBelts" type="Node2D" parent="."]
+z_index = -1
+
+[node name="belt_1_4_0" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 32)
+animation = &"ns"
+routePhase = 2.0
+
+[node name="belt_1_4_1" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 96)
+animation = &"ns"
+routePhase = 3.0
+
+[node name="belt_1_4_2" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 160)
+animation = &"ns"
+routePhase = 4.0
+
+[node name="belt_1_4_3" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 224)
+animation = &"ns"
+routePhase = 5.0
+
+[node name="belt_1_4_4" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 288)
+animation = &"ns"
+routePhase = 6.0
+
+[node name="belt_1_4_5" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 352)
+animation = &"ns"
+routePhase = 7.0
+
+[node name="belt_1_4_6" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 416)
+animation = &"ns"
+routePhase = 8.0
+
+[node name="belt_1_4_7" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 480)
+animation = &"ns"
+routePhase = 9.0
+
+[node name="belt_1_4_8" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 544)
+animation = &"ns"
+routePhase = 10.0
+
+[node name="belt_1_4_9" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 608)
+animation = &"ns"
+routePhase = 11.0
+
+[node name="belt_1_4_10" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 672)
+animation = &"ns"
+routePhase = 12.0
+
+[node name="belt_1_4_11" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 736)
+animation = &"ns"
+routePhase = 13.0
+
+[node name="belt_1_4_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(288, 800)
+animation = &"ne"
+routePhase = 14.0
+
+[node name="belt_1_5_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(352, 800)
+animation = &"we"
+routePhase = 15.0
+
+[node name="belt_1_6_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(416, 800)
+animation = &"we"
+routePhase = 16.0
+
+[node name="belt_1_7_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(480, 800)
+animation = &"we"
+routePhase = 17.0
+
+[node name="belt_1_8_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(544, 800)
+animation = &"we"
+routePhase = 18.0
+
+[node name="belt_1_9_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(608, 800)
+animation = &"we"
+routePhase = 19.0
+
+[node name="belt_1_10_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(672, 800)
+animation = &"we"
+routePhase = 20.0
+
+[node name="belt_1_11_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(736, 800)
+animation = &"we"
+routePhase = 21.0
+
+[node name="belt_1_12_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(800, 800)
+animation = &"we"
+routePhase = 22.0
+
+[node name="belt_1_13_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(864, 800)
+animation = &"we"
+routePhase = 23.0
+
+[node name="belt_1_14_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(928, 800)
+animation = &"we"
+routePhase = 24.0
+
+[node name="belt_1_15_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(992, 800)
+animation = &"we"
+routePhase = 25.0
+
+[node name="belt_1_16_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1056, 800)
+animation = &"we"
+routePhase = 26.0
+
+[node name="belt_1_17_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1120, 800)
+animation = &"we"
+routePhase = 27.0
+
+[node name="belt_1_18_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1184, 800)
+animation = &"we"
+routePhase = 28.0
+
+[node name="belt_1_19_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1248, 800)
+animation = &"we"
+routePhase = 29.0
+
+[node name="belt_1_20_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1312, 800)
+animation = &"we"
+routePhase = 30.0
+
+[node name="belt_1_21_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1376, 800)
+animation = &"we"
+routePhase = 31.0
+
+[node name="belt_1_22_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1440, 800)
+animation = &"we"
+routePhase = 32.0
+
+[node name="belt_1_23_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1504, 800)
+animation = &"we"
+routePhase = 33.0
+
+[node name="belt_1_24_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1568, 800)
+animation = &"we"
+routePhase = 34.0
+
+[node name="belt_1_25_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1632, 800)
+animation = &"we"
+routePhase = 35.0
+
+[node name="belt_1_26_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1696, 800)
+animation = &"we"
+routePhase = 36.0
+
+[node name="belt_1_27_12" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 800)
+animation = &"wn"
+routePhase = 37.0
+
+[node name="belt_1_27_11" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 736)
+animation = &"sn"
+routePhase = 38.0
+
+[node name="belt_1_27_10" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 672)
+animation = &"sn"
+routePhase = 39.0
+
+[node name="belt_1_27_9" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 608)
+animation = &"sn"
+routePhase = 40.0
+
+[node name="belt_1_27_8" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 544)
+animation = &"sn"
+routePhase = 41.0
+
+[node name="belt_1_27_7" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 480)
+animation = &"sn"
+routePhase = 42.0
+
+[node name="belt_1_27_6" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 416)
+animation = &"sn"
+routePhase = 43.0
+
+[node name="belt_1_27_5" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 352)
+animation = &"sn"
+routePhase = 44.0
+
+[node name="belt_1_27_4" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 288)
+animation = &"sn"
+routePhase = 45.0
+
+[node name="belt_1_27_3" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 224)
+animation = &"sn"
+routePhase = 46.0
+
+[node name="belt_1_27_2" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 160)
+animation = &"sn"
+routePhase = 47.0
+
+[node name="belt_1_27_1" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 96)
+animation = &"sn"
+routePhase = 48.0
+
+[node name="belt_1_27_0" parent="GroundBelts" instance=ExtResource("2_belt")]
+position = Vector2(1760, 32)
+animation = &"sn"
+routePhase = 49.0
+
+[node name="PlaceableSlots" type="Node2D" parent="."]
+z_index = -1
+
+[node name="slot_u_5_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(352, 32)
+
+[node name="slot_u_6_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(416, 32)
+
+[node name="slot_u_7_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(480, 32)
+
+[node name="slot_u_8_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(544, 32)
+
+[node name="slot_u_9_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(608, 32)
+
+[node name="slot_u_10_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(672, 32)
+
+[node name="slot_u_11_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(736, 32)
+
+[node name="slot_u_12_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(800, 32)
+
+[node name="slot_u_13_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(864, 32)
+
+[node name="slot_u_14_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(928, 32)
+
+[node name="slot_u_15_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(992, 32)
+
+[node name="slot_u_16_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1056, 32)
+
+[node name="slot_u_17_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1120, 32)
+
+[node name="slot_u_18_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1184, 32)
+
+[node name="slot_u_19_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1248, 32)
+
+[node name="slot_u_20_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1312, 32)
+
+[node name="slot_u_21_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1376, 32)
+
+[node name="slot_u_22_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1440, 32)
+
+[node name="slot_u_23_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1504, 32)
+
+[node name="slot_u_24_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1568, 32)
+
+[node name="slot_u_25_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1632, 32)
+
+[node name="slot_u_26_0" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1696, 32)
+
+[node name="slot_u_5_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(352, 96)
+
+[node name="slot_u_6_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(416, 96)
+
+[node name="slot_u_7_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(480, 96)
+
+[node name="slot_u_8_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(544, 96)
+
+[node name="slot_u_9_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(608, 96)
+
+[node name="slot_u_10_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(672, 96)
+
+[node name="slot_u_11_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(736, 96)
+
+[node name="slot_u_12_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(800, 96)
+
+[node name="slot_u_13_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(864, 96)
+
+[node name="slot_u_14_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(928, 96)
+
+[node name="slot_u_15_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(992, 96)
+
+[node name="slot_u_16_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1056, 96)
+
+[node name="slot_u_17_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1120, 96)
+
+[node name="slot_u_18_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1184, 96)
+
+[node name="slot_u_19_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1248, 96)
+
+[node name="slot_u_20_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1312, 96)
+
+[node name="slot_u_21_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1376, 96)
+
+[node name="slot_u_22_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1440, 96)
+
+[node name="slot_u_23_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1504, 96)
+
+[node name="slot_u_24_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1568, 96)
+
+[node name="slot_u_25_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1632, 96)
+
+[node name="slot_u_26_1" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1696, 96)
+
+[node name="slot_u_5_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(352, 160)
+
+[node name="slot_u_6_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(416, 160)
+
+[node name="slot_u_7_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(480, 160)
+
+[node name="slot_u_8_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(544, 160)
+
+[node name="slot_u_9_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(608, 160)
+
+[node name="slot_u_10_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(672, 160)
+
+[node name="slot_u_11_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(736, 160)
+
+[node name="slot_u_12_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(800, 160)
+
+[node name="slot_u_13_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(864, 160)
+
+[node name="slot_u_14_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(928, 160)
+
+[node name="slot_u_15_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(992, 160)
+
+[node name="slot_u_16_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1056, 160)
+
+[node name="slot_u_17_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1120, 160)
+
+[node name="slot_u_18_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1184, 160)
+
+[node name="slot_u_19_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1248, 160)
+
+[node name="slot_u_20_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1312, 160)
+
+[node name="slot_u_21_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1376, 160)
+
+[node name="slot_u_22_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1440, 160)
+
+[node name="slot_u_23_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1504, 160)
+
+[node name="slot_u_24_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1568, 160)
+
+[node name="slot_u_25_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1632, 160)
+
+[node name="slot_u_26_2" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1696, 160)
+
+[node name="slot_u_5_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(352, 224)
+
+[node name="slot_u_6_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(416, 224)
+
+[node name="slot_u_7_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(480, 224)
+
+[node name="slot_u_8_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(544, 224)
+
+[node name="slot_u_9_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(608, 224)
+
+[node name="slot_u_10_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(672, 224)
+
+[node name="slot_u_11_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(736, 224)
+
+[node name="slot_u_12_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(800, 224)
+
+[node name="slot_u_13_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(864, 224)
+
+[node name="slot_u_14_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(928, 224)
+
+[node name="slot_u_15_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(992, 224)
+
+[node name="slot_u_16_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1056, 224)
+
+[node name="slot_u_17_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1120, 224)
+
+[node name="slot_u_18_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1184, 224)
+
+[node name="slot_u_19_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1248, 224)
+
+[node name="slot_u_20_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1312, 224)
+
+[node name="slot_u_21_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1376, 224)
+
+[node name="slot_u_22_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1440, 224)
+
+[node name="slot_u_23_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1504, 224)
+
+[node name="slot_u_24_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1568, 224)
+
+[node name="slot_u_25_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1632, 224)
+
+[node name="slot_u_26_3" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1696, 224)
+
+[node name="slot_u_5_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(352, 288)
+
+[node name="slot_u_6_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(416, 288)
+
+[node name="slot_u_7_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(480, 288)
+
+[node name="slot_u_8_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(544, 288)
+
+[node name="slot_u_9_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(608, 288)
+
+[node name="slot_u_10_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(672, 288)
+
+[node name="slot_u_11_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(736, 288)
+
+[node name="slot_u_12_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(800, 288)
+
+[node name="slot_u_13_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(864, 288)
+
+[node name="slot_u_14_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(928, 288)
+
+[node name="slot_u_15_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(992, 288)
+
+[node name="slot_u_16_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1056, 288)
+
+[node name="slot_u_17_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1120, 288)
+
+[node name="slot_u_18_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1184, 288)
+
+[node name="slot_u_19_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1248, 288)
+
+[node name="slot_u_20_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1312, 288)
+
+[node name="slot_u_21_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1376, 288)
+
+[node name="slot_u_22_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1440, 288)
+
+[node name="slot_u_23_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1504, 288)
+
+[node name="slot_u_24_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1568, 288)
+
+[node name="slot_u_25_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1632, 288)
+
+[node name="slot_u_26_4" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1696, 288)
+
+[node name="slot_u_5_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(352, 352)
+
+[node name="slot_u_6_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(416, 352)
+
+[node name="slot_u_7_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(480, 352)
+
+[node name="slot_u_8_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(544, 352)
+
+[node name="slot_u_9_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(608, 352)
+
+[node name="slot_u_10_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(672, 352)
+
+[node name="slot_u_11_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(736, 352)
+
+[node name="slot_u_12_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(800, 352)
+
+[node name="slot_u_13_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(864, 352)
+
+[node name="slot_u_14_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(928, 352)
+
+[node name="slot_u_15_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(992, 352)
+
+[node name="slot_u_16_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1056, 352)
+
+[node name="slot_u_17_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1120, 352)
+
+[node name="slot_u_18_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1184, 352)
+
+[node name="slot_u_19_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1248, 352)
+
+[node name="slot_u_20_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1312, 352)
+
+[node name="slot_u_21_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1376, 352)
+
+[node name="slot_u_22_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1440, 352)
+
+[node name="slot_u_23_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1504, 352)
+
+[node name="slot_u_24_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1568, 352)
+
+[node name="slot_u_25_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1632, 352)
+
+[node name="slot_u_26_5" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1696, 352)
+
+[node name="slot_u_5_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(352, 416)
+
+[node name="slot_u_6_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(416, 416)
+
+[node name="slot_u_7_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(480, 416)
+
+[node name="slot_u_8_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(544, 416)
+
+[node name="slot_u_9_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(608, 416)
+
+[node name="slot_u_10_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(672, 416)
+
+[node name="slot_u_11_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(736, 416)
+
+[node name="slot_u_12_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(800, 416)
+
+[node name="slot_u_13_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(864, 416)
+
+[node name="slot_u_14_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(928, 416)
+
+[node name="slot_u_15_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(992, 416)
+
+[node name="slot_u_16_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1056, 416)
+
+[node name="slot_u_17_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1120, 416)
+
+[node name="slot_u_18_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1184, 416)
+
+[node name="slot_u_19_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1248, 416)
+
+[node name="slot_u_20_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1312, 416)
+
+[node name="slot_u_21_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1376, 416)
+
+[node name="slot_u_22_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1440, 416)
+
+[node name="slot_u_23_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1504, 416)
+
+[node name="slot_u_24_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1568, 416)
+
+[node name="slot_u_25_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1632, 416)
+
+[node name="slot_u_26_6" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1696, 416)
+
+[node name="slot_u_5_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(352, 480)
+
+[node name="slot_u_6_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(416, 480)
+
+[node name="slot_u_7_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(480, 480)
+
+[node name="slot_u_8_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(544, 480)
+
+[node name="slot_u_9_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(608, 480)
+
+[node name="slot_u_10_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(672, 480)
+
+[node name="slot_u_11_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(736, 480)
+
+[node name="slot_u_12_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(800, 480)
+
+[node name="slot_u_13_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(864, 480)
+
+[node name="slot_u_14_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(928, 480)
+
+[node name="slot_u_15_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(992, 480)
+
+[node name="slot_u_16_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1056, 480)
+
+[node name="slot_u_17_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1120, 480)
+
+[node name="slot_u_18_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1184, 480)
+
+[node name="slot_u_19_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1248, 480)
+
+[node name="slot_u_20_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1312, 480)
+
+[node name="slot_u_21_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1376, 480)
+
+[node name="slot_u_22_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1440, 480)
+
+[node name="slot_u_23_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1504, 480)
+
+[node name="slot_u_24_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1568, 480)
+
+[node name="slot_u_25_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1632, 480)
+
+[node name="slot_u_26_7" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1696, 480)
+
+[node name="slot_u_5_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(352, 544)
+
+[node name="slot_u_6_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(416, 544)
+
+[node name="slot_u_7_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(480, 544)
+
+[node name="slot_u_8_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(544, 544)
+
+[node name="slot_u_9_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(608, 544)
+
+[node name="slot_u_10_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(672, 544)
+
+[node name="slot_u_11_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(736, 544)
+
+[node name="slot_u_12_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(800, 544)
+
+[node name="slot_u_13_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(864, 544)
+
+[node name="slot_u_14_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(928, 544)
+
+[node name="slot_u_15_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(992, 544)
+
+[node name="slot_u_16_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1056, 544)
+
+[node name="slot_u_17_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1120, 544)
+
+[node name="slot_u_18_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1184, 544)
+
+[node name="slot_u_19_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1248, 544)
+
+[node name="slot_u_20_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1312, 544)
+
+[node name="slot_u_21_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1376, 544)
+
+[node name="slot_u_22_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1440, 544)
+
+[node name="slot_u_23_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1504, 544)
+
+[node name="slot_u_24_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1568, 544)
+
+[node name="slot_u_25_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1632, 544)
+
+[node name="slot_u_26_8" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1696, 544)
+
+[node name="slot_u_5_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(352, 608)
+
+[node name="slot_u_6_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(416, 608)
+
+[node name="slot_u_7_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(480, 608)
+
+[node name="slot_u_8_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(544, 608)
+
+[node name="slot_u_9_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(608, 608)
+
+[node name="slot_u_10_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(672, 608)
+
+[node name="slot_u_11_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(736, 608)
+
+[node name="slot_u_12_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(800, 608)
+
+[node name="slot_u_13_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(864, 608)
+
+[node name="slot_u_14_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(928, 608)
+
+[node name="slot_u_15_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(992, 608)
+
+[node name="slot_u_16_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1056, 608)
+
+[node name="slot_u_17_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1120, 608)
+
+[node name="slot_u_18_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1184, 608)
+
+[node name="slot_u_19_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1248, 608)
+
+[node name="slot_u_20_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1312, 608)
+
+[node name="slot_u_21_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1376, 608)
+
+[node name="slot_u_22_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1440, 608)
+
+[node name="slot_u_23_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1504, 608)
+
+[node name="slot_u_24_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1568, 608)
+
+[node name="slot_u_25_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1632, 608)
+
+[node name="slot_u_26_9" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1696, 608)
+
+[node name="slot_u_5_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(352, 672)
+
+[node name="slot_u_6_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(416, 672)
+
+[node name="slot_u_7_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(480, 672)
+
+[node name="slot_u_8_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(544, 672)
+
+[node name="slot_u_9_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(608, 672)
+
+[node name="slot_u_10_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(672, 672)
+
+[node name="slot_u_11_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(736, 672)
+
+[node name="slot_u_12_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(800, 672)
+
+[node name="slot_u_13_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(864, 672)
+
+[node name="slot_u_14_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(928, 672)
+
+[node name="slot_u_15_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(992, 672)
+
+[node name="slot_u_16_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1056, 672)
+
+[node name="slot_u_17_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1120, 672)
+
+[node name="slot_u_18_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1184, 672)
+
+[node name="slot_u_19_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1248, 672)
+
+[node name="slot_u_20_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1312, 672)
+
+[node name="slot_u_21_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1376, 672)
+
+[node name="slot_u_22_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1440, 672)
+
+[node name="slot_u_23_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1504, 672)
+
+[node name="slot_u_24_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1568, 672)
+
+[node name="slot_u_25_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1632, 672)
+
+[node name="slot_u_26_10" parent="PlaceableSlots" instance=ExtResource("3_slot")]
+position = Vector2(1696, 672)

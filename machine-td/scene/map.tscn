@@ -18,9 +18,14 @@
 [ext_resource type="PackedScene" path="res://scene/ui/wave_banner.tscn" id="14_wavebanner"]
 [ext_resource type="PackedScene" path="res://scene/ui/boss_health_bar.tscn" id="15_bossbar"]
 [ext_resource type="PackedScene" path="res://scene/ui/early_call_panel.tscn" id="16_earlycall"]
+[ext_resource type="Script" path="res://script/ui/ability_range_overlay.gd" id="17_ability_range"]
 
 [node name="map" type="Node2D" unique_id=988854810]
 script = ExtResource("1_rgtto")
+
+[node name="AbilityRangeOverlay" type="Node2D" parent="."]
+z_index = 20
+script = ExtResource("17_ability_range")
 
 [node name="CustomCamera" parent="." unique_id=1331816399 instance=ExtResource("5_jp76l")]
 zoomMax = 4.5

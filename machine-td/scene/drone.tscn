@@ -33,7 +33,7 @@ sprite_frames = SubResource("SpriteFrames_il87p")
 
 [node name="Trail" type="Line2D" parent="." index="1" unique_id=1901231757]
 top_level = true
-z_index = 1
+z_index = 4
 width = 7.0
 width_curve = SubResource("Curve_trail")
 default_color = Color(0.55, 0.9, 1, 1)
