@@ -70,9 +70,9 @@ func _draw() -> void:
 	for pts in arcs:
 		for i in range(pts.size() - 1):
 			# 三层叠加：外圈粗而暗、中层彩、内芯白 —— 和特斯拉塔的闪电画法一致
-			draw_line(pts[i], pts[i + 1], Color(arcColor.r, arcColor.g, arcColor.b, a * 0.75), 3.0, true)
-			draw_line(pts[i], pts[i + 1], Color(arcColor.r, arcColor.g, arcColor.b, a * 0.95), 1.3, true)
-			draw_line(pts[i], pts[i + 1], Color(1, 1, 1, a * 0.9), 0.7, true)
+			draw_line(pts[i], pts[i + 1], Color(arcColor.r, arcColor.g, arcColor.b, a * 0.75), 2.0, true)
+			draw_line(pts[i], pts[i + 1], Color(arcColor.r, arcColor.g, arcColor.b, a * 0.95), 1.0, true)
+			draw_line(pts[i], pts[i + 1], Color(1, 1, 1, a * 0.9), 0.5, true)
 	# 命中点的一点白光
-	draw_circle(Vector2.ZERO, 7.0 * a, Color(1, 1, 1, a * 0.6))
-	draw_circle(Vector2.ZERO, 3.5 * a, Color(1, 1, 1, a * 0.9))
+	draw_circle(Vector2.ZERO, 5.0 * a, Color(1, 1, 1, a * 0.6))
+	draw_circle(Vector2.ZERO, 2.5 * a, Color(1, 1, 1, a * 0.9))

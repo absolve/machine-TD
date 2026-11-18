@@ -1,6 +1,8 @@
 extends Area2D
 class_name Tower
 
+const SKILL_EFFECT_SCENE: PackedScene = preload("res://scene/fx/tower_skill_effect.tscn")
+
 @export var hp = 0 # 防御塔血量
 @export var maxHp = 0 # 最大血量
 @export var radarScope = 500 # 雷达范围
@@ -114,6 +116,9 @@ var overkill: int = 0      ## 溢出伤害（打死时多出来的部分），�
 @onready var rangeOverlay: Node2D = $RangeOverlay
 # 开火特效播放器：只有配置了炮口闪光的塔才有这个节点，其余塔为 null
 @onready var sparkPlayer = get_node_or_null("SparkPlayer")
+
+var skillEffectNode: Node2D
+var invincibleEffectNode: Node2D
 
 
 func _ready() -> void:
@@ -315,6 +320,7 @@ func toggleSkill() -> bool:
 	applyFireRate()
 	applySight()
 	onSkillModeChanged()
+	setToggleSkillEffect(skillOn)
 	return true
 
 
@@ -326,6 +332,7 @@ func startTimedSkill() -> bool:
 	applyFireRate()
 	applySight()
 	onSkillModeChanged()
+	playTimedSkillEffect(skillActiveLeft)
 	return true
 
 
@@ -345,7 +352,40 @@ func endTimedSkill() -> void:
 ## 机甲覆写它做群体治疗。
 func runInstantSkill() -> bool:
 	onSkillModeChanged()
+	playTimedSkillEffect(float(skillDef.get("effectDuration", 1.2)))
 	return true
+
+
+## 短时技能把特效作为子节点挂在塔上，生命周期由特效场景管理。
+func playTimedSkillEffect(effectDuration: float) -> void:
+	if effectDuration <= 0.0:
+		return
+	var effect: Node2D = SKILL_EFFECT_SCENE.instantiate() as Node2D
+	effect.set("effectStyle", str(skillDef.get("effectStyle", "pulse")))
+	effect.set("effectColor", skillDef.get("effectColor", Color(0.35, 0.85, 1.0, 1.0)))
+	effect.set("effectDuration", effectDuration)
+	effect.set("persistent", false)
+	effect.set("soundPath", str(skillDef.get("sound", "")))
+	add_child(effect)
+	skillEffectNode = effect
+
+
+## 持续模式开启时保留特效节点，关闭时移除；无需每帧重建。
+func setToggleSkillEffect(enabled: bool) -> void:
+	if not enabled:
+		if is_instance_valid(skillEffectNode):
+			skillEffectNode.queue_free()
+		skillEffectNode = null
+		return
+	if is_instance_valid(skillEffectNode):
+		return
+	var effect: Node2D = SKILL_EFFECT_SCENE.instantiate() as Node2D
+	effect.set("effectStyle", str(skillDef.get("effectStyle", "pulse")))
+	effect.set("effectColor", skillDef.get("effectColor", Color(0.35, 0.85, 1.0, 1.0)))
+	effect.set("persistent", true)
+	effect.set("soundPath", str(skillDef.get("sound", "")))
+	add_child(effect)
+	skillEffectNode = effect
 
 
 ## 模式/生效状态变化后的钩子（子类用来刷新自绘、渐变等）。默认什么也不做。
@@ -581,14 +621,23 @@ func setInvincible(duration: float) -> void:
 	set_process(true)
 
 
-# 无敌期间用安全黄色高亮，和"我方强化"的视觉约定一致
+# 无敌期间用持续护盾特效提示状态；旧的整塔变色保留注释供参考。
 func setInvincibleVisual(on: bool) -> void:
 	if on:
-		modulate = Color(1.0, 0.92, 0.55, 1.0)
+		if not is_instance_valid(invincibleEffectNode):
+			invincibleEffectNode = SKILL_EFFECT_SCENE.instantiate() as Node2D
+			invincibleEffectNode.set("effectStyle", "invincible")
+			invincibleEffectNode.set("effectColor", Color(1.0, 0.82, 0.28, 1.0))
+			invincibleEffectNode.set("persistent", true)
+			add_child(invincibleEffectNode)
+		# modulate = Color(1.0, 0.92, 0.55, 1.0)
 		return
 	invincible = false
 	invincibleLeft = 0.0
-	modulate = Color(1.0, 1.0, 1.0, 1.0)
+	if is_instance_valid(invincibleEffectNode):
+		invincibleEffectNode.queue_free()
+	invincibleEffectNode = null
+	# modulate = Color(1.0, 1.0, 1.0, 1.0)
 	set_process(false)
 
 func hurt(_num: int, _source = null, _damage_type: String = "physical"):

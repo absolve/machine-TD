@@ -656,6 +656,8 @@ func _physics_process(_delta):
 func _draw() -> void:
 	if not selected or not showsRange or radarScope <= 0.0:
 		return
+	# Enemy follows inherit the route's turn rotation; cancel it for the world-space radar.
+	draw_set_transform(Vector2.ZERO, -global_rotation, Vector2.ONE)
 	var radarColor: Color = Color(0.25, 0.75, 1.0, 1.0)
 	draw_circle(Vector2.ZERO, radarScope,
 		Color(radarColor.r, radarColor.g, radarColor.b, 0.12))
@@ -688,6 +690,7 @@ func _draw() -> void:
 		Color(radarColor.r, radarColor.g, radarColor.b, 1.0),
 		2.0
 	)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	if lifeBar == null or not is_instance_valid(lifeBar):
 		return
 	# ⚠️ parent 可能为 null：`parent` 是各子类 `_ready()` 里

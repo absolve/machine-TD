@@ -2,7 +2,7 @@ extends "res://script/tower/tower.gd"
 
 var bullet = preload("res://scene/bullet/rocketbullet.tscn")
 
-@onready var shotSound=$ShotSound
+@onready var shotSound = $ShotSound
 
 func _ready():
 	turret.rotation = randf() * TAU
@@ -28,7 +28,10 @@ func fire(t):
 		# 导弹模式（toggle）：单体直击、不溅射、弹速更快
 		if skillKind == "toggle" and skillOn:
 			temp.noSplash = bool(skillDef.get("noSplash", false))
+			temp.initialSpeed = float(skillDef.get("initialSpeed", temp.initialSpeed))
 			temp.bulletSpeed = float(skillDef.get("bulletSpeed", temp.bulletSpeed))
+			temp.acceleration = float(skillDef.get("acceleration", temp.acceleration))
+			temp.noTargetTimeout = float(skillDef.get("noTargetTimeout", temp.noTargetTimeout))
 			temp.turnSpeed = float(skillDef.get("turnSpeed", temp.turnSpeed))
 		Game.addObj(temp)
 		canShot = false
