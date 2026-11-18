@@ -114,6 +114,9 @@ func showTowerInfo(type):
 	info.showDetail(temp, type)
 	# 等待一帧让布局更新，获取正确的尺寸
 	await get_tree().process_frame
+	# 再贴一次内容尺寸：showDetail 里那次 reset_size() 时 autowrap 的宽度可能还没生效，
+	# 这里布局已经稳定，量到的才是最终尺寸（否则 tooltip 会带一截空白）。
+	info.reset_size()
 	var infoSize = info.size
 	var mousePos = get_global_mouse_position()
 	var viewportSize = get_viewport_rect().size

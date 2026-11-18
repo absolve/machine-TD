@@ -279,11 +279,11 @@ const towerSkills = {
 		"desc": "_Skill_overheat_desc",
 		"effectStyle": "overheat",
 		"effectColor": Color(1.0, 0.36, 0.12, 1.0),
-		"duration": 3.0,
+		"duration": 5.0,
 		"cooldown": 18.0,
 		"atkMul": 2.0,          # atk ×2（配合 delayMul 0.5 ≈ DPS ×4）
 		"delayMul": 0.5,
-		"selfHpPerSec": 6.0,    # 每秒自损 6（3 秒共 18）
+		"selfHpPerSec": 6.0,    # 每秒自损 6（5 秒共 30）
 		"minHpRatio": 0.25,     # 血量低于 25% 拒绝触发
 	},
 	towerType.cannonTower: {
@@ -292,7 +292,7 @@ const towerSkills = {
 		"desc": "_Skill_pierce_desc",
 		"effectStyle": "pierce",
 		"effectColor": Color(1.0, 0.78, 0.24, 1.0),
-		"duration": 3.0,
+		"duration": 5.0,
 		"cooldown": 20.0,
 		"delayMul": 1.4,        # 射速 ×0.7 —— 破甲的代价
 		"pierceArmor": true,    # 子弹按能量伤害结算（enemy.hurt 的 "energy" 通道无视 armor）
@@ -340,7 +340,7 @@ const towerSkills = {
 		"desc": "_Skill_chain_desc",
 		"effectStyle": "chain",
 		"effectColor": Color(0.35, 0.78, 1.0, 1.0),
-		"duration": 3.0,
+		"duration": 5.0,
 		"cooldown": 20.0,
 		"chainExtra": 2,        # 电弧多跳 2 个目标
 		"selfHpPerSec": 5.0,
@@ -352,7 +352,7 @@ const towerSkills = {
 		"desc": "_Skill_scramble_desc",
 		"effectStyle": "scramble",
 		"effectColor": Color(0.3, 1.0, 0.78, 1.0),
-		"duration": 4.0,
+		"duration": 5.0,
 		"cooldown": 24.0,
 		"delayMul": 0.667,      # 射速 ×1.5
 	},
@@ -362,7 +362,7 @@ const towerSkills = {
 		"desc": "_Skill_armor_desc",
 		"effectStyle": "armor",
 		"effectColor": Color(0.35, 0.88, 1.0, 1.0),
-		"duration": 4.0,
+		"duration": 5.0,
 		"cooldown": 20.0,
 		"damageTakenMul": 0.3,  # 受到伤害 ×0.3
 	},

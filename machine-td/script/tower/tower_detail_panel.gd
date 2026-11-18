@@ -29,6 +29,8 @@ var tower: Node = null # 当前选中的塔
 var lastRepairText: String = ""
 var lastSellText: String = ""
 var lastSkillText: String = ""
+## 技能按钮的悬停提示（缓存，避免每帧重复拼接/赋值）
+var lastSkillTip: String = ""
 
 
 func _ready() -> void:
@@ -158,6 +160,14 @@ func refreshSkillButton(t: Tower) -> void:
 	if not has:
 		return
 	var skillName: String = tr(str(t.skillDef.get("name", "")))
+	# 悬停提示：说清楚这个技能是干嘛的（名字 + 一句说明，说明里已经带了时长和代价）
+	# 说明文案里有 `**强调**` 这种标记（给 RichTextLabel 用的），原生 tooltip 是纯文本，
+	# 不去掉会原样显示成星号。
+	var skillDesc: String = tr(str(t.skillDef.get("desc", ""))).replace("**", "")
+	var tip: String = "%s\n%s" % [skillName, skillDesc]
+	if tip != lastSkillTip:
+		lastSkillTip = tip
+		btnSkill.tooltip_text = tip
 	var text: String = ""
 	if t.skillKind == "toggle":
 		text = Game.t("_SkillToggle", "Switch: %s") % skillName

@@ -34,6 +34,12 @@ func showDetail(obj, tower_type = 0):
 	scopeValue.text = str(obj.scope)
 	costValue.text = str(obj.cost)
 	hpValue.text = str(obj.get("hp", obj.get("maxHp", 0)))
+	# ⚠️ 必须收缩回内容尺寸，而且**要延后**到布局完成之后。
+	# 面板是个**自由的 Control**（不在任何容器里），size 只会被"最小尺寸"往上撑，
+	# 最小尺寸变小后不会自己缩回去。而刚填好文字那一瞬间 autowrap 的宽度还没生效，
+	# 最小高度会被算成天量级，此时立刻 reset_size() 会被 custom_maximum_size 夹到 800，
+	# 反而把自己撑满。所以用 call_deferred，等这一帧的布局跑完再贴。
+	reset_size.call_deferred()
 	visible = true
 
 func hideDetail():

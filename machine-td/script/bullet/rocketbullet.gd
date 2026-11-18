@@ -115,6 +115,18 @@ func spawnBomb(hitEnemy: Node = null) -> void:
 	Game.addObj(bomb)
 	queue_free()
 
+## 雷达一直没找到目标 -> 导弹自行销毁。**销毁时留一个小爆炸**，
+## 否则子弹会"凭空消失"，玩家看着像掉帧/漏判。
+## 用 explosion_small 变体：这是"打空了"，不该和命中敌人那样放一发大的。
+## 注意这里只走 ExplosionManage 的视觉 + 音效，**不生成 bomb 场景**，
+## 所以不会误伤任何东西（单体导弹模式也一样安全）。
+func spawnFizzleExplosion() -> void:
+	if is_queued_for_deletion():
+		return
+	ExplosionManage.playExplosion(global_position, "res://scene/explosion/explosion_small.tscn")
+	queue_free()
+
+
 func _physics_process(delta: float) -> void:
 	timer += delta
 	if timer > lifetime:
@@ -129,7 +141,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		noTargetElapsed += delta
 		if noTargetElapsed >= noTargetTimeout:
-			queue_free()
+			spawnFizzleExplosion()
 			return
 	vec = Vector2(currentSpeed, 0).rotated(angle)
 	position += vec * delta
