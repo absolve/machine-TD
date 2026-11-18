@@ -466,6 +466,7 @@ func runInstantSkill() -> bool:
 	skillDisabledLeft = float(skillDef.get("shutdown", 3.0))
 	stopAllWork()
 	onSkillModeChanged()
+	playTimedSkillEffect(float(skillDef.get("effectDuration", 1.4)))
 	return true
 
 

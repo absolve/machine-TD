@@ -277,6 +277,8 @@ const towerSkills = {
 		"kind": "timed",
 		"name": "_Skill_overheat",
 		"desc": "_Skill_overheat_desc",
+		"effectStyle": "overheat",
+		"effectColor": Color(1.0, 0.36, 0.12, 1.0),
 		"duration": 3.0,
 		"cooldown": 18.0,
 		"atkMul": 2.0,          # atk ×2（配合 delayMul 0.5 ≈ DPS ×4）
@@ -288,6 +290,8 @@ const towerSkills = {
 		"kind": "timed",
 		"name": "_Skill_pierce",
 		"desc": "_Skill_pierce_desc",
+		"effectStyle": "pierce",
+		"effectColor": Color(1.0, 0.78, 0.24, 1.0),
 		"duration": 3.0,
 		"cooldown": 20.0,
 		"delayMul": 1.4,        # 射速 ×0.7 —— 破甲的代价
@@ -297,17 +301,24 @@ const towerSkills = {
 		"kind": "toggle",
 		"name": "_Skill_missile",
 		"desc": "_Skill_missile_desc",
+		"effectStyle": "missile",
+		"effectColor": Color(1.0, 0.48, 0.18, 1.0),
 		"switchCooldown": 3.0,
 		"atkMul": 1.25,         # 40 → 50（Lv3 78 → 98，仍守住 atk < 100 的规范）
 		"sightMul": 1.6,        # 200 → 320
 		"noSplash": true,       # ⚠️ 核心代价：不再有爆炸范围
-		"bulletSpeed": 520.0,   # 300 → 520
+		"initialSpeed": 180.0,
+		"bulletSpeed": 520.0,   # 加速上限
+		"acceleration": 600.0,
+		"noTargetTimeout": 1.5,
 		"turnSpeed": 6.5,       # 5.0 → 6.5（速度更快，转向要跟上）
 	},
 	towerType.EMPTower: {
 		"kind": "timed",
 		"name": "_Skill_overload",
 		"desc": "_Skill_overload_desc",
+		"effectStyle": "overload",
+		"effectColor": Color(0.2, 0.85, 1.0, 1.0),
 		"duration": 5.0,
 		"cooldown": 25.0,
 		"slowMul": 2.0,         # 减速强度 ×2
@@ -317,6 +328,8 @@ const towerSkills = {
 		"kind": "toggle",
 		"name": "_Skill_singular",
 		"desc": "_Skill_singular_desc",
+		"effectStyle": "singular",
+		"effectColor": Color(0.72, 0.42, 1.0, 1.0),
 		"switchCooldown": 3.0,
 		"atkMul": 2.2,          # 38 → 84（Lv3 44 → 97，仍守住 atk < 100）
 		"maxTargets": 1,        # 3 → 1
@@ -325,6 +338,8 @@ const towerSkills = {
 		"kind": "timed",
 		"name": "_Skill_chain",
 		"desc": "_Skill_chain_desc",
+		"effectStyle": "chain",
+		"effectColor": Color(0.35, 0.78, 1.0, 1.0),
 		"duration": 3.0,
 		"cooldown": 20.0,
 		"chainExtra": 2,        # 电弧多跳 2 个目标
@@ -335,6 +350,8 @@ const towerSkills = {
 		"kind": "timed",
 		"name": "_Skill_scramble",
 		"desc": "_Skill_scramble_desc",
+		"effectStyle": "scramble",
+		"effectColor": Color(0.3, 1.0, 0.78, 1.0),
 		"duration": 4.0,
 		"cooldown": 24.0,
 		"delayMul": 0.667,      # 射速 ×1.5
@@ -343,6 +360,8 @@ const towerSkills = {
 		"kind": "timed",
 		"name": "_Skill_armor",
 		"desc": "_Skill_armor_desc",
+		"effectStyle": "armor",
+		"effectColor": Color(0.35, 0.88, 1.0, 1.0),
 		"duration": 4.0,
 		"cooldown": 20.0,
 		"damageTakenMul": 0.3,  # 受到伤害 ×0.3
@@ -351,6 +370,9 @@ const towerSkills = {
 		"kind": "instant",
 		"name": "_Skill_emergency_repair",
 		"desc": "_Skill_emergency_repair_desc",
+		"effectStyle": "repair",
+		"effectColor": Color(0.45, 1.0, 0.56, 1.0),
+		"effectDuration": 1.4,
 		"healRatio": 0.30,      # 治疗 30% 各自最大血量（自身 + 范围内所有塔）
 		"healScope": 180.0,
 		"shutdown": 3.0,        # ⚠️ 用完后整机停止 3 秒：不能移动 / 维修 / 回收

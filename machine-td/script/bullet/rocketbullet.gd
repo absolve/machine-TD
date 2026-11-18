@@ -1,26 +1,34 @@
 extends "res://script/bullet/bullet.gd"
-## 火箭弹：出膛后靠自身的小雷达锁定附近**同类**敌人，并逐渐转向追上去。
+## 火箭弹：出膛后从初速加速，并靠自身小雷达锁定附近**同类**敌人追踪。
 ##
-## 为什么需要雷达：本弹基础速度只有 [member bulletSpeed]（300 像素/秒），
+## 为什么需要雷达：目标会移动或转向，导弹需要转向追踪并在飞行中逐渐加速。
 ## 直射时目标只要稍一移动 / 换向就会擦身而过，然后一直飞到 5 秒寿命才自炸 ——
 ## 表现就是"火箭塔打不中人"。
 ## 现在子弹自带一个圆形雷达（场景里的 Radar 子节点，见 rocketbullet.tscn）：
 ##   ① 每物理帧取"雷达圈内、仍有效、且与出膛时同属地面 / 空中"的最近敌人；
 ##   ② 用有限的角速度 [member turnSpeed] 把飞行方向**逐渐**转过去（不是瞬间锁定）。
-## 有目标就拐弯咬住，没有就保持直线；命中判定与爆炸逻辑完全不变。
+## 有目标就拐弯咬住；持续一段时间没有雷达目标就自行销毁，不留下空爆。
 
 ## 导弹模式（火箭塔的 toggle 技能）：**没有爆炸范围**，命中时直接对单个敌人结算伤害。
 ## 由发射方 `rocket_tower.gd` 在实例化后设置。
 @export var noSplash: bool = false
 
-## 转向角速度（弧度 / 秒）。越大拐弯越急：300 像素/秒 ÷ 5 弧度/秒 ≈ 60 像素转弯半径。
+## 转向角速度（弧度 / 秒）。
 @export var turnSpeed: float = 5.0
 
-## 飞行速度（像素 / 秒）。原来是写死在 `_ready()` 里的 300，提到导出方便调手感。
+## 最大飞行速度（像素 / 秒）。
 @export var bulletSpeed: float = 300.0
+## 出膛初速（像素 / 秒）。
+@export var initialSpeed: float = 150.0
+## 加速度（像素 / 秒²）。
+@export var acceleration: float = 420.0
+## 雷达连续没有找到有效目标多久后自毁（秒）。
+@export var noTargetTimeout: float = 1.5
 
 var bombScene: PackedScene = preload("res://scene/explosion/bomb.tscn")
 var targetFlying: bool = false
+var currentSpeed: float = 0.0
+var noTargetElapsed: float = 0.0
 
 ## 雷达圈内的候选敌人，由 Radar 的 area_entered / area_exited 维护
 var nearbyEnemies: Array[Area2D] = []
@@ -29,7 +37,8 @@ var nearbyEnemies: Array[Area2D] = []
 func _ready() -> void:
 	alignToAngle()
 	lifetime = 5.0
-	vec = Vector2(bulletSpeed, 0).rotated(angle)
+	currentSpeed = minf(initialSpeed, bulletSpeed)
+	vec = Vector2(currentSpeed, 0).rotated(angle)
 
 
 ## 雷达进 / 出：只收敌人。Radar 的 mask 已限定 layer 2（敌人），这里再兜一层类型判断。
@@ -72,7 +81,7 @@ func steerToward(enemy: Enemy, delta: float) -> void:
 	var difference: float = wrapf(wantAngle - angle, -PI, PI)
 	angle = angle + clampf(difference, -turnSpeed * delta, turnSpeed * delta)
 	rotation = angle
-	vec = Vector2(bulletSpeed, 0).rotated(angle)
+	vec = Vector2(currentSpeed, 0).rotated(angle)
 
 
 ## `hitEnemy`：本次命中的敌人（寿命耗尽时没有目标，传 null）。
@@ -111,10 +120,18 @@ func _physics_process(delta: float) -> void:
 	if timer > lifetime:
 		spawnBomb()
 		return
-	# 有雷达目标就先拐弯，再按（可能已更新的）方向前进
+	currentSpeed = minf(bulletSpeed, currentSpeed + acceleration * delta)
+	# 有有效雷达目标就先拐弯；一直没有目标则自毁，避免空飞到寿命结束后空爆。
 	var homingTarget: Enemy = pickHomingTarget()
 	if homingTarget != null:
+		noTargetElapsed = 0.0
 		steerToward(homingTarget, delta)
+	else:
+		noTargetElapsed += delta
+		if noTargetElapsed >= noTargetTimeout:
+			queue_free()
+			return
+	vec = Vector2(currentSpeed, 0).rotated(angle)
 	position += vec * delta
 	for area in get_overlapping_areas():
 		if area is Enemy and area.flying != targetFlying:

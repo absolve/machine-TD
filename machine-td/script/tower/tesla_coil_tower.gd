@@ -87,11 +87,12 @@ func applyChainDamage() -> void:
 			# 击中效果：每个被打到的敌人身上单独播一次电弧（独立场景）。
 			# 塔自己画的是"炮口 -> 敌人"那条链；这个是贴在敌人身上的迸射，两者互补。
 			var arc: Node = HIT_ARC_SCENE.instantiate()
-			Game.addObj(arc)
-			if parent2d != null and arc.get_parent() == parent2d:
+			if parent2d != null:
 				arc.position = parent2d.to_local(hitPos)
+				parent2d.add_child(arc)
 			else:
 				(arc as Node2D).global_position = hitPos
+				Game.addObj(arc)
 			# 命中音：链上每个敌人各响一声，音高错开，听起来像"噼里啪啦串过去"。
 			# 用剪好的 0.2 秒短版 —— 原版 electric_buzz 整段 9.7 秒，
 			# 一次链 4 个敌人同时播，尾巴会把整场战斗糊成一片电流噪声。
