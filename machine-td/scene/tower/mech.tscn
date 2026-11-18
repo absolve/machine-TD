@@ -14,7 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://dl20d3cxbv5dp" path="res://sprite/fx/fx_spark.png" id="12_spark"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mech"]
-size = Vector2(64, 64)
+size = Vector2(32, 32)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c8e2w"]
 resource_local_to_scene = true
@@ -80,7 +80,6 @@ animations = [{
 }]
 
 [node name="mech" unique_id=1099991569 instance=ExtResource("1_base")]
-scale = Vector2(0.6, 0.6)
 script = ExtResource("2_mech")
 selfHealInterval = 6.0
 selfHealRatio = 0.06
@@ -90,22 +89,30 @@ salvageScope = 220.0
 salvageSeconds = 1.2
 muzzleOffset = 22.0
 
-[node name="shape" parent="." index="0" unique_id=1958475246]
+[node name="shape" parent="." index="1" unique_id=1958475246]
 shape = SubResource("RectangleShape2D_mech")
 
-[node name="base" parent="." index="1" unique_id=1580788916]
+[node name="base" parent="." index="2" unique_id=1580788916]
 material = SubResource("ShaderMaterial_c8e2w")
+scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_mech_base")
 
-[node name="radar" parent="." index="2" unique_id=2082783838]
+[node name="radar" parent="." index="3" unique_id=2082783838]
 visible = false
 
 [node name="CollisionShape2D" parent="radar" index="0" unique_id=803920863]
 shape = SubResource("CircleShape2D_mech_radar")
 
-[node name="turret" parent="." index="3" unique_id=1212426607]
+[node name="turret" parent="." index="4" unique_id=1212426607]
 material = SubResource("ShaderMaterial_s5dng")
+scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_mech_turret")
+
+[node name="TowerRank" parent="." index="6" unique_id=1195618471]
+position = Vector2(32, -16.000002)
+
+[node name="LifeBar" parent="." index="8" unique_id=1589605555]
+position = Vector2(0, -33)
 
 [node name="SelfHealTimer" type="Timer" parent="." index="12" unique_id=181945475]
 wait_time = 6.0

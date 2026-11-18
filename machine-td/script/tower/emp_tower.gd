@@ -95,10 +95,20 @@ func _exit_tree() -> void:
 
 
 func _draw():
-	# 未选中时保留原来的范围显示
-	if not selected:
-		draw_circle(Vector2.ZERO, radarScope, Color(EMP_COLOR.r, EMP_COLOR.g, EMP_COLOR.b, 0.1))
-		draw_arc(Vector2.ZERO, radarScope, 0, TAU, 64, Color(EMP_COLOR.r, EMP_COLOR.g, EMP_COLOR.b, 0.1), 1.0)
+	# ⚠️ 不要写 super._draw()：父类 tower.gd 已经没有 _draw 了 ——
+	#    选中/悬停的范围圈整体搬到了 RangeOverlay 子节点（tower_range_overlay.gd），
+	#    对着不存在的父类 _draw 调 super 会让整个脚本解析失败。
+	#
+	# EMP 还额外保留一份"没被选中也没悬停时的淡青色范围圈"（别的塔不画）。
+	# 悬停时 RangeOverlay 会把亮的那份画出来，这里就不再叠一层。
+	if selected or hovered:
 		return
-	# 选中时沿用父类的统一雷达扫描效果
-	super._draw()
+	draw_circle(Vector2.ZERO, radarScope, Color(EMP_COLOR.r, EMP_COLOR.g, EMP_COLOR.b, 0.1))
+	draw_arc(Vector2.ZERO, radarScope, 0, TAU, 64, Color(EMP_COLOR.r, EMP_COLOR.g, EMP_COLOR.b, 0.1), 1.0)
+
+
+## 父类把范围圈的刷新统一收口到 refreshRangeOverlay()（选中/悬停/升级/改范围都会走它）。
+## EMP 自己还多画一份淡圈，所以顺带把自己也重画一下 —— 否则雷达范围升级后圈会停在旧半径上。
+func refreshRangeOverlay() -> void:
+	super.refreshRangeOverlay()
+	queue_redraw()

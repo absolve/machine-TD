@@ -5,8 +5,8 @@
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_wfuso"]
 [ext_resource type="Texture2D" uid="uid://dl20d3cxbv5dp" path="res://sprite/fx/fx_spark.png" id="90_spark"]
 [ext_resource type="Texture2D" uid="uid://cpy1fdfwdx3em" path="res://sprite/fx/p_star.png" id="91_star"]
-[ext_resource type="Texture2D" path="res://sprite/tower/base_platform_128.png" id="99_base"]
-[ext_resource type="Texture2D"  path="res://sprite/tower/tower_laser.png" id="99_turret"]
+[ext_resource type="Texture2D" uid="uid://c2qn154w404po" path="res://sprite/tower/base_platform_128.png" id="99_base"]
+[ext_resource type="Texture2D" uid="uid://namm2gbd0cfh" path="res://sprite/tower/tower_laser.png" id="99_turret"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_axgl3"]
 size = Vector2(64, 64)
@@ -68,26 +68,29 @@ colors = PackedColorArray(1, 1, 0.92, 1, 1, 0.95, 0.6, 1, 1, 0.72, 0.28, 1, 0.95
 script = ExtResource("2_733d0")
 type = 1006
 
-[node name="shape" parent="." index="0" unique_id=1958475246]
+[node name="shape" parent="." index="1" unique_id=1958475246]
 visible = false
 shape = SubResource("RectangleShape2D_axgl3")
 
-[node name="base" parent="." index="1" unique_id=1580788916]
+[node name="base" parent="." index="2" unique_id=1580788916]
 z_index = -1
 material = SubResource("ShaderMaterial_lu6os")
 sprite_frames = SubResource("SpriteFrames_027me")
 
-[node name="radar" parent="." index="2" unique_id=2082783838]
+[node name="radar" parent="." index="3" unique_id=2082783838]
 visible = false
 
 [node name="CollisionShape2D" parent="radar" index="0" unique_id=803920863]
 shape = SubResource("CircleShape2D_0llar")
 
-[node name="turret" parent="." index="3" unique_id=1212426607]
+[node name="turret" parent="." index="4" unique_id=1212426607]
 z_index = -1
 material = SubResource("ShaderMaterial_mopmr")
 scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_autotur")
+
+[node name="LifeBar" parent="." index="8" unique_id=1589605555]
+position = Vector2(0, -70)
 
 [node name="MuzzleFx" type="CPUParticles2D" parent="." index="11" unique_id=1166174513]
 emitting = false

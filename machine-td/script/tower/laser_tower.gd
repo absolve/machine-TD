@@ -210,7 +210,10 @@ func _physics_process(_delta: float):
 
 
 func _draw():
-	super._draw()
+	# ⚠️ 不要写 super._draw()：父类 tower.gd 已经**没有 _draw 了** ——
+	#    选中/悬停的范围圈整体搬到了 RangeOverlay 子节点（tower_range_overlay.gd）。
+	#    对着不存在的父类 _draw 调 super 会让整个脚本解析失败
+	#    （"Cannot call the parent class' virtual function _draw()"）。
 	if laserTargets.is_empty():
 		return
 	var start = to_local(marker.global_position)

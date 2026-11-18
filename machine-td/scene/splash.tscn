@@ -1,14 +1,7 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://pc8kwqe1tinr"]
 
-[ext_resource type="Script" path="res://script/menu/splash.gd" id="1_splash"]
-[ext_resource type="Texture2D" path="res://sprite/icon/godot_engine_logo.png" id="2_logo"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ball"]
-bg_color = Color(0.94, 0.96, 0.98, 1)
-corner_radius_top_left = 160
-corner_radius_top_right = 160
-corner_radius_bottom_right = 160
-corner_radius_bottom_left = 160
+[ext_resource type="Script" uid="uid://cr0846rid667t" path="res://script/menu/splash.gd" id="1_splash"]
+[ext_resource type="Texture2D" uid="uid://ek178qbuuufr" path="res://sprite/icon/godot_engine_logo.png" id="2_logo"]
 
 [sub_resource type="Curve" id="Curve_trail"]
 _data = [Vector2(0, 0.15), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
@@ -18,7 +11,14 @@ point_count = 2
 offsets = PackedFloat32Array(0, 0.45, 1)
 colors = PackedColorArray(0.55, 0.9, 1, 0, 0.55, 0.9, 1, 0.35, 0.62, 0.95, 1, 1)
 
-[node name="Splash" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ball"]
+bg_color = Color(0.94, 0.96, 0.98, 1)
+corner_radius_top_left = 160
+corner_radius_top_right = 160
+corner_radius_bottom_right = 160
+corner_radius_bottom_left = 160
+
+[node name="Splash" type="Control" unique_id=150184475]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,7 +27,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_splash")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=1010138106]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,7 +37,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.0352941, 0.0431373, 0.0627451, 1)
 
-[node name="Trail" type="Line2D" parent="."]
+[node name="Trail" type="Line2D" parent="." unique_id=494022314]
 width = 14.0
 width_curve = SubResource("Curve_trail")
 default_color = Color(0.55, 0.9, 1, 1)
@@ -46,16 +46,16 @@ joint_mode = 2
 begin_cap_mode = 2
 end_cap_mode = 2
 
-[node name="LogoContainer" type="Node2D" parent="."]
+[node name="LogoContainer" type="Node2D" parent="." unique_id=1863889275]
 
-[node name="Ball" type="Panel" parent="LogoContainer"]
+[node name="Ball" type="Panel" parent="LogoContainer" unique_id=150767128]
 offset_left = -160.0
 offset_top = -160.0
 offset_right = 160.0
 offset_bottom = 160.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_ball")
 
-[node name="Logo" type="TextureRect" parent="LogoContainer"]
+[node name="Logo" type="TextureRect" parent="LogoContainer" unique_id=1929016235]
 modulate = Color(0.12, 0.15, 0.2, 1)
 offset_left = -118.0
 offset_top = -118.0

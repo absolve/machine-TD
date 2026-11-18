@@ -4,9 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://4vv5x7rd5335" path="res://scene/life_bar.tscn" id="2_5eujo"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="2_uhti2"]
 [ext_resource type="PackedScene" uid="uid://bwdh7erg7xr7y" path="res://scene/tower_rank.tscn" id="2_y3288"]
-[ext_resource type="AudioStream" uid="uid://bcukxvd0o3nm5" path="res://sound/sfx/tower_deploy.ogg" id="7_m2v4c"]
+[ext_resource type="AudioStream" uid="uid://72olu5uadwv5" path="res://sound/sfx/tower_deploy.ogg" id="7_m2v4c"]
 [ext_resource type="PackedScene" path="res://scene/fx/tower_fire_smoke.tscn" id="8_damage_fx"]
-[ext_resource type="Script" path="res://script/tower/tower_range_overlay.gd" id="9_range_overlay"]
+[ext_resource type="Script" uid="uid://cbxawboatd3sq" path="res://script/tower/tower_range_overlay.gd" id="9_range_overlay"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vvofi"]
 resource_local_to_scene = true
@@ -36,7 +36,7 @@ collision_mask = 0
 input_pickable = false
 script = ExtResource("1_nxw3l")
 
-[node name="RangeOverlay" type="Node2D" parent="."]
+[node name="RangeOverlay" type="Node2D" parent="." unique_id=1362086858]
 z_index = 10
 script = ExtResource("9_range_overlay")
 
@@ -73,7 +73,7 @@ one_shot = true
 
 [node name="LifeBar" parent="." unique_id=1589605555 instance=ExtResource("2_5eujo")]
 z_index = 1
-position = Vector2(0, -62)
+position = Vector2(0, -48)
 
 [node name="Player" type="AnimationPlayer" parent="." unique_id=1035425773]
 libraries/ = SubResource("AnimationLibrary_hwngx")

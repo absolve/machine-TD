@@ -16,9 +16,9 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="Lineguard: Factory Tower Defense"
 run/main_scene="res://scene/splash.tscn"
-boot_splash/show_image=false
-boot_splash/bg_color=Color(0.0352941, 0.0431373, 0.0627451, 1)
 config/features=PackedStringArray("4.7", "GL Compatibility")
+boot_splash/bg_color=Color(0.0352941, 0.0431373, 0.0627451, 1)
+boot_splash/show_image=false
 config/icon="res://icon.svg"
 
 [autoload]

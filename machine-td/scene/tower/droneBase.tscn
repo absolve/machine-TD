@@ -2,11 +2,22 @@
 
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_qyteg"]
 [ext_resource type="Script" uid="uid://cnmy5uf77qffw" path="res://script/tower/drone_base.gd" id="2_ir8sv"]
+[ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_och7i"]
+[ext_resource type="Texture2D" uid="uid://c2qn154w404po" path="res://sprite/tower/base_platform_128.png" id="99_base"]
 [ext_resource type="Texture2D" uid="uid://c5x73fo1dftri" path="res://sprite/tower/tower_drone.png" id="99_turret"]
-[ext_resource type="Texture2D" path="res://sprite/tower/base_platform_128.png" id="99_base"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j5ypg"]
 size = Vector2(64, 64)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uvnbh"]
+resource_local_to_scene = true
+shader = ExtResource("3_och7i")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 14.0
+shader_parameter/flash_amplitude = 0.8
+shader_parameter/outline_thickness = 0.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_base"]
 animations = [{
@@ -18,6 +29,16 @@ animations = [{
 "name": &"default",
 "speed": 5.0
 }]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jkqy4"]
+resource_local_to_scene = true
+shader = ExtResource("3_och7i")
+shader_parameter/enable_flash = false
+shader_parameter/base_brightness = 1.0
+shader_parameter/flash_speed = 14.0
+shader_parameter/flash_amplitude = 0.8
+shader_parameter/outline_thickness = 0.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_autotur"]
 animations = [{
@@ -34,14 +55,19 @@ animations = [{
 script = ExtResource("2_ir8sv")
 type = 1004
 
-[node name="shape" parent="." index="0" unique_id=1958475246]
+[node name="shape" parent="." index="1" unique_id=1958475246]
 shape = SubResource("RectangleShape2D_j5ypg")
 
-[node name="base" parent="." index="1"]
+[node name="base" parent="." index="2" unique_id=1580788916]
+material = SubResource("ShaderMaterial_uvnbh")
 sprite_frames = SubResource("SpriteFrames_base")
 
-[node name="radar" parent="." index="2" unique_id=2082783838]
+[node name="radar" parent="." index="3" unique_id=2082783838]
 visible = false
 
-[node name="turret" parent="." index="3" unique_id=1212426607]
+[node name="turret" parent="." index="4" unique_id=1212426607]
+material = SubResource("ShaderMaterial_jkqy4")
 sprite_frames = SubResource("SpriteFrames_autotur")
+
+[node name="LifeBar" parent="." index="8" unique_id=1589605555]
+position = Vector2(0, -70)

@@ -3,8 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://c7fck7k88qhrn" path="res://scene/tower/Tower.tscn" id="1_x4oq0"]
 [ext_resource type="Script" uid="uid://dnaqsi3rmg555" path="res://script/tower/tesla_coil_tower.gd" id="2_5fmby"]
 [ext_resource type="Shader" uid="uid://ospldh2r5x74" path="res://shader/tower_upgrade_glow.gdshader" id="3_427bq"]
-[ext_resource type="Texture2D"  path="res://sprite/tower/tower_tesla.png" id="99_turret"]
-[ext_resource type="Texture2D" path="res://sprite/tower/base_platform_128.png" id="99_base"]
+[ext_resource type="Texture2D" uid="uid://c2qn154w404po" path="res://sprite/tower/base_platform_128.png" id="99_base"]
+[ext_resource type="Texture2D" uid="uid://dr3404ovqlqpl" path="res://sprite/tower/tower_tesla.png" id="99_turret"]
 [ext_resource type="Texture2D" uid="uid://d007qyjl2hj8g" path="res://sprite/tower/tower_tesla_f1.png" id="f1"]
 [ext_resource type="Texture2D" uid="uid://d0usqajra2hj7" path="res://sprite/tower/tower_tesla_f2.png" id="f2"]
 [ext_resource type="Texture2D" uid="uid://ohg1jbbdutmx" path="res://sprite/tower/tower_tesla_f3.png" id="f3"]
@@ -13,7 +13,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4p7g2"]
 size = Vector2(100, 100)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_nw5hk"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m0kww"]
 resource_local_to_scene = true
 shader = ExtResource("3_427bq")
 shader_parameter/enable_flash = false
@@ -37,7 +37,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_3idwy"]
 radius = 500.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_m0kww"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2fkt3"]
 resource_local_to_scene = true
 shader = ExtResource("3_427bq")
 shader_parameter/enable_flash = false
@@ -94,26 +94,29 @@ animations = [{
 script = ExtResource("2_5fmby")
 type = 1005
 
-[node name="shape" parent="." index="0" unique_id=1958475246]
+[node name="shape" parent="." index="1" unique_id=1958475246]
 visible = false
 shape = SubResource("RectangleShape2D_4p7g2")
 
-[node name="base" parent="." index="1" unique_id=1580788916]
+[node name="base" parent="." index="2" unique_id=1580788916]
 z_index = -1
-material = SubResource("ShaderMaterial_nw5hk")
+material = SubResource("ShaderMaterial_m0kww")
 sprite_frames = SubResource("SpriteFrames_base")
 
-[node name="radar" parent="." index="2" unique_id=2082783838]
+[node name="radar" parent="." index="3" unique_id=2082783838]
 visible = false
 
 [node name="CollisionShape2D" parent="radar" index="0" unique_id=803920863]
 shape = SubResource("CircleShape2D_3idwy")
 
-[node name="turret" parent="." index="3" unique_id=1212426607]
+[node name="turret" parent="." index="4" unique_id=1212426607]
 z_index = -1
-material = SubResource("ShaderMaterial_m0kww")
+material = SubResource("ShaderMaterial_2fkt3")
 sprite_frames = SubResource("SpriteFrames_autotur")
 animation = &"idle"
+
+[node name="LifeBar" parent="." index="8" unique_id=1589605555]
+position = Vector2(0, -70)
 
 [connection signal="area_entered" from="radar" to="." method="onRadarAreaEntered"]
 [connection signal="area_exited" from="radar" to="." method="onRadarAreaExited"]

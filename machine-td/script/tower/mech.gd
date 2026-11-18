@@ -593,7 +593,8 @@ func claimCurrentGrid() -> void:
 
 
 func _draw() -> void:
-	super._draw()
+	# ⚠️ 不要写 super._draw()：父类 tower.gd 已经没有 _draw 了（范围圈搬去了 RangeOverlay），
+	#    对着不存在的父类 _draw 调 super 会让整个脚本解析失败。
 	var origin: Vector2 = to_local(getMuzzlePosition())
 	# 维修激光
 	if beamOn and repairTarget != null and is_instance_valid(repairTarget):
