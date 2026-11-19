@@ -12,12 +12,10 @@ extends "res://script/bullet/bullet.gd"
 ## 导弹模式（火箭塔的 toggle 技能）：**没有爆炸范围**，命中时直接对单个敌人结算伤害。
 ## 由发射方 `rocket_tower.gd` 在实例化后设置。
 @export var noSplash: bool = false
-
 ## 转向角速度（弧度 / 秒）。
 @export var turnSpeed: float = 5.0
-
 ## 最大飞行速度（像素 / 秒）。
-@export var bulletSpeed: float = 300.0
+@export var bulletSpeed: float = 390.0
 ## 出膛初速（像素 / 秒）。
 @export var initialSpeed: float = 150.0
 ## 加速度（像素 / 秒²）。
