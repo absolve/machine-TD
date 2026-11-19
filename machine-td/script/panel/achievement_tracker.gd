@@ -17,6 +17,7 @@ extends Node
 
 # 单局型成就的目标（用于日志/校验，实际目标值以 AchievementManager 为准）
 const RUN_BEST_ACHIEVEMENTS: Array[String] = ["full_armory", "chain_reaction"]
+const TUTORIAL_STAGE_ID := 0
 
 var towerTypesUsed: Dictionary = {} # 本局用过的塔类型（全域火力）
 var chainKills: int = 0 # 本局由特斯拉/火箭塔击杀的数量（连锁反应）
@@ -36,7 +37,7 @@ func _ready() -> void:
 ## 放在记录器内部统一判断，而不是让每个调用方各写一遍：调用点有 4 处
 ## （击杀 / 建造 / 升级 / 通关），分散判断必然漏。
 func trackingEnabled() -> bool:
-	return not Game.isChallengeMode()
+	return not Game.isChallengeMode() and (Game.endlessMode or StageData.currentStageId != TUTORIAL_STAGE_ID)
 
 
 func onEnemyDefeated(enemy, source) -> void:

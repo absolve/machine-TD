@@ -215,7 +215,7 @@ var allStage = [
 		'category': '_TutorialCategory',
 		'description': '_TutorialDescription',
 		'wave': 10,
-		'health': 25,
+		'health': 260,
 		'money': 1200,
 		'spawnInterval': 1.0, # 兜底间隔(秒)：只对 ENEMY_SPAWN_DELAY 表里没配的兵种生效
 		'scene': 'res://scene/level/level_tutorial.tscn',

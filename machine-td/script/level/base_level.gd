@@ -632,6 +632,8 @@ func spawnEnemy(spawnInfo: Dictionary):
 	# （敌人实例就是它的直接子节点），推进 progress 的逻辑一行都不用改。
 	var follower: PathFollow2D = PathFollow2D.new()
 	follower.loop = false
+	# 路线按各 PathFollow2D 当前的 Y 坐标排序，让敌人在转弯和交错路段正确前后遮挡。
+	route.y_sort_enabled = true
 	# 偏移：让同一路线上的敌人散开、不叠在一起（详见 _resolve_offset）。
 	# 用 PathFollow2D 的 v_offset 实现，所以它是**固定侧向位移**、跟着曲线拐弯，
 	# 不是随机抖动。必须在 add_child 之后设 —— PathFollow2D 要拿到父级 Path2D
